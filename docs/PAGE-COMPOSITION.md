@@ -161,10 +161,9 @@ the copy is its own legend; no sentence was added to explain it.
 
 Recommendation: Pro is marked in the card (`Recommended` badge) and in the comparison table, where
 the Pro column header carries the badge and the whole column is tinted `--accent-soft`. The table
-keeps the 9 rows the page already had (dailyDigest has left the plan model in schema 3;
-`apiAccess`, `priorityRefresh` and `bulkExport` are still declared-but-unenforced in `plans.js`, and
-the page sells only `bulkExport` as "Export everything" — product copy was not changed in this
-pass), `font-variant-numeric: tabular-nums` on all cells, a caption, and `scope="col"` on every
+keeps the rows the page already had (dailyDigest has left the plan model in schema 3, and the
+capability flag list has since been cut to the three a handler gates in `64edb96`, leaving
+Scale a quota tier rather than a feature tier), `font-variant-numeric: tabular-nums` on all cells, a caption, and `scope="col"` on every
 header.
 
 ### 2.5 The two review defects

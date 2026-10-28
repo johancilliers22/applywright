@@ -495,7 +495,7 @@ you finish, show the gate output, not a summary of it.
 | The printable CV | `server/lib/packs/build.js` | It produces a standalone document with inline print CSS: A4, 18 mm margins, one column, real headings and lists, no layout tables, no icon fonts, no images, no external URLs. Keep it that way — that is what survives an ATS and a copy-paste into Word. `GET /api/applications/:id/cv` serves it. |
 | Scoring weights and findings | `server/lib/cv/score.js` | Deterministic and offline: keywords 35, structure 20, achievements 20, readability 15, formatting 10, and every point is explained by a named finding with a fix. Change a weight and the advisory sentence in `server/app.js` (`ADVISORY`, which quotes the same numbers) must move with it. |
 | Job sources | `server/lib/jobs/sources.js` | Arbeitnow, Remotive and Remote OK fetchers and normalisers, with a 6 s timeout per source, one source allowed to fail, and dedupe by `sha256(company\|title\|location)`. Attribution is a condition of using those feeds, so keep the source label on every row. Adding a board means adding its attribution string too. |
-| Plans, prices, quotas | `server/lib/billing/plans.js` | One table. The server's quota and feature gates read it directly (`can`, `entitlements`), and the product UI renders whatever `GET /api/billing/plans` returns — so change this file, not the pages. Only four quotas are enforced (`cvs`, `packs`, `alerts`, `jobResultsPerDay`); the declared feature flags are returned but not gated, except the covering-letter flag. |
+| Plans, prices, quotas | `server/lib/billing/plans.js` | One table. The server's quota and feature gates read it directly (`can`, `entitlements`), and the product UI renders whatever `GET /api/billing/plans` returns — so change this file, not the pages. Only four quotas are enforced (`cvs`, `packs`, `alerts`, `jobResultsPerDay`); the three capability flags (`fullAtsReport`, `coverLetter`, `packHistory`) are gated in the handlers, and Scale is a quota tier, not a feature tier. |
 
 Two more that repay a read early: `server/lib/cv/extract.js` (what formats ingest, and the
 native-then-WSL extractor chain) and `server/app.js` (every route, the security headers, the
@@ -563,11 +563,10 @@ is exposed.
   scanner all live in the process, and SQLite has one writer. Cluster mode would double
   every fetch and every scan.
 - **Know what is enforced.** Four quotas are enforced (`cvs`, `packs`, `alerts`,
-  `jobResultsPerDay`) and three capability flags are gated: `fullAtsReport` (Free sees the
-  score and the top three findings), `coverLetter` and `packHistory` (Free reads only its
-  most recent covering letter). `dailyDigest` was removed rather than sold. `apiAccess`,
-  `priorityRefresh` and `bulkExport` remain declared and returned, not gated: "API access"
-  has no key authentication, and `GET /api/export` is open to every plan on purpose for
+  `jobResultsPerDay`) and all three capability flags are gated: `fullAtsReport` (Free sees
+  the score and the top three findings), `coverLetter` and `packHistory` (Free reads only
+  its most recent covering letter). Scale is a quota tier — it adds unlimited CVs and packs
+  and 50 saved alerts, not features. `GET /api/export` is open to every plan on purpose for
   data portability. `docs/PROJECT-STATUS.md` §9 is the honest list; keep it honest if you
   change one.
 - **The licence is MIT.** `LICENSE` (MIT, © 2026 Johan Cilliers / Intelligent Artificial)

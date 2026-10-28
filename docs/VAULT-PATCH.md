@@ -119,10 +119,11 @@ redlines with `[CV §n]` citations) are still queued, not shipped.
   limits, one writer; a function host would lose the database and the sessions.
 - **Honest refusal over half-wired.** Stripe unconfigured means plans visible, checkout 501.
 - **Enforce what you display.** Four quotas are enforced (`cvs`, `packs`, `alerts`, job
-  results per day) and three capability flags are gated in the handlers (`fullAtsReport`,
-  `coverLetter`, `packHistory`). `dailyDigest` was removed from `plans.js` and the pricing
-  page; `apiAccess`, `priorityRefresh` and `bulkExport` remain declared but unenforced, with
-  `GET /api/export` deliberately open to every plan for data portability.
+  results per day) and the capability flag list is exactly the three a handler gates
+  (`fullAtsReport`, `coverLetter`, `packHistory`), with `FLAG_FEATURES` equal to
+  `ENFORCED_FLAGS`. Scale is a quota tier — it adds unlimited CVs and packs and 50 saved
+  alerts, not features. `GET /api/export` is deliberately open to every plan for data
+  portability.
 - **One bookmarklet artifact, two entry points.** Settings inside `/app` is the primary
   install; `/bookmarklet` is the same artifact made shareable to a signed-out person.
 - **No data without an exit.** CV text is stored as text, export is one route, delete is

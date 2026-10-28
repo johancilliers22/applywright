@@ -772,5 +772,5 @@ prints `At Northwind Traders, I reduced infrastructure cost by 32 percent across
 - `docs/EDITOR.md` — the editor's contract (propose, never save; the document is the text).
 - `docs/PIPELINE.md` — ingest → score → tailor → pack.
 - `docs/PASSWORD-RECOVERY.md` — recovery codes vs. operator-issued reset links.
-- `docs/PROJECT-STATUS.md` §9 — declared-but-unenforced flags (`apiAccess`, `priorityRefresh`, `bulkExport`).
+- `docs/PROJECT-STATUS.md` §9 — the enforced capability flags (`fullAtsReport`, `coverLetter`, `packHistory`); Scale is a quota tier, not a feature tier.
 - `scripts/browser-preview.mjs` — the screenshot/overflow pass this harness's CDP client is modelled on.

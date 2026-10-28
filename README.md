@@ -252,14 +252,14 @@ rather than shipped.
 ## Plans and quotas
 
 The numbers below are `server/lib/billing/plans.js`, which is the table the server
-enforces and `GET /api/billing/plans` returns. Prices exclude VAT, are charged in GBP, and
+enforces and `GET /api/billing/plans` returns. Prices are charged in GBP and include any applicable tax, and
 are reported in pence by the API.
 
 | Plan | Price | CVs | Tailored packs / month | Alerts | Job feed | Features |
 |---|---|---|---|---|---|---|
 | Free | £0 | 1 | 3 | 1 | 40 results/day | — |
 | Pro | £19 / month, £190 / year | 5 | 60 | 10 | unlimited | full ATS report, covering letters, pack history |
-| Scale | £49 / month, £490 / year | unlimited | unlimited | 50 | unlimited | all of Pro, plus API access, priority refresh, bulk export |
+| Scale | £49 / month, £490 / year | unlimited | unlimited | 50 | unlimited | all of Pro; a quota tier, not a feature tier |
 
 Annual is ten months for twelve. Cancel anytime; downgrading keeps existing packs
 readable.
@@ -270,11 +270,9 @@ exceeding one returns 402 `quota_exceeded` with the next plan in the body
 in the handlers: `fullAtsReport` (Free gets the score, the five subscores and the top
 three findings; Pro gets the rest), `coverLetter` (a Free pack carries an empty letter and
 a lock note) and `packHistory` (Free can read the covering letter of its most recent pack
-only). `dailyDigest` was removed from the model and the pricing copy because nothing
-delivered a digest. `apiAccess`, `priorityRefresh` and `bulkExport` are still declared
-only: "API access" has no key authentication, priority refresh has no queue, and
-`GET /api/export` is deliberately open to every plan because exporting your own data is
-not a paid feature. See [Limitations](#limitations).
+only). **Scale is a quota tier; it adds unlimited CVs and packs and 50 saved alerts, not
+features.** `GET /api/export` is deliberately open to every plan because exporting your own
+data is not a paid feature. See [Limitations](#limitations).
 
 ## API summary
 
@@ -531,11 +529,10 @@ anything.
 - **`DATABASE_PATH` does not move the database.** The variable is documented in
   `.env.example` and ignored by `server/config.js`, which resolves `<repo>/data/applywright.db`.
   To relocate the data, move the whole checkout or use a bind mount at `data/`.
-- **Some plan features are declared, not enforced.** `apiAccess`, `priorityRefresh` and
-  `bulkExport` are returned by the plans API with nothing gating them: "API access" has no
-  key authentication and priority refresh has no queue. `GET /api/export` is open to every
-  plan on purpose — data portability is not a paid feature. `fullAtsReport`, `coverLetter`
-  and `packHistory` are gated in the handlers, and `dailyDigest` is no longer sold.
+- **Plan tiers differ in quota, not in features.** `fullAtsReport`, `coverLetter` and
+  `packHistory` are the only capability flags, and each is gated in the handlers. Scale is a
+  quota tier — it adds unlimited CVs and packs and 50 saved alerts, not features.
+  `GET /api/export` is open to every plan on purpose — data portability is not a paid feature.
 - **PDF upload needs `pdftotext`.** Without Poppler on `PATH`, a PDF is refused with a
   warning rather than parsed.
 - **Rate limits apply to mutations.** Every API response carries the limit headers, but

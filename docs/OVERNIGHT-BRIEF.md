@@ -74,9 +74,9 @@ and kill **that** PID — never by command-line guess, that mistake cost two sta
    `tests/editor.test.js`; verify the path against a running server rather than build it.
 2. **Done** — the hero is the advert→CV proof sheet (`342d621`) and its CSS is complete;
    `check.js` is back to 0 warnings.
-3. **Done** — the plan flags landed in `7b88acc`: `fullAtsReport` and `packHistory` are
-   enforced, `dailyDigest` is removed, and `apiAccess` / `priorityRefresh` / `bulkExport`
-   are named as declared-only.
+3. **Done** — the plan flags landed in `7b88acc` and `64edb96`: `fullAtsReport`,
+   `coverLetter` and `packHistory` are the enforced set, `FLAG_FEATURES` equals it, and
+   Scale is a quota tier; it adds unlimited CVs and packs and 50 saved alerts, not features.
 4. **Done** — Stripe webhook idempotency landed in the same commit: `stripe_events` records
    each event id before applying it (schema v3), so a replay changes nothing.
 5. Accessibility: audit `/app` and `/editor` (the marketing pages are done: the axe matrix

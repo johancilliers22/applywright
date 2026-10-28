@@ -171,9 +171,10 @@ The short form:
   operator CLI (`scripts/reset-password.mjs`).
 - The **public demo stays open** (`REGISTRATION_OPEN=1`) unless the log says otherwise.
 - **Billing integrity is no longer an open item.** `7b88acc` enforced `fullAtsReport`,
-  `coverLetter` and `packHistory`, removed `dailyDigest`, and made the webhook idempotent
-  via `stripe_events` (schema v3). `apiAccess`, `priorityRefresh` and `bulkExport` remain
-  declared and returned, not gated — that is deliberate, not drift.
+  `coverLetter` and `packHistory`, and made the webhook idempotent via `stripe_events`
+  (schema v3). `64edb96` cut the declared flag list to that enforced set, so `FLAG_FEATURES`
+  equals `ENFORCED_FLAGS`: Scale is a quota tier — it adds unlimited CVs and packs and 50
+  saved alerts, not features. That is deliberate, not drift.
 - Structural: **one process per database** (in-process rate limits, feed cache, alert
   scanner; SQLite has one writer) and **no build step** (what is in `public/` is what the
   browser gets).

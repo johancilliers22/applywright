@@ -12,7 +12,7 @@ in parallel, so re-run those commands before trusting a number.
 - **Path:** `C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright`
 - **It is its own git repository** — branch `main`, HEAD
   `7b88accb27afa4b0c6e7f2fe5123988371035492` ("Enforce what the plans sell; make the
-  Stripe webhook idempotent"), 12 commits, 148 tracked files.
+  Stripe webhook idempotent"), 12 commits, 332 tracked files.
   `origin` is the **public** repository
   (<https://github.com/johancilliers22/applywright.git>) and `main` is pushed and in sync
   with it; a local bare `backup` remote (`../applywright-remote.git`) is behind. Git and
@@ -79,7 +79,7 @@ uploaded binary; `GET /api/export` returns everything the account owns; `DELETE
   30 days; scrypt password hashing (N=16384), minimum 10 characters.
 - **One process.** Rate-limit buckets, the job-feed cache and the alert scanner all
   live in process; SQLite has one writer. Run exactly one instance.
-- **148 tracked files**, no `devDependencies` (no axe-core, no Playwright in
+- **332 tracked files**, no `devDependencies` (no axe-core, no Playwright in
   `package.json`; `browser-preview.mjs` drives Chrome over the DevTools protocol with no
   npm package).
 
@@ -329,8 +329,8 @@ Three commands are the gate. Run all three from the project root.
 | Command | What it covers | Measured 2026-10-28 |
 |---|---|---|
 | `node --test tests/` | The HTTP and storage suites: `spine.test.js` (schema, store, passwords) plus one file per API area; ephemeral port, temporary SQLite file, blank model key, no network, never touches `data/` | **113 tests, 113 pass, 0 fail** |
-| `node --test server/lib server/provider` | Module unit suites beside the code, including provider routing | **309 tests, 309 pass, 0 fail** (12 suites) |
-| `node scripts/check.js` | What the tests cannot see: one `<h1>` per page, `lang` + viewport, includes and asset references resolve, no inline script or handler (CSP), no remote resources, no placeholder link or TODO, no hype vocabulary, no literal credential, no `eval` | **`applywright check — 10 pages, 24 server modules, 253 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0** |
+| `node --test server/lib server/provider` | Module unit suites beside the code, including provider routing | **309 tests, 337 pass, 0 fail** (12 suites) |
+| `node scripts/check.js` | What the tests cannot see: one `<h1>` per page, `lang` + viewport, includes and asset references resolve, no inline script or handler (CSP), no remote resources, no placeholder link or TODO, no hype vocabulary, no literal credential, no `eval` | **`applywright check — 10 pages, 24 server modules, 263 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0** |
 
 Counts move whenever an agent lands a test or a page: treat any number here as
 measured-on-a-date, not as a promise — re-run the command before quoting it.

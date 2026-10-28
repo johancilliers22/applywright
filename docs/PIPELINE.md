@@ -14,7 +14,7 @@ not as it might be. Read after [`PROJECT-STATUS.md`](PROJECT-STATUS.md) and
 | Own git repository | **yes** — `.git` lives here; `git rev-parse --is-inside-work-tree` → `true` |
 | Branch | `main` — the trunk; it tracks `origin/main` |
 | First commit | `bc6731dfe734a5167a9579b8e4de98e5ef830629` — *"Applywright: CV scoring, grounded tailoring, job tracking and alerts"*; 12 commits at measurement |
-| Current HEAD | `24eb0e7` (see `git log --oneline -1`; docs lag commits, the repo is authoritative) — previously `7b88accb27afa4b0c6e7f2fe5123988371035492` — *"Enforce what the plans sell; make the Stripe webhook idempotent"* |
+| Current HEAD | `e5b04f0` (see `git log --oneline -1`; docs lag commits, the repo is authoritative) — previously `7b88accb27afa4b0c6e7f2fe5123988371035492` — *"Enforce what the plans sell; make the Stripe webhook idempotent"* |
 | Commit author | Johan Cilliers `<johannes.cilliers1@gmail.com>`, Wed 28 Oct 2026 05:52:21 +0000 |
 | Tracked files | **148** (`node_modules/` is ignored, not tracked) |
 | Remotes | `origin` → <https://github.com/johancilliers22/applywright.git> (**public**); `backup` → `../applywright-remote.git`, a local bare copy last pushed at `eb6dd75` |
@@ -111,9 +111,9 @@ node scripts/check.js
 
 | Command | Proves | Expected (measured 2026-10-28) |
 |---|---|---|
-| `node --test tests/` | HTTP, storage, auth, isolation, billing, errors | **113 pass, 0 fail** |
-| `node --test server/lib server/provider` | Pure-module behaviour, provider routing, fixtures instead of network | **309 pass, 0 fail**, 12 suites |
-| `node scripts/check.js` | Page structure, includes/assets resolve, CSP compliance, no remote resources, no placeholder/TODO, no hype vocabulary, no literal credential, no `eval` | `10 pages, 24 server modules, 253 css classes` then `ok — 0 errors, 0 warning(s)`, exit 0 |
+| `node --test tests/` | HTTP, storage, auth, isolation, billing, errors | **150 pass, 0 fail** |
+| `node --test server/lib server/provider` | Pure-module behaviour, provider routing, fixtures instead of network | **337 pass, 0 fail**, 12 suites |
+| `node scripts/check.js` | Page structure, includes/assets resolve, CSP compliance, no remote resources, no placeholder/TODO, no hype vocabulary, no literal credential, no `eval` | `10 pages, 24 server modules, 263 css classes` then `ok — 0 errors, 0 warning(s)`, exit 0 |
 
 Notes:
 

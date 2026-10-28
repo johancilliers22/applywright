@@ -247,3 +247,16 @@ Each cost time and is cheap to avoid. They are recorded because the same shapes 
    (§P7), and the same drift runs the other way now, with shipped code that the plan still
    calls QUEUED. Rule: a doc sentence needs a command, a route or a file read behind it on the
    day it is written; "DONE" means the check passes, not that the code looks finished.
+
+## Postscript (28 Oct, after this was written)
+
+Two things above are historical rather than current, kept so you can see what changed:
+
+- The drift list (branch/remote, licence, Tesseract, README tagline, gate counts, plan-vs-tree) was
+  reconciled at its source in **`01c4c23`** — the docs now match the code. If a line above still says
+  "QUEUED" or "no remote", treat the repo as authoritative and trust `git log`.
+- The hero (P3.6), motion (P3.7) and the CV editor are shipped (`342d621`, `4c5ace8`), and the plan
+  marks them done.
+
+Everything else — the settled decisions, the ownership map, the delegation advice and the five
+mistakes — stands as written.

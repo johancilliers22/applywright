@@ -182,7 +182,6 @@ const FLAG_LABELS = {
   fullAtsReport: "Full ATS report",
   coverLetter: "Covering letters",
   packHistory: "Pack history",
-  dailyDigest: "Daily digest",
   apiAccess: "API access",
   priorityRefresh: "Priority refresh",
   bulkExport: "Export everything",

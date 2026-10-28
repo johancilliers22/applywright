@@ -1147,7 +1147,7 @@ function describeKey(key) {
 const MODEL_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["summary", "bullets", "coverLetter"],
+  required: ["summary", "bullets"],
   properties: {
     summary: { type: "string" },
     bullets: {

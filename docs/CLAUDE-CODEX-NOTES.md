@@ -5,9 +5,12 @@ that delegates. Companion to [`ORCHESTRATOR-HANDOFF.md`](ORCHESTRATOR-HANDOFF.md
 for settled decisions, ownership detail and the long form of the five mistakes) and
 [`ESTATE-RELAY.md`](ESTATE-RELAY.md) (current state).*
 
-Claude and Codex harnesses are **not currently used for delegation** here (Johan's 28 Oct
-decision); this file exists for when that changes. Until then the work is done by DSH
-agents, Gemini and Grok. The estate rules in the hub `AGENTS.md` bind regardless: named-path
+Delegation changed on 28 Oct evening: **Codex is now the main orchestrator and validator**
+(see `CODEX-ORCHESTRATOR-HANDOFF.md`), **DSH/DeepSeek does the bulk of implementation**, and
+**T3 Mission Control** tracks missions and supplies independent review/test children
+(`T3-MISSIONS.md`). The T3 Claude-agent route is disabled in `ROLES.json` until Johan enables it
+and records why. The product's own AI editing is a separate thing entirely — it calls the Claude
+org key directly (`MODEL-CONFIG.md`). The estate rules in the hub `AGENTS.md` bind regardless: named-path
 commits, no secret reads, PID-scoped process kills, no computer use in unattended runs.
 
 Measured 2026-10-28. Re-run the gate before trusting any number below.

@@ -126,20 +126,20 @@ follow the other file.
 
 **Two files are still contested. Finish the cleanup deliberately; do not inherit it as drift.**
 
-1. **`public/assets/tokens.css` — a dead `.reveal` block** (lines 534–550, five rules,
-   `reveal-on` / `is-visible`). `public/assets/site.js` records at line 54 that the scroll
-   reveal, its observer and those classes were retired with the rest of the old motion; no
-   HTML in `public/` carries `class="reveal"` any more; `motion.css` mentions it only in a
-   prose comment. Delete the block, then re-run `check.js` (its class census will move) and
-   the two `node --test` runs.
-2. **`public/assets/theme.css` — the `--mark` overrides at lines 73–114.** Their own comment
-   says they exist so `site.css` can migrate the ink-on-paper components to `var(--mark)` and
-   then be "deleted without changing a pixel". `site.css` has since migrated
-   (eight `var(--mark)` uses: brand mark, nav current-page rule, nav toggle bars, card icon,
-   featured plan border, `.btn--light`, the pill, `.btn--primary`). Verify pixels in both
-   schemes, delete what is now redundant, and leave the `.mock__who`, `.nav` fallback,
-   `.section--dark`, `.bento` and `.hero__grad` rules that are still doing work. Deleting
-   without the pixel check is the failure mode; leaving them is the other.
+1. **`public/assets/tokens.css` — the dead `.reveal` block: DONE, deleted.** It was provably
+   dead (0 HTML matches across ten pages, no selector outside the block itself) and went with
+   `--r-xl`. The class census moved from 253 to 263 over the following passes, so re-run
+   `check.js` rather than quoting a figure from this file.
+2. **`public/assets/theme.css` — "redundant" overrides: DO NOT DELETE WITHOUT A PIXEL DIFF.**
+   The earlier assumption that the `--mark` overrides could be removed once `site.css` migrated
+   was wrong twice over, and the tree proves it: a pixel diff showed
+   `html[data-theme="dark"] .brand__mark .m-ring` is what wins over the footer/aside restatement
+   at (0,3,0), and the `.btn--primary` half of the `--btn-fg` override is load-bearing because
+   `a.section--dark` (0,1,1) outranks `.btn` (0,1,0) — removing it repainted the dark CTA label
+   from **9.12:1 to 1.86:1** on the accent. Both rules were restored and the final captures are
+   byte-identical on six page/theme combinations. The lesson is the method, not the file: a rule
+   that only looks redundant is exactly what a contrast regression hides behind. Deleting
+   without the pixel diff is the failure mode; leaving genuinely dead rules is the other.
 
 ---
 

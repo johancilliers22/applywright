@@ -1,12 +1,14 @@
 # Applywright — Estate relay
 
-*For an Estate orchestrator taking this project over when Claude or Codex usage returns.
-This is a relay, not a second brief: it records what changed since
-[`ORCHESTRATOR-HANDOFF.md`](ORCHESTRATOR-HANDOFF.md) was written, what is in flight right
-now, and the first four actions to take. It assumes you will delegate rather than write.*
+*For an Estate orchestrator taking this project over. Codex usage has returned and the Codex
+desktop chat is now the main orchestrator and validator — see
+[`CLAUDE-ESTATE-RELAY.md`](CLAUDE-ESTATE-RELAY.md) for the handover, the validation checklist
+and how to create that chat. This file remains the project-state relay: what changed since
+[`ORCHESTRATOR-HANDOFF.md`](ORCHESTRATOR-HANDOFF.md) was written, what is in flight, and the
+first four actions. It assumes you will delegate rather than write.*
 
-Measured 2026-10-28 (late morning, Europe/London) against the tree itself. Re-measure
-before quoting anything — several agents are still writing.
+Measured 2026-10-28 (evening, Europe/London) against the tree itself. Re-measure before
+quoting anything — the tree moves under several writers.
 
 ---
 
@@ -69,27 +71,32 @@ git status -sb
 
 | Fact | Measured 2026-10-28 |
 |---|---|
-| HEAD | `24eb0e7` *"Remove the dead dailyDigest label from the SPA; mark the handoff's historical lines"* |
+| HEAD | `eb83c41` *"T3 mission setup: who does what, and three ready missions"* (committed 2026-10-28 16:52Z) |
 | Sync | `## main...origin/main` — no ahead/behind, so `origin` matches local |
-| Tree | **clean when measured**; within minutes the in-flight agents began writing (`docs/OVERNIGHT-LOG.md`, `docs/SHARE.md`, new `screenshots/`). Re-check `git status --short` before staging |
-| Tracked files | **148** |
+| Tree | **clean when measured**; several writers are still active, so re-check `git status --short` before staging |
+| Tracked files | **330** |
 | Node / npm | `v26.12.1` / `12.2.1` (floor is 22.5, for `node:sqlite`) |
-| Gate: `node --test tests/` | **113 pass, 0 fail, 0 skipped** |
-| Gate: `node --test server/lib server/provider` | **309 pass, 0 fail**, 12 suites |
-| Gate: `node scripts/check.js` | `applywright check — 10 pages, 24 server modules, 253 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0 |
-| Running server | listener `127.0.0.1:3160`, PID `13520`; `/api/health` → `status ok`, `provider "rules"`, `stripe false`, 44 cached jobs |
-| Tunnel | one `cloudflared` process (PID `38788`); **confirm its target before telling anyone the demo is reachable** |
-| Vault | `brain/applywright-platform.md` exists |
-| Keys | no `.env`, no `.env.local`; `MODEL_API_KEY`, `ANTHROPIC_ORG_API_KEY` and `STRIPE_SECRET_KEY` all unset in the environment |
+| Gate: `node --test tests/` | **150 pass, 0 fail, 0 skipped** |
+| Gate: `node --test server/lib server/provider` | **338 tests: 337 pass, 0 fail, 1 skipped**, 12 suites. The skip is the WSL-`pdftotext` fallback case, skipped because native Poppler is now on `PATH` |
+| Gate: `node scripts/check.js` | `applywright check — 10 pages, 24 server modules, 263 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0 |
+| E2E | `node scripts/e2e-flow.mjs` → **10/10 steps, 235/235 assertions, exit 0** (about 48 s, its own `PORT 0` instance and temp database) |
+| Running server | listener `127.0.0.1:3160`, PID `64064`; `/api/health` → `status ok`, `provider "live"`, `stripe false`, 84 cached jobs |
+| Tunnel | **two** `cloudflared` processes: one quick tunnel serving `http://127.0.0.1:3160`, one named tunnel with no `--url`. The current public URL is `docs/SHARE.md` § "Current live URL" (`https://bumper-naturals-raises-thickness.trycloudflare.com` when measured, `/api/health` 200) |
+| Vault | `brain/applywright-platform.md` exists and was refreshed 16:52Z with the orchestration handover |
+| Keys | no `.env`, no `.env.local` and no key in this shell; the **running** server holds a model key injected on stdin by `scripts/model-boot.mjs`, which is why health says `live` and an assist call returns `mode: model` |
 
-Two documents are stale on this point, so trust the run rather than the prose:
+Docs lag this tree, so trust the run rather than the prose:
 
-- `PIPELINE.md` §1 records HEAD `7b88acc`; two commits landed after it (`01c4c23`,
-  `24eb0e7`). Its repo/remote/gate sections are otherwise right.
-- The sibling hub stub `agent-system/docs/diagnostics/APPLYWRIGHT-PROJECT-STATUS-20261028.md`
-  still says branch `master`, 126 files, "no remote", and 80/303 gates. That was true when
-  it was written; the relay stub
-  `APPLYWRIGHT-RELAY-ESTATE-20261028.md` carries the current state.
+- `PIPELINE.md` §1 records HEAD `24eb0e7` and 148 tracked files; §4 records 113 / 309 / 253.
+  Today: `eb83c41`, 330 files, 150 / 337+1 skip / 263. Its repo and remote sections are right.
+- `PROJECT-STATUS.md` §7 still records 113 / 309 / 253 css classes. Its §9 does correctly say
+  the `apiAccess` / `priorityRefresh` / `bulkExport` flags were removed, not left unenforced.
+- The hub stubs in `agent-system/docs/diagnostics/` are older still (branch `master`, 126 files,
+  "no remote", 80/303 gates). `APPLYWRIGHT-RELAY-ESTATE-20261028.md` is the newer of the two;
+  neither is committed to the hub.
+- `E2E-VERIFICATION.md` records product commit `706b741`; HEAD is 7 commits past it. The harness
+  passes today (see the E2E row above), but the recorded commit needs re-recording — a docs edit,
+  not a behaviour change.
 
 ---
 
@@ -119,15 +126,19 @@ by commit author. Evidence commits are from `git log --oneline`.
 | `handoff-aw` | `PROJECT-STATUS.md`, `IMPLEMENTATION-PLAN.md`, `PIPELINE.md`, `VAULT-PATCH.md`, hub stub; now this relay | earlier handoff commits |
 | `polish-aw` | motion and marketing accessibility polish | folded into `0f19177`, `6cb8d47` |
 
-**In flight at relay time — three agents plus one research subagent.** Their ledgers did
-not exist yet when this file was written; check before citing them.
+**Delivered since this file was first written — all four ledgers now exist:**
 
-| Owner | Task | Expected file (not present yet) |
+| Owner | Result | File |
 |---|---|---|
-| `flow-aw` | End-to-end browser verification: sign-up → upload PDF/DOCX/OCR → score → tailor → editor proposals → exports → tracking → alerts → recovery | `docs/E2E-VERIFICATION.md` |
-| `motion-aw` | Motion inventory, interaction feedback, reduced-motion, CPU-throttled jank numbers | `docs/MOTION.md` |
+| `flow-aw` | End-to-end browser journey: 10 steps, 235 assertions, exit 0; recorded at product commit `706b741` | `docs/E2E-VERIFICATION.md` |
+| `motion-aw` | Motion inventory and measurements: 0 frames over 32 ms at 6× CPU, 0 long tasks | `docs/MOTION.md` |
 | `design-lead` | UX review of `/editor`, `/app`, `/sign-in`, `/sign-up`, `/reset`, with screenshots and fixes | `docs/design/UX-REVIEW-20261028.md` |
-| Gemini 4 Argon subagent | SOTA research: ATS reality, competitor teardown, grounded-rewrite gap, pricing, distribution | `docs/research/SOTA-20261028.md` |
+| Gemini 4 Argon subagent | SOTA research; 13 marketing copy claims corrected against the code | `docs/research/SOTA-20261028.md` |
+
+**Landed after that:** the visual release (`bc9eba9`..`706b741`), grounding fixes (`bdbc927`),
+the T3 mission setup (`eb83c41`), and new docs `T3-MISSIONS.md`, `MODEL-CONFIG.md`,
+`ARTWORK.md`, `PAGE-COMPOSITION.md`, `CLAUDE-ESTATE-RELAY.md`. Codex is now the main
+orchestrator; DSH implements; T3 tracks. See `CLAUDE-ESTATE-RELAY.md`.
 
 ---
 
@@ -140,14 +151,16 @@ Measured state for each, so you can tell "blocked" from "nobody got to it".
 | **Stripe keys** | `/api/health` reports `"stripe": false`; `STRIPE_SECRET_KEY` unset; no `.env.local`. Checkout, portal and webhook answer 501. Idempotency shipped in `7b88acc` but has never seen a real event | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, and the four `STRIPE_PRICE_*` IDs; a test-mode account is enough to verify 5.4/5.5 |
 | **DNS at GoDaddy + Cloudflare tunnel** | `DOMAIN.md` §0 states nothing has been executed: no record, tunnel, host or certificate; the zone is delegated to GoDaddy nameservers | Registrar access to switch/confirm nameservers, the Cloudflare account, tunnel creation, and the TLS-mode decision. Do not plan work that assumes a hostname exists |
 | **VAT** | `plans.js` states prices are exclusive of VAT and computes no VAT (`VAT` appears twice, both in comments) | The rate, and whether displayed prices are inclusive. A legal decision, not an engineering one |
-| **Model key** | `MODEL_API_KEY` and `ANTHROPIC_ORG_API_KEY` unset; no `.env`/`.env.local`; health says `provider "rules"`; seed packs report `mode: rules` | One key and the provider choice (DeepSeek/OpenAI-compatible, or `ANTHROPIC_ORG_API_KEY`). The product works without it; `mode` is honest |
+| **Model key** | **No longer blocked.** The running server was booted with a key through the estate loader (`scripts/model-boot.mjs`, key on stdin, never on a command line); `/api/health` says `provider "live"` and an assist call returns `mode: model`. No key sits in this shell, `.env` or any file | Nothing, unless the process is restarted with a plain `node server/index.js` — that reverts to `rules` mode by design, and the UI says so |
 
 Never put a key on a command line, in a remote URL, or in a document; it lands in shell
 history and process listings. Keys go in `.env.local` (gitignored) or the service
 manager's env file and need a restart because config is read once at boot.
 
-Also not planned work: the **tunnel state**. One `cloudflared` is alive; find out what it
-serves before describing the demo as public.
+Also not planned work: the **tunnel state**. Two `cloudflared` processes are alive — a quick
+tunnel serving `127.0.0.1:3160` and a named tunnel that is not this project's. `SHARE.md`
+§ "Current live URL" is the one to trust, and it must be replaced whenever the quick tunnel
+restarts, because quick-tunnel hostnames do not survive a restart.
 
 ---
 
@@ -224,7 +237,7 @@ git fetch origin
 git status -sb
 ```
 
-Expect `24eb0e7`, a clean tree, and `## main...origin/main` with no ahead/behind. If the
+Expect `eb83c41`, a clean tree, and `## main...origin/main` with no ahead/behind. If the
 tree is dirty, that is another agent's work in progress — do not stage it; read it and
 work around it (`PIPELINE.md` §2).
 
@@ -236,8 +249,8 @@ node --test server/lib server/provider
 node scripts/check.js
 ```
 
-Expect **113 pass**, **309 pass** (12 suites), and
-`10 pages, 24 server modules, 253 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0.
+Expect **150 pass**, **337 pass with the one documented skip** (338 tests, 12 suites), and
+`10 pages, 24 server modules, 263 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0.
 If a number differs, the tree moved — trust the run, and update
 `PROJECT-STATUS.md` §7 if it is a lasting change. A non-zero exit is a failure; a summary
 without the output is not a result.
@@ -250,10 +263,12 @@ Get-Content docs\ORCHESTRATOR-HANDOFF.md
 Get-ChildItem docs -Filter *.md | Select-Object Name
 ```
 
-Read `IMPLEMENTATION-PLAN.md` next for the queue. Then check whether
-`docs/E2E-VERIFICATION.md`, `docs/MOTION.md` and `docs/design/UX-REVIEW-20261028.md`
-exist yet; if they do, read them before choosing work, because each may have found a
-defect that outranks the queue.
+Read `IMPLEMENTATION-PLAN.md` next for the queue. The four ledgers this file once listed as
+pending now exist — read `docs/E2E-VERIFICATION.md`, `docs/MOTION.md` and
+`docs/design/UX-REVIEW-20261028.md` before choosing work. Then read
+`docs/CLAUDE-ESTATE-RELAY.md`: Codex now orchestrates and validates, DSH implements, and T3
+tracks, so the queue is executed through that handover rather than started here.
+`node scripts/e2e-flow.mjs` confirms the journey still passes (about 48 s).
 
 ### 4. Take exactly one queue item
 
@@ -288,6 +303,7 @@ OVERNIGHT-BRIEF        operating contract for an unattended session
 IMPLEMENTATION-PLAN    the queue with owners and acceptance checks
 PIPELINE               git, gates, push
 ESTATE-RELAY           this file: current state, in flight, first four actions
+CLAUDE-ESTATE-RELAY    Codex handover: validation checklist, create the Codex chat, T3 boundary
 CLAUDE-CODEX-NOTES     harness-specific orientation and a paste-ready prompt
 FRIEND-COPY            how a friend copies the repo (fork, zip, bundle)
 ```

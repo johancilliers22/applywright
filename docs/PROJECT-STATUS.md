@@ -424,9 +424,8 @@ Current, verified against the code. Each is a real limitation, not a typo.
   tier: its flag array is identical to Pro's. The in-app billing screen still carries
   three dead labels in `FLAG_LABELS` (`public/app/app.js:185-187`: `apiAccess`,
   `priorityRefresh`, `bulkExport`); the API no longer returns those flags, so the labels
-  are unreachable rather than misleading. `docs/SPEC.md` §2 no longer lists these capabilities, so the page and the
-  API access and priority refresh in its plan table; that is a SPEC contract change, not
-  a copy fix. `tests/flags-webhook.test.js` holds the line: the page must sell the
+  are unreachable rather than misleading. `docs/SPEC.md` §2 no longer lists these capabilities, so the
+  page, SPEC and `plans.js` now agree; that was a SPEC contract change, not a copy fix. `tests/flags-webhook.test.js` holds the line: the page must sell the
   enforced flags, and a page that sells a withheld flag fails the suite.
 - **VAT is not modelled.** Prices are quoted and charged in GBP including any applicable
   tax — the shipped copy, SPEC §2 and the footer say so — but there is no VAT line, rate

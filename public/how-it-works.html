@@ -72,18 +72,24 @@
     }
 
     /* Steps: a fixed number-chip column, a heading column, and the body at the
-       reading measure, so every step aligns on one grid. Below 900px the block
+       reading measure, so every step aligns on one grid. The measure is applied
+       to the paragraph, not to the grid track: ch resolves against the grid
+       container's font size (17px) while the paragraph is 15px, and a track in
+       the wrong font's ch units comes out ~15% too wide. Below 900px the block
        keeps its chip indent and reads as one column. */
     @media (min-width: 900px) {
       .step {
         display: grid;
-        grid-template-columns: 3.25rem minmax(14rem, 18rem) minmax(0, var(--measure-reading));
+        grid-template-columns: 3.25rem minmax(14rem, 18rem) minmax(0, 1fr);
         column-gap: var(--sp-4);
         align-items: start;
         padding-inline-start: 0;
       }
       .step > .h3 { grid-column: 2; }
-      .step > p { grid-column: 3; }
+      .step > p {
+        grid-column: 3;
+        max-width: var(--measure-reading);
+      }
       /* The second paragraph is a genuine sub-note: one size down, set off by a
          rule, instead of a footnote that happened to be smaller. */
       .step > p.small.muted {

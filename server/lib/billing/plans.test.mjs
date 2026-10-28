@@ -12,6 +12,7 @@ import {
   PLAN_IDS,
   QUOTA_FEATURES,
   FLAG_FEATURES,
+  ENFORCED_FLAGS,
   UNLIMITED,
   CURRENCY,
   isUnlimited,
@@ -417,26 +418,39 @@ describe("can(): unknown plans and features", () => {
 });
 
 describe("can(): flags and usage input", () => {
-  it("recognises capability flags from the SPEC table", () => {
-    // dailyDigest was removed from the inventory in schema 3: nothing delivered a
-    // digest, so the flag was a promise no route could keep.
+  it("recognises the capability flags that are left", () => {
+    // dailyDigest was removed in schema 3: nothing delivered a digest, so the flag
+    // was a promise no route could keep.
     for (const feature of ["fullAtsReport", "coverLetter", "packHistory"]) {
       assert.equal(can("pro", feature).allowed, true, `pro ${feature}`);
       assert.equal(can("scale", feature).allowed, true, `scale ${feature}`);
       assert.equal(can("free", feature).allowed, false, `free ${feature}`);
     }
-    assert.equal(can("pro", "dailyDigest").kind, "unknown");
-    assert.equal(can("pro", "apiAccess").allowed, false);
-    assert.equal(can("scale", "apiAccess").allowed, true);
-    assert.equal(can("scale", "priorityRefresh").allowed, true);
-    assert.equal(can("scale", "bulkExport").allowed, true);
-    assert.equal(can("pro", "bulkExport").allowed, false);
+
+    // apiAccess, priorityRefresh and bulkExport were withdrawn for the same reason
+    // in the other direction: the page no longer sells them, so the plans API must
+    // not grant them either. "Unknown feature" is the shape that proves the
+    // withdrawal — the assertions that used to sit here pinned them as
+    // declared-but-unenforced on purpose, and were deleted with the flags.
+    for (const withdrawn of ["dailyDigest", "apiAccess", "priorityRefresh", "bulkExport"]) {
+      const result = can("scale", withdrawn);
+      assert.equal(result.kind, "unknown", `${withdrawn} must no longer be a declared flag`);
+      assert.equal(result.allowed, false);
+      assert.equal(result.error.code, "unknown_feature");
+    }
+  });
+
+  it("declares nothing that is not enforced", () => {
+    // The invariant that keeps the plans API and the pricing page honest: a flag in
+    // FLAG_FEATURES is a capability a handler actually gates on. Nothing is declared
+    // "for later".
+    assert.deepEqual([...ENFORCED_FLAGS].sort(), [...FLAG_FEATURES].sort());
   });
 
   it("gives flags a limit of 1 or 0 and spends nothing", () => {
-    const included = can("scale", "apiAccess");
+    const included = can("scale", "packHistory");
     assert.deepEqual(included, {
-      feature: "apiAccess",
+      feature: "packHistory",
       plan: "scale",
       requestedPlan: "scale",
       fallback: false,
@@ -447,15 +461,15 @@ describe("can(): flags and usage input", () => {
       remaining: 1,
       unlimited: false,
     });
-    const excluded = can("free", "apiAccess");
+    const excluded = can("free", "packHistory");
     assert.equal(excluded.allowed, false);
     assert.equal(excluded.limit, 0);
     assert.equal(excluded.remaining, 0);
   });
 
   it("never counts a flag down", () => {
-    assert.equal(can("scale", "apiAccess", 99).used, 0);
-    assert.equal(can("scale", "apiAccess", 99).allowed, true);
+    assert.equal(can("scale", "packHistory", 99).used, 0);
+    assert.equal(can("scale", "packHistory", 99).allowed, true);
   });
 
   it("includes every Pro flag on Scale", () => {
@@ -467,8 +481,9 @@ describe("can(): flags and usage input", () => {
 
   it("keeps flags and quota names disjoint", () => {
     for (const feature of FLAG_FEATURES) assert.equal(QUOTA_FEATURES.includes(feature), false);
-    // Six after dailyDigest was removed with the digest that never existed.
-    assert.deepEqual([...FLAG_FEATURES].length, 6);
+    // Three: every declared flag is enforced. dailyDigest, apiAccess,
+    // priorityRefresh and bulkExport were withdrawn rather than declared.
+    assert.deepEqual([...FLAG_FEATURES].length, 3);
   });
 
   it("accepts a per-feature usage map", () => {
@@ -573,7 +588,7 @@ describe("listPlans() for GET /api/billing/plans", () => {
   it("hands back a fresh array each call, so a caller cannot poison the next", () => {
     const first = listPlans();
     first[0].quotas.cvs = 999;
-    first[0].flags.push("apiAccess");
+    first[0].flags.push("packHistory");
     assert.equal(listPlans()[0].quotas.cvs, 1);
     assert.deepEqual(listPlans()[0].flags, []);
   });

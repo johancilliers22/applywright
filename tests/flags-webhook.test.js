@@ -1,13 +1,16 @@
 /**
  * Two integrity gaps, held shut by tests.
  *
- * 1. Plan flags the pricing page sells. `fullAtsReport` and `packHistory` are
- *    enforced (Free sees less of the report, and less of its pack history);
- *    `dailyDigest` is removed from the product because no route could deliver a
- *    digest; `apiAccess`, `priorityRefresh` and `bulkExport` stay declared but
- *    unenforced, recorded as debt in `docs/PROJECT-STATUS.md` §9. The copy test
- *    below fails if the page and `plans.js` stop agreeing, and the behaviour
- *    tests prove the enforced flags are real gates rather than declarations.
+ * 1. Plan flags the pricing page sells. Three capability flags are left, and all
+ *    three are enforced: `fullAtsReport` and `packHistory` gate real behaviour
+ *    (Free sees less of the report, and less of its pack history) and
+ *    `coverLetter` was already gated. Four were withdrawn rather than sold —
+ *    `dailyDigest` (nothing delivered a digest), `apiAccess` (no key
+ *    authentication exists), `priorityRefresh` (no refresh queue) and
+ *    `bulkExport` (`GET /api/export` is open to every plan as data portability).
+ *    The copy test below fails if the page and `plans.js` stop agreeing, and the
+ *    behaviour tests prove the enforced flags are real gates rather than
+ *    declarations.
  *
  * 2. Stripe webhook deliveries. The signature is checked against the raw bytes,
  *    the event id is recorded before anything is applied, and an event for a
@@ -325,24 +328,22 @@ test("the pricing page sells exactly the flags the server enforces", async () =>
     assert.equal(PLANS.free.flags.includes(flag), false, `Free must not carry ${flag}`);
   }
 
-  // dailyDigest is gone from the product, not just from the page: no route
-  // delivered a digest, so nothing may still grant or advertise it. The assertion
-  // is on the inventory the API publishes, not on the source text — plans.js
-  // mentions the name once, to record why it was removed.
-  assert.equal(FLAG_FEATURES.includes("dailyDigest"), false, "dailyDigest must not be a declared flag");
-  for (const id of ["free", "pro", "scale"]) {
-    assert.equal(PLANS[id].flags.includes("dailyDigest"), false, `${id} must not carry dailyDigest`);
-    assert.equal(PLANS[id].features.includes("dailyDigest"), false, `${id} must not list dailyDigest`);
+  // Nothing declared may be unenforced, and nothing withdrawn may be granted.
+  // Four flags were removed from the product rather than sold; the assertion is on
+  // the inventory the API publishes, not on the source text — plans.js names them
+  // once, to record why they were withdrawn.
+  assert.deepEqual([...FLAG_FEATURES].sort(), [...ENFORCED_FLAGS].sort(), "every declared flag must be enforced");
+  for (const withdrawn of ["dailyDigest", "apiAccess", "priorityRefresh", "bulkExport"]) {
+    assert.equal(FLAG_FEATURES.includes(withdrawn), false, `${withdrawn} must not be a declared flag`);
+    for (const id of ["free", "pro", "scale"]) {
+      assert.equal(PLANS[id].flags.includes(withdrawn), false, `${id} must not carry ${withdrawn}`);
+      assert.equal(PLANS[id].features.includes(withdrawn), false, `${id} must not list ${withdrawn}`);
+    }
   }
 
-  // Every declared flag is on one side of the line or the other — enforced, or
-  // one of the three declared-but-unenforced flags recorded as debt in
-  // docs/PROJECT-STATUS.md §9. A new flag cannot be added without deciding.
-  const DECLARED_ONLY = ["apiAccess", "priorityRefresh", "bulkExport"];
-  assert.deepEqual([...FLAG_FEATURES].sort(), [...ENFORCED_FLAGS, ...DECLARED_ONLY].sort());
-
-  // What the page says for each flag, so copy drift is a failing assertion
-  // rather than something a reviewer has to notice.
+  // What the page says for each flag, so copy drift is a failing assertion rather
+  // than something a reviewer has to notice. The withdrawn entries are kept on
+  // purpose: each one asserts the page has stopped selling it.
   const SOLD_AS = {
     fullAtsReport: /Full ATS report/i,
     coverLetter: /Covering letter/i,
@@ -357,7 +358,10 @@ test("the pricing page sells exactly the flags the server enforces", async () =>
   for (const flag of ENFORCED_FLAGS) {
     assert.match(page, SOLD_AS[flag], `pricing.html must sell ${flag}, which the server enforces`);
   }
-  // ...and it must not sell a flag that is not a declared plan flag at all.
+  // ...and it must not sell a flag the server does not declare. This is the
+  // other direction of the same integrity check: apiAccess and priorityRefresh
+  // were withdrawn from the page, and bulkExport went with them because
+  // /api/export is data portability, open to every plan.
   for (const [flag, pattern] of Object.entries(SOLD_AS)) {
     if (FLAG_FEATURES.includes(flag)) continue;
     assert.doesNotMatch(page, pattern, `${flag} is not a declared plan flag, so pricing.html must not sell it`);

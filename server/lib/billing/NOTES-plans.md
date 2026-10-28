@@ -14,8 +14,8 @@ Contract: SPEC section 5, `server/lib/billing/plans.js`.
 | `PLANS` | `{ free, pro, scale }`, frozen, prices in pence, quotas as numbers |
 | `PLAN_IDS` | `["free", "pro", "scale"]` in display order |
 | `QUOTA_FEATURES` | `["cvs", "packs", "alerts", "jobResultsPerDay"]` |
-| `FLAG_FEATURES` | the six capability flags |
-| `ENFORCED_FLAGS` | `["fullAtsReport", "coverLetter", "packHistory"]` — the flags a handler actually gates; the rest are declared only |
+| `FLAG_FEATURES` | the three capability flags: `fullAtsReport`, `coverLetter`, `packHistory` |
+| `ENFORCED_FLAGS` | `["fullAtsReport", "coverLetter", "packHistory"]` — the flags a handler actually gates; it equals `FLAG_FEATURES`, and a test asserts that |
 | `UNLIMITED` | `Infinity`; use it instead of writing `Infinity` at call sites |
 | `CURRENCY` | `"GBP"` |
 | `isUnlimited(limit)` | `true` for `Infinity` or `null` (the JSON form) |
@@ -32,7 +32,7 @@ Contract: SPEC section 5, `server/lib/billing/plans.js`.
 
 ## The numbers
 
-Pence, exclusive of VAT, as SPEC section 2 states them.
+Pence, in GBP and inclusive of any applicable tax, as SPEC section 2 states them.
 
 | Plan | Month | Year | CVs | Packs / month | Alerts | Job results / day |
 |---|---|---|---|---|---|---|
@@ -140,33 +140,34 @@ The Lead's handler owns the wiring; these are the intended call sites.
 
 ## Feature vocabulary
 
-The task fixed the four quota names. The capability flags come from the "Other"
-column of the SPEC table, because `can()` needs a vocabulary and inventing one that
-the table does not describe would be worse:
+The task fixed the four quota names. The capability flags are the ones a handler
+can actually gate on, because `can()` needs a vocabulary and a flag nothing reads
+is a promise nothing keeps:
 
-| Flag | From the table | Free | Pro | Scale |
+| Flag | Free | Pro | Scale | Where it is gated |
 |---|---|---|---|---|
-| `fullAtsReport` | Pro: full ATS reports | no | yes | yes |
-| `coverLetter` | Pro: covering letters | no | yes | yes |
-| `packHistory` | Pro: pack history | no | yes | yes |
-| `apiAccess` | Scale: API access | no | no | yes |
-| `priorityRefresh` | Scale: priority refresh | no | no | yes |
-| `bulkExport` | Scale: export everything | no | no | yes |
+| `fullAtsReport` | no | yes | yes | tail of `POST /api/analyse` |
+| `coverLetter` | no | yes | yes | `/api/tailor`, refine rebuild |
+| `packHistory` | no | yes | yes | `GET /api/applications/:id` |
 
 Scale includes every Pro flag; a test asserts that hierarchy so a future edit
-cannot quietly break it.
+cannot quietly break it. Scale is a quota tier, not a feature tier: its summary
+says so, and its flag array is identical to Pro's.
 
-`dailyDigest` is **not** in `FLAG_FEATURES`: nothing in the tree delivered a digest, so
-the flag was removed rather than sold. The remaining six split in three:
+Four flags were **withdrawn rather than sold**, and `can()` now returns the
+`kind: "unknown"` shape for each of them:
 
-- **Enforced** (`ENFORCED_FLAGS`): `fullAtsReport` gates the tail of `POST /api/analyse`,
-  `coverLetter` gates the letter in `/api/tailor` and the refine rebuild, and
-  `packHistory` gates the older covering letters in `GET /api/applications/:id`.
-- **Declared but unenforced**: `apiAccess`, `priorityRefresh` and `bulkExport` are
-  returned by the plans API and gated nowhere — "API access" has no key authentication
-  and priority refresh has no queue. `GET /api/export` stays open to every plan on
-  purpose: exporting your own data is data portability, not pack history.
-- **Removed**: `dailyDigest`, from the table and from the pricing copy.
+- `dailyDigest` — nothing in the tree delivered a digest.
+- `apiAccess` — there is no key authentication, so there was nothing to sell.
+- `priorityRefresh` — there is no refresh queue.
+- `bulkExport` — `GET /api/export` stays open to every plan on purpose:
+  exporting your own data is data portability, not a paid feature. Naming it
+  `bulkExport` did not change that, so the flag went rather than promising a
+  Scale-only export the product must not gate.
+
+Every flag that remains is enforced (`ENFORCED_FLAGS`), and a test asserts that
+`FLAG_FEATURES` and `ENFORCED_FLAGS` are the same set — nothing is declared "for
+later".
 
 ## What this module deliberately does not do
 
@@ -175,7 +176,8 @@ the flag was removed rather than sold. The remaining six split in three:
   that can only be verified against a live Stripe account, so `stripeConfigured()`
   plus the 501 is the honest degraded path rather than a half-wired integration.
 - No proration, invoices, receipts, coupons, trials, seat counts, dunning or tax.
-  Prices exclude VAT, as the SPEC says; VAT and currency conversion are not modelled.
+  Prices are in GBP and include any applicable tax, as the SPEC says; VAT and
+  currency conversion are not modelled.
 - No database access and no usage accounting. `can()` trusts the count it is given,
   which means the caller must count in the right window: packs and CVs per calendar
   month, job results per UTC day.
@@ -191,9 +193,11 @@ the flag was removed rather than sold. The remaining six split in three:
    Free, because the score is core to every plan, while the rest of the findings and the
    advice array are Pro. `plans.js` names it in `ENFORCED_FLAGS`; the handler in
    `server/app.js` is the gate.
-3. **`bulkExport`, not `exportAll`.** SPEC section 1 and section 6 require
-   `GET /api/export` and account deletion to work on every plan. Naming Scale's flag
-   `bulkExport` keeps the privacy export from being gated by mistake.
+3. **`bulkExport` was withdrawn.** SPEC section 1 and section 6 require
+   `GET /api/export` and account deletion to work on every plan, so a
+   "Scale-only export" cannot be enforced without breaking data portability. The
+   flag was removed from the inventory and from the pricing page; the route stays
+   open to every plan.
 4. **`jobResultsPerDay` is a daily cap among monthly quotas.** It is named as the task
    named it; the window is a server concern.
 5. **Alerts count as they stand at the moment of the check.** Whether deleting an

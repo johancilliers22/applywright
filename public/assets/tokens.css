@@ -116,13 +116,14 @@
   --wrap-narrow: 760px;
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
 
-  /* The one reading measure. 58ch is 69 characters at the 15px reading size and
-     67 at the 21px lede size — inside the 65–72 target at both sizes, because ch
-     scales with the font. Prose, step bodies and ledes cap at this; tables,
-     figures and diagrams are allowed to use the full column. The marketing pages
-     already reference var(--measure-reading, 58ch), so declaring it here changes
-     nothing they render and makes the value one. */
-  --measure-reading: 58ch;
+  /* The one reading measure. Measured in the browser rather than estimated:
+     1ch is 8.09px at the 15px reading size, so 68ch is 550px and ~67 characters
+     per line — inside the 65–72 target. At the 21px lede size (1ch = 11.33px)
+     the same 68ch is 770px and 62–72 characters. Prose, step bodies and ledes
+     cap at this; tables, figures and diagrams may use the full column. The
+     marketing pages already reference var(--measure-reading, 58ch), so this
+     declaration is what makes the value one. */
+  --measure-reading: 68ch;
 
   /* --- shape ------------------------------------------------------ */
   --r-sm: 8px;

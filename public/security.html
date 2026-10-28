@@ -129,22 +129,27 @@
       border-radius: 50%;
       background: var(--line-meaning);
     }
-    [data-flow] ul[data-never] {
-      margin-top: var(--sp-4);
+    /* The exclusions are a definition list, not bullets: each label is a term
+       and each clause its definition, so the break is structural rather than a
+       consequence of display. The colon lives in the markup, so the label and
+       the clause stay apart in text extraction and in a screen reader, not only
+       on screen. */
+    [data-flow] dl[data-never] {
+      margin: var(--sp-4) 0 0;
       padding-top: var(--sp-4);
       border-top: 1px dashed var(--line-meaning);
-      gap: var(--sp-2) var(--sp-5);
+      display: grid;
+      gap: var(--sp-4) var(--sp-5);
     }
     @media (min-width: 760px) {
-      [data-flow] ul[data-never] {
+      [data-flow] dl[data-never] {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
-    [data-flow] ul[data-never] li {
-      color: var(--text);
+    [data-flow] dl[data-never] > div {
+      min-width: 0;
     }
-    [data-flow] ul[data-never] li strong {
-      display: block;
+    [data-flow] dl[data-never] dt {
       font-size: var(--fs-xs);
       font-family: var(--mono);
       letter-spacing: 0.06em;
@@ -152,12 +157,25 @@
       color: var(--text-muted);
       margin-bottom: 0.2rem;
     }
+    [data-flow] dl[data-never] dd {
+      margin: 0;
+      color: var(--text);
+      font-size: var(--fs-sm);
+      line-height: 1.5;
+    }
     [data-flow] figcaption {
+      display: grid;
+      gap: var(--sp-2);
       margin-top: var(--sp-4);
       font-size: var(--fs-xs);
       line-height: 1.55;
       color: var(--text-muted);
       max-width: 72ch;
+    }
+    [data-flow] figcaption .link-arrow {
+      justify-self: start;
+      font-size: var(--fs-xs);
+      color: var(--text);
     }
 
     /* --- the four steps: a band, not a ribbon -----------------------------
@@ -272,6 +290,13 @@
 
     /* Page-specific rhythm check: the gap from the page head's last line to the
        first line of the first section is the site's 84–85px, measured at 1440. */
+    /* Artwork: the registration corner marks the "at a glance" proof. It is
+       decorative — the three destinations below carry the meaning, and the
+       section reads completely without it. */
+    #glance .wrap { position: relative; }
+    #glance [data-art-corner] { position: absolute; top: 0; right: 0; color: var(--text-muted); }
+    @media (max-width: 599px) { #glance [data-art-corner] { display: none; } }
+
     /* Paper grain: the 240px tile in assets/art/grain.svg at 3%, fixed and
        pointer-transparent. Decorative; off in print. */
     body::after {
@@ -319,6 +344,16 @@
   <!-- ==================================================== at a glance -->
   <section class="section" id="glance">
     <div class="wrap">
+      <!-- Artwork (docs/ARTWORK.md): the set's registration corner frames the
+           proof sheet. Decorative; the list below is the content. -->
+      <div data-art-corner aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <path d="M1.5 47V1.5H47" />
+          <path d="M18 1.5v5M30 1.5v5M1.5 18h5M1.5 30h5" stroke-width="1" />
+          <circle cx="14" cy="14" r="4.5" />
+          <path d="M14 6v16M6 14h16" stroke-width="1" />
+        </svg>
+      </div>
       <div class="section-head">
         <p class="eyebrow">At a glance</p>
         <h2 class="h2">What stays, what leaves, and what is never stored</h2>
@@ -326,6 +361,10 @@
       </div>
 
 
+      <!-- Ornament slot: design-lead's public/assets/art/ set has landed; the
+           security ornament goes here when it is chosen. The structure is
+           complete without it. See docs/PAGE-COMPOSITION.md. -->
+      <figure data-flow>
         <ol>
           <li>
             <h3>Your browser</h3>
@@ -352,15 +391,24 @@
           </li>
         </ol>
 
-        <ul data-never>
-          <li><strong>Never stored</strong>The uploaded file: decoded in memory, read, discarded.</li>
-          <li><strong>Never sent</strong>The score: computed in-process, never sent to an employer.</li>
-          <li><strong>Never readable</strong>Your password: kept as a scrypt hash, never plaintext.</li>
-        </ul>
+        <dl data-never>
+          <div>
+            <dt>Never stored: </dt>
+            <dd>The uploaded file: decoded in memory, read, discarded.</dd>
+          </div>
+          <div>
+            <dt>Never sent: </dt>
+            <dd>The score: computed in-process, never sent to an employer.</dd>
+          </div>
+          <div>
+            <dt>Never readable: </dt>
+            <dd>Your password: kept as a scrypt hash, never plaintext.</dd>
+          </div>
+        </dl>
 
         <figcaption>
-          Read from the code in <code>server/</code>. The retention table under
-          <a href="#your-cv">Your CV</a> lists every row, its table and its lifetime.
+          <span>Read from the code in <code>server/</code>.</span>
+          <a class="link-arrow" href="#your-cv">Jump to the retention table</a>
         </figcaption>
       </figure>
     </div>

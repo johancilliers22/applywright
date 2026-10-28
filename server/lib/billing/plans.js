@@ -25,18 +25,16 @@ export const QUOTA_FEATURES = Object.freeze(["cvs", "packs", "alerts", "jobResul
  * Capability flags, taken from the "Other" column of the SPEC table. These are
  * included or not — they are never counted down.
  *
- * A flag belongs here only if some route could gate on it. `dailyDigest` was
- * removed in schema 3: it had no delivery mechanism anywhere in the tree, so
- * selling it was a promise nothing could keep.
+ * A flag belongs here only if some route gates on it. Four have been withdrawn
+ * rather than sold:
+ *
+ *   dailyDigest     — no delivery mechanism anywhere in the tree (schema 3).
+ *   apiAccess       — no key authentication exists, so there is nothing to sell.
+ *   priorityRefresh — no refresh queue exists.
+ *   bulkExport      — `GET /api/export` is open to every plan on purpose:
+ *                     exporting your own data is data portability, not a feature.
  */
-export const FLAG_FEATURES = Object.freeze([
-  "fullAtsReport",
-  "coverLetter",
-  "packHistory",
-  "apiAccess",
-  "priorityRefresh",
-  "bulkExport",
-]);
+export const FLAG_FEATURES = Object.freeze(["fullAtsReport", "coverLetter", "packHistory"]);
 
 /**
  * The capability flags a handler actually gates on, and where:
@@ -50,12 +48,10 @@ export const FLAG_FEATURES = Object.freeze([
  *                   letter of its most recent pack only; older packs return the
  *                   lock message and keep their CV and screening answers.
  *
- * Everything in `FLAG_FEATURES` that is not named here is **declared but
- * unenforced** — it is returned by the plans API, and the pricing page sells
- * `apiAccess`, `priorityRefresh` and `bulkExport`, but no code path gates on
- * them. `docs/PROJECT-STATUS.md` §9 records that debt; the pricing-copy test in
- * `tests/flags-webhook.test.js` keeps every flag on one side of this line or the
- * other, so a new flag cannot be added without deciding which it is.
+ * Every declared flag is in this list: nothing is declared without being
+ * enforced, and `server/lib/billing/plans.test.mjs` asserts the two sets are
+ * equal. The pricing-copy test in `tests/flags-webhook.test.js` uses this list to
+ * check that the page sells the enforced flags and none of the withdrawn ones.
  */
 export const ENFORCED_FLAGS = Object.freeze(["fullAtsReport", "coverLetter", "packHistory"]);
 
@@ -104,16 +100,10 @@ const PLANS_SPEC = {
     name: "Scale",
     price: { month: 4900, year: 49000 },
     quotas: { cvs: UNLIMITED, packs: UNLIMITED, alerts: 50, jobResultsPerDay: UNLIMITED },
-    flags: [
-      "fullAtsReport",
-      "coverLetter",
-      "packHistory",
-      "apiAccess",
-      "priorityRefresh",
-      "bulkExport",
-    ],
+    // Same capabilities as Pro: Scale is a quota tier, not a feature tier.
+    flags: ["fullAtsReport", "coverLetter", "packHistory"],
     summary:
-      "Unlimited CVs and packs, 50 alerts, API access, priority refresh and an export of everything.",
+      "Unlimited CVs and packs, 50 alerts, the full ATS report, covering letters and pack history.",
   },
 };
 
@@ -145,7 +135,8 @@ function buildPlan(id) {
     id,
     name: spec.name,
     currency: CURRENCY,
-    // Pence, exclusive of VAT, for both billing intervals.
+    // Pence, in GBP and inclusive of any applicable tax, for both billing
+    // intervals — the same words the pricing page and SPEC section 2 use.
     price: Object.freeze({ month: spec.price.month, year: spec.price.year }),
     quotas: makeQuotas(spec.quotas),
     flags: Object.freeze([...spec.flags]),
@@ -306,7 +297,8 @@ const INTERVAL_ALIASES = Object.freeze({
 });
 
 /**
- * Price in pence for one billing interval, exclusive of VAT.
+ * Price in pence for one billing interval, in GBP and inclusive of any applicable
+ * tax.
  *
  * Unknown plan or interval returns null rather than a number: a checkout must
  * refuse an unknown plan, and a 0 here would read as a free purchase. Free is a

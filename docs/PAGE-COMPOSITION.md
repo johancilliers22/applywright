@@ -116,9 +116,25 @@ Rendered at 1440: figure 405.7px tall, three nodes 1:1:1, connectors drawn as ru
 retention table is unchanged in content (13 rows) and now sits at full 1,080px width, 868.5px tall,
 with its caption and `scope="col"` headers intact.
 
-**Ornament slot:** `public/assets/art/` does not exist as of this pass, so the figure ships as
-semantic HTML/CSS with an HTML comment marking the slot. When design-lead's set lands, the flow
-figure is the place for it; nothing else in the figure depends on it.
+**List or table (the question from review).** The flow is an ordered list: three nodes where the
+order is the meaning (browser → this server → outbound), and a table would imply three columns to be
+compared rather than a direction to be followed. The exclusions are a definition list: three
+label/clause pairs, not rows. The "what / where / lifetime" matrix is a table and already exists in
+`#your-cv` — 13 rows, caption, `scope="col"`, full width — so the page has exactly one table for the
+one thing that is genuinely a matrix, and lists for the things that are sequences and pairs. The
+figure's caption is the bridge: it points at the table rather than duplicating it.
+
+**Ornament slot:** design-lead's `public/assets/art/` set has since landed (16 files, and the
+registration corner renders in this section). The figure ships as semantic HTML/CSS with the slot
+marked in a comment, so an ornament can be added inside it without changing the structure. Nothing in
+the figure depends on the art.
+
+**Figure restored after review.** A concurrent art edit at 11:53 removed the opening
+`<figure data-flow>` tag and the slot comment but left the children and the closing tag, so the browser
+rendered the flow as a plain nested list and lost the card styling. The opening tag and slot comment
+were restored at 11:58; the figure, the three node cards and the connectors render again at every
+width. The `screenshots/final-security.png` in the repo was captured from that intermediate state, so
+its glance section is superseded by `fix-security-glance-light.png` / `-dark` / `-360`.
 
 ### 2.4 `/pricing` — comparable cards, a real control, a marked recommendation
 
@@ -150,6 +166,21 @@ keeps the 9 rows the page already had (dailyDigest has left the plan model in sc
 the page sells only `bulkExport` as "Export everything" — product copy was not changed in this
 pass), `font-variant-numeric: tabular-nums` on all cells, a caption, and `scope="col"` on every
 header.
+
+### 2.5 The two review defects
+
+1. **The exclusions ran together in text.** As bullets with a `<strong>` label, the label and the
+   clause were separate only because of `display: block`; in text extraction, screen readers and
+   copy-paste they read `Never storedThe uploaded file…`. They are now a definition list
+   (`<dl data-never>` with three `<div>` groups, `<dt>` label and `<dd>` clause) and the colon lives
+   in the markup: `Never stored: The uploaded file…`. Rendered, the label sits on its own line above
+   its clause; copied, it reads as a label. Verified at 360, 768 and 1440 in both palettes: the `dl`
+   is `display: grid` with three columns at ≥760 and one at 360, and copy-paste text reads
+   `Never stored: The uploaded file: decoded in memory, read, discarded. Never sent: …`.
+2. **The retention link no longer carries the sentence.** The figcaption is now two parts: the
+   sentence `Read from the code in server/.` and a standalone `Jump to the retention table` link on
+   its own line (`.link-arrow`, `justify-self: start`), so no phrase doubles as a destination. The
+   link points at `#your-cv`, where the table is.
 
 ---
 
@@ -199,7 +230,12 @@ Run from `projects/applywright`:
 | In-page anchors | every `href="#…"` resolves to an element | pricing 4/4, about 4/4, security 9/9 (all new anchors included) |
 | Both palettes | `window.applywrightTheme.set('light'/'dark')` before measuring | measured and captured; no overflow or layout change |
 
-Full-page screenshots (both palettes, three widths, three pages = 18) and section crops are in
+The after set is in the repo: `screenshots/final-pricing.png`, `final-about.png`, `final-security.png`,
+`final-how.png` (Lead's captures), with design-lead's art-comparison set beside them. Note that
+`final-security.png` predates the figure restoration in §2.3, so the current glance section is
+evidenced by the `fix-security-glance-{light,dark,360}.png` crops.
+
+Earlier full-page captures and section crops are in
 `C:\Users\johan\AppData\Local\Temp\applywright-composition\` (outside the repo, because the write
 scope was the three pages and this document):
 
@@ -208,6 +244,10 @@ scope was the three pages and this document):
 * `security-{360,768,1440}-{light,dark}.png` — 6
 * crops for the four fixes: `review-pricing-plans-*`, `review-about-why-*`,
   `review-security-glance-*`, `review-security-apply-*` (light, dark and 360 where useful)
+
+Re-measured after design-lead's ornament and art pass (11:53–11:58) and after the figure restoration:
+`/pricing` 4,103px, `/about` 4,363px, `/security` 12,352px tall at 1440 light; horizontal overflow
+still 0 at 360, 768 and 1440 in both palettes, and the section rhythm in §3 is unchanged.
 
 Regenerate by running the server on port 3160 and repeating the Playwright calls: set the viewport,
 `window.applywrightTheme.set(theme)`, wait for `document.fonts.ready`, then

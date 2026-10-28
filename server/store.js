@@ -441,6 +441,26 @@ export function createStore(db) {
       return json ?? {};
     },
 
+    // -------------------------------------------------------- stripe events
+    /**
+     * Record one webhook delivery by event id. `inserted: false` means the id was
+     * already there — a replay — and the caller must change nothing. The primary
+     * key decides, not a read-then-write, so two deliveries racing each other
+     * cannot both apply the same event.
+     */
+    recordStripeEvent(eventId, type = null) {
+      const result = q("INSERT OR IGNORE INTO stripe_events (id, type, received_at) VALUES (?, ?, ?)").run(
+        eventId,
+        type ?? null,
+        nowIso()
+      );
+      return { inserted: result.changes === 1 };
+    },
+
+    hasStripeEvent(eventId) {
+      return Boolean(q("SELECT 1 AS present FROM stripe_events WHERE id = ?").get(eventId));
+    },
+
     // ---------------------------------------------------------------- export
     exportUser(userId) {
       const user = this.userById(userId);

@@ -24,16 +24,40 @@ export const QUOTA_FEATURES = Object.freeze(["cvs", "packs", "alerts", "jobResul
 /**
  * Capability flags, taken from the "Other" column of the SPEC table. These are
  * included or not — they are never counted down.
+ *
+ * A flag belongs here only if some route could gate on it. `dailyDigest` was
+ * removed in schema 3: it had no delivery mechanism anywhere in the tree, so
+ * selling it was a promise nothing could keep.
  */
 export const FLAG_FEATURES = Object.freeze([
   "fullAtsReport",
   "coverLetter",
   "packHistory",
-  "dailyDigest",
   "apiAccess",
   "priorityRefresh",
   "bulkExport",
 ]);
+
+/**
+ * The capability flags a handler actually gates on, and where:
+ *
+ *   fullAtsReport — `POST /api/analyse`: Free gets the score, the five subscores
+ *                   and the three highest-priority findings; the rest of the
+ *                   findings list and the advice array are Pro.
+ *   coverLetter   — `POST /api/tailor` and `POST /api/applications/:id/refine`:
+ *                   a Free pack carries `coverLetterMd: ""` and a lock message.
+ *   packHistory   — `GET /api/applications/:id`: Free may read the covering
+ *                   letter of its most recent pack only; older packs return the
+ *                   lock message and keep their CV and screening answers.
+ *
+ * Everything in `FLAG_FEATURES` that is not named here is **declared but
+ * unenforced** — it is returned by the plans API, and the pricing page sells
+ * `apiAccess`, `priorityRefresh` and `bulkExport`, but no code path gates on
+ * them. `docs/PROJECT-STATUS.md` §9 records that debt; the pricing-copy test in
+ * `tests/flags-webhook.test.js` keeps every flag on one side of this line or the
+ * other, so a new flag cannot be added without deciding which it is.
+ */
+export const ENFORCED_FLAGS = Object.freeze(["fullAtsReport", "coverLetter", "packHistory"]);
 
 export const PLAN_IDS = Object.freeze(["free", "pro", "scale"]);
 
@@ -72,9 +96,9 @@ const PLANS_SPEC = {
     name: "Pro",
     price: { month: 1900, year: 19000 },
     quotas: { cvs: 5, packs: 60, alerts: 10, jobResultsPerDay: UNLIMITED },
-    flags: ["fullAtsReport", "coverLetter", "packHistory", "dailyDigest"],
+    flags: ["fullAtsReport", "coverLetter", "packHistory"],
     summary:
-      "Five CVs, 60 packs a month, 10 alerts, full ATS reports, covering letters, pack history and a daily digest.",
+      "Five CVs, 60 packs a month, 10 alerts, the full ATS report, covering letters and pack history.",
   },
   scale: {
     name: "Scale",
@@ -84,7 +108,6 @@ const PLANS_SPEC = {
       "fullAtsReport",
       "coverLetter",
       "packHistory",
-      "dailyDigest",
       "apiAccess",
       "priorityRefresh",
       "bulkExport",

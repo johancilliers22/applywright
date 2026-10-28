@@ -280,6 +280,85 @@ function requireQuota(store, user, feature, used, message) {
   return result;
 }
 
+/**
+ * Where the Free report stops. `fullAtsReport` is enforced, not declared: Free
+ * keeps the score, the five subscores and the three highest-priority findings,
+ * and loses the rest of the findings list plus the advice array. The shape of a
+ * report never changes with the plan — `advice` is an empty array and
+ * `fullAtsReport.included` says which report this is — so a client cannot crash
+ * on a missing key and cannot mistake a truncation for an empty list.
+ */
+const FREE_FINDINGS_SHOWN = 3;
+const FULL_REPORT_LOCK = "The full findings list and the fix order are part of Pro.";
+
+function gateReport(plan, report) {
+  const findings = Array.isArray(report.findings) ? report.findings : [];
+  if (can(plan, "fullAtsReport").allowed) {
+    return { ...report, fullAtsReport: { included: true, shownFindings: findings.length, totalFindings: findings.length } };
+  }
+  return {
+    ...report,
+    findings: findings.slice(0, FREE_FINDINGS_SHOWN),
+    advice: [],
+    fullAtsReport: {
+      included: false,
+      shownFindings: Math.min(FREE_FINDINGS_SHOWN, findings.length),
+      totalFindings: findings.length,
+      locked: FULL_REPORT_LOCK,
+    },
+  };
+}
+
+/**
+ * Where Free's pack history stops. `packHistory` is the record, not the pack:
+ * the CV and the screening answers in an older pack stay readable, and only its
+ * covering letter returns the lock message. "Most recent" is by `created_at`,
+ * the order packs were built in, so editing an old pack's status cannot promote
+ * it past the gate.
+ */
+const PACK_HISTORY_LOCK =
+  "Pack history is part of Pro. Your most recent pack stays open; older packs keep their CV and screening answers.";
+
+/** The sentence a covering-letter refusal carries, wherever it is shown. */
+const COVER_LETTER_LOCK = "A covering letter is part of Pro. The CV and screening answers in this pack are yours to use.";
+
+/** Change-record fields whose before/after text is the letter itself. */
+const LETTER_CHANGE_FIELDS = new Set(["letter", "coverLetter"]);
+
+/**
+ * Remove every copy of a covering letter from a pack, not just the rendered
+ * Markdown: the tailored source a later refine would rewrite from, and any
+ * before/after letter text in the refinement trail. A gate on one field would
+ * leak the letter through the other two.
+ */
+function withoutCoverLetter(pack) {
+  const source = pack && typeof pack === "object" ? pack : {};
+  const next = { ...source, coverLetterMd: "" };
+  if (next.tailored && typeof next.tailored === "object") next.tailored = { ...next.tailored, coverLetter: "" };
+  if (Array.isArray(next.refinements)) {
+    next.refinements = next.refinements.map((entry) => {
+      if (!entry || !Array.isArray(entry.changes)) return entry;
+      return {
+        ...entry,
+        changes: entry.changes.filter((change) => !LETTER_CHANGE_FIELDS.has(String(change?.field))),
+      };
+    });
+  }
+  return next;
+}
+
+function gatePackHistory(store, user, application) {
+  if (can(user.plan, "packHistory").allowed) return application;
+  const newest = store
+    .listApplications(user.id)
+    .reduce((best, entry) => (!best || String(entry.created_at) > String(best.created_at) ? entry : best), null);
+  if (!newest || newest.id === application.id) return application;
+  return {
+    ...application,
+    pack: { ...withoutCoverLetter(application.pack), coverLetterLocked: PACK_HISTORY_LOCK, packHistoryLocked: PACK_HISTORY_LOCK },
+  };
+}
+
 export async function createApp(config) {
   const db = openDatabase(config.databasePath);
   const store = createStore(db);
@@ -651,6 +730,7 @@ export async function createApp(config) {
     const cv = resolveCv(req.user, body.cvId);
     const job = resolveJobText(body);
     const report = scoreCv({ cvText: cv.text, jobText: job.description, profile: cv.profile });
+    // The full report is stored either way; what comes back is what the plan buys.
     const stored = store.createReport({
       userId: req.user.id,
       cvId: cv.id,
@@ -659,7 +739,12 @@ export async function createApp(config) {
       score: report.score,
       report,
     });
-    res.json({ report: stored, job: { id: job.id ?? null, title: job.title ?? null, company: job.company ?? null }, advisory: ADVISORY });
+    const fullReport = can(req.user.plan, "fullAtsReport").allowed;
+    res.json({
+      report: gateReport(req.user.plan, stored),
+      job: { id: job.id ?? null, title: job.title ?? null, company: job.company ?? null },
+      advisory: fullReport ? ADVISORY : `${ADVISORY} ${FULL_REPORT_LOCK}`,
+    });
   });
 
   app.get("/api/reports", requireUser, (req, res) => {
@@ -680,13 +765,7 @@ export async function createApp(config) {
     // The pricing table sells covering letters on Pro and above; enforce it here
     // rather than letting a Free pack carry one.
     const coverLetterAllowed = can(req.user.plan, "coverLetter").allowed;
-    const pack = coverLetterAllowed
-      ? built
-      : {
-          ...built,
-          coverLetterMd: "",
-          coverLetterLocked: "A covering letter is part of Pro. The CV and screening answers in this pack are yours to use.",
-        };
+    const pack = coverLetterAllowed ? built : { ...withoutCoverLetter(built), coverLetterLocked: COVER_LETTER_LOCK };
     const score = scoreCv({ cvText: cv.text, jobText: job.description, profile: cv.profile });
 
     const application = store.createApplication({
@@ -698,7 +777,9 @@ export async function createApp(config) {
       url: job.url ?? null,
       status: "pack_ready",
       score: score.score,
-      pack: { ...pack, tailored, score },
+      // The tailored source is stored, so it is gated with the pack: a Free
+      // account cannot read the letter back out of `tailored.coverLetter`.
+      pack: { ...pack, tailored: coverLetterAllowed ? tailored : { ...tailored, coverLetter: "" }, score },
     });
     store.recordUsage(req.user.id, "pack", 1);
 
@@ -711,7 +792,14 @@ export async function createApp(config) {
         score: application.score,
         createdAt: application.created_at,
       },
-      pack: { summary: tailored.summary, mode: tailored.mode, warnings: tailored.warnings, coverLetter: tailored.coverLetter },
+      pack: {
+        summary: tailored.summary,
+        mode: tailored.mode,
+        warnings: tailored.warnings,
+        // The same gate as the stored pack: the letter is not in this response either.
+        coverLetter: coverLetterAllowed ? tailored.coverLetter : "",
+        ...(coverLetterAllowed ? {} : { coverLetterLocked: COVER_LETTER_LOCK }),
+      },
       score: { score: score.score, subscores: score.subscores },
     });
   });
@@ -737,7 +825,7 @@ export async function createApp(config) {
   app.get("/api/applications/:id", requireUser, (req, res) => {
     const application = store.applicationById(req.params.id, req.user.id);
     if (!application) throw notFound("application not found");
-    res.json({ application });
+    res.json({ application: gatePackHistory(store, req.user, application) });
   });
 
   app.patch("/api/applications/:id", requireUser, (req, res) => {
@@ -1033,6 +1121,20 @@ ${items}
     res.json({ url: payload.url });
   });
 
+  /**
+   * Stripe webhook. Three independent checks, in this order:
+   *
+   *   1. The signature, against the bytes Stripe sent — `express.raw` is mounted
+   *      on this path only and the JSON parser above skips it, so the body is
+   *      still the original buffer here. A bad signature is a 400 and writes
+   *      nothing, not even a `stripe_events` row.
+   *   2. The event id, written before the event is applied. The primary key is
+   *      the authority, so a redelivery — including one racing this request —
+   *      answers `duplicate: true` and changes nothing.
+   *   3. The subscription period. An event for an older `current_period_end`
+   *      than the account already records is ignored, so a late delivery cannot
+   *      downgrade a plan that a newer event set.
+   */
   app.post("/api/billing/webhook", express.raw({ type: "application/json", limit: config.limits.maxBodyBytes }), (req, res) => {
     if (!config.stripe.configured) throw notImplemented("Billing is not configured on this server.");
     const raw = Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body ?? {}));
@@ -1050,20 +1152,59 @@ ${items}
       throw badRequest("webhook body is not JSON");
     }
 
-    if (event.type === "checkout.session.completed" || event.type === "customer.subscription.updated") {
-      const session = event.data?.object ?? {};
+    // Stripe always sends an id. Without one the delivery cannot be made
+    // idempotent, so it is refused rather than applied untracked.
+    const eventId = typeof event?.id === "string" ? event.id.trim() : "";
+    if (!eventId) throw badRequest("webhook event has no id");
+    const type = typeof event.type === "string" ? event.type : "";
+
+    if (!store.recordStripeEvent(eventId, type).inserted) {
+      res.json({ received: true, duplicate: true });
+      return;
+    }
+
+    const session = event.data?.object ?? {};
+    // Stripe sends seconds since the epoch; ISO text is what the users row keeps.
+    const periodEnd = (value) => {
+      const seconds = Number(value);
+      return Number.isFinite(seconds) && seconds > 0 ? new Date(seconds * 1000).toISOString() : null;
+    };
+    /** True when the account already records a period later than this event's. */
+    const isOlderPeriod = (userId, incoming) => {
+      if (!incoming) return false;
+      const user = store.userById(userId);
+      const recorded = user?.plan_renews_at ? Date.parse(user.plan_renews_at) : NaN;
+      return Number.isFinite(recorded) && Date.parse(incoming) < recorded;
+    };
+
+    let changed = false;
+    let ignored = null;
+
+    if (type === "checkout.session.completed" || type === "customer.subscription.updated") {
       const userId = session.metadata?.userId ?? session.client_reference_id;
       const plan = session.metadata?.plan;
-      if (userId && plan && PLANS[plan]) {
-        store.updateUserPlan(userId, plan, session.current_period_end ? new Date(session.current_period_end * 1000).toISOString() : null, session.customer ?? null);
+      const nextPeriodEnd = periodEnd(session.current_period_end);
+      if (userId && typeof plan === "string" && Object.hasOwn(PLANS, plan)) {
+        if (isOlderPeriod(userId, nextPeriodEnd)) {
+          ignored = "older_period";
+        } else {
+          store.updateUserPlan(userId, plan, nextPeriodEnd, session.customer ?? null);
+          changed = true;
+        }
+      }
+    } else if (type === "customer.subscription.deleted") {
+      const userId = session.metadata?.userId;
+      if (userId) {
+        if (isOlderPeriod(userId, periodEnd(session.current_period_end))) {
+          ignored = "older_period";
+        } else {
+          store.updateUserPlan(userId, "free", null, null);
+          changed = true;
+        }
       }
     }
-    if (event.type === "customer.subscription.deleted") {
-      const session = event.data?.object ?? {};
-      const userId = session.metadata?.userId;
-      if (userId) store.updateUserPlan(userId, "free", null, null);
-    }
-    res.json({ received: true });
+
+    res.json({ received: true, duplicate: false, type, changed, ignored });
   });
 
   // ------------------------------------------------------- account + health
@@ -1231,21 +1372,40 @@ ${items}
       job: application.pack.job ?? { title: application.title, company: application.company, url: application.url, description: "" },
       tailored: tailoredNext,
     });
-    const gatedRebuilt = can(req.user.plan, "coverLetter").allowed
+    const coverLetterAllowed = can(req.user.plan, "coverLetter").allowed;
+    const gatedRebuilt = coverLetterAllowed
       ? rebuilt
-      : {
-          ...rebuilt,
-          coverLetterMd: "",
-          coverLetterLocked: "A covering letter is part of Pro. The CV and screening answers in this pack are yours to use.",
-        };
-    const nextPack = { ...application.pack, ...gatedRebuilt, tailored: tailoredNext, refinements: [...(application.pack.refinements ?? []), { instruction, at: nowIso(), changes: refined.changes ?? [] }] };
+      : { ...withoutCoverLetter(rebuilt), coverLetterLocked: COVER_LETTER_LOCK };
+    const nextPack = {
+      ...application.pack,
+      ...gatedRebuilt,
+      // The stored tailored source and the refinement trail are gated with the
+      // pack, so neither is a back door to the letter on a later read.
+      tailored: coverLetterAllowed ? tailoredNext : { ...tailoredNext, coverLetter: "" },
+      refinements: [
+        ...(application.pack.refinements ?? []),
+        {
+          instruction,
+          at: nowIso(),
+          changes: coverLetterAllowed
+            ? refined.changes ?? []
+            : (refined.changes ?? []).filter((change) => !LETTER_CHANGE_FIELDS.has(String(change?.field))),
+        },
+      ],
+    };
     const updated = store.updateApplication(application.id, req.user.id, { pack: nextPack });
     store.recordUsage(req.user.id, "refine", 1);
 
+    // The response carries the same gate as the stored pack: neither a Free
+    // account nor a downgraded one may read a covering letter back out of a
+    // refine, in the payload or in the change trail.
+    const refinedOut = refined.refined ?? null;
     res.json({
       application: { id: updated.id, title: updated.title, status: updated.status, updatedAt: updated.updated_at },
-      refined: refined.refined ?? null,
-      changes: refined.changes ?? [],
+      refined: refinedOut && !coverLetterAllowed ? { ...refinedOut, coverLetter: "" } : refinedOut,
+      changes: coverLetterAllowed
+        ? refined.changes ?? []
+        : (refined.changes ?? []).filter((change) => !LETTER_CHANGE_FIELDS.has(String(change?.field))),
       mode: refined.mode ?? "rules",
       warnings: refined.warnings ?? [],
     });

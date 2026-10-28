@@ -8,7 +8,9 @@ import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
-export const SCHEMA_VERSION = 2;
+// 3 adds stripe_events (webhook idempotency). Forward-only: every migration is
+// a CREATE ... IF NOT EXISTS in SCHEMA below, so boot re-runs are no-ops.
+export const SCHEMA_VERSION = 3;
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS users (
@@ -153,6 +155,16 @@ CREATE TABLE IF NOT EXISTS password_resets (
   created_at TEXT NOT NULL,
   expires_at TEXT NOT NULL,
   used_at TEXT
+);
+
+-- Stripe webhook deliveries, one row per event id, written before the event is
+-- applied. The primary key is the authority: a redelivery (or two deliveries
+-- racing each other) hits the key and changes nothing. The type and received_at
+-- columns are for the operator reading the table, not for the decision.
+CREATE TABLE IF NOT EXISTS stripe_events (
+  id TEXT PRIMARY KEY,
+  type TEXT,
+  received_at TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_jobs_fetched ON jobs(fetched_at);

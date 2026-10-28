@@ -71,15 +71,15 @@ git status -sb
 
 | Fact | Measured 2026-10-28 |
 |---|---|
-| HEAD | `eb83c41` *"T3 mission setup: who does what, and three ready missions"* (committed 2026-10-28 16:52Z) |
+| HEAD | `e5b04f0` *"Handoff finals, and three corrections the handoff review found"* (committed 2026-10-28 17:02Z); the handoff baseline it descends from is `34d23a6` |
 | Sync | `## main...origin/main` — no ahead/behind, so `origin` matches local |
 | Tree | **clean when measured**; several writers are still active, so re-check `git status --short` before staging |
-| Tracked files | **330** |
+| Tracked files | **332** |
 | Node / npm | `v26.12.1` / `12.2.1` (floor is 22.5, for `node:sqlite`) |
 | Gate: `node --test tests/` | **150 pass, 0 fail, 0 skipped** |
 | Gate: `node --test server/lib server/provider` | **338 tests: 337 pass, 0 fail, 1 skipped**, 12 suites. The skip is the WSL-`pdftotext` fallback case, skipped because native Poppler is now on `PATH` |
 | Gate: `node scripts/check.js` | `applywright check — 10 pages, 24 server modules, 263 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0 |
-| E2E | `node scripts/e2e-flow.mjs` → **10/10 steps, 235/235 assertions, exit 0** (about 48 s, its own `PORT 0` instance and temp database) |
+| E2E | `node scripts/e2e-flow.mjs` → **10/10 steps, 235/235 assertions, exit 0** (about 48 s, its own `PORT 0` instance and temp database), re-verified at `34d23a6` |
 | Running server | listener `127.0.0.1:3160`, PID `64064`; `/api/health` → `status ok`, `provider "live"`, `stripe false`, 84 cached jobs |
 | Tunnel | **two** `cloudflared` processes: one quick tunnel serving `http://127.0.0.1:3160`, one named tunnel with no `--url`. The current public URL is `docs/SHARE.md` § "Current live URL" (`https://bumper-naturals-raises-thickness.trycloudflare.com` when measured, `/api/health` 200) |
 | Vault | `brain/applywright-platform.md` exists and was refreshed 16:52Z with the orchestration handover |
@@ -88,13 +88,13 @@ git status -sb
 Docs lag this tree, so trust the run rather than the prose:
 
 - `PIPELINE.md` §1 records HEAD `24eb0e7` and 148 tracked files; §4 records 113 / 309 / 253.
-  Today: `eb83c41`, 330 files, 150 / 337+1 skip / 263. Its repo and remote sections are right.
+  Today: `e5b04f0`, 332 files, 150 / 337+1 skip / 263. Its repo and remote sections are right.
 - `PROJECT-STATUS.md` §7 still records 113 / 309 / 253 css classes. Its §9 does correctly say
   the `apiAccess` / `priorityRefresh` / `bulkExport` flags were removed, not left unenforced.
 - The hub stubs in `agent-system/docs/diagnostics/` are older still (branch `master`, 126 files,
   "no remote", 80/303 gates). `APPLYWRIGHT-RELAY-ESTATE-20261028.md` is the newer of the two;
   neither is committed to the hub.
-- `E2E-VERIFICATION.md` records product commit `706b741`; HEAD is 7 commits past it. The harness
+- `E2E-VERIFICATION.md` records product commit `706b741`; HEAD is 10 commits past it. The harness
   passes today (see the E2E row above), but the recorded commit needs re-recording — a docs edit,
   not a behaviour change.
 
@@ -136,8 +136,9 @@ by commit author. Evidence commits are from `git log --oneline`.
 | Gemini 4 Argon subagent | SOTA research; 13 marketing copy claims corrected against the code | `docs/research/SOTA-20261028.md` |
 
 **Landed after that:** the visual release (`bc9eba9`..`706b741`), grounding fixes (`bdbc927`),
-the T3 mission setup (`eb83c41`), and new docs `T3-MISSIONS.md`, `MODEL-CONFIG.md`,
-`ARTWORK.md`, `PAGE-COMPOSITION.md`, `CLAUDE-ESTATE-RELAY.md`. Codex is now the main
+the T3 mission setup (`eb83c41`), the Codex handoff pair (`dcd754e`: `CODEX-ORCHESTRATOR-HANDOFF.md`
+plus `CLAUDE-ESTATE-RELAY.md`), the VAT copy close (`34d23a6`), handoff finals (`e5b04f0`), and new
+docs `T3-MISSIONS.md`, `MODEL-CONFIG.md`, `ARTWORK.md`, `PAGE-COMPOSITION.md`. Codex is now the main
 orchestrator; DSH implements; T3 tracks. See `CLAUDE-ESTATE-RELAY.md`.
 
 ---
@@ -150,7 +151,7 @@ Measured state for each, so you can tell "blocked" from "nobody got to it".
 |---|---|---|
 | **Stripe keys** | `/api/health` reports `"stripe": false`; `STRIPE_SECRET_KEY` unset; no `.env.local`. Checkout, portal and webhook answer 501. Idempotency shipped in `7b88acc` but has never seen a real event | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, and the four `STRIPE_PRICE_*` IDs; a test-mode account is enough to verify 5.4/5.5 |
 | **DNS at GoDaddy + Cloudflare tunnel** | `DOMAIN.md` §0 states nothing has been executed: no record, tunnel, host or certificate; the zone is delegated to GoDaddy nameservers | Registrar access to switch/confirm nameservers, the Cloudflare account, tunnel creation, and the TLS-mode decision. Do not plan work that assumes a hostname exists |
-| **VAT** | `plans.js` states prices are exclusive of VAT and computes no VAT (`VAT` appears twice, both in comments) | The rate, and whether displayed prices are inclusive. A legal decision, not an engineering one |
+| **VAT** | Copy is now consistent on "include any applicable tax" (`34d23a6` closed the last `/app` contradiction), but no VAT is modelled anywhere and the scale/copy decision is still open | The rate, inclusive-or-exclusive policy, and whether to model a VAT line at all. A legal decision, not an engineering one |
 | **Model key** | **No longer blocked.** The running server was booted with a key through the estate loader (`scripts/model-boot.mjs`, key on stdin, never on a command line); `/api/health` says `provider "live"` and an assist call returns `mode: model`. No key sits in this shell, `.env` or any file | Nothing, unless the process is restarted with a plain `node server/index.js` — that reverts to `rules` mode by design, and the UI says so |
 
 Never put a key on a command line, in a remote URL, or in a document; it lands in shell
@@ -237,7 +238,7 @@ git fetch origin
 git status -sb
 ```
 
-Expect `eb83c41`, a clean tree, and `## main...origin/main` with no ahead/behind. If the
+Expect `e5b04f0` or a descendant, a clean tree, and `## main...origin/main` with no ahead/behind. If the
 tree is dirty, that is another agent's work in progress — do not stage it; read it and
 work around it (`PIPELINE.md` §2).
 

@@ -608,29 +608,14 @@ function isCapitalised(token) {
 }
 
 /**
- * Is a capitalised token shaped like a name at all? A hyphenated compound with a
- * lower-case segment after the first is a compound adjective, not an employer:
- * "Go-based services", "Results-driven delivery", "Cloud-native platform". Those
- * were being rejected as invented names ("new name \"Go-based\"" was a live
- * failure), and they are English. "Coca-Cola" and "Hewlett-Packard" keep every
- * segment capitalised and are still names.
- */
-function isNameShaped(token) {
-  if (!token.includes("-")) return true;
-  const parts = token.split("-").filter(Boolean);
-  if (parts.length < 2) return true;
-  return parts.slice(1).every((part) => /^[A-Z0-9]/.test(part));
-}
-
-/**
- * Capitalised phrases that could be proper nouns, with where each one sits. Some
- * are employers, some are job titles, some are technologies — all of them must
- * come from the CV. A sentence-start capital is not evidence either way, so it is
- * routed through `couldBeName` rather than skipped, and the result records whether
- * the phrase was a single word opening a sentence: that is the weakest signal in
- * the check, and the prose callers may warn rather than reject on it.
+ * Capitalised phrases that could be proper nouns: employers, job titles,
+ * technologies, names. Position does not excuse one — "Initech is my employer"
+ * opens with a capital and is still a name — so every capitalised phrase is
+ * returned and `assertGrounded` decides with the curated vocabulary plus the source
+ * text. Morphology does not excuse one either: a hyphenated compound is a candidate
+ * whole, and passes only if the compound itself is in the source.
  *
- * @returns {{ phrase: string, sentenceStart: boolean, single: boolean }[]}
+ * @returns {string[]}
  */
 function properNounPhrases(text) {
   const tokens = toText(text).split(/\s+/).filter(Boolean);
@@ -638,18 +623,18 @@ function properNounPhrases(text) {
   let index = 0;
   while (index < tokens.length) {
     const token = cleanToken(tokens[index]);
-    const previous = index > 0 ? tokens[index - 1] : "";
-    const sentenceStart =
-      index === 0 ||
-      /[.!?:;•*—–-]$/.test(previous) ||
-      isMarkedBullet(tokens[index]);
     const blocked =
       !isCapitalised(token) ||
-      !isNameShaped(token) ||
       ENTITY_STOP.has(token.toLowerCase()) ||
       MONTH_SET.has(token.toLowerCase().replace(/\.$/, ""));
-    const nextToken = index + 1 < tokens.length ? cleanToken(tokens[index + 1]) : "";
-    if (blocked || (sentenceStart && !couldBeName(token, nextToken))) {
+    if (blocked) {
+      index += 1;
+      continue;
+    }
+    // A curated English word is not the start of a name, and must not swallow the
+    // next capitalised word into a phrase: "Improved Kubernetes deployment" still
+    // holds a name candidate ("Kubernetes").
+    if (isCuratedWord(token)) {
       index += 1;
       continue;
     }
@@ -659,7 +644,6 @@ function properNounPhrases(text) {
       const next = cleanToken(tokens[cursor]);
       if (
         isCapitalised(next) &&
-        isNameShaped(next) &&
         !ENTITY_STOP.has(next.toLowerCase()) &&
         !MONTH_SET.has(next.toLowerCase().replace(/\.$/, ""))
       ) {
@@ -675,7 +659,7 @@ function properNounPhrases(text) {
       }
       break;
     }
-    phrases.push({ phrase: parts.join(" "), sentenceStart, single: parts.length === 1 });
+    phrases.push(parts.join(" "));
     index = cursor;
   }
   return phrases;
@@ -766,25 +750,39 @@ const COMMON_VERBS = new Set([
   "adopt",
   "align",
   "allow",
+  "analyse",
+  "analyze",
   "apply",
+  "architect",
   "articulate",
+  "assist",
+  "automate",
   "avoid",
   "broaden",
   "bring",
+  "budget",
   "build",
   "clarify",
+  "collaborate",
   "combine",
   "communicate",
+  "contribute",
   "convey",
+  "coordinate",
   "cover",
   "create",
   "cut",
+  "debug",
   "deepen",
   "deliver",
   "demonstrate",
+  "deploy",
   "describe",
   "design",
   "detail",
+  "develop",
+  "direct",
+  "document",
   "draw",
   "drive",
   "emphasise",
@@ -798,91 +796,147 @@ const COMMON_VERBS = new Set([
   "explain",
   "finish",
   "focus",
+  "found",
   "frame",
   "generate",
   "give",
   "grow",
   "guide",
+  "handle",
+  "head",
   "help",
   "highlight",
+  "implement",
+  "improve",
   "include",
   "increase",
   "introduce",
+  "involve",
   "keep",
+  "launch",
   "lead",
   "list",
   "maintain",
   "make",
   "manage",
   "mention",
+  "mentor",
+  "migrate",
+  "modernise",
+  "modernize",
+  "monitor",
   "move",
+  "negotiate",
   "note",
   "open",
+  "organise",
+  "organize",
   "outline",
+  "oversee",
+  "own",
+  "participate",
+  "partner",
+  "perform",
+  "plan",
   "position",
   "present",
   "produce",
   "provide",
   "put",
   "reduce",
+  "refactor",
   "reflect",
   "remove",
   "replace",
   "rephrase",
+  "report",
+  "review",
   "reveal",
   "rewrite",
+  "save",
   "say",
+  "scale",
   "shape",
   "shift",
+  "ship",
   "show",
   "showcase",
   "start",
   "state",
+  "streamline",
   "strengthen",
   "summarise",
   "summarize",
+  "supervise",
   "support",
   "surface",
   "tailor",
   "take",
   "target",
+  "task",
+  "test",
   "tighten",
+  "train",
   "trim",
   "unlock",
   "update",
   "use",
+  "work",
   "write",
   "yield",
 ]);
 
 /** Adverbs and discourse markers that open a sentence without being names. */
 const COMMON_START_ADVERBS = [
+  "actively",
   "additionally",
   "again",
   "also",
   "although",
+  "clearly",
+  "closely",
+  "consistently",
   "currently",
+  "deeply",
+  "directly",
+  "effectively",
+  "efficiently",
+  "especially",
   "finally",
   "first",
+  "fully",
   "furthermore",
+  "generally",
   "however",
   "instead",
   "later",
   "moreover",
   "next",
+  "notably",
   "now",
+  "often",
   "overall",
+  "particularly",
   "previously",
+  "primarily",
   "rather",
   "recently",
+  "routinely",
   "second",
+  "significantly",
+  "specifically",
   "still",
+  "strongly",
+  "successfully",
   "then",
   "thereafter",
   "therefore",
   "third",
   "today",
   "together",
+  "typically",
+  "ultimately",
+  "usually",
   "while",
 ];
 
@@ -909,165 +963,20 @@ const COMMON_OPENERS = (() => {
 })();
 
 /**
- * Determiners, pronouns, prepositions, conjunctions, auxiliaries and adverbs: a
- * capitalised word immediately followed by one of these opens a clause rather than
- * naming an entity ("Delivers **a** 40% reduction", "Use **the** existing copy").
+ * A capitalised phrase the curated vocabulary licenses on its own: a single English
+ * word from the verb, adverb or acronym lists, or a multi-segment phrase whose every
+ * segment is one. This is the only shape-based licence there is, and it is a
+ * vocabulary check, not a position or morphology check — "Delivers a 40%" passes
+ * because "delivers" is a known verb, while "Initech is my employer" passes nothing
+ * and must appear in the source. Everything not licensed here must be in the CV.
  */
-const FUNCTION_WORDS = new Set([
-  "a",
-  "an",
-  "the",
-  "this",
-  "that",
-  "these",
-  "those",
-  "it",
-  "its",
-  "my",
-  "our",
-  "your",
-  "their",
-  "his",
-  "her",
-  "some",
-  "any",
-  "no",
-  "every",
-  "each",
-  "another",
-  "both",
-  "all",
-  "more",
-  "less",
-  "most",
-  "few",
-  "several",
-  "many",
-  "to",
-  "for",
-  "with",
-  "in",
-  "on",
-  "at",
-  "by",
-  "from",
-  "across",
-  "into",
-  "onto",
-  "about",
-  "of",
-  "as",
-  "per",
-  "via",
-  "within",
-  "without",
-  "during",
-  "after",
-  "before",
-  "between",
-  "over",
-  "under",
-  "through",
-  "towards",
-  "toward",
-  "and",
-  "but",
-  "or",
-  "so",
-  "then",
-  "because",
-  "since",
-  "while",
-  "whereas",
-  "although",
-  "though",
-  "if",
-  "when",
-  "where",
-  "which",
-  "who",
-  "whom",
-  "whose",
-  "than",
-  "whether",
-  "is",
-  "are",
-  "was",
-  "were",
-  "be",
-  "been",
-  "being",
-  "has",
-  "have",
-  "had",
-  "do",
-  "does",
-  "did",
-  "will",
-  "would",
-  "can",
-  "could",
-  "should",
-  "may",
-  "might",
-  "must",
-  "not",
-  "never",
-  "always",
-  "just",
-  "already",
-  "again",
-  "only",
-  "even",
-  "further",
-  "here",
-  "there",
-  "up",
-  "down",
-  "out",
-  "off",
-  "back",
-  "around",
-  "away",
-  "together",
-  "overall",
-  "instead",
-  "thus",
-  "hence",
-  "throughout",
-]);
-
-/**
- * Could a capitalised token at the start of a sentence be a name, or is it
- * capitalised only because of its position? Three questions, cheapest first:
- *
- *   1. Is it a common word — an irregular verb, a form of a common verb, an adverb,
- *      a 2–3 letter acronym? Then it is English, not a name.
- *   2. Does it look like an inflected verb rather than a name — a regular past
- *      tense, gerund or adverb ("Improved", "Building", "Additionally"), the same
- *      ending inside a hyphenated compound ("Go-based", "Results-driven"), or a
- *      third-person form whose stem is a common verb ("Delivers")?
- *   3. Is it followed by a determiner, pronoun, preposition, conjunction, auxiliary
- *      or adverb? Then it opens a clause ("Delivers a 40%…", "Use the existing…").
- *
- * Anything left is a candidate name and is checked against the CV like any other
- * proper noun. A missed name is a missed claim; a verb mistaken for a name costs
- * the candidate the edit they asked for, so the judgement leans away from "name".
- */
-function couldBeName(token, nextToken = "") {
-  const lower = token.toLowerCase();
-  if (COMMON_OPENERS.has(lower)) return false;
-
-  // The last hyphen/slash segment decides: names rarely end "-ed"/"-ing"/"-ly".
-  const lastSegment = lower.split(/[-–—/]/).pop() ?? lower;
-  if (/^[a-z]{3,}(?:ed|ing|ly)$/.test(lastSegment)) return false;
-
-  // A third-person or participle form whose stem is a common verb ("Delivers").
-  const stem = lower.replace(/(?:ies|es|ed|ing|s)$/, "");
-  if (stem !== lower && (COMMON_VERBS.has(stem) || COMMON_OPENERS.has(stem))) return false;
-
-  if (nextToken && FUNCTION_WORDS.has(nextToken.toLowerCase())) return false;
-  return true;
+function isCuratedWord(phrase) {
+  const segments = String(phrase ?? "")
+    .toLowerCase()
+    .split(/[\s\-–—/]+/)
+    .filter(Boolean);
+  if (!segments.length) return false;
+  return segments.every((segment) => COMMON_OPENERS.has(segment));
 }
 
 // ---------------------------------------------------------------------------
@@ -1243,7 +1152,7 @@ const LEAD_SKIP_WORDS = new Set([
 const SUPPORT_OPENERS =
   /^(?:i\s+(?:was|were|am|have\s+been|had\s+been)\s+)?(?:responsible\s+for|tasked\s+with|involved\s+in|part\s+of|a\s+part\s+of)\b/i;
 
-/** The first verb of the line, or null when the first content word is not one. */
+/** The first recognised verb of one line. Adverbs, auxiliaries and pronouns are skipped. */
 function leadingVerb(text) {
   const source = collapse(toText(text)).replace(/^[^A-Za-z]+/, "");
   if (!source) return null;
@@ -1251,6 +1160,9 @@ function leadingVerb(text) {
   const words = source.toLowerCase().match(/[a-z]+/g) ?? [];
   for (const word of words) {
     if (LEAD_SKIP_WORDS.has(word)) continue;
+    // Adverbs sit before the verb they modify. Stopping at the first unrecognised
+    // word let "Effectively led 12 engineers" through as an unknown verb.
+    if (/^[a-z]{4,}ly$/.test(word)) continue;
     if (SUPPORT_VERBS.has(word)) return { word, level: "support" };
     if (EXECUTION_VERBS.has(word)) return { word, level: "execution" };
     if (LEADERSHIP_VERBS.has(word)) return { word, level: "leadership" };
@@ -1259,15 +1171,26 @@ function leadingVerb(text) {
   return null;
 }
 
+/** The strongest ownership claim in a text, line by line; null when none is recognised. */
+function claimedOwnership(text) {
+  let best = null;
+  for (const line of toText(text).split(/\r?\n/)) {
+    const verb = leadingVerb(line);
+    if (!verb) continue;
+    if (!best || OWNERSHIP_LEVELS[verb.level] > OWNERSHIP_LEVELS[best.level]) best = verb;
+  }
+  return best;
+}
+
 /**
- * The ownership level a line claims. An unrecognised line is treated as
- * "execution", the middle: that lets "Improved latency by 40%" become "Delivered a
- * 40% latency improvement" (same level) while still refusing "Led the latency
- * work" (a level the line never claimed).
+ * The ownership level a text claims: the strongest claim in it, or "execution" when
+ * no line names a verb this recognises. The middle default lets "Improved latency by
+ * 40%" become "Delivered a 40% latency improvement" (same level) while still
+ * refusing "Led the latency work" (a level the text never claimed).
  */
 function ownershipLevel(text) {
-  const verb = leadingVerb(text);
-  return verb ? OWNERSHIP_LEVELS[verb.level] : OWNERSHIP_LEVELS.execution;
+  const claimed = claimedOwnership(text);
+  return claimed ? OWNERSHIP_LEVELS[claimed.level] : OWNERSHIP_LEVELS.execution;
 }
 
 /**
@@ -1280,21 +1203,20 @@ function ownershipLevel(text) {
  * (pass the full CV), because a rewrite may legitimately name something the CV
  * states — it may never name something the CV does not.
  *
- * Two further promises are mechanical here, not stylistic: a rewrite of one line
- * may not promote the level of ownership (`ownership`, line-for-line only), and a
- * rewrite may not name a lower-case tool or method the CV does not mention
+ * Two further promises are mechanical here, not stylistic: neither side of a rewrite
+ * may change the level of ownership it claims (`ownership`, compared line by line),
+ * and a rewrite may not name a lower-case tool or method the CV does not mention
  * (`skills`).
  *
- * `softSentenceStart` is the blast-radius limit for prose: when it is on, an unknown
- * *single word that only opens a sentence* becomes a warning instead of a reason,
- * because one capitalised word should never revert a whole rewritten paragraph. The
- * employer-shaped cases ("Initech", "Northwind Technologies") are still reasons.
+ * There is no "soft" mode for names: a capitalised phrase is either in the source or
+ * in the curated English vocabulary, and a name that is in neither is a reason,
+ * wherever it sits in the sentence.
  *
  * @param {string} original source text (a bullet, or the whole CV)
  * @param {string} rewritten candidate rewrite
  * @param {{ context?: string, figures?: boolean, dates?: boolean,
  *           qualifications?: boolean, titles?: boolean, names?: boolean,
- *           skills?: boolean, ownership?: boolean, softSentenceStart?: boolean }} [options]
+ *           skills?: boolean, ownership?: boolean }} [options]
  * @returns {{ ok: boolean, reasons: string[], warnings: string[] }}
  */
 export function assertGrounded(original, rewritten, options = {}) {
@@ -1309,7 +1231,6 @@ export function assertGrounded(original, rewritten, options = {}) {
     names: options.names !== false,
     skills: options.skills !== false,
     ownership: options.ownership !== false,
-    softSentenceStart: options.softSentenceStart === true,
   };
 
   if (!source.trim()) {
@@ -1408,21 +1329,15 @@ export function assertGrounded(original, rewritten, options = {}) {
   // --- employers, names and other proper nouns
   const unknownNames = [];
   if (check.names) {
-    for (const candidate of properNounPhrases(target)) {
-      if (containsTerm(corpus, candidate.phrase)) continue;
-      // The weakest signal in the check: one capitalised word that happens to open a
-      // sentence. For prose (`softSentenceStart`) that is a warning, not a reason —
-      // the model is rewriting a paragraph and every sentence has a first word.
-      // Anything employer-shaped — a multi-word phrase, or a word that survives the
-      // judgement above — is still a reason.
-      if (check.softSentenceStart && candidate.sentenceStart && candidate.single) {
-        warnings.push(
-          `kept the sentence opener "${candidate.phrase}", which the original does not contain — check it is the candidate's own word`
-        );
-        continue;
-      }
-      unknownNames.push(candidate.phrase);
-      add(`new name "${candidate.phrase}" is not in the original`);
+    for (const phrase of properNounPhrases(target)) {
+      // The two licences, and the only two: the phrase appears in the source (the
+      // CV may legitimately name its own employer, tool or title), or it is English
+      // from the curated vocabulary. Position and morphology are deliberately not
+      // consulted — "Initech is my employer" opens a sentence and is still invented.
+      if (containsTerm(corpus, phrase)) continue;
+      if (isCuratedWord(phrase)) continue;
+      unknownNames.push(phrase);
+      add(`new name "${phrase}" is not in the original`);
     }
   }
 
@@ -1441,14 +1356,14 @@ export function assertGrounded(original, rewritten, options = {}) {
 
   // --- the level of ownership the line claims
   //
-  // Only line-for-line rewrites are judged: a multi-line source is a document (the
-  // whole CV, a covering letter), and its opening verb says nothing about what a
-  // summary or letter derived from it may claim. Comparing those would reject a
-  // model summary that opens "Led a team of 12 engineers" over a CV whose first
-  // word is the candidate's name — a wrong rejection, which costs more than a
-  // missed one.
-  if (check.ownership && !/[\r\n]/.test(source)) {
-    const claimed = leadingVerb(target);
+  // Both sides are compared line by line, and the strongest claim on each side is
+  // what counts. A multi-line source is a document (the whole CV, a letter): its
+  // level is the highest ownership claim anywhere in it, so "Led a team…" is
+  // licensed by a CV that already says "Led the migration", and refused when the
+  // only support claim in the CV is "Helped with managing…". A newline must never
+  // switch this check off.
+  if (check.ownership) {
+    const claimed = claimedOwnership(target);
     if (claimed && OWNERSHIP_LEVELS[claimed.level] > ownershipLevel(source)) {
       add(
         `the rewrite claims "${claimed.word}", a stronger level of ownership than the original line supports`
@@ -2297,7 +2212,6 @@ export async function tailorCv({ cvText, profile, job, model } = {}) {
       // summary should not fall back to the rules engine over one opening word.
       const summaryCheck = assertGrounded(text, payload.summary, {
         context: [parsedJob.title, parsedJob.company].filter(Boolean).join("\n"),
-        softSentenceStart: true,
       });
       if (summaryWords > MAX_SUMMARY_WORDS) {
         warnings.push(
@@ -2314,7 +2228,6 @@ export async function tailorCv({ cvText, profile, job, model } = {}) {
       const letterWords = wordCount(payload.coverLetter);
       const letterCheck = assertGrounded(text, payload.coverLetter, {
         context: [parsedJob.title, parsedJob.company].filter(Boolean).join("\n"),
-        softSentenceStart: true,
       });
       if (!letterCheck.ok) {
         warnings.push(`model cover letter replaced: ${letterCheck.reasons[0]}`);
@@ -2374,7 +2287,6 @@ export async function tailorCv({ cvText, profile, job, model } = {}) {
       if (payload.motivation) {
         const motivationCheck = assertGrounded(text, payload.motivation, {
           context: [parsedJob.title, parsedJob.company].filter(Boolean).join("\n"),
-          softSentenceStart: true,
         });
         if (motivationCheck.ok) {
           warnings.push(...motivationCheck.warnings);

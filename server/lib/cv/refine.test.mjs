@@ -444,7 +444,9 @@ test("a model reply whose sentences open with ordinary English is accepted", asy
   }
 });
 
-test("one sentence opener does not revert a prose reply, but still rejects a bullet", async () => {
+test("no soft mode for names: a fabricated opener in a summary is refused there too", async () => {
+  // Review P1-A: this summary used to survive into result.refined.summary as a
+  // warning. A name is either in the CV or the curated lists, or it is a refusal.
   const summary = "Zephyria delivers a leaner payments platform after 9 years, cutting deploy time from 45 minutes to 6 and spending £240,000 a year.";
   const model = {
     async complete() {
@@ -457,20 +459,56 @@ test("one sentence opener does not revert a prose reply, but still rejects a bul
   };
   const result = await refine({ pack: makePack(), instruction: "rewrite the summary in a more formal tone", model });
 
-  // The prose field kept the change, with a warning naming the word to check.
-  assert.equal(result.mode, "model");
-  assert.equal(result.refined.summary, summary);
-  assert.ok(
-    result.warnings.some((warning) => /sentence opener "Zephyria"/.test(warning)),
-    JSON.stringify(result.warnings)
-  );
-
-  // The bullet is a factual line: the same shape is still refused there.
+  assert.equal(result.mode, "rules", JSON.stringify(result.warnings));
+  assert.notEqual(result.refined.summary, summary);
   assert.ok(
     result.warnings.some((warning) => /reverted because it failed the grounding check: new name "Zephyria"/.test(warning)),
     JSON.stringify(result.warnings)
   );
   assert.match(result.refined.bullets[3], /^Led the standing engineering forum/);
+});
+
+test("an empty summary field does not fail the whole model reply", async () => {
+  // Review P2: the editor sends `summary: ""` when the CV has none, and refine then
+  // refused the reply for "there is no original text" — even though the model is
+  // writing that field from the CV's own facts. The proposal is grounded against the
+  // pack instead.
+  const model = {
+    async complete() {
+      return {
+        summary: "Backend engineer with 9 years building Go services and Kubernetes platforms.",
+        bullets: [],
+        coverLetter: LETTER,
+      };
+    },
+  };
+  const pack = makePack({ tailored: { summary: "", bullets: [] } });
+  const result = await refine({ pack, instruction: "write the summary", model });
+
+  assert.equal(result.mode, "model", JSON.stringify(result.warnings));
+  assert.equal(result.refined.summary, "Backend engineer with 9 years building Go services and Kubernetes platforms.");
+  assert.ok(!result.warnings.some((warning) => /no original text/.test(warning)), JSON.stringify(result.warnings));
+});
+
+test("a model bullet index of null fails validation instead of selecting bullet one", async () => {
+  // Review P2: Number(null) === 0 used to rewrite bullet zero.
+  const model = {
+    async complete() {
+      return {
+        summary: SUMMARY,
+        bullets: [{ index: null, text: "A rewritten bullet." }],
+        coverLetter: LETTER,
+      };
+    },
+  };
+  const result = await refine({ pack: makePack(), instruction: "tighten the fourth bullet", model });
+
+  assert.equal(result.mode, "rules", JSON.stringify(result.warnings));
+  assert.ok(
+    result.warnings.some((warning) => /index is outside 0\.\./.test(warning)),
+    JSON.stringify(result.warnings)
+  );
+  assert.notEqual(result.refined.bullets[0], "A rewritten bullet.");
 });
 
 test("a dropped phone number is a warning, not a rejection", () => {

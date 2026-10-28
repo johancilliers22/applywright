@@ -29,6 +29,9 @@ test("a rewrite cannot promote the level of ownership", () => {
     "Drove 12 engineers.",
     "Owned 12 engineers.",
     "Directed 12 engineers.",
+    // Review P1-B: an adverb before the verb used to stop the comparison dead.
+    "Effectively led 12 engineers.",
+    "Successfully managed 12 engineers.",
   ]) {
     const result = assertGrounded(source, promoted);
     assert.equal(result.ok, false, `"${promoted}" claims more than the source`);
@@ -76,24 +79,32 @@ test("a legitimate rephrase still passes: worked with becomes partnered with", (
   assert.deepEqual(result.reasons, []);
 });
 
-test("a document is not judged for ownership: a model summary may open with a leadership verb", () => {
-  // The model path checks a summary against the whole CV. The CV opens with the
-  // candidate's name, so its "leading verb" is nothing; treating that as a low
-  // level would reject a true summary that opens "Led…". Only line-for-line
-  // rewrites are compared, and this is the case that would have been a wrong
-  // rejection.
-  const cv = [
+test("ownership is compared line by line: a newline does not switch the check off", () => {
+  // Review P1-B: a multiline source used to disable the ownership comparison, so a
+  // CV whose only experience claim is "helped" accepted "Led…".
+  const supportOnly = [
     "Ada Whitfield",
     "ada.whitfield@example.com",
     "",
     "Experience",
     "- Helped with managing 12 engineers across two squads.",
   ].join("\n");
+  const promoted = assertGrounded(supportOnly, "Led a team of 12 engineers across two squads.");
+  assert.equal(promoted.ok, false, "a document source must not license leadership it does not claim");
+  assert.ok(saysOwnership(promoted));
 
-  const summary = assertGrounded(cv, "Led a team of 12 engineers across two squads.");
-  assert.equal(summary.ok, true, `a document source is not a line claim: ${JSON.stringify(summary.reasons)}`);
+  // A CV that already says "Led" licenses the summary's leadership: the strongest
+  // claim in the document is what counts.
+  const leadership = [
+    "Ada Whitfield",
+    "ada.whitfield@example.com",
+    "",
+    "Experience",
+    "- Led the migration of 14 payment services across 12 teams.",
+  ].join("\n");
+  assert.equal(assertGrounded(leadership, "Led a team of 12 engineers.").ok, true);
 
-  // The same words over the bullet itself are still refused.
+  // And the same words over the bullet itself are always refused.
   const bullet = assertGrounded("Helped with managing 12 engineers across two squads.", "Led a team of 12 engineers across two squads.");
   assert.equal(bullet.ok, false);
   assert.ok(saysOwnership(bullet));
@@ -127,22 +138,17 @@ test("an ordinary verb opening a sentence is not mistaken for a name", () => {
 
 test("a sentence-opening English word is not a name: the two live editor failures", () => {
   // Live model replies that used to be reverted with `new name "Delivers" is not in
-  // the original` and `new name "Use" is not in the original`.
+  // the original` and `new name "Use" is not in the original`. The licence is the
+  // curated vocabulary, not the position: "delivers", "use", "reveals", "IT" and
+  // "additionally" are all English words in the lists.
   const source = "Reduced deploy time by 40% by rebuilding the pipeline.";
   const rewrites = [
-    // third-person verb + determiner
     "Delivers a 40% reduction in deploy time.",
-    // imperative verb + determiner
     "Use the existing pipeline to cut deploy time by 40%.",
-    // hyphenated compound whose last segment is a participle ("Go-based" was the
-    // word that cost the live instruction)
-    "Go-based services cut deploy time by 40%.",
-    // third-person verb, no determiner (stem rule)
     "Reveals a 40% drop in deploy time.",
-    // common acronym + noun
     "IT sales work cut deploy time by 40%.",
-    // adverb
     "Additionally, deploy time fell by 40%.",
+    "Collaborates effectively with the platform team to cut deploy time by 40%.",
   ];
   for (const rewrite of rewrites) {
     const result = assertGrounded(source, rewrite);
@@ -150,21 +156,19 @@ test("a sentence-opening English word is not a name: the two live editor failure
   }
 });
 
-test("a hyphenated compound adjective is not a name, mid-sentence either", () => {
-  // The live failure: `new name "Go-based" is not in the original`, where the model
-  // wrote "…with Go-based services…" inside the sentence.
-  const source = "Reduced deploy time by 40% by rebuilding the pipeline.";
-  for (const rewrite of [
-    "Cut deploy time by 40% with Go-based services.",
-    "Cut deploy time by 40% through results-driven delivery.",
-    "Cut deploy time by 40% on a cloud-native platform.",
-  ]) {
-    const result = assertGrounded(source, rewrite);
-    assert.equal(result.ok, true, `"${rewrite}" is a compound adjective: ${JSON.stringify(result.reasons)}`);
-  }
+test("a hyphenated compound is licensed by the source, never by its shape", () => {
+  // Review P1-A: the compound exemption let a fabricated "Initech-labs" through.
+  const fabricated = assertGrounded("Worked on services.", "Worked at Initech-labs.");
+  assert.equal(fabricated.ok, false, "a hyphen is not a licence");
+  assert.ok(fabricated.reasons.some((reason) => /Initech-labs/.test(reason)));
 
-  // A hyphenated *name* keeps every segment capitalised, so it is still checked.
-  const name = assertGrounded(source, "Cut deploy time by 40% with Coca-Cola.");
+  // The same compound passes when the source itself uses it.
+  const source = "Rebuilt the payments platform with Go-based services.";
+  assert.equal(assertGrounded(source, "Rebuilt the payments platform using Go-based services.").ok, true);
+
+  // An invented capitalised compound is still refused, and so is a hyphenated name.
+  assert.equal(assertGrounded(source, "Cut deploy time with Results-driven delivery.").ok, false);
+  const name = assertGrounded(source, "Cut deploy time with Coca-Cola.");
   assert.equal(name.ok, false);
   assert.ok(name.reasons.some((reason) => /Coca-Cola/.test(reason)));
 });
@@ -195,24 +199,30 @@ test("a fabricated employer is still rejected, sentence-initial or not", () => {
   assert.ok(employer.reasons.some((reason) => /Initech/.test(reason)));
 });
 
-test("the prose callers may soften one sentence opener, and only that", () => {
+test("the fabricated-employer repro from the review is refused", () => {
+  // Review P1-A, verbatim: "Initech" was exempted because it is followed by "is".
+  const result = assertGrounded("Built services.", "Initech is my employer.");
+  assert.equal(result.ok, false, "a sentence-opening capital is not a licence");
+  assert.ok(result.reasons.some((reason) => /Initech/.test(reason)));
+  assert.deepEqual(result.warnings, []);
+});
+
+test("there is no soft mode for names: an unknown sentence opener is refused", () => {
   const source = "Reduced deploy time by 40% by rebuilding the pipeline.";
 
-  // The weakest signal: one capitalised word that opens the sentence. Soft mode
-  // keeps the change and says what to check.
-  const softened = assertGrounded(source, "Zephyria cut deploy time by 40%.", { softSentenceStart: true });
-  assert.equal(softened.ok, true);
-  assert.equal(softened.reasons.length, 0);
-  assert.equal(softened.warnings.length, 1);
-  assert.match(softened.warnings[0], /sentence opener "Zephyria"/);
+  // Review P1-A: this used to survive into result.refined.summary as a warning.
+  for (const rewrite of [
+    "Zephyria cut deploy time by 40%.",
+    "Northwind Technologies cut deploy time by 40%.",
+    "Delivered the platform at Initech.",
+  ]) {
+    const result = assertGrounded(source, rewrite);
+    assert.equal(result.ok, false, `"${rewrite}" must be refused`);
+    assert.deepEqual(result.warnings, [], "names are never downgraded to warnings");
+  }
 
-  // Same input without the option is still a refusal: bullets keep the hard rule.
-  assert.equal(assertGrounded(source, "Zephyria cut deploy time by 40%.").ok, false);
-
-  // Soft mode does not soften an employer-shaped name: multi-word stays hard...
-  assert.equal(assertGrounded(source, "Northwind Technologies cut deploy time by 40%.", { softSentenceStart: true }).ok, false);
-  // ...and a mid-sentence name stays hard.
-  assert.equal(assertGrounded(source, "Delivered the platform at Initech.", { softSentenceStart: true }).ok, false);
+  // Curated English openers still pass, licensed by the vocabulary rather than position.
+  assert.equal(assertGrounded(source, "Delivers a 40% reduction in deploy time.").ok, true);
 });
 
 /* ------------------------------------------------------------------ *

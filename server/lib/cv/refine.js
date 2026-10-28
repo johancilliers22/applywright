@@ -271,13 +271,10 @@ function contactSpans(text) {
  *
  * @param {string} before the current text
  * @param {string} after the candidate replacement
- * @param {{ context?: string, allowFiguresFromContext?: boolean, softSentenceStart?: boolean }} [options]
+ * @param {{ context?: string, allowFiguresFromContext?: boolean }} [options]
  *   `context` is the pack's own text (pass it so a rewrite may name something the
  *   CV states); `allowFiguresFromContext` relaxes the "new figure" rule for
- *   expansion, never the "dropped figure" rule; `softSentenceStart` turns an
- *   unknown single word that merely opens a sentence into a warning instead of a
- *   rejection, which is what the prose fields use so one capitalised word cannot
- *   revert a whole reply.
+ *   expansion, never the "dropped figure" rule.
  * @returns {{ ok: boolean, reasons: string[], warnings: string[] }}
  */
 export function groundChanges(before, after, options = {}) {
@@ -285,27 +282,34 @@ export function groundChanges(before, after, options = {}) {
   const target = toText(after);
   const context = toText(options.context);
 
-  if (!source.trim()) {
-    return { ok: false, reasons: ["there is no original text to check the change against"], warnings: [] };
-  }
   if (!target.trim()) {
     return { ok: false, reasons: ["the change is empty"], warnings: [] };
   }
+
+  // An empty field is not a refusal. The editor sends `summary: ""` when the CV has
+  // no summary, and the model is then *writing* that field from the pack's own facts;
+  // failing the whole reply on "there is no original text" was a P2 in the review.
+  const fillingEmptyField = !source.trim();
+  if (fillingEmptyField && !context.trim()) {
+    return { ok: false, reasons: ["there is no original text to check the change against"], warnings: [] };
+  }
+  // What the change must stay inside: the field itself, or the whole pack when the
+  // field is empty. There is nothing to drop from an empty field.
+  const reference = fillingEmptyField ? context : source;
 
   const reasons = [];
 
   // Names, dates, titles and qualifications: reuse tailor's checker. Its own
   // figure rule is narrower than ours (it only looks for *new* figures, against
   // the original alone), so it is switched off here and replaced below.
-  const entityCheck = assertGrounded(source, target, {
-    context,
+  const entityCheck = assertGrounded(reference, target, {
+    context: fillingEmptyField ? "" : context,
     figures: false,
-    softSentenceStart: options.softSentenceStart === true,
   });
   reasons.push(...entityCheck.reasons);
   const warnings = [...(entityCheck.warnings ?? [])];
 
-  const beforeKeys = figureKeySet(source);
+  const beforeKeys = figureKeySet(reference);
   const afterKeys = figureKeySet(target);
   const contextKeys = figureKeySet(context);
   const reported = new Set();
@@ -1271,7 +1275,9 @@ function validateModelReply(reply, { bulletCount }) {
         problems.push(`bullets[${position}] is not an object`);
         continue;
       }
-      const index = Number(entry.index);
+      // The index must already be an integer. Coercing it let `null` become 0 and
+      // silently rewrite bullet one instead of refusing the reply.
+      const index = entry.index;
       if (!Number.isInteger(index) || index < 0 || index >= bulletCount) {
         problems.push(`bullets[${position}].index is outside 0..${Math.max(0, bulletCount - 1)}`);
         continue;
@@ -1364,21 +1370,12 @@ async function tryModel({ pack, parsed, instruction, style, model, summary, bull
   const changes = [];
   const refined = { summary, bullets: [...bullets], coverLetter: letter, answers: null };
 
-  /**
-   * Prose fields get the soft sentence-start rule: the model is rewriting a
-   * paragraph, every sentence has a first word, and one capitalised word must not
-   * revert the whole reply. A bullet is a factual line, so it keeps the hard rule —
-   * and a rejected bullet costs one bullet, not the reply.
-   */
-  const proseField = (key) => key === "summary" || key === "coverLetter";
-
   const attempt = (key, before, after) => {
     const next = toText(after).trim();
     if (!next || collapse(next) === collapse(before)) return;
     const check = groundChanges(before, next, {
       context: groundContext,
       allowFiguresFromContext,
-      softSentenceStart: proseField(key),
     });
     if (!check.ok) {
       addWarning(warnings, `a model change to ${describeKey(key)} was reverted because it failed the grounding check: ${check.reasons[0]}`);
@@ -1684,9 +1681,6 @@ export async function refine({ pack, instruction, style, model } = {}) {
     const check = groundChanges(edit.before, text, {
       context: [groundContext, edit.meta.original].filter(Boolean).join("\n"),
       allowFiguresFromContext,
-      // Same split as the model path: prose may keep a change over one opening
-      // capital, a bullet may not.
-      softSentenceStart: edit.field === "summary" || edit.field === "letter",
     });
     if (!check.ok) {
       addWarning(

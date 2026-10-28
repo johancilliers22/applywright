@@ -1530,22 +1530,30 @@ async function run() {
         ["Name", "Pasted CV"],
         ["CV text", CV_TEXT],
       ]);
+      // D1 guard (fixed in f6a3913, "Fix the score panel never mounting after a
+      // first CV import"): on an empty account the score panel does not exist
+      // before the import, and the screen re-derives itself after the import so
+      // the panel is mounted in-session — no navigation between the submit and
+      // the wait below.
+      check(
+        "the score panel is absent before the first CV is imported",
+        !(await browser.call(() => Boolean(document.querySelector("#cv-analyse"))))
+      );
       await browser.submitForm("Add this CV");
       const pasteImport = await browser.waitHttp({ method: "POST", path: "/api/cvs" }, { timeout: 30_000 });
+      await browser.wait('!!document.querySelector("#cv-analyse")', "the score panel to mount in-session", 5_000);
+      check("the score panel is mounted straight after the first CV import (D1 guard)", await browser.visible("#cv-analyse"));
+      const analyser = await browser.call(() => {
+        const panel = document.querySelector("#cv-analyse");
+        if (!panel) return { present: false, forms: 0 };
+        panel.scrollIntoView({ block: "start" });
+        return { present: true, forms: panel.querySelectorAll("form").length };
+      });
+      check("the score panel has its form ready to use", analyser.present && analyser.forms >= 1, JSON.stringify(analyser));
+
       const pasteCv = await assertImported({ label: "Pasted text", response: pasteImport, format: "txt", name: "Pasted CV", ocr: false });
       check("the pasted CV has no extraction warnings to report", (pasteImport.json?.warnings ?? []).length === 0, JSON.stringify(pasteImport.json?.warnings));
       ctx.cvId = pasteCv.id;
-
-      // Defect D1 (public/app/app.js, renderCvScreen): the score panel and its
-      // form are only mounted when the screen is first rendered with a CV on
-      // file. Importing the first CV on an empty account leaves them absent, so
-      // the library's "Analyse this" button has nothing to scroll to until the
-      // screen is reloaded. Recorded as it behaves; see docs/E2E-VERIFICATION.md.
-      const analyseBeforeReload = await browser.call(() => Boolean(document.querySelector("#cv-analyse")));
-      if (!analyseBeforeReload) note("defect D1 — after the first CV import the score panel does not exist until /app/cv is reloaded");
-      await browser.goto("/app/cv");
-      await browser.wait('!!document.querySelector("#cv-analyse")', "the analyse panel after a reload");
-      check("the score panel is available once the CV screen is rendered with the CV on file", await browser.visible("#cv-analyse"));
 
       // The account ends the import step with exactly one CV, as the Free plan allows.
       const list = await browser.fetchPage("/api/cvs");
@@ -1662,6 +1670,64 @@ async function run() {
       check("the pack quotes the CV's own achievements", /32 percent|45 minutes|14 services|9 minutes/.test(packText));
     });
 
+    /* --------------------------------------------------------------- 4b */
+    // The Free gates are measured in step 4. Step 4b measures the other side of
+    // the same gates, which needs a paid plan. Stripe has no keys on this host,
+    // so the upgrade a webhook would apply is applied to the scratch database
+    // directly — the payment path stays unexercised and is recorded as such in
+    // docs/E2E-VERIFICATION.md. This is what guards D3 (the covering letter's
+    // double comma), which is unreachable while the letter is locked.
+    await step("4b", "Pro behaviour (plan set on the scratch database): full report and a clean covering letter", async () => {
+      const me = await browser.fetchPage("/api/auth/me");
+      const userId = me.json?.user?.id;
+      check("the session names the account whose plan is being set", typeof userId === "string" && userId.length > 0, String(userId));
+      instance.store.updateUserPlan(userId, "pro", null, null);
+      const upgraded = await browser.fetchPage("/api/auth/me");
+      check("the scratch account is on the pro plan", upgraded.json?.plan === "pro", String(upgraded.json?.plan));
+      const flags = upgraded.json?.entitlements?.flags ?? [];
+      check("pro entitlements include the full ATS report", flags.includes("fullAtsReport"), JSON.stringify(flags));
+      check("pro entitlements include the covering letter", flags.includes("coverLetter"), JSON.stringify(flags));
+
+      await browser.goto("/app/cv");
+      await browser.wait('!!document.querySelector("#cv-analyse")', "the analyse panel");
+      await browser.fillForm("Score this CV", [
+        ["Role title", "Senior Platform Engineer"],
+        ["Job description", JOB_TEXT],
+      ]);
+      await browser.submitForm("Score this CV");
+      const analysis = await browser.waitHttp({ method: "POST", path: "/api/analyse" }, { timeout: 30_000 });
+      check("a Pro analyse answers 200", analysis.status === 200, `status ${analysis.status}`);
+      const report = analysis.json?.report ?? {};
+      check("a Pro report sets fullAtsReport.included = true", report.fullAtsReport?.included === true, JSON.stringify(report.fullAtsReport));
+      check("a Pro report is not truncated to three findings", (report.findings ?? []).length > 3, `${(report.findings ?? []).length} findings`);
+      check("a Pro report carries the advice array", (report.advice ?? []).length > 0, `${(report.advice ?? []).length} lines`);
+      await browser.waitCall((count) => document.querySelectorAll("#app-view .aw-finding").length === count, [(report.findings ?? []).length], "the full findings list", 10_000);
+      const rendered = await browser.evaluate("document.querySelector('#app-view').innerText");
+      check("the page renders every finding on Pro", (await browser.count("#app-view .aw-finding")) === (report.findings ?? []).length);
+      check("the page renders 'What to change first' on Pro", /What to change first/.test(rendered));
+
+      await browser.clickByText("Create the tailored pack", { selector: "button" });
+      const tailor = await browser.waitHttp({ method: "POST", path: "/api/tailor" }, { timeout: 45_000 });
+      check("a Pro tailor answers 201", tailor.status === 201, `status ${tailor.status}`);
+      const body = tailor.json ?? {};
+      check("a Pro tailor response carries a covering letter", String(body.pack?.coverLetter ?? "").length > 200, `${String(body.pack?.coverLetter ?? "").length} chars`);
+      check("a Pro tailor response carries no cover-letter lock", !body.pack?.coverLetterLocked, String(body.pack?.coverLetterLocked));
+      ctx.applicationId = body.application?.id ?? null;
+      ctx.applicationTitle = body.application?.title ?? null;
+
+      const stored = await browser.fetchPage(`/api/applications/${encodeURIComponent(ctx.applicationId)}`);
+      check("GET /api/applications/:id answers 200 for the Pro pack", stored.status === 200, `status ${stored.status}`);
+      const pack = stored.json?.application?.pack ?? {};
+      const letter = String(pack.coverLetterMd ?? "");
+      check("the stored Pro pack has covering-letter markdown", letter.length > 200, `${letter.length} chars`);
+      check("the stored Pro pack carries no cover-letter lock", !pack.coverLetterLocked, String(pack.coverLetterLocked));
+      // D3 guard (fixed in 73e42ec, "Fix trailing punctuation on a parsed employer").
+      check("the covering letter never doubles a comma (D3 guard)", !/,,/.test(letter), letter.slice(0, 200));
+      check("the covering letter never leaves a dangling 'At'", !/\bAt\s*[,.]/.test(letter), letter.slice(0, 200));
+      check("the covering letter names the CV's own employer cleanly", /At Northwind Traders, I /.test(letter), letter.slice(0, 240));
+      check("no number in the covering letter is absent from the CV", inventedFacts(letter, { figures: [CV_TEXT], names: [CV_TEXT, JOB_TEXT] }).figures.length === 0, JSON.stringify(inventedFacts(letter, { figures: [CV_TEXT], names: [CV_TEXT, JOB_TEXT] }).figures));
+    });
+
     /* ---------------------------------------------------------------- 5 */
     await step("5", "editor: section edit, Ctrl+S diff, proposals, grounding", async () => {
       const editor = `/editor?cv=${encodeURIComponent(ctx.cvId)}`;
@@ -1771,7 +1837,10 @@ async function run() {
       const markdown = await browser.waitDownload(/\.md$/);
       const markdownText = markdown.bytes.toString("utf8");
       check("the Markdown link downloads a .md file", /\.md$/.test(markdown.name), markdown.name);
-      check("the Markdown starts with the CV name as a level-1 heading", markdownText.startsWith(`# ${cvName}`), markdownText.split("\n")[0]);
+      // D2 guard (fixed in 3f59cee, "One heading rule for every CV artefact"):
+      // every artefact is headed with the candidate's name, not the record's.
+      check("the Markdown is headed with the candidate's name (D2 guard)", markdownText.startsWith("# Ada Lovelace"), markdownText.split("\n")[0]);
+      check("the Markdown is not headed with the CV record's name", !markdownText.split("\n")[0].includes(cvName), markdownText.split("\n")[0]);
       check("the Markdown carries the section headings", /## Summary/.test(markdownText) && /## Experience/.test(markdownText) && /## Skills/.test(markdownText));
       check("the Markdown carries the CV's own facts", markdownText.includes("payments platform") && markdownText.includes("Northwind Traders"));
 
@@ -1820,14 +1889,17 @@ async function run() {
         "the DOCX document part carries the CV's own facts",
         /Northwind Traders/.test(documentXml) && /payments platform/.test(documentXml) && /Kubernetes/.test(documentXml)
       );
-      // Defect D2 (public/assets/editor.js, downloadDocx): the DOCX is titled with
-      // the CV record's name, while the print sheet and the page use the contact's
-      // name. Recorded as it behaves; see docs/E2E-VERIFICATION.md.
+      // D2 guard (fixed in 3f59cee, "One heading rule for every CV artefact"):
+      // one heading rule (contact name → record name → "Curriculum vitae") is used
+      // by the DOCX, the Markdown and the print sheet.
       const docxHeading = /<w:pStyle w:val="Heading1"\/><\/w:pPr><w:r><w:t[^>]*>([^<]*)</.exec(documentXml)?.[1] ?? "";
-      check("the DOCX Heading1 is the CV record's name", docxHeading === cvName, `${docxHeading} vs ${cvName}`);
-      if (docxHeading !== printSheet.heading) {
-        note(`defect D2 — the DOCX heads the document "${docxHeading}" (the CV record's name) while the print sheet heads it "${printSheet.heading}" (the contact's name)`);
-      }
+      check("the DOCX Heading1 is the candidate's name (D2 guard)", docxHeading === "Ada Lovelace", docxHeading);
+      check("the DOCX does not carry the CV record's name as its title", !documentXml.includes(cvName), cvName);
+      check(
+        "the DOCX, the Markdown and the print sheet agree on the heading",
+        docxHeading === printSheet.heading && markdownText.startsWith(`# ${printSheet.heading}`),
+        `${docxHeading} / ${printSheet.heading} / ${markdownText.split("\n")[0]}`
+      );
     });
 
     /* ---------------------------------------------------------------- 7 */

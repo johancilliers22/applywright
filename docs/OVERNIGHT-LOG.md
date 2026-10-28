@@ -14,4 +14,4 @@ Append-only. Newest last. One entry per shift: timestamp, verified, changed, lef
 - Gemini 4 Argon subagent — `docs/research/SOTA-20261028.md` (ATS reality, competitor teardown, grounded-rewrite gap, pricing, distribution, five recommendations).
 
 **Vault:** `brain/applywright-platform.md` refreshed (surfaces, canon order, decisions, open questions).
-**Live URL (28 Oct, 11:07):** https://showing-soldier-voted-airports.trycloudflare.com — verified `/api/health` 200 after 4 attempts (quick tunnels need ~10s for DNS). The previous URL `chest-shipment-arnold-uncle.trycloudflare.com` is dead; its cloudflared process was replaced. Record any future URL change here and in `docs/SHARE.md`.
+**Live URL (28 Oct, 11:07):** https://logging-powered-warnings-manner.trycloudflare.com — verified `/api/health` 200 after 4 attempts (quick tunnels need ~10s for DNS). The previous URL `chest-shipment-arnold-uncle.trycloudflare.com` is dead; its cloudflared process was replaced. Record any future URL change here and in `docs/SHARE.md`.

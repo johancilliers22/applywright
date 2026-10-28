@@ -54,7 +54,7 @@ What it actually does, in order:
 | Pro | £19 / month | 5 | 60 | 10 | full ATS reports, covering letters, pack history |
 | Scale | £49 / month | unlimited | unlimited | 50 | API access, priority refresh, export everything |
 
-Annual: 10 months for 12 (Pro £190/yr, Scale £490/yr). Prices exclude VAT.
+Annual: 10 months for 12 (Pro £190/yr, Scale £490/yr). Prices are in GBP and include any applicable tax.
 Cancel anytime; downgrade keeps existing packs readable.
 
 ## 3. Data model (SQLite via `node:sqlite`, one file at `data/applywright.db`)

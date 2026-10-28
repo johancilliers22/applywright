@@ -32,3 +32,6 @@ Append-only. Newest last. One entry per shift: timestamp, verified, changed, lef
 - Docs: SOTA research, relay, Claude/Codex notes, friend-copy, E2E verification ledger (9 steps, 203 assertions at `1a0b17a`), MOTION, UX-REVIEW.
 
 **Open defects:** D2 exported `.docx` headed with the CV record name (editor-aw), D3 trailing comma in a letter built from a role header (flags-aw). Both dispatched with repro lines.
+**12:15 — visual release.** Artwork set (registration marks, pipeline schematic, three empty-state drawings, seam-proved grain, OG card, favicon family), one 68ch reading measure replacing four, `/security` steps as a 2×2 band, `/pricing` subgrid alignment with a no-JS interval control, `/app` and `/editor` dark themes, two-tier dashboard hierarchy, marketing gauge replacing the donut, shape-coded status, drawn empty states in all three slots. Motion round two measured at 6× CPU: 0 frames over 32ms, 0 long tasks. Commits `bc9eba9`..`706b741`. Gates: 143 HTTP, 332 module, `check.js` 0 errors.
+
+Caught in the verification loop rather than by a user: the E2E harness failed at STEP 3 because it still waited for the deleted score ring — the product was correct (screenshot shows `Scored 57 of 100` on the new gauge), the harness was stale. `flow-aw` is updating the selector to assert rendered text and ARIA rather than a class name.

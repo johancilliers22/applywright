@@ -421,6 +421,58 @@ test("quoted wording can replace a field, and is otherwise protected", async () 
   assert.ok(bullets.warnings.some((warning) => /only replaces the summary or the cover letter/.test(warning)));
 });
 
+test("a model reply whose sentences open with ordinary English is accepted", async () => {
+  // Live failures: the summary was reverted for `new name "Delivers"` and
+  // `new name "Use"`, so the whole reply fell back to the rules engine.
+  for (const summary of [
+    "Delivers a leaner cloud platform while keeping spend at £240,000 a year.",
+    "Use the existing cloud platform to keep spend at £240,000 a year.",
+  ]) {
+    const model = {
+      async complete() {
+        return { summary, bullets: [], coverLetter: LETTER };
+      },
+    };
+    const result = await refine({
+      pack: summaryPack("Cut cloud spend by £240,000 a year."),
+      instruction: "rewrite the summary in a more formal tone",
+      model,
+    });
+    assert.equal(result.mode, "model", `expected the reply to survive: ${JSON.stringify(result.warnings)}`);
+    assert.equal(result.refined.summary, summary);
+    assert.ok(!result.warnings.some((warning) => /new name/.test(warning)), JSON.stringify(result.warnings));
+  }
+});
+
+test("one sentence opener does not revert a prose reply, but still rejects a bullet", async () => {
+  const summary = "Zephyria delivers a leaner payments platform after 9 years, cutting deploy time from 45 minutes to 6 and spending £240,000 a year.";
+  const model = {
+    async complete() {
+      return {
+        summary,
+        bullets: [{ index: 3, text: "Zephyria led the engineering forum." }],
+        coverLetter: LETTER,
+      };
+    },
+  };
+  const result = await refine({ pack: makePack(), instruction: "rewrite the summary in a more formal tone", model });
+
+  // The prose field kept the change, with a warning naming the word to check.
+  assert.equal(result.mode, "model");
+  assert.equal(result.refined.summary, summary);
+  assert.ok(
+    result.warnings.some((warning) => /sentence opener "Zephyria"/.test(warning)),
+    JSON.stringify(result.warnings)
+  );
+
+  // The bullet is a factual line: the same shape is still refused there.
+  assert.ok(
+    result.warnings.some((warning) => /reverted because it failed the grounding check: new name "Zephyria"/.test(warning)),
+    JSON.stringify(result.warnings)
+  );
+  assert.match(result.refined.bullets[3], /^Led the standing engineering forum/);
+});
+
 test("length intents work on the cover letter without losing the sign-off", async () => {
   const result = await refine({ pack: makePack(), instruction: "make the cover letter shorter" });
   const change = result.changes.find((entry) => entry.field === "coverLetter");

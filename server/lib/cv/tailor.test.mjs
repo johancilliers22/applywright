@@ -125,6 +125,96 @@ test("an ordinary verb opening a sentence is not mistaken for a name", () => {
   }
 });
 
+test("a sentence-opening English word is not a name: the two live editor failures", () => {
+  // Live model replies that used to be reverted with `new name "Delivers" is not in
+  // the original` and `new name "Use" is not in the original`.
+  const source = "Reduced deploy time by 40% by rebuilding the pipeline.";
+  const rewrites = [
+    // third-person verb + determiner
+    "Delivers a 40% reduction in deploy time.",
+    // imperative verb + determiner
+    "Use the existing pipeline to cut deploy time by 40%.",
+    // hyphenated compound whose last segment is a participle ("Go-based" was the
+    // word that cost the live instruction)
+    "Go-based services cut deploy time by 40%.",
+    // third-person verb, no determiner (stem rule)
+    "Reveals a 40% drop in deploy time.",
+    // common acronym + noun
+    "IT sales work cut deploy time by 40%.",
+    // adverb
+    "Additionally, deploy time fell by 40%.",
+  ];
+  for (const rewrite of rewrites) {
+    const result = assertGrounded(source, rewrite);
+    assert.equal(result.ok, true, `"${rewrite}" is English, not a name: ${JSON.stringify(result.reasons)}`);
+  }
+});
+
+test("a hyphenated compound adjective is not a name, mid-sentence either", () => {
+  // The live failure: `new name "Go-based" is not in the original`, where the model
+  // wrote "…with Go-based services…" inside the sentence.
+  const source = "Reduced deploy time by 40% by rebuilding the pipeline.";
+  for (const rewrite of [
+    "Cut deploy time by 40% with Go-based services.",
+    "Cut deploy time by 40% through results-driven delivery.",
+    "Cut deploy time by 40% on a cloud-native platform.",
+  ]) {
+    const result = assertGrounded(source, rewrite);
+    assert.equal(result.ok, true, `"${rewrite}" is a compound adjective: ${JSON.stringify(result.reasons)}`);
+  }
+
+  // A hyphenated *name* keeps every segment capitalised, so it is still checked.
+  const name = assertGrounded(source, "Cut deploy time by 40% with Coca-Cola.");
+  assert.equal(name.ok, false);
+  assert.ok(name.reasons.some((reason) => /Coca-Cola/.test(reason)));
+});
+
+test("a fabricated employer is still rejected, sentence-initial or not", () => {
+  const source = "Reduced deploy time by 40% by rebuilding the pipeline.";
+
+  // The five shapes the Lead asked to keep failing.
+  const rejected = {
+    Kubernetes: "Kubernetes migration cut deploy time by 40%.",
+    Snowflake: "Snowflake migration cut deploy time by 40%.",
+    PhD: "PhD-level analysis cut deploy time by 40%.",
+    Initech: "Initech cut deploy time by 40%.",
+    "Northwind Technologies": "Northwind Technologies cut deploy time by 40%.",
+  };
+  for (const [label, rewrite] of Object.entries(rejected)) {
+    const result = assertGrounded(source, rewrite);
+    assert.equal(result.ok, false, `"${label}" must still be refused`);
+    assert.ok(
+      result.reasons.some((reason) => reason.toLowerCase().includes(label.toLowerCase().split(" ")[0])),
+      `expected a reason naming "${label}" in: ${JSON.stringify(result.reasons)}`
+    );
+  }
+
+  // Mid-sentence, as an employer.
+  const employer = assertGrounded(source, "Delivered the platform at Initech.");
+  assert.equal(employer.ok, false);
+  assert.ok(employer.reasons.some((reason) => /Initech/.test(reason)));
+});
+
+test("the prose callers may soften one sentence opener, and only that", () => {
+  const source = "Reduced deploy time by 40% by rebuilding the pipeline.";
+
+  // The weakest signal: one capitalised word that opens the sentence. Soft mode
+  // keeps the change and says what to check.
+  const softened = assertGrounded(source, "Zephyria cut deploy time by 40%.", { softSentenceStart: true });
+  assert.equal(softened.ok, true);
+  assert.equal(softened.reasons.length, 0);
+  assert.equal(softened.warnings.length, 1);
+  assert.match(softened.warnings[0], /sentence opener "Zephyria"/);
+
+  // Same input without the option is still a refusal: bullets keep the hard rule.
+  assert.equal(assertGrounded(source, "Zephyria cut deploy time by 40%.").ok, false);
+
+  // Soft mode does not soften an employer-shaped name: multi-word stays hard...
+  assert.equal(assertGrounded(source, "Northwind Technologies cut deploy time by 40%.", { softSentenceStart: true }).ok, false);
+  // ...and a mid-sentence name stays hard.
+  assert.equal(assertGrounded(source, "Delivered the platform at Initech.", { softSentenceStart: true }).ok, false);
+});
+
 /* ------------------------------------------------------------------ *
  * Lower-case tools and methods
  * ------------------------------------------------------------------ */

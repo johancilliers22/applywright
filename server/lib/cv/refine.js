@@ -223,11 +223,14 @@ function figureKeySet(text) {
  *
  * @param {string} before the current text
  * @param {string} after the candidate replacement
- * @param {{ context?: string, allowFiguresFromContext?: boolean }} [options]
+ * @param {{ context?: string, allowFiguresFromContext?: boolean, softSentenceStart?: boolean }} [options]
  *   `context` is the pack's own text (pass it so a rewrite may name something the
  *   CV states); `allowFiguresFromContext` relaxes the "new figure" rule for
- *   expansion, never the "dropped figure" rule.
- * @returns {{ ok: boolean, reasons: string[] }}
+ *   expansion, never the "dropped figure" rule; `softSentenceStart` turns an
+ *   unknown single word that merely opens a sentence into a warning instead of a
+ *   rejection, which is what the prose fields use so one capitalised word cannot
+ *   revert a whole reply.
+ * @returns {{ ok: boolean, reasons: string[], warnings: string[] }}
  */
 export function groundChanges(before, after, options = {}) {
   const source = toText(before);
@@ -235,10 +238,10 @@ export function groundChanges(before, after, options = {}) {
   const context = toText(options.context);
 
   if (!source.trim()) {
-    return { ok: false, reasons: ["there is no original text to check the change against"] };
+    return { ok: false, reasons: ["there is no original text to check the change against"], warnings: [] };
   }
   if (!target.trim()) {
-    return { ok: false, reasons: ["the change is empty"] };
+    return { ok: false, reasons: ["the change is empty"], warnings: [] };
   }
 
   const reasons = [];
@@ -246,8 +249,13 @@ export function groundChanges(before, after, options = {}) {
   // Names, dates, titles and qualifications: reuse tailor's checker. Its own
   // figure rule is narrower than ours (it only looks for *new* figures, against
   // the original alone), so it is switched off here and replaced below.
-  const entityCheck = assertGrounded(source, target, { context, figures: false });
+  const entityCheck = assertGrounded(source, target, {
+    context,
+    figures: false,
+    softSentenceStart: options.softSentenceStart === true,
+  });
   reasons.push(...entityCheck.reasons);
+  const warnings = [...(entityCheck.warnings ?? [])];
 
   const beforeKeys = figureKeySet(source);
   const afterKeys = figureKeySet(target);
@@ -272,7 +280,7 @@ export function groundChanges(before, after, options = {}) {
   }
 
   const unique = dedupe(reasons);
-  return { ok: unique.length === 0, reasons: unique };
+  return { ok: unique.length === 0, reasons: unique, warnings };
 }
 
 /* ------------------------------------------------------------------------- *
@@ -1290,14 +1298,27 @@ async function tryModel({ pack, parsed, instruction, style, model, summary, bull
   const changes = [];
   const refined = { summary, bullets: [...bullets], coverLetter: letter, answers: null };
 
+  /**
+   * Prose fields get the soft sentence-start rule: the model is rewriting a
+   * paragraph, every sentence has a first word, and one capitalised word must not
+   * revert the whole reply. A bullet is a factual line, so it keeps the hard rule —
+   * and a rejected bullet costs one bullet, not the reply.
+   */
+  const proseField = (key) => key === "summary" || key === "coverLetter";
+
   const attempt = (key, before, after) => {
     const next = toText(after).trim();
     if (!next || collapse(next) === collapse(before)) return;
-    const check = groundChanges(before, next, { context: groundContext, allowFiguresFromContext });
+    const check = groundChanges(before, next, {
+      context: groundContext,
+      allowFiguresFromContext,
+      softSentenceStart: proseField(key),
+    });
     if (!check.ok) {
       addWarning(warnings, `a model change to ${describeKey(key)} was reverted because it failed the grounding check: ${check.reasons[0]}`);
       return;
     }
+    for (const warning of check.warnings ?? []) addWarning(warnings, warning);
     changes.push({ field: key, before, after: next, reason: "the model rewrote it, and the grounding check passed" });
     if (key === "summary") refined.summary = next;
     if (key === "coverLetter") refined.coverLetter = next;
@@ -1597,6 +1618,9 @@ export async function refine({ pack, instruction, style, model } = {}) {
     const check = groundChanges(edit.before, text, {
       context: [groundContext, edit.meta.original].filter(Boolean).join("\n"),
       allowFiguresFromContext,
+      // Same split as the model path: prose may keep a change over one opening
+      // capital, a bullet may not.
+      softSentenceStart: edit.field === "summary" || edit.field === "letter",
     });
     if (!check.ok) {
       addWarning(
@@ -1605,6 +1629,7 @@ export async function refine({ pack, instruction, style, model } = {}) {
       );
       continue;
     }
+    for (const warning of check.warnings ?? []) addWarning(warnings, warning);
 
     edit.write(text);
     changes.push({ field: edit.key, before: edit.before, after: text, reason: notes.join("; ") });

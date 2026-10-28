@@ -369,3 +369,7 @@ registration open. At the time of writing that tunnel had been started by anothe
 while the app still ran on default env (`TRUST_PROXY=0`, `SECURE_COOKIES=0`). Those two
 flags are still worth setting on the next restart (`share.ps1 -WriteEnv` writes them), and
 stopping or restarting the tunnel goes by PID so the env and the tunnel are owned together.
+
+## Current live URL (28 Oct 2026)
+
+`https://showing-soldier-voted-airports.trycloudflare.com` — quick tunnel, registration open. Replace this line whenever the tunnel restarts; quick-tunnel hostnames do not survive a restart.

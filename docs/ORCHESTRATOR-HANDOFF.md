@@ -61,7 +61,7 @@ node --test server/lib server/provider   # pure modules and provider routing
 node scripts/check.js                    # pages, includes, assets, CSP, secrets, bookmarklet
 ```
 
-Measured on 2026-10-28 while writing this: **102 pass / 0 fail**, **309 pass / 0 fail**
+Measured on 2026-10-28 while writing this: **113 pass / 0 fail**, **309 pass / 0 fail**
 (12 suites), and `applywright check — 10 pages, 24 server modules, 253 css classes` /
 `ok — 0 errors, 0 warning(s)`, exit 0. Treat every number as measured-on-a-date: the tree is
 written by several agents, so re-run before quoting.

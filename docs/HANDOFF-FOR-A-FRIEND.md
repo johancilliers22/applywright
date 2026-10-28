@@ -98,6 +98,6 @@ your own rather than `127.0.0.1`, follow `docs/DEPLOY.md` for a VPS with Caddy, 
    use your copy, agree up front how long CVs and application history are kept, where the
    SQLite file lives, and who holds the backups — `data/` is personal data even though it is
    gitignored.
-3. **The licence.** There is no `LICENSE` file yet, so redistribution and public deployment
+3. **The licence.** MIT (`LICENSE`, © 2026 Johan Cilliers / Intelligent Artificial) — you may fork, change and reuse it with attribution; public deployment
    are unresolved rather than permitted. Ask before you publish a modified copy or run it
    under a public name.

@@ -214,3 +214,84 @@ test("the rules rewriter never returns a promoted bullet", async () => {
   assert.ok(helped);
   assert.match(helped.rewritten, /^Helped with managing/i);
 });
+
+/* ------------------------------------------------------------------ *
+ * Role headers: the parse must not carry a separator into a sentence
+ * ------------------------------------------------------------------ */
+
+const LETTER_JOB = {
+  title: "Senior Platform Engineer",
+  company: "Acme Ltd",
+  description: "Platform engineering, Kubernetes, Terraform and mentoring.",
+};
+
+/**
+ * A CV whose one achievement sits under `header`. Deliberately no summary section:
+ * the letter then falls back to naming the parsed title in its claim sentence, so
+ * the title and the employer are both readable from the public output.
+ */
+function cvWithHeader(header) {
+  return [
+    "Ada Whitfield",
+    "ada.whitfield@example.com",
+    "",
+    "Experience",
+    header,
+    "- Reduced deploy time by 40% by rebuilding the pipeline.",
+    "",
+    "Education",
+    "BSc Computer Science, University of Leeds, 2012-2015",
+    "",
+    "Skills",
+    "Kubernetes, Terraform, Go",
+  ].join("\n");
+}
+
+test("a role header's employer does not carry the date's trailing comma into the letter", async () => {
+  // The defect: "Platform Engineer, Northwind Traders, 2019 to present" was split on
+  // the commas, leaving the employer as "Northwind Traders," — so the Pro letter read
+  // "At Northwind Traders,, I reduced…".
+  const tailored = await tailorCv({
+    cvText: cvWithHeader("Platform Engineer, Northwind Traders, 2019 to present"),
+    job: LETTER_JOB,
+  });
+  const letter = tailored.coverLetter;
+
+  assert.ok(letter.includes("At Northwind Traders, I reduced deploy time by 40%"), letter);
+  assert.equal((letter.match(/At Northwind Traders,/g) ?? []).length, 1, "the sentence appears once, with one comma");
+  assert.ok(!letter.includes(",,"), "no doubled comma");
+  assert.match(letter, /(?:^|\n)Platform Engineer across /, "the title is parsed without the employer or the date");
+});
+
+test("the neighbouring role-header shapes parse without inventing or dropping the employer", async () => {
+  const cases = [
+    {
+      header: "Engineer at Northwind 2019–present",
+      title: "Engineer",
+      line: "At Northwind, I reduced deploy time by 40%",
+    },
+    {
+      header: "Northwind Traders — Platform Engineer (2019–present)",
+      title: "Platform Engineer",
+      line: "At Northwind Traders, I reduced deploy time by 40%",
+    },
+    {
+      header: "Platform Engineer, 2019 to present",
+      title: "Platform Engineer",
+      line: "I reduced deploy time by 40%",
+    },
+  ];
+
+  for (const entry of cases) {
+    const tailored = await tailorCv({ cvText: cvWithHeader(entry.header), job: LETTER_JOB });
+    const letter = tailored.coverLetter;
+    assert.ok(letter.includes(entry.line), `${entry.header}: ${letter}`);
+    assert.match(letter, new RegExp(`(?:^|\\n)${entry.title} across `), `${entry.header}: parsed title`);
+    assert.ok(!/,,|At\s*,/.test(letter), `${entry.header}: malformed sentence in ${letter}`);
+  }
+
+  // The no-employer shape must not leave a dangling "At": the achievement sentence
+  // falls back to "I …" because there is no employer to name.
+  const noEmployer = await tailorCv({ cvText: cvWithHeader("Platform Engineer, 2019 to present"), job: LETTER_JOB });
+  assert.doesNotMatch(noEmployer.coverLetter, /\bAt\s*[,I]/);
+});

@@ -277,30 +277,55 @@ const SKILL_TERMS = [
   "matlab",
 ];
 
+/**
+ * Trim the separators a role header leaves on a parsed token: the employer of
+ * "Platform Engineer, Northwind Traders, 2019 to present" is "Northwind Traders",
+ * not "Northwind Traders,". Only the ends are touched — a hyphen inside the name
+ * ("Northwind-Traders") and a trailing full stop ("Traders Ltd.") are part of it.
+ */
+function cleanFactsToken(value) {
+  return collapse(toText(value))
+    .replace(/^[\s,;:—–|-]+/, "")
+    .replace(/[\s,;:—–|-]+$/, "")
+    .trim();
+}
+
 /** Pull an employer and a title out of a role header, conservatively. */
 function roleFacts(header) {
   const text = collapse(header);
   if (!text) return { employer: "", title: "" };
-  const cleaned = text
-    .replace(new RegExp(YEAR_RANGE.source, "gi"), " ")
-    .replace(/[()[\]]/g, " ")
-    .replace(/[|·•]/g, " — ")
-    .replace(/\s+/g, " ")
-    .trim();
+  const cleaned = cleanFactsToken(
+    text
+      .replace(new RegExp(YEAR_RANGE.source, "gi"), " ")
+      .replace(/[()[\]]/g, " ")
+      .replace(/[|·•]/g, " — ")
+  );
+  if (!cleaned) return { employer: "", title: "" };
+  const hasTitleWord = (piece) =>
+    piece
+      .toLowerCase()
+      .split(/[^a-z]+/)
+      .some((word) => TITLE_WORDS.has(word));
+
+  // "Engineer at Northwind Traders": the title sits before the preposition and the
+  // employer after it. Only when there is no other separator on the left, so
+  // "Platform Engineer, Northwind Traders at scale" is still split on the comma.
+  const at = /^(.+?)\s+at\s+(.+)$/i.exec(cleaned);
+  if (at && !/[,;—–]/.test(at[1]) && !/\s-\s/.test(at[1])) {
+    const title = cleanFactsToken(at[1]);
+    const employer = cleanFactsToken(at[2]);
+    if (title && employer && hasTitleWord(title)) return { title, employer };
+  }
+
   const pieces = cleaned
     .split(/\s+[—–]\s+|\s+-\s+|,\s+/)
-    .map((piece) => piece.trim())
+    .map(cleanFactsToken)
     .filter(Boolean);
   if (pieces.length === 1) {
     return EMPLOYER_MARKERS.test(pieces[0])
       ? { employer: pieces[0], title: "" }
       : { employer: "", title: pieces[0] };
   }
-  const hasTitleWord = (piece) =>
-    piece
-      .toLowerCase()
-      .split(/[^a-z]+/)
-      .some((word) => TITLE_WORDS.has(word));
   const titleIndex = pieces.findIndex(hasTitleWord);
   if (titleIndex >= 0) {
     return {
@@ -1365,8 +1390,11 @@ function achievementSentence(bullet) {
   if (!rewritten) return "";
   const header = bullet.evidence.includes(" | ") ? bullet.evidence.split(" | ")[0] : "";
   const role = roleFacts(header);
-  if (role.employer) {
-    return `At ${role.employer}, I ${lowerFirst(rewritten)}.`;
+  // The parse trims its own tokens; trimming again here is what keeps the sentence
+  // well formed ("At Northwind Traders, I…") if a caller ever supplies loose text.
+  const employer = cleanFactsToken(role.employer);
+  if (employer) {
+    return `At ${employer}, I ${lowerFirst(rewritten)}.`;
   }
   return `I ${lowerFirst(rewritten)}.`;
 }

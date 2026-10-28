@@ -26,7 +26,7 @@
       </a>
       <p class="auth__quote">Three honest ways back in, and none of them needs a mail server.</p>
       <ul class="auth__facts">
-        <li>A recovery code you saved at sign-up works offline, once per code.</li>
+        <li>A recovery code you saved at sign-up works once, with no email involved.</li>
         <li>A reset link is issued on the host and passed on by the operator.</li>
         <li>Setting a new password ends every other session on the account.</li>
       </ul>
@@ -50,7 +50,7 @@
           <p class="auth__sub" data-reset-sub>Use a recovery code you saved, or ask the operator for a reset link. The username is the email address you signed up with.</p>
         </div>
 
-        <!-- Set new password: shown when the page is opened with ?token=... -->
+        <!-- Set a new password: shown when the page is opened with ?token=... -->
         <section hidden data-reset-panel="token">
           <div class="auth__form">
             <h2 class="legend">Choose a new password</h2>
@@ -71,7 +71,7 @@
           </div>
         </section>
 
-        <!-- No token: the two paths that start here. -->
+        <!-- No token: the two paths that start on this page. -->
         <section data-reset-panel="request">
           <div class="auth__form">
             <h2 class="legend">Use a recovery code</h2>
@@ -98,9 +98,8 @@
               <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
               <button class="btn btn--primary btn--lg btn--block" type="submit">Use the code</button>
             </form>
-          </div>
 
-          <div class="auth__form">
+            <div class="hairline-top"></div>
             <h2 class="legend">Request a reset link</h2>
             <p class="note">This server has no email transport. A reset link is issued to the operator, not emailed, in this build — you will need to reach the operator to collect it.</p>
             <form class="auth__form" data-auth-form="forgot" novalidate>
@@ -111,9 +110,8 @@
               <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
               <button class="btn btn--primary btn--lg btn--block" type="submit">Request a reset link</button>
             </form>
-          </div>
 
-          <div class="auth__form">
+            <div class="hairline-top"></div>
             <h2 class="legend">Forgotten your username?</h2>
             <p class="auth__sub">The username is the email address on your account.</p>
             <form class="auth__form" data-auth-form="forgot-username" novalidate>
@@ -129,8 +127,8 @@
 
         <p class="auth__alt">Remembered it? <a href="/sign-in">Sign in</a></p>
         <p class="auth__legal">
-          A reset link is never returned by the API and never emailed: it is issued on the host and read there by the
-          operator, then passed on by hand. Recovery codes are stored only as hashes, so we cannot read yours back.
+          A reset link is never returned by the API and never emailed: it is issued on the host, read there by the
+          operator, and passed on by hand. Recovery codes are stored only as hashes, so we cannot read yours back.
         </p>
       </div>
     </div>

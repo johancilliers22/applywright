@@ -1163,14 +1163,16 @@ code:not(.code) {
    sentence on the site, and .footer a's 0.82 opacity pulls the link to #cbc9c2
    against #a9aeb6 of the surrounding text — 1.34:1, i.e. a colour-only cue.
    The underline is the non-colour cue; the colour itself is untouched, so the
-   footer reads exactly as before for anyone not looking for the distinction. */
-.footer__tag a {
+   footer reads exactly as before for anyone not looking for the distinction.
+   Two classes deep on purpose: `.footer a` sets text-decoration: none later in
+   the file at the same specificity, so a single-class selector here loses. */
+.footer .footer__tag a {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 
-.footer__tag a:hover {
+.footer .footer__tag a:hover {
   text-decoration-thickness: 2px;
 }
 

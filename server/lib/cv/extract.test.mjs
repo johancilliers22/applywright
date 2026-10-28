@@ -6,7 +6,7 @@ import { delimiter, join } from "node:path";
 import test from "node:test";
 import { crc32, deflateRawSync } from "node:zlib";
 
-import { detectFormat, docxToText, extractText, segmentSections } from "./extract.js";
+import { detectFormat, docxToText, extractText, segmentSections, setToolOverridesForTesting } from "./extract.js";
 
 // ---------------------------------------------------------------------------
 // A hand-written zip, so the DOCX fixture is a real OOXML package rather than a
@@ -249,6 +249,69 @@ const HTML_CV = `<!DOCTYPE html>
 </body></html>`;
 
 // ---------------------------------------------------------------------------
+// Image fixtures. A PNG header is enough for the routing tests; the live OCR
+// test needs a real decodable image, so it gets a hand-built 24-bit BMP with
+// blocky glyphs drawn from a 5x7 font — no encoder, no dependency, no fixture.
+// ---------------------------------------------------------------------------
+
+const PNG_BYTES = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(32)]);
+
+const GLYPHS_5X7 = {
+  T: ["11111", "00100", "00100", "00100", "00100", "00100", "00100"],
+  E: ["11111", "10000", "10000", "11110", "10000", "10000", "11111"],
+  S: ["01111", "10000", "10000", "01110", "00001", "00001", "11110"],
+};
+
+/** Uncompressed 24-bit BMP, white by default, black where `isBlack` says so. */
+function buildBmp({ width, height, isBlack = () => false }) {
+  const rowBytes = (width * 3 + 3) & ~3;
+  const size = 54 + rowBytes * height;
+  const buffer = Buffer.alloc(size, 0);
+  buffer.write("BM", 0, "latin1");
+  buffer.writeUInt32LE(size, 2);
+  buffer.writeUInt32LE(54, 10);
+  buffer.writeUInt32LE(40, 14);
+  buffer.writeInt32LE(width, 18);
+  buffer.writeInt32LE(height, 22);
+  buffer.writeUInt16LE(1, 26);
+  buffer.writeUInt16LE(24, 28);
+  buffer.writeUInt32LE(rowBytes * height, 34);
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const value = isBlack(x, y) ? 0x00 : 0xff;
+      const at = 54 + (height - 1 - y) * rowBytes + x * 3;
+      buffer[at] = value;
+      buffer[at + 1] = value;
+      buffer[at + 2] = value;
+    }
+  }
+  return buffer;
+}
+
+/** Render a short uppercase word large enough for Tesseract to read. */
+function buildWordBmp(word, { scale = 14, padding = 20 } = {}) {
+  const glyphWidth = 8 * scale;
+  const glyphHeight = 7 * scale;
+  return buildBmp({
+    width: padding * 2 + word.length * glyphWidth,
+    height: padding * 2 + glyphHeight,
+    isBlack: (x, y) => {
+      const gx = x - padding;
+      const gy = y - padding;
+      if (gx < 0 || gy < 0 || gy >= glyphHeight) return false;
+      const index = Math.floor(gx / glyphWidth);
+      if (index >= word.length) return false;
+      const glyph = GLYPHS_5X7[word[index]];
+      if (!glyph) return false;
+      const column = Math.floor((gx - index * glyphWidth) / scale);
+      const row = Math.floor(gy / scale);
+      if (column > 4 || row > 6) return false;
+      return glyph[row][column] === "1";
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
 // detectFormat
 // ---------------------------------------------------------------------------
 
@@ -488,7 +551,7 @@ test("a legacy binary .doc is refused with a clear next step", async () => {
 });
 
 // ---------------------------------------------------------------------------
-// Images and OCR: honest when the tool is absent
+// Images and OCR
 // ---------------------------------------------------------------------------
 
 test("an image upload with no OCR anywhere names the install command and the paste path", async () => {
@@ -497,11 +560,7 @@ test("an image upload with no OCR anywhere names the install command and the pas
   try {
     // An empty directory guarantees neither tesseract nor wsl is found, whatever the host has.
     process.env.PATH = directory;
-    const png = Buffer.concat([
-      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
-      Buffer.alloc(32),
-    ]);
-    const result = await extractText({ buffer: png, filename: "cv.png", mime: "image/png" });
+    const result = await extractText({ buffer: PNG_BYTES, filename: "cv.png", mime: "image/png" });
 
     assert.equal(result.format, "image");
     assert.equal(result.text, "");
@@ -510,9 +569,114 @@ test("an image upload with no OCR anywhere names the install command and the pas
     assert.match(warning, /winget install UB-Mannheim\.TesseractOCR/);
     assert.match(warning, /sudo apt install tesseract-ocr/);
     assert.match(warning, /paste/i);
+    assert.ok(!warning.includes("read with OCR"), "a refusal must not claim OCR ran");
   } finally {
     process.env.PATH = savedPath;
     rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("OCR uses a native tesseract on PATH with stdin/stdout argv", async () => {
+  const calls = [];
+  setToolOverridesForTesting({
+    findOnPath: (name) => (name === "tesseract" ? "C:\\fake\\tesseract.exe" : null),
+    run: (binary, args) => {
+      calls.push({ binary, args });
+      return { ok: true, text: "Ada Lovelace\n2021 - 2024 Senior Engineer" };
+    },
+  });
+  try {
+    const result = await extractText({ buffer: PNG_BYTES, filename: "cv.png", mime: "image/png" });
+
+    assert.equal(result.format, "image");
+    assert.equal(result.text, "Ada Lovelace\n2021 - 2024 Senior Engineer");
+    assert.equal(calls.length, 1, `expected one extractor call, saw ${JSON.stringify(calls)}`);
+    assert.equal(calls[0].binary, "C:\\fake\\tesseract.exe");
+    assert.deepEqual(calls[0].args, ["stdin", "stdout"], "tesseract must read stdin and write stdout");
+    const warning = result.warnings.join(" ");
+    assert.match(warning, /read with OCR/);
+    assert.match(warning, /check numbers and section headings/, "the accuracy caveat is missing");
+  } finally {
+    setToolOverridesForTesting(null);
+  }
+});
+
+test("OCR falls back to WSL tesseract, and the WSL probe is cached across uploads", async () => {
+  const calls = [];
+  setToolOverridesForTesting({
+    findOnPath: (name) => (name === "wsl" ? "C:\\Windows\\System32\\wsl.exe" : null),
+    run: (_binary, args) => {
+      calls.push(args);
+      if (args.includes("--version")) return { ok: true, text: "tesseract 5.3.4" };
+      return { ok: true, text: "TEST" };
+    },
+  });
+  try {
+    const first = await extractText({ buffer: PNG_BYTES, filename: "cv.png" });
+    const second = await extractText({ buffer: PNG_BYTES, filename: "cv.png" });
+
+    assert.equal(first.text, "TEST");
+    assert.equal(second.text, "TEST");
+    const probes = calls.filter((args) => args.includes("--version"));
+    assert.equal(probes.length, 1, `the WSL probe must be cached, not repeated; saw ${probes.length}`);
+    const conversions = calls.filter((args) => !args.includes("--version"));
+    assert.equal(conversions.length, 2);
+    assert.deepEqual(conversions[0], ["-e", "tesseract", "stdin", "stdout"]);
+    assert.match(first.warnings.join(" "), /wsl -e tesseract stdin stdout/, "the warning must name the route that ran");
+  } finally {
+    setToolOverridesForTesting(null);
+  }
+});
+
+test("OCR with no route at all names both routes and both install commands", async () => {
+  setToolOverridesForTesting({
+    findOnPath: () => null,
+    run: () => ({ ok: false, reason: "must not be called when no binary resolves" }),
+  });
+  try {
+    const result = await extractText({ buffer: PNG_BYTES, filename: "cv.png" });
+    assert.equal(result.format, "image");
+    assert.equal(result.text, "");
+    const warning = result.warnings.join(" ");
+    assert.match(warning, /no tesseract binary is on the Windows PATH/);
+    assert.match(warning, /there is no `wsl` on the Windows PATH/);
+    assert.match(warning, /winget install UB-Mannheim\.TesseractOCR/);
+    assert.match(warning, /sudo apt install tesseract-ocr/);
+    assert.ok(!warning.includes("read with OCR"));
+  } finally {
+    setToolOverridesForTesting(null);
+  }
+});
+
+test("OCR that finds nothing says so instead of claiming a read", async () => {
+  setToolOverridesForTesting({
+    findOnPath: (name) => (name === "wsl" ? "C:\\Windows\\System32\\wsl.exe" : null),
+    run: (_binary, args) => (args.includes("--version") ? { ok: true, text: "" } : { ok: true, text: " \n\n " }),
+  });
+  try {
+    const result = await extractText({ buffer: PNG_BYTES, filename: "cv.png" });
+    assert.equal(result.format, "image");
+    assert.equal(result.text, "");
+    const warning = result.warnings.join(" ");
+    assert.match(warning, /found no text/);
+    assert.ok(!warning.includes("check numbers"), "an empty read must not carry the accuracy caveat");
+  } finally {
+    setToolOverridesForTesting(null);
+  }
+});
+
+test("OCR on an image that decodes but is not a CV still returns text, with the caveat", async () => {
+  const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  setToolOverridesForTesting({
+    findOnPath: (name) => (name === "tesseract" ? "/usr/bin/tesseract" : null),
+    run: () => ({ ok: true, text: "  2021 - 2024\n  Senior  Engineer " }),
+  });
+  try {
+    const result = await extractText({ buffer: png, filename: "cv.png" });
+    assert.equal(result.text, "2021 - 2024\n  Senior  Engineer");
+    assert.match(result.warnings.join(" "), /check numbers/);
+  } finally {
+    setToolOverridesForTesting(null);
   }
 });
 
@@ -521,6 +685,35 @@ test("binary bytes named as an image are refused without pretending OCR ran", as
   assert.equal(result.format, "image");
   assert.equal(result.text, "");
   assert.ok(result.warnings.some((warning) => warning.includes("not a PNG, JPEG, GIF, BMP, TIFF or WebP image")));
+});
+
+test("live OCR: WSL tesseract reads a synthesised image end to end", async (t) => {
+  // This host has Tesseract in WSL and nothing on the Windows PATH, which is the
+  // situation the fallback exists for. Anything else skips loudly, with a reason,
+  // rather than passing on the strength of a binary it never exercised.
+  if (nativeBinaryOnPath("tesseract")) {
+    t.diagnostic("SKIP: native tesseract is on PATH, so this run would not exercise the WSL OCR route");
+    t.skip("native tesseract on PATH; the WSL route is covered by the injected-runner test");
+    return;
+  }
+  if (!probeSucceeds("wsl", ["-e", "tesseract", "--version"])) {
+    t.diagnostic("SKIP: no tesseract on the Windows PATH and none inside WSL, so no OCR can run live");
+    t.skip("no tesseract on the Windows PATH or in WSL");
+    return;
+  }
+
+  const result = await extractText({ buffer: buildWordBmp("TEST"), filename: "scan.bmp", mime: "image/bmp" });
+
+  assert.equal(result.format, "image");
+  assert.match(result.text, /T\s*E\s*S\s*T/i, `live OCR returned ${JSON.stringify(result.text)}`);
+  const warning = result.warnings.join(" ");
+  assert.match(warning, /wsl -e tesseract stdin stdout/, "the warning must name the WSL route");
+  assert.match(warning, /check numbers and section headings/);
+
+  // A blank page must not invent text.
+  const blank = await extractText({ buffer: buildBmp({ width: 200, height: 60 }), filename: "blank.bmp" });
+  assert.equal(blank.text, "");
+  assert.match(blank.warnings.join(" "), /found no text/);
 });
 
 // ---------------------------------------------------------------------------

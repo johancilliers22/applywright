@@ -95,6 +95,21 @@
   }
 }
 
+/* Focus outranks the reveal.
+   site.js marks blocks that start below the fold and keeps them at opacity 0
+   until the observer sees them. A keyboard user who tabs straight into one
+   arrives on a control that is still invisible — measured on /pricing at 390:
+   the block holding the focused link sat at opacity 0 and took ~620ms to reach
+   0.997, so the focus ring (WCAG 2.4.7) was not visible when focus landed.
+   :focus-within settles the block on the frame focus arrives; the observer still
+   owns the scroll case, so nothing below the fold pops in early. No transition
+   here on purpose — a fade would leave the same invisible interval. */
+html.reveal-on .reveal:not(.is-visible):focus-within {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 /* Belt and braces for a preference changed after load, when site.js may have
    already installed the observer. */
 @media (prefers-reduced-motion: reduce) {

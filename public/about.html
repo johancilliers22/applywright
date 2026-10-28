@@ -183,8 +183,12 @@
             </div>
             <div class="field">
               <label for="contact-message">Message</label>
-              <textarea class="textarea" id="contact-message" name="message" rows="6" maxlength="4000" required></textarea>
-              <span class="small">Specific is better: the job, the finding and what you expected instead.</span>
+              <textarea class="textarea" id="contact-message" name="message" rows="6" maxlength="4000" required aria-describedby="contact-message-hint"></textarea>
+              <!-- The hint is a description of the control, not a paragraph that
+                   happens to sit below it: aria-describedby is what makes a
+                   screen reader read it when the field takes focus. The id is
+                   per-page, so it cannot collide with security.html's copy. -->
+              <span class="small" id="contact-message-hint">Specific is better: the job, the finding and what you expected instead.</span>
             </div>
             <div class="field" style="display: none" aria-hidden="true">
               <label for="contact-website">Website</label>

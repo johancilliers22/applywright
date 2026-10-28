@@ -9,7 +9,8 @@
  *      inflating the document part; RTF and HTML are stripped in-process. PDF
  *      and image uploads are delegated to a local `pdftotext` / `tesseract`
  *      binary, tried on the Windows PATH first and then inside WSL (`wsl -e`),
- *      because this host has Poppler in WSL but not on the Windows PATH.
+ *      because this host has Poppler and Tesseract in WSL but neither on the
+ *      Windows PATH. An absent tool is reported, never faked.
  *   3. Anything a parser cannot do is said out loud, with the next step. Plain
  *      text and Markdown are the reliable path, and the dashboard paste box
  *      plus `PATCH /api/cvs/:id { text }` is the correction path when an
@@ -34,10 +35,14 @@ const MAX_EXTRACTED_TEXT_BYTES = 4 * 1024 * 1024;
 /** The first `wsl -e` of a session pays a VM start, so probe it a little longer. */
 const WSL_PROBE_TIMEOUT_MS = 10_000;
 
-/** Shared by the PDF and OCR paths: read stdin, write stdout. */
+/** Shared by the PDF path: read stdin, write stdout. */
 const STDIO_ARGS = ["-", "-"];
-/** tesseract spells its stdout sink as a name, not a dash. */
-const OCR_ARGS = ["-", "stdout"];
+/**
+ * tesseract names its stdin and stdout sinks instead of using dashes.
+ * Verified against tesseract 5.3.4 in WSL: a blank image exits 0 with no output,
+ * a rendered "TEST" exits 0 with "TEST" on stdout.
+ */
+const OCR_ARGS = ["stdin", "stdout"];
 
 const LEGACY_DOC_WARNING =
   "Legacy binary Word (.doc) is not supported and no text was read. Open the file in Word or LibreOffice and save it as .docx, or paste the CV text instead.";
@@ -801,13 +806,14 @@ function readHtml(bytes, warnings) {
 // External extractors: local binary first, WSL second
 // ---------------------------------------------------------------------------
 //
-// PDF and image ingest need a real tool. Both are optional on this machine:
-//   * Poppler's `pdftotext` lives at /usr/bin/pdftotext inside WSL, not on the
-//     Windows PATH, so `wsl -e pdftotext - -` is the working route here.
-//   * `tesseract` is not installed anywhere, so image uploads answer with the
-//     install command instead of pretending to read them.
-// The WSL capability probe runs once per process and is cached; the `wsl`
-// binary itself is re-resolved each call, so a changed PATH is always honoured.
+// PDF and image ingest need a real tool. Neither is on the Windows PATH on this
+// machine, so WSL is the working route:
+//   * Poppler's `pdftotext` at /usr/bin/pdftotext  -> `wsl -e pdftotext - -`
+//   * `tesseract` at /usr/bin/tesseract           -> `wsl -e tesseract stdin stdout`
+// The native Windows attempt is kept first, because a Windows install would be
+// faster and needs no VM. The WSL capability probe runs once per tool and is
+// cached; the `wsl` binary itself is re-resolved each call, so a changed PATH is
+// always honoured.
 
 /** Locate an executable on PATH without spawning anything. */
 function findOnPath(name) {
@@ -839,6 +845,31 @@ function errorCode(error) {
   return "unknown error";
 }
 
+/** Probe results for `wsl -e <tool>`, cached per tool for the life of the process. */
+const wslToolCache = new Map();
+
+/**
+ * Test seam, null in production. The tests inject
+ * `{ findOnPath(name), run(binary, args, input, timeout) }` so routing, argv, the
+ * cached WSL probe and the refusal messages can be asserted offline and on any
+ * host without a real binary. `run` must return the same shape as runExtractor.
+ * Passing null restores the real implementations and forgets the cached probes.
+ */
+let toolOverrides = null;
+
+export function setToolOverridesForTesting(overrides) {
+  toolOverrides = overrides && typeof overrides === "object" ? overrides : null;
+  wslToolCache.clear();
+}
+
+/** PATH lookup, through the test seam when one is installed. */
+function resolveOnPath(name) {
+  if (toolOverrides && typeof toolOverrides.findOnPath === "function") {
+    return toolOverrides.findOnPath(name) ?? null;
+  }
+  return findOnPath(name);
+}
+
 /**
  * Run an extractor with the file on stdin and the text on stdout.
  * Bounded twice: a hard timeout so a hung binary cannot hold a request, and a
@@ -846,6 +877,10 @@ function errorCode(error) {
  * @returns {{ ok: true, text: string } | { ok: false, reason: string }}
  */
 function runExtractor(binary, args, input, timeout = TOOL_TIMEOUT_MS) {
+  if (toolOverrides && typeof toolOverrides.run === "function") {
+    return toolOverrides.run(binary, args, input, timeout);
+  }
+
   let result;
   try {
     result = spawnSync(binary, args, {
@@ -873,9 +908,6 @@ function runExtractor(binary, args, input, timeout = TOOL_TIMEOUT_MS) {
   return { ok: true, text: String(result.stdout ?? "") };
 }
 
-/** Probe results for `wsl -e <tool>`, cached per tool for the life of the process. */
-const wslToolCache = new Map();
-
 /**
  * Can WSL run this tool? Probed once and cached.
  * A missing `wsl` on PATH is *not* cached: PATH is the caller's to change, and
@@ -884,7 +916,7 @@ const wslToolCache = new Map();
 function wslHasTool(tool, probeArgs) {
   const cached = wslToolCache.get(tool);
   if (cached !== undefined) return cached;
-  const wsl = findOnPath("wsl");
+  const wsl = resolveOnPath("wsl");
   if (!wsl) return false;
   const probe = runExtractor(wsl, ["-e", tool, ...probeArgs], Buffer.alloc(0), WSL_PROBE_TIMEOUT_MS);
   wslToolCache.set(tool, probe.ok);
@@ -896,7 +928,7 @@ function wslHasTool(tool, probeArgs) {
  * @returns {{ status: 'ok', text: string } | { status: 'unavailable'|'failed', reason: string }}
  */
 function runInWsl(tool, args, input, probeArgs) {
-  const wsl = findOnPath("wsl");
+  const wsl = resolveOnPath("wsl");
   if (!wsl) return { status: "unavailable", reason: "there is no `wsl` on the Windows PATH" };
   if (!wslHasTool(tool, probeArgs)) {
     return { status: "unavailable", reason: `WSL is installed but \`${tool}\` is not installed inside it` };
@@ -916,11 +948,12 @@ function joinAttempts(tried) {
  * Try an extractor on the Windows PATH, then inside WSL.
  * Returning `text: null` means both routes are exhausted and `tried` explains
  * each one, which is what the caller's warning quotes back to the user.
+ * `source` names the route that worked, so a warning can say which one ran.
  * @returns {{ text: string, source: string } | { text: null, tried: string[] }}
  */
 function runExtractorChain({ binary, args, input, probeArgs }) {
   const tried = [];
-  const native = findOnPath(binary);
+  const native = resolveOnPath(binary);
   if (native) {
     const attempt = runExtractor(native, args, input);
     if (attempt.ok) return { text: attempt.text, source: binary };
@@ -929,8 +962,9 @@ function runExtractorChain({ binary, args, input, probeArgs }) {
     tried.push(`no ${binary} binary is on the Windows PATH`);
   }
 
+  const wslCommand = `wsl -e ${binary} ${args.join(" ")}`;
   const viaWsl = runInWsl(binary, args, input, probeArgs);
-  if (viaWsl.status === "ok") return { text: viaWsl.text, source: `wsl ${binary}` };
+  if (viaWsl.status === "ok") return { text: viaWsl.text, source: `\`${wslCommand}\`` };
   tried.push(viaWsl.status === "failed" ? viaWsl.reason : `${viaWsl.reason} (\`wsl -e ${binary} ${probeArgs.join(" ")}\` did not run)`);
   return { text: null, tried };
 }
@@ -953,7 +987,7 @@ function capExtractedText(text, warnings, label) {
 
 /** True when OCR could actually run, so advice is only offered when it is actionable. */
 function tesseractAvailable() {
-  return Boolean(findOnPath("tesseract")) || wslHasTool("tesseract", ["--version"]);
+  return Boolean(resolveOnPath("tesseract")) || wslHasTool("tesseract", ["--version"]);
 }
 
 /** What to tell someone whose PDF turned out to be a scan. */
@@ -981,8 +1015,10 @@ function extractPdf(buffer, warnings) {
 
 /**
  * Read an image with OCR, or say precisely why it could not be read.
- * There is no cloud call and no dependency: if Tesseract is absent, the upload
- * gets the install command and the paste path instead of a silent empty string.
+ * Tesseract is not perfect on CVs: it mangles numerals and sometimes merges or
+ * invents section headings, so a successful read says which route ran and that
+ * the text needs checking. There is no cloud call and no dependency: only when
+ * neither route exists does the upload get the install command instead.
  */
 function extractImage(buffer, warnings) {
   const attempt = runExtractorChain({ binary: "tesseract", args: OCR_ARGS, input: buffer, probeArgs: ["--version"] });
@@ -994,7 +1030,13 @@ function extractImage(buffer, warnings) {
   }
 
   const text = normalisePlain(capExtractedText(attempt.text, warnings, "tesseract"));
-  if (!text) warnings.push("OCR ran but found no text in that image; try a sharper, straight-on scan.");
+  if (!text) {
+    warnings.push(`OCR ran via ${attempt.source} but found no text in that image; try a sharper, straight-on scan.`);
+    return { text: "", format: "image", warnings };
+  }
+  warnings.push(
+    `The text was read with OCR via ${attempt.source}; check numbers and section headings against the original, and correct them in the editor.`
+  );
   return { text, format: "image", warnings };
 }
 

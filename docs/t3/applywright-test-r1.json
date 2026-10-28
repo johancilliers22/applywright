@@ -1,0 +1,30 @@
+{
+  "id": "applywright-test-r1",
+  "objective": "Verify observable behaviour of Applywright against its own gates and its end-to-end browser journey, and report exactly what ran, what passed and what did not run.",
+  "workspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+  "parentWorkspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system",
+  "parentThreadId": "REPLACE_WITH_T3_THREAD_ID",
+  "maxActiveChildren": 2,
+  "tasks": [
+    {
+      "key": "test-gates-r1",
+      "agent": "tester",
+      "access": "shared",
+      "brief": "From the project root C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright run, in order: `node --test tests/`, `node --test server/lib server/provider`, `node scripts/check.js`, and `node scripts/e2e-flow.mjs` (the last one starts its own instance on PORT 0 with a temporary database and takes about 15 seconds). Report the exact summary lines for each command, the E2E ledger's step and assertion counts, and any failure with the failing assertion text. State explicitly anything you could NOT run and why (for example no network, no model key, no browser). Do not modify repository files; temporary files outside the repo are fine. Do not merge, publish or delegate further. Known baselines if you need to judge drift: 150 HTTP tests, 338 module tests, check.js 0 errors, E2E 10 steps / 235 assertions - but report what you measure, not what this brief expects.",
+      "inputPaths": [
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/package.json",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/E2E-VERIFICATION.md",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/PIPELINE.md"
+      ],
+      "ownedPaths": [],
+      "dependsOn": [],
+      "acceptance": [
+        "Each of the four commands has its actual summary lines quoted.",
+        "The E2E run reports steps and assertions, and the commit it ran against.",
+        "Every failure includes the failing assertion text.",
+        "A NOT RUN section exists, even if empty, stating why.",
+        "No repository files modified; no delegation."
+      ]
+    }
+  ]
+}

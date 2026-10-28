@@ -1,0 +1,32 @@
+{
+  "id": "applywright-plan-r1",
+  "objective": "Produce the next sprint plan for Applywright against the current tree, bounded to work that can be executed by DSH implementation agents and reviewed by Codex.",
+  "workspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+  "parentWorkspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system",
+  "parentThreadId": "REPLACE_WITH_T3_THREAD_ID",
+  "maxActiveChildren": 2,
+  "tasks": [
+    {
+      "key": "plan-r1",
+      "agent": "codex-planner",
+      "access": "read-only",
+      "brief": "Read the supplied project documents and the current tree, then produce a bounded next-sprint plan. The product is a CV scoring and grounded-tailoring web app; the repository is its own git repo inside projects/applywright and is not a hub package. Determine what is genuinely unfinished from docs/IMPLEMENTATION-PLAN.md and docs/PROJECT-STATUS.md, cross-check every claim against the code (do not trust prose that says something shipped), and return: (a) the five highest-value items with file paths, (b) for each, the acceptance check a stranger could run, (c) which items are blocked on Johan (DNS, Stripe keys, VAT, Scale-tier decision), (d) an execution order with dependencies. Do not implement, do not edit files and do not delegate further.",
+      "inputPaths": [
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/PROJECT-STATUS.md",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/IMPLEMENTATION-PLAN.md",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/PIPELINE.md",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/MODEL-CONFIG.md",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/CODEX-ORCHESTRATOR-HANDOFF.md"
+      ],
+      "ownedPaths": [],
+      "dependsOn": [],
+      "acceptance": [
+        "Five prioritised items, each naming concrete file paths.",
+        "Every item has an acceptance check that is a command or an observable behaviour.",
+        "Blocked-on-operator items are separated from actionable ones.",
+        "Claims about what has shipped cite a file or commit that supports them.",
+        "No files written; no delegation."
+      ]
+    }
+  ]
+}

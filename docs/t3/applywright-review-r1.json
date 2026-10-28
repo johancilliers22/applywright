@@ -1,0 +1,52 @@
+{
+  "id": "applywright-review-r1",
+  "objective": "Independently review the two modules where correctness is the product's promise: the grounding check (does it still refuse fabricated facts while accepting ordinary English?) and the model integration path (does a real model reply actually reach the user?).",
+  "workspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+  "parentWorkspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system",
+  "parentThreadId": "REPLACE_WITH_T3_THREAD_ID",
+  "maxActiveChildren": 2,
+  "tasks": [
+    {
+      "key": "review-grounding-r1",
+      "agent": "codex-reviewer",
+      "access": "read-only",
+      "brief": "Read server/lib/cv/tailor.js and server/lib/cv/refine.js as they stand, plus their tests, and judge two things. FIRST: does the grounding check still refuse a fabricated employer, job title, qualification, date or figure? Look for the mechanisms that decide whether a capitalised token is a name (SENTENCE_START_WORDS, COMMON_OPENERS, couldBeName, isNameShaped) and the ownership-tier verb guard, then judge whether any of them creates a bypass - a way for an invented fact or a promoted verb to pass. SECOND: is the check over-eager in a way that rejects ordinary English, which was a real defect: 'Delivers a 40% reduction', 'Use a plainer tone' and 'Go-based services' were all refused at different times. Report the mechanism, any bypass you can demonstrate, and any ordinary phrasing you believe would still be wrongly refused, with file and line references. You may run the existing module tests; do not edit any file and do not delegate further.",
+      "inputPaths": [
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/server/lib/cv/tailor.js",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/server/lib/cv/refine.js",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/server/lib/cv/tailor.test.mjs",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/server/lib/cv/refine.test.mjs"
+      ],
+      "ownedPaths": [],
+      "dependsOn": [],
+      "acceptance": [
+        "Names the mechanisms that decide 'is this a name' and 'is this a stronger verb'.",
+        "States clearly whether a fabricated employer/qualification/figure can still pass; if yes, gives a reproducing input.",
+        "Lists ordinary-English phrasings that would still be wrongly refused, or states that none were found and why.",
+        "Verdict PASS, REQUEST_CHANGES or BLOCKED with file:line evidence.",
+        "No files written; no delegation."
+      ]
+    },
+    {
+      "key": "review-model-path-r1",
+      "agent": "codex-reviewer",
+      "access": "read-only",
+      "brief": "Read server/model.js, server/provider/anthropic.js and the assist/refine route code in server/app.js. Judge whether a real model reply can reach the user end to end: the schema the reply must satisfy, what happens when a field is missing or wrong, whether a silence fallback hides a failure from the user, and whether the documented claim in docs/MODEL-CONFIG.md ('health: live is not proof; mode: model is') is what the code actually reports. Report any path where a model failure is indistinguishable from a rules-only server, and any place a model's reply could reach a user without passing the grounding check. File and line references required; do not edit files and do not delegate further.",
+      "inputPaths": [
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/server/model.js",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/server/provider/anthropic.js",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/server/app.js",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/MODEL-CONFIG.md"
+      ],
+      "ownedPaths": [],
+      "dependsOn": [],
+      "acceptance": [
+        "States whether every model-proposed string is grounding-checked before it is returned.",
+        "Identifies any failure mode where the user cannot tell a model run from a rules run.",
+        "Confirms or refutes the MODE reporting claim with code references.",
+        "Verdict PASS, REQUEST_CHANGES or BLOCKED with file:line evidence.",
+        "No files written; no delegation."
+      ]
+    }
+  ]
+}

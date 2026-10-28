@@ -47,7 +47,7 @@
         <p class="eyebrow">Plain text and Markdown</p>
         <h1 class="ed-bar__title" id="ed-title">CV editor</h1>
         <p class="ed-bar__meta">
-          <span id="ed-cv-name">Loading your CV…</span>
+          <span id="ed-cv-name">No CV chosen</span>
           <span class="dot-sep" aria-hidden="true">·</span>
           <span class="mono ed-save" id="ed-save-state" data-savestate data-state="loading">loading</span>
         </p>
@@ -56,14 +56,14 @@
         <button class="btn btn--primary" type="button" id="ed-save" data-save aria-keyshortcuts="Control+S Meta+S" disabled>
           Save
         </button>
-        <button class="btn btn--ghost" type="button" id="ed-download-md" disabled>Download .md</button>
-        <button class="btn btn--ghost" type="button" id="ed-print" disabled>Print / PDF</button>
-        <button class="btn btn--ghost" type="button" id="ed-download-docx" disabled>Download .docx</button>
+        <button class="btn btn--ghost btn--sm" type="button" id="ed-download-md" disabled>Download .md</button>
+        <button class="btn btn--ghost btn--sm" type="button" id="ed-print" disabled>Print / PDF</button>
+        <button class="btn btn--ghost btn--sm" type="button" id="ed-download-docx" disabled>Download .docx</button>
       </div>
     </div>
     <p class="ed-bar__hint" id="ed-shortcuts">
-      <span class="mono">⌘/Ctrl + S</span> saves. The document is the text the analyser and the printable pack read —
-      not a layout you have to fight.
+      <span class="mono">Ctrl + S</span> (Cmd + S on a Mac) saves. The document is the text the analyser and the
+      printable pack read — not a layout you have to fight.
     </p>
   </header>
 
@@ -74,12 +74,12 @@
     <nav class="ed-pane ed-pane--nav" aria-labelledby="ed-sections-title">
       <h2 class="ed-pane__title" id="ed-sections-title">Sections</h2>
       <ul class="ed-nav" id="ed-nav">
-        <li><a href="#ed-section-contact">Contact <span class="ed-nav__count mono" data-count="contact">—</span></a></li>
-        <li><a href="#ed-section-summary">Summary <span class="ed-nav__count mono" data-count="summary">—</span></a></li>
-        <li><a href="#ed-section-experience">Experience <span class="ed-nav__count mono" data-count="experience">—</span></a></li>
-        <li><a href="#ed-section-education">Education <span class="ed-nav__count mono" data-count="education">—</span></a></li>
-        <li><a href="#ed-section-skills">Skills <span class="ed-nav__count mono" data-count="skills">—</span></a></li>
-        <li><a href="#ed-section-other">Other <span class="ed-nav__count mono" data-count="other">—</span></a></li>
+        <li><a href="#ed-section-contact">Contact <span class="ed-nav__count mono" data-count="contact"></span></a></li>
+        <li><a href="#ed-section-summary">Summary <span class="ed-nav__count mono" data-count="summary"></span></a></li>
+        <li><a href="#ed-section-experience">Experience <span class="ed-nav__count mono" data-count="experience"></span></a></li>
+        <li><a href="#ed-section-education">Education <span class="ed-nav__count mono" data-count="education"></span></a></li>
+        <li><a href="#ed-section-skills">Skills <span class="ed-nav__count mono" data-count="skills"></span></a></li>
+        <li><a href="#ed-section-other">Other <span class="ed-nav__count mono" data-count="other"></span></a></li>
       </ul>
       <p class="ed-pane__note">
         Each count is the number of words in that section on the saved copy. The assistant in the right-hand rail
@@ -90,15 +90,6 @@
     <!-- ---------------------------------------------------- the document -->
     <main class="ed-pane ed-pane--doc" id="ed-main" tabindex="-1">
       <h2 class="sr-only" id="ed-doc-title">Your CV document</h2>
-
-      <div class="ed-toolbar">
-        <p class="ed-toolbar__state">
-          <span class="mono ed-save" data-savestate data-state="loading">loading</span>
-        </p>
-        <div class="ed-toolbar__actions">
-          <button class="btn btn--primary" type="button" data-save aria-keyshortcuts="Control+S Meta+S" disabled>Save</button>
-        </div>
-      </div>
 
       <div class="ed-loading" id="ed-loading" role="status">
         <p>Loading the CV…</p>
@@ -206,18 +197,26 @@
       <section class="ed-card" aria-labelledby="ed-agent-title">
         <h3 class="ed-card__title" id="ed-agent-title">AI agent</h3>
         <p class="ed-card__note">
-          It rewrites only what you already wrote. Every proposed string is checked against this CV first: a number,
-          employer, job title, qualification or date that is not in the document rejects the change. Nothing is applied
-          until you accept it, and nothing is saved until you do.
+          It rewrites only what you already wrote. Every proposal is checked against this CV first, and nothing is
+          applied or saved until you accept it.
         </p>
+        <details class="ed-source">
+          <summary>What the grounding check refuses</summary>
+          <div class="ed-source__body">
+            <p class="hint">
+              A number, employer, job title, qualification or date that is not already in the document rejects the
+              change. Refused changes are listed under the proposal with the reason, and nothing is applied.
+            </p>
+          </div>
+        </details>
 
-        <form class="ed-agent" id="ed-agent-form" novalidate>
+        <form class="ed-agent" id="ed-agent-form">
           <div class="field">
             <label for="ed-instruction">What should change?</label>
-            <textarea class="textarea" id="ed-instruction" name="instruction" rows="3" aria-describedby="ed-instruction-hint"></textarea>
+            <textarea class="textarea" id="ed-instruction" name="instruction" rows="2" required minlength="3" aria-describedby="ed-instruction-hint"></textarea>
             <p class="hint" id="ed-instruction-hint">
               Shorter, longer, formal, plainer, more senior, less jargon, first person, UK spelling. Quote a phrase in
-              “double quotes” to protect it. <span class="mono">⌘/Ctrl + Enter</span> sends.
+              “double quotes” to protect it. <span class="mono">Ctrl + Enter</span> (Cmd + Enter on a Mac) sends.
             </p>
           </div>
           <div class="field">
@@ -232,7 +231,7 @@
             </select>
           </div>
           <p class="ed-actions">
-            <button class="btn btn--primary" type="submit" id="ed-ask">Ask for a proposal</button>
+            <button class="btn btn--primary" type="submit" id="ed-ask" disabled>Ask for a proposal</button>
           </p>
         </form>
 

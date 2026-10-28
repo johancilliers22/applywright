@@ -12,6 +12,11 @@
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
   <link rel="stylesheet" href="/assets/auth.css" />
+  <!-- Blocking and after the stylesheets: the saved or system theme is applied
+       before first paint, so choosing dark on the marketing pages no longer
+       drops you back into light on a recovery screen. Same-origin, so
+       script-src 'self' covers it; no inline boot code (CSP and check.js). -->
+  <script src="/assets/theme.js"></script>
 </head>
 <body>
   <main class="auth">
@@ -47,17 +52,18 @@
 
         <div>
           <h1 class="auth__title">Recover your account</h1>
-          <p class="auth__sub" data-reset-sub>Use a recovery code you saved, or ask the operator for a reset link. The username is the email address you signed up with.</p>
+          <p class="auth__sub" data-reset-sub>Use a recovery code you saved, or ask the operator for a reset link.</p>
         </div>
 
         <!-- Set a new password: shown when the page is opened with ?token=... -->
         <section hidden data-reset-panel="token">
           <div class="auth__form">
             <h2 class="legend">Choose a new password</h2>
-            <form class="auth__form" data-auth-form="reset" novalidate>
-              <div class="field">
+            <form class="auth__form" data-auth-form="reset">
+              <div class="field field__row">
                 <label for="password-reset">New password</label>
                 <input class="input" id="password-reset" name="password" type="password" autocomplete="new-password" required minlength="10" />
+                <button class="field__toggle" type="button" data-toggle-password aria-pressed="false">show</button>
                 <span class="hint">At least 10 characters. Length beats punctuation.</span>
               </div>
               <div class="field">
@@ -75,8 +81,8 @@
         <section data-reset-panel="request">
           <div class="auth__form">
             <h2 class="legend">Use a recovery code</h2>
-            <p class="auth__sub">The eight codes shown when you signed up. Each one works once.</p>
-            <form class="auth__form" data-auth-form="recover" novalidate>
+            <p class="auth__sub">The eight codes you saved at sign-up. Each works once, and capitals or dashes do not matter.</p>
+            <form class="auth__form" data-auth-form="recover">
               <div class="field">
                 <label for="email-recover">Email</label>
                 <input class="input" id="email-recover" name="email" type="email" autocomplete="email" required />
@@ -86,9 +92,10 @@
                 <input class="input mono" id="code-recover" name="code" type="text" autocomplete="one-time-code" placeholder="aw-XXXX-XXXX" required />
                 <span class="hint">Any capitalisation works; the dashes are optional.</span>
               </div>
-              <div class="field">
+              <div class="field field__row">
                 <label for="password-recover">New password</label>
                 <input class="input" id="password-recover" name="password" type="password" autocomplete="new-password" required minlength="10" />
+                <button class="field__toggle" type="button" data-toggle-password aria-pressed="false">show</button>
                 <span class="hint">At least 10 characters.</span>
               </div>
               <div class="field">
@@ -101,22 +108,22 @@
 
             <div class="hairline-top"></div>
             <h2 class="legend">Request a reset link</h2>
-            <p class="note">This server has no email transport. A reset link is issued to the operator, not emailed, in this build — you will need to reach the operator to collect it.</p>
-            <form class="auth__form" data-auth-form="forgot" novalidate>
+            <p class="note">This server sends no email. A reset link is issued on the host, so the operator passes it on to you by hand.</p>
+            <form class="auth__form" data-auth-form="forgot">
               <div class="field">
                 <label for="email-request">Email</label>
                 <input class="input" id="email-request" name="email" type="email" autocomplete="email" required />
               </div>
               <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
-              <button class="btn btn--primary btn--lg btn--block" type="submit">Request a reset link</button>
+              <button class="btn btn--ghost btn--lg btn--block" type="submit">Request a reset link</button>
             </form>
 
             <div class="hairline-top"></div>
-            <h2 class="legend">Forgotten your username?</h2>
-            <p class="auth__sub">The username is the email address on your account.</p>
-            <form class="auth__form" data-auth-form="forgot-username" novalidate>
+            <h2 class="legend">Cannot remember which email you used?</h2>
+            <p class="auth__sub">The username is the email address on the account, so there is nothing else to look up.</p>
+            <form class="auth__form" data-auth-form="forgot-username">
               <div class="field">
-                <label for="email-username">Email</label>
+                <label for="email-username">Email to ask about</label>
                 <input class="input" id="email-username" name="email" type="email" autocomplete="email" required />
               </div>
               <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>

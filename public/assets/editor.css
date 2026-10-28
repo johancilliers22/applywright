@@ -11,6 +11,15 @@
    Shell
    -------------------------------------------------------------------------- */
 
+/* The `hidden` attribute is how editor.js swaps the paper, the loading state,
+   the diff and the error banner. The UA rule for [hidden] loses to any author
+   `display` declaration — .ed-paper is display:block — which made an empty
+   document render under the "No CV chosen" message and under the loading state.
+   This restores the attribute's meaning for this page. */
+[hidden] {
+  display: none !important;
+}
+
 body {
   background: var(--bone);
 }
@@ -110,6 +119,15 @@ body {
   max-width: 1560px;
   margin: var(--sp-3) auto 0;
   padding: 0 var(--gutter);
+  /* A save can fail while the person is editing the experience section, 2–4
+     thousand pixels down. Pinning the banner to the top of the viewport keeps
+     the failure (and its fix) on screen instead of at the top of the page. */
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background: var(--bone);
+  padding-top: var(--sp-2);
+  padding-bottom: var(--sp-1);
 }
 
 .ed-errors [role="alert"],
@@ -245,7 +263,7 @@ body {
 
 .ed-nav a {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
   padding: 0.3rem 0.5rem;
@@ -254,7 +272,9 @@ body {
   color: var(--text-soft);
   text-decoration: none;
   font-size: var(--fs-sm);
-  min-height: 2rem;
+  /* 40px, not 32: on a phone these are the only way to move between sections,
+     and they sit edge to edge in a wrapping row. */
+  min-height: 2.5rem;
 }
 
 .ed-nav a:hover {
@@ -283,29 +303,18 @@ body {
   max-width: 30ch;
 }
 
+/* With no document open (editor.js leaves #ed-form hidden) the section list is
+   six links to anchors that do not exist yet: dead controls above the one action
+   the empty state offers. Hide the pane until a CV is loaded. */
+@supports selector(:has(*)) {
+  html:has(#ed-form[hidden]) .ed-pane--nav {
+    display: none;
+  }
+}
+
 /* --------------------------------------------------------------------------
    Document pane
    -------------------------------------------------------------------------- */
-
-.ed-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  padding: 0 0 var(--sp-2);
-}
-
-.ed-toolbar__state {
-  margin: 0;
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-}
-
-.ed-toolbar__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-}
 
 .ed-loading {
   border: 1px dashed var(--line-meaning);
@@ -319,7 +328,9 @@ body {
   display: block;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: var(--r-lg);
+  /* A sheet, not a card: 2px corners and the stacked-sheet offset shadow are the
+     system's paper treatment (--r-folio / --shadow-sheet). */
+  border-radius: var(--r-folio);
   box-shadow: var(--shadow-sheet);
   padding: clamp(1.1rem, 3vw, 2.5rem);
 }
@@ -494,7 +505,7 @@ body {
 }
 
 .ed-card__note {
-  margin: 0 0 var(--sp-3);
+  margin: 0 0 var(--sp-2);
   color: var(--text-soft);
   font-size: var(--fs-xs);
   line-height: 1.55;
@@ -516,7 +527,7 @@ body {
 
 .ed-agent {
   display: grid;
-  gap: var(--sp-3);
+  gap: var(--sp-2);
 }
 
 .ed-actions {
@@ -657,6 +668,13 @@ body {
   display: grid;
   gap: var(--sp-2);
   padding: var(--sp-2) 0 var(--sp-1);
+}
+
+/* The UA rule for a closed <details> is display:none on its non-summary
+   children, and the author `display: grid` above wins over it — every source
+   drawer was permanently open. Restore the disclosure. */
+details.ed-source:not([open]) > .ed-source__body {
+  display: none;
 }
 
 .ed-source__body .hint {

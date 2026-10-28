@@ -12,6 +12,11 @@
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
   <link rel="stylesheet" href="/assets/auth.css" />
+  <!-- Blocking and after the stylesheets: the saved or system theme is applied
+       before first paint, so choosing dark on the marketing pages no longer
+       drops you back into light at the door. Same-origin, so script-src 'self'
+       covers it; no inline boot code (CSP and scripts/check.js). -->
+  <script src="/assets/theme.js"></script>
 </head>
 <body>
   <main class="auth">
@@ -47,17 +52,17 @@
 
         <div>
           <h1 class="auth__title">Sign in</h1>
-          <p class="auth__sub">Your CVs, packs and application record are waiting.</p>
+          <p class="auth__sub">Your CVs, reports and application record are here.</p>
         </div>
 
-        <form class="auth__form" data-auth-form="login" novalidate>
+        <form class="auth__form" data-auth-form="login">
           <div class="field">
             <label for="email">Email</label>
             <input class="input" id="email" name="email" type="email" autocomplete="email" required />
           </div>
           <div class="field field__row">
             <label for="password">Password</label>
-            <input class="input" id="password" name="password" type="password" autocomplete="current-password" required minlength="10" />
+            <input class="input" id="password" name="password" type="password" autocomplete="current-password" required />
             <button class="field__toggle" type="button" data-toggle-password aria-pressed="false">show</button>
           </div>
           <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
@@ -67,8 +72,8 @@
         <p class="auth__alt"><a href="/reset">Forgotten your password?</a> Use a recovery code, or ask the operator for a reset link.</p>
         <p class="auth__alt">No account yet? <a href="/sign-up">Create one — the free plan needs no card.</a></p>
         <p class="auth__legal">
-          Sessions are a server-side cookie, HttpOnly and SameSite=Lax. We never store your
-          original file, only the text you provide.
+          You stay signed in on this device for 30 days. We never store your original file, only the text you
+          provide, and you can export or delete everything from Settings.
         </p>
       </div>
     </div>

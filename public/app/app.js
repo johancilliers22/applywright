@@ -1462,6 +1462,10 @@ async function renderCvScreen(mount, { signal }) {
               onClick: () => {
                 selectedCvId = cv.id;
                 renderSelect();
+                // Defensive: if the panel is somehow not mounted (a stale
+                // structure from before the rebuild rule), build it first so the
+                // scroll always has a target.
+                if (!byId("cv-analyse")) refreshScreen();
                 jobText.focus();
                 byId("cv-analyse")?.scrollIntoView({ behavior: "smooth", block: "start" });
               },
@@ -1476,8 +1480,7 @@ async function renderCvScreen(mount, { signal }) {
                     try {
                       await api(`/api/cvs/${encodeURIComponent(cv.id)}`, { method: "PATCH", body: { primary: true } });
                       cvs = cvs.map((item) => ({ ...item, primary: item.id === cv.id }));
-                      renderLibrary();
-                      renderSelect();
+                      refreshScreen();
                       toast(`${cv.name} is now your primary CV.`);
                     } catch (error) {
                       target.disabled = false;
@@ -1498,9 +1501,7 @@ async function renderCvScreen(mount, { signal }) {
                   styleCache.delete(cv.id);
                   if (selectedCvId === cv.id) selectedCvId = (cvs.find((item) => item.primary) ?? cvs[0])?.id ?? "";
                   await loadMe(null, { force: true });
-                  renderLibrary();
-                  renderSelect();
-                  refreshCvQuotaNote();
+                  refreshScreen();
                   updateRail();
                   toast(`${cv.name} deleted.`);
                 } catch (error) {
@@ -1571,9 +1572,7 @@ async function renderCvScreen(mount, { signal }) {
       pasteForm.reset();
       say(pasteStatus, "Added.", "ok");
       await loadMe(signal, { force: true });
-      renderLibrary();
-      renderSelect();
-      refreshCvQuotaNote();
+      refreshScreen();
       updateRail();
       toast(`${data.cv.name} added.`);
     } catch (error) {
@@ -1636,9 +1635,7 @@ async function renderCvScreen(mount, { signal }) {
         );
       }
       await loadMe(signal, { force: true });
-      renderLibrary();
-      renderSelect();
-      refreshCvQuotaNote();
+      refreshScreen();
       updateRail();
       toast(`${data.cv.name} added.`);
     } catch (error) {
@@ -1800,9 +1797,7 @@ async function renderCvScreen(mount, { signal }) {
           cvs = [created.cv, ...cvs];
           selectedCvId = created.cv.id;
           await loadMe(null, { force: true });
-          renderLibrary();
-          renderSelect();
-          refreshCvQuotaNote();
+          refreshScreen();
           updateRail();
           loadLibraryStyles();
           target.textContent = "CV created";
@@ -1963,6 +1958,10 @@ async function renderCvScreen(mount, { signal }) {
                 ),
                 ...packBlocks
               );
+              // A pack spends a credit: re-derive so the rail, the allowance line
+              // and the structure all agree with the new state.
+              refreshScreen();
+              updateRail();
               toast("Pack created and queued.");
             } catch (error) {
               if (error?.status === 402) tailorStatus.replaceChildren(quotaPrompt(error));
@@ -1971,6 +1970,9 @@ async function renderCvScreen(mount, { signal }) {
           },
         })
       );
+      // The report is already in analysisResult; re-derive the screen so it is
+      // inside a mounted panel even if the structure was stale, then show it.
+      refreshScreen();
       analysisResult.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (error) {
       reportActionError(analyseErrors, error);
@@ -1980,84 +1982,116 @@ async function renderCvScreen(mount, { signal }) {
     }
   });
 
-  renderLibrary();
-  renderSelect();
-  loadLibraryStyles();
-
-  // The CV allowance is re-read after every add or delete, so this line can
-  // never show a stale count.
+  // The CV allowance is re-read after every mutation, so this line can never
+  // show a stale count.
   const cvQuotaNote = el("p", { class: "aw-note" });
-  const refreshCvQuotaNote = () => {
+  function refreshCvQuotaNote() {
     const current = quotaInfo("cvs");
     cvQuotaNote.textContent = current.unlimited
       ? "Your plan does not cap CVs."
       : `${current.used} of ${current.limit} ${plural(current.limit, "CV", "CVs")} used on this plan.`;
-  };
+  }
   refreshCvQuotaNote();
 
-  const addSection = el(
-    "div",
-    { class: "aw-grid aw-grid--2", id: "cv-add" },
-    card({
-      kicker: "Add a CV",
-      title: "Paste the text",
-      meta: cvQuotaNote,
-      children: pasteForm,
-    }),
-    card({ kicker: "Add a CV", title: "Upload a file", children: uploadForm })
-  );
+  /**
+   * The screen is a function of state, not of the route that entered it.
+   *
+   * This used to be built once, from `cvs.length` as it was on entry: importing
+   * the first CV on an empty account only refreshed the library, so the "Analyse
+   * against a job" panel was never mounted and the library's "Analyse this"
+   * button had nothing to scroll to until a reload. Everything that can change
+   * state now calls refreshScreen(), which re-derives the order.
+   *
+   * The interactive nodes (paste/upload/import/analyse forms, the report, the
+   * status lines) are created once outside this function and re-parented, so a
+   * rebuild keeps typed text, a finished report and any error line.
+   */
+  function renderScreen() {
+    const wantsImport = Boolean(importCapture) || new URLSearchParams(location.search).get("import") === "1";
+    const hasCvs = cvs.length > 0;
+    // Keep the drawer where the reader left it, but an account with no CV has
+    // nothing else to do, so the drawer opens regardless (it is the only route
+    // forward, and its contents are the target of the empty state's link). On a
+    // fresh route entry there is no previous drawer, so a CV means folded away.
+    const previousIngest = mount.querySelector(".aw-ingest");
+    const ingestWasOpen = previousIngest ? previousIngest.open : null;
+    const showIngest = !hasCvs || wantsImport ? true : ingestWasOpen === true;
 
-  // Every route into a CV sits in one drawer, so an account that already has a
-  // CV lands on the library and the score panel instead of a long import form.
-  const wantsImport = Boolean(importCapture) || new URLSearchParams(location.search).get("import") === "1";
-  const ingest = el(
-    "details",
-    { class: "aw-ingest", id: "cv-ingest", open: cvs.length === 0 || wantsImport },
-    el(
-      "summary",
-      null,
-      el("span", { text: "Add or import a CV" }),
-      el("span", { class: "aw-note", text: "paste · upload · import a profile" })
-    ),
-    el(
+    const addSection = el(
       "div",
-      { class: "aw-ingest__body" },
+      { class: "aw-grid aw-grid--2", id: "cv-add" },
       card({
-        kicker: "Import a profile",
-        title: "From your own profile text",
-        meta: "You paste the text; nothing is fetched for you",
-        children: importForm,
+        kicker: "Add a CV",
+        title: "Paste the text",
+        meta: cvQuotaNote,
+        children: pasteForm,
       }),
-      addSection
-    )
-  );
+      card({ kicker: "Add a CV", title: "Upload a file", children: uploadForm })
+    );
 
-  const librarySection = section({
-    title: "Your CVs",
-    meta: cvs.length ? `${cvs.length} on file` : null,
-    children: libraryBox,
-  });
-
-  const analyseSection = el(
-    "div",
-    { id: "cv-analyse" },
-    section({
-      title: "Analyse against a job",
-      meta: "Score, subscores and findings",
-      children: el(
-        "div",
-        { class: "aw-stack" },
-        el("div", { class: "aw-card" }, analyseForm),
-        analyseErrors,
-        analysisResult,
-        tailorStatus
+    // Every route into a CV sits in one drawer, so an account that already has a
+    // CV lands on the library and the score panel instead of a long import form.
+    const ingest = el(
+      "details",
+      { class: "aw-ingest", id: "cv-ingest", open: showIngest },
+      el(
+        "summary",
+        null,
+        el("span", { text: "Add or import a CV" }),
+        el("span", { class: "aw-note", text: "paste · upload · import a profile" })
       ),
-    })
-  );
+      el(
+        "div",
+        { class: "aw-ingest__body" },
+        card({
+          kicker: "Import a profile",
+          title: "From your own profile text",
+          meta: "You paste the text; nothing is fetched for you",
+          children: importForm,
+        }),
+        addSection
+      )
+    );
+    const librarySection = section({
+      title: "Your CVs",
+      meta: hasCvs ? `${cvs.length} on file` : null,
+      children: libraryBox,
+    });
 
-  // An empty account gets the drawer first (and open); one with a CV gets the
-  // library and the score panel first, with ingestion folded away.
-  mount.replaceChildren(...(cvs.length ? [librarySection, analyseSection, ingest] : [ingest, librarySection]));
+    const analyseSection = el(
+      "div",
+      { id: "cv-analyse" },
+      section({
+        title: "Analyse against a job",
+        meta: "Score, subscores and findings",
+        children: el(
+          "div",
+          { class: "aw-stack" },
+          el("div", { class: "aw-card" }, analyseForm),
+          analyseErrors,
+          analysisResult,
+          tailorStatus
+        ),
+      })
+    );
+
+    // An empty account gets the drawer first (and open); one with a CV gets the
+    // library and the score panel first, with ingestion folded away.
+    mount.replaceChildren(...(hasCvs ? [librarySection, analyseSection, ingest] : [ingest, librarySection]));
+  }
+
+  /** Re-render from state: the one rule every mutation obeys. */
+  function refreshScreen() {
+    renderLibrary();
+    renderSelect();
+    refreshCvQuotaNote();
+    renderScreen();
+  }
+
+  renderLibrary();
+  renderSelect();
+  loadLibraryStyles();
+  renderScreen();
 }
 
 /* ------------------------------------------------------------------------- *
@@ -3979,5 +4013,6 @@ if (document.readyState === "loading") {
 } else {
   boot();
 }
+
 
 

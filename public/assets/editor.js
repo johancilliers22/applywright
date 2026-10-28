@@ -212,6 +212,25 @@ export function documentFromProfile(profile) {
 }
 
 /**
+ * The heading of the document, by one precedence rule: the candidate's name,
+ * then the CV record's name, then a generic title.
+ *
+ * Every artefact the editor produces calls this — the print sheet, the Markdown
+ * export and the DOCX export — because the one thing that must never carry the
+ * record's placeholder ("Pasted CV") is the file the user sends to an employer.
+ * The page's own header still shows the record's name: that is the *library
+ * label* for the CV, not the document's heading.
+ *
+ * @param {{ contact?: object, sections?: object, title?: string }} document
+ * @returns {string}
+ */
+export function documentTitle(document) {
+  const source = document && typeof document === "object" ? document : {};
+  const contact = normaliseContact(source.contact);
+  return contact.name || text(source.title).trim() || "Curriculum vitae";
+}
+
+/**
  * Plain Markdown of the document: one H1, contact line, one H2 per section,
  * bullets as list items. No layout, no tables — the same single column the
  * printable pack produces.
@@ -223,7 +242,7 @@ export function markdownFor(document) {
   const source = document && typeof document === "object" ? document : {};
   const contact = normaliseContact(source.contact);
   const sections = normaliseSections(source.sections);
-  const title = text(source.title).trim() || contact.name || "Curriculum vitae";
+  const title = documentTitle(source);
   const out = [`# ${title}`, ""];
 
   const meta = [contact.email, contact.phone, ...contact.links].filter(Boolean).join(" · ");
@@ -687,7 +706,7 @@ export function buildDocx(document) {
   const source = document && typeof document === "object" ? document : {};
   const contact = normaliseContact(source.contact);
   const sections = normaliseSections(source.sections);
-  const title = text(source.title).trim() || contact.name || "Curriculum vitae";
+  const title = documentTitle(source);
   const body = [];
 
   body.push(docxParagraph(title, "Heading1"));
@@ -1726,7 +1745,9 @@ function bootEditor() {
   function buildPrintSheet() {
     readForm();
     const sheet = el("article", { id: "ed-print-doc", lang: "en-GB" });
-    const name = state.contact.name || state.cvName || "Curriculum vitae";
+    // Same precedence as the Markdown and DOCX exports (documentTitle), so the
+    // printed page and the downloaded files cannot be headed differently.
+    const name = documentTitle({ contact: state.contact, sections: state.sections, title: state.cvName });
     sheet.append(el("h1", { text: name }));
     const meta = [state.contact.email, state.contact.phone, ...state.contact.links].filter(Boolean).join(" · ");
     if (meta) sheet.append(el("p", { class: "ed-print__contact", text: meta }));

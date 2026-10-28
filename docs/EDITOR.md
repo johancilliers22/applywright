@@ -175,20 +175,28 @@ has been decided cannot be pressed again. An unsaved document warns before the t
 
 ## 4. What each export produces
 
+**One heading rule, in one place.** `documentTitle()` — exported by `public/assets/editor.js` —
+decides the heading for every artefact: the candidate's name from the contact block, then the CV
+record's name, then "Curriculum vitae". The print sheet, the Markdown export and the DOCX export all
+call it, so a CV record called "Pasted CV" whose contact block says "Ada Lovelace" cannot export a
+file headed "Pasted CV". The page's own header still shows the record's name, because that is the
+library label for the CV, not the document's heading.
+
 ### Download .md
 
-`markdownFor()`: one `#` heading (the CV's name, or the contact name), a contact line joined with
-`·`, one `##` per non-empty section, bullets as `- ` list items, other lines as paragraphs. Plain
-Markdown, no HTML, single column. Filename: the CV name slugified, e.g. `ada-cv.md`.
+`markdownFor()`: one `#` heading from `documentTitle()`, a contact line joined with `·`, one `##`
+per non-empty section, bullets as `- ` list items, other lines as paragraphs. Plain Markdown, no
+HTML, single column. Filename: the CV record name slugified, e.g. `ada-cv.md`.
 
 ### Print / PDF
 
 `window.print()` against a print-only sheet (`#ed-print-doc`) that the page builds at click time:
-`h1` name, contact line, `h2` per section, `ul`/`li` for bullets, `p` for role lines. The
-stylesheet mirrors `server/lib/packs/build.js`: `@page { size: A4; margin: 18mm }`, 10.5pt body,
-11pt section headings with a hairline, `break-inside: avoid` on headings and list items, and every
-other element on the page hidden. It prints the light palette even when the screen is dark. For a
-PDF file, use the browser's "Save as PDF" in the print dialogue; no PDF is generated on the server.
+`h1` from `documentTitle()`, contact line, `h2` per section, `ul`/`li` for bullets, `p` for role
+lines. The stylesheet mirrors `server/lib/packs/build.js`: `@page { size: A4; margin: 18mm }`, 10.5pt
+body, 11pt section headings with a hairline, `break-inside: avoid` on headings and list items, and
+every other element on the page hidden. It prints the light palette even when the screen is dark.
+For a PDF file, use the browser's "Save as PDF" in the print dialogue; no PDF is generated on the
+server.
 
 ### Download .docx
 
@@ -196,9 +204,10 @@ PDF file, use the browser's "Save as PDF" in the print dialogue; no PDF is gener
 `[Content_Types].xml`, `_rels/.rels`, `word/document.xml`, `word/_rels/document.xml.rels`,
 `word/styles.xml` — with a CRC-32 per entry and a fixed timestamp, so the same CV exports a
 byte-identical file. The document is A4 with 18 mm margins, single column, no tables and no
-numbering part: the name is a real `Heading 1`, each section heading a real `Heading 2` (both
-defined in `word/styles.xml` with outline levels), and bullets are literal `- ` text, which every
-ATS reads. Filename: `ada-cv.docx`.
+numbering part: the heading is `documentTitle()` as a real `Heading 1`, each section heading a real
+`Heading 2` (both defined in `word/styles.xml` with outline levels), and bullets are literal `- `
+text, which every ATS reads. Filename: `ada-cv.docx` (from the record name — a filename may differ
+from the heading; the heading is what the employer reads).
 
 Verified structurally in `tests/editor.test.js` (zip central directory, CRC recomputation, XML
 shape) and by opening an exported file with `python-docx` 1.2.0: 210 × 297 mm, 18 mm margins, one
@@ -277,10 +286,11 @@ Run from `projects/applywright` on 28 October 2026:
 
 | Check | Command | Result |
 |---|---|---|
-| Unit and HTTP tests | `node --test tests/` | **102 tests, 102 pass, 0 fail** (22 of them in `tests/editor.test.js`) |
-| Static self-check | `node scripts/check.js` | **10 pages, 24 server modules, 253 css classes — 0 errors, 0 warnings** |
+| Unit and HTTP tests | `node --test tests/` | **141 tests, 141 pass, 0 fail** (29 of them in `tests/editor.test.js`) |
+| Static self-check | `node scripts/check.js` | **10 pages, 24 server modules, 247 css classes — 0 errors, 0 warnings** |
 | Editor in a real browser | headless Chrome over CDP (scratch server, ephemeral port, temp database) | **65/65 checks** — load, edit, `Ctrl+S`, diff, propose, reject-free accept, LinkedIn parse, advert coverage, `.md`, `.docx`, print sheet, `Page.printToPDF` A4, 1440/768/375 with no horizontal overflow, no console errors, light and dark schemes, the three error states |
-| Exported DOCX | `python-docx` 1.2.0 | opens; 210 × 297 mm, 18 mm margins, 1 `Heading 1`, 4 `Heading 2`, 0 tables |
+| Export heading (`documentTitle`) | headless Chrome over CDP, CV record "Pasted CV" / contact "Ada Lovelace" | **15/15 checks** — the DOCX, the Markdown and the print sheet are all headed "Ada Lovelace"; the page header keeps "Pasted CV"; the DOCX bytes contain no "Pasted CV"; no console errors |
+| Exported DOCX | `python-docx` 1.2.0 | opens; 210 × 297 mm, 18 mm margins, `Heading 1` = the candidate's name, 4 `Heading 2`, 0 tables |
 
 The browser pass is not in the repository: it needs a Chrome install and a scratch server. The
 behaviour it covers is asserted at the HTTP and pure-function level in `tests/editor.test.js`, which

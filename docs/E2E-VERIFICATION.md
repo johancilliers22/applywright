@@ -389,10 +389,13 @@ Honest list — none of these is covered by the ledger above.
     with the boards' content — 17 in one earlier run, one in another, at least one on every run that got that
     far — so the assertion is "at least one", not a count.
 11. **What the pin does and does not cover.** The measured code is commit `1a0b17a`; the main tree has moved
-    on (it was at `63cf0f0` when the pin was taken) and `public/assets/editor.js` was still being edited by
-    another lane. A later run of the same script in the main tree may legitimately measure different code;
-    re-pin and re-run for a fresh fingerprint. The one file the ledger counts as uncommitted is the harness
-    driver, which is not in the commit (see "Reproducing the pinned run").
+    on (it was at `63cf0f0` when the pin was taken, and at `def3ebe` when this was written) and
+    `public/assets/editor.js` was still being edited by another lane. A later run of the same script in the
+    main tree may legitimately measure different code; re-pin and re-run for a fresh fingerprint. The one
+    file the ledger counts as uncommitted is the harness driver, which is not in the commit (see
+    "Reproducing the pinned run"). As a spot check, not a pinned ledger, the same script also passed 9/9 steps
+    and 203/203 assertions on `main @ def3ebe + 8 uncommitted path(s)`, so the assertions are not tied to a
+    single commit's markup.
 
 ## Defects found
 

@@ -23,6 +23,7 @@ import {
   buildDocx,
   diffLines,
   documentFromProfile,
+  documentTitle,
   exportFilename,
   markdownFor,
   parseNotice,
@@ -328,6 +329,30 @@ describe("the DOCX export", () => {
 
     assert.ok(entries.get("word/styles.xml").includes("heading 1"));
     assert.ok(entries.get("[Content_Types].xml").includes("wordprocessingml.styles+xml"));
+  });
+
+  test("the heading is the candidate's name, not the CV record's name", () => {
+    // The bug this pins: a CV record called "Pasted CV" whose contact block says
+    // "Ada Lovelace" exported a Word document headed "Pasted CV" — the one file
+    // an employer sees carried the placeholder. The heading is now decided by
+    // documentTitle() for the DOCX, the Markdown and the print sheet.
+    const document = documentFromProfile(segmentSections(CV_TEXT));
+    const bytes = buildDocx({ contact: document.contact, sections: document.sections, title: "Pasted CV" });
+    const xml = readZip(bytes).get("word/document.xml");
+
+    const headingBlock = xml.slice(xml.indexOf('<w:pStyle w:val="Heading1"/>'));
+    const heading = (headingBlock.match(/<w:t xml:space="preserve">([^<]*)<\/w:t>/) ?? [])[1];
+    assert.equal(heading, "Ada Lovelace", "the Heading 1 paragraph is the candidate's name");
+    assert.ok(!xml.includes("Pasted CV"), "the record's label never becomes the document's heading");
+
+    // The same rule, in the same place: the Markdown export and any future caller.
+    assert.match(markdownFor({ contact: document.contact, sections: document.sections, title: "Pasted CV" }), /^# Ada Lovelace\n/);
+    assert.equal(documentTitle({ contact: document.contact, title: "Pasted CV" }), "Ada Lovelace");
+
+    // Precedence, all three branches: name, then record name, then generic.
+    assert.equal(documentTitle({ contact: {}, title: "Pasted CV" }), "Pasted CV");
+    assert.equal(documentTitle({}), "Curriculum vitae");
+    assert.equal(documentTitle({ contact: { name: "Ada Lovelace" }, title: "" }), "Ada Lovelace");
   });
 
   test("escapes XML rather than producing a document Word refuses", () => {

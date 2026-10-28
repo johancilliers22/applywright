@@ -54,6 +54,20 @@ const CV_TEXT = [
   "Mathematics, algorithms, notation, technical writing, proofreading.",
 ].join("\n");
 
+const CV_WITH_JARGON = [
+  "Ada Lovelace",
+  "ada@example.com",
+  "",
+  "Summary",
+  "Programmer of the analytical engine, ten years of mathematical practice.",
+  "",
+  "Experience",
+  "- Documented seven instruction sequences for computing Bernoulli numbers.",
+  "",
+  "Skills",
+  "Python, SQL, utilise dashboards, leverage reporting",
+].join("\n");
+
 /* ------------------------------------------------------------------------- *
  * Pure document model
  * ------------------------------------------------------------------------- */
@@ -520,6 +534,25 @@ describe("POST /api/cvs/:id/assist", () => {
     assert.equal(summaryOnly.status, 200, summaryOnly.text);
     assert.ok(summaryOnly.json.changes.length >= 1);
     assert.deepEqual([...new Set(summaryOnly.json.changes.map((change) => change.section))], ["summary"]);
+  });
+
+  test("a non-experience section is proposed for its own scope", async () => {
+    const call = await signedIn(base, "assist-skills@example.com");
+    const cv = await createCv(call, CV_WITH_JARGON);
+
+    const response = await call("POST", `/api/cvs/${cv.id}/assist`, { instruction: "Less jargon, please.", scope: "skills" });
+    assert.equal(response.status, 200, response.text);
+    assert.ok(response.json.changes.length >= 1, "a line-level unit outside experience can be proposed");
+
+    for (const change of response.json.changes) {
+      assert.equal(change.section, "skills");
+      assert.ok(!/utilise|leverage/i.test(change.after), change.after);
+      assert.ok(response.json.proposed.sections.skills.includes(change.after), "the preview applied the change");
+    }
+    assert.ok(!response.json.proposed.text.includes("utilise"));
+
+    const after = await call("GET", `/api/cvs/${cv.id}`);
+    assert.equal(after.json.cv.text, CV_WITH_JARGON, "the proposal is still not saved");
   });
 
   test("refuses a scope it does not have", async () => {

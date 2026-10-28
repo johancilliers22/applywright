@@ -687,7 +687,12 @@ function initialState() {
     cvName: "",
     contact: { name: "", email: "", phone: "", links: [] },
     sections: { summary: "", experience: "", education: "", skills: "", other: "" },
+    // `savedText` is the reconstruction baseline (so Save with no edits is a
+    // no-op); `storedText` is what the server actually holds, which is what the
+    // save diff is measured against — the first save normalises headings and the
+    // contact block, and that must be visible rather than silent.
     savedText: "",
+    storedText: "",
     loaded: false,
     dirty: false,
     proposal: null,
@@ -705,10 +710,16 @@ function bootEditor() {
 
   function el(tag, props = {}, ...children) {
     const node = document_.createElement(tag);
-    for (const [key, value] of Object.entries(props)) {
+    // `null` props mean "no attributes" — several call sites pass it to keep the
+    // child list readable, and the default parameter would not catch it.
+    const attributes = props && typeof props === "object" ? props : {};
+    for (const [key, value] of Object.entries(attributes)) {
       if (value === null || value === undefined || value === false) continue;
       if (key === "text") node.textContent = String(value);
       else if (key === "class") node.className = String(value);
+      // `onclick` (the DOM property) is lowercase, and an `onClick=` attribute
+      // is an inline handler the CSP forbids. Handler props are listeners here.
+      else if (/^on[A-Z]/.test(key) && typeof value === "function") node.addEventListener(key.slice(2).toLowerCase(), value);
       else if (key === "dataset") Object.assign(node.dataset, value);
       else if (key in node) node[key] = value;
       else node.setAttribute(key, String(value));
@@ -829,6 +840,21 @@ function bootEditor() {
       if (field) field.value = state.sections[key];
     }
     updateCounts();
+    autoSizeAll();
+  }
+
+  /** A document, not a form: every field is as tall as its text. */
+  function autoSize(field) {
+    if (!field || !field.style) return;
+    // `height: auto` on a textarea resolves to its `rows` attribute, and
+    // scrollHeight can never be smaller than the client height — so the box has
+    // to be collapsed to zero before it can be measured.
+    field.style.height = "0px";
+    field.style.height = `${Math.max(field.scrollHeight, 44)}px`;
+  }
+
+  function autoSizeAll() {
+    for (const field of document_.querySelectorAll(".ed-input, .ed-input--compact")) autoSize(field);
   }
 
   function updateCounts() {
@@ -906,22 +932,25 @@ function bootEditor() {
       return;
     }
 
-    const document_ = documentFromProfile(profile);
-    state.contact = document_.contact;
-    state.sections = document_.sections;
+    const loadedDocument = documentFromProfile(profile);
+    state.contact = loadedDocument.contact;
+    state.sections = loadedDocument.sections;
     // The baseline is what this page would write, not the stored text: the
     // stored text may use headings and a contact order this editor normalises,
     // and clicking Save with no edits must not rewrite the user's CV. The first
     // real save does normalise it, which docs/EDITOR.md states plainly.
     state.savedText = reconstructCvText(state);
+    state.storedText = text(cv.text) || state.savedText;
     state.savedAt = new Date();
     state.loaded = true;
 
     byId("ed-cv-name").textContent = state.cvName;
     document_.title = `${state.cvName} · CV editor · Applywright`;
-    writeForm();
+    // Reveal the paper before measuring the fields: a hidden textarea has no
+    // scrollHeight, so the auto-size pass would leave every section at 44px.
     byId("ed-loading").hidden = true;
     byId("ed-form").hidden = false;
+    writeForm();
     setSaveState("saved");
     setBusy(false);
 
@@ -964,8 +993,9 @@ function bootEditor() {
     clearErrors();
     try {
       const data = await api(`/api/cvs/${encodeURIComponent(state.cvId)}`, { method: "PATCH", body: { text: nextText } });
-      const previous = state.savedText;
+      const previous = state.storedText || state.savedText;
       state.savedText = text(data.cv?.text) || nextText;
+      state.storedText = state.savedText;
       state.savedAt = new Date();
       const savedDocument = documentFromProfile(
         data.cv?.profile && typeof data.cv.profile === "object"
@@ -1633,11 +1663,13 @@ function bootEditor() {
 
   function wire() {
     const form = byId("ed-form");
-    form?.addEventListener("input", () => {
+    form?.addEventListener("input", (event) => {
       readForm();
       updateCounts();
       setDirty(true);
+      if (event.target instanceof HTMLTextAreaElement) autoSize(event.target);
     });
+    window.addEventListener("resize", () => autoSizeAll());
 
     for (const button of document_.querySelectorAll("[data-save]")) {
       button.addEventListener("click", () => save());

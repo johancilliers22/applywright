@@ -360,7 +360,8 @@ body {
   }
 }
 
-/* The editors are the document: no box, no chrome, paper underneath. */
+/* The editors are the document: no box, no chrome, paper underneath, and as
+   tall as their own text (the page script measures them on every write). */
 .ed-input {
   min-height: 0;
   background: transparent;
@@ -369,7 +370,8 @@ body {
   font-size: var(--fs-reading);
   line-height: var(--lh-reading);
   padding: 0.5rem 0.6rem;
-  resize: vertical;
+  resize: none;
+  overflow-y: auto;
 }
 
 .ed-input:hover {

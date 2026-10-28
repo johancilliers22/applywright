@@ -51,10 +51,10 @@ uploaded binary, `GET /api/export` returns everything the account owns, and
 
 ### Fork, then clone your fork
 
-Fork `https://github.com/johancilliers22/applywright` on GitHub (the *Fork* button, keep
-the name, keep the branch `main`), then clone **your** fork and add Johan's repository as a
-second remote called `upstream`. The fork is where you push; `upstream` is how you pull
-future changes.
+Fork `https://github.com/johancilliers22/applywright` on GitHub (the *Fork* button; the fork
+keeps the name and the `main` branch by default), then clone **your** fork and add Johan's
+repository as a second remote called `upstream`. The fork is where you push; `upstream` is
+how you pull future changes.
 
 Windows PowerShell:
 
@@ -155,10 +155,11 @@ pdftotext -v
 tesseract --version
 ```
 
-`pdftotext -v` prints its version to standard error and exits non-zero on some builds; what
-matters is that the command is found. If it is not, the portable Poppler package did not
-land on `PATH` — add its `Library\bin` directory to `PATH`, or rely on the WSL fallback
-below. Tesseract's normal installer does add itself to `PATH`.
+`pdftotext -v` writes its version to standard error rather than standard output; what
+matters is that the command is found at all. If it is not, the portable Poppler package did
+not land on `PATH` — add its `Library\bin` directory to `PATH`, or rely on the WSL fallback
+below. If `tesseract --version` is not found, add Tesseract's install directory to `PATH`
+the same way.
 
 Linux or WSL, via apt:
 
@@ -342,7 +343,7 @@ Behind a TLS proxy the four that matter are `HOST=127.0.0.1`, `TRUST_PROXY=1`,
 
 ### Where the existing docs are behind the code
 
-Three drifts a reader will hit, verified on 28 October 2026:
+Four drifts a reader will hit, verified on 28 October 2026:
 
 - `docs/PIPELINE.md` and `docs/PROJECT-STATUS.md` describe a repository with no remote and
   branch `master`. The public repository is `main`, `origin` is set, and it is public.
@@ -352,6 +353,9 @@ Three drifts a reader will hit, verified on 28 October 2026:
 - `docs/PROJECT-STATUS.md` §9 says Tesseract is not installed anywhere on Johan's machine
   and image uploads are refused. Tesseract is now present at `/usr/bin/tesseract` in WSL, so
   the `wsl -e tesseract` route is live; the newest commit is the one that wired it up.
+- `README.md` §Plans says a covering letter is produced on every plan. The code enforces the
+  flag: a Free pack carries an empty `coverLetterMd` and a `coverLetterLocked` note
+  (`server/app.js`, `can(plan, "coverLetter")`). `docs/PROJECT-STATUS.md` §9 has this right.
 
 ---
 
@@ -389,7 +393,9 @@ The full gate adds the module suites, which are the ones that catch a broken gro
 or a changed score. Run all three before you commit:
 
 ```bash
-node --test tests/ && node --test server/lib server/provider && node scripts/check.js
+node --test tests/
+node --test server/lib server/provider
+node scripts/check.js
 ```
 
 Two habits keep an agent honest here. Ask it to show the command output rather than
@@ -438,8 +444,8 @@ usable — just less fluent. `POST /api/tailor` returns the same field as `pack.
 falls back with the reason in `warnings`.
 
 Any OpenAI-compatible endpoint works the same way, because `server/model.js` speaks
-`/chat/completions` with `response_format: {"type":"json_object"}`. That includes OpenAI
-itself, Azure, a local vLLM or Ollama server, or a proxy. The Anthropic route is different:
+`/chat/completions` with `response_format: {"type":"json_object"}`; its own header names
+OpenAI, Azure, vLLM and Ollama as the intended targets. The Anthropic route is different:
 set `ANTHROPIC_ORG_API_KEY` and `MODEL_PROVIDER=anthropic`, and `server/provider/anthropic.js`
 speaks `/v1/messages` instead. DeepSeek is the default on purpose — the base URL and model
 name are its values.
@@ -573,12 +579,15 @@ is exposed.
 - **Run one process per database.** Rate-limit buckets, the job-feed cache and the alert
   scanner all live in the process, and SQLite has one writer. Cluster mode would double
   every fetch and every scan.
-- **Know what is enforced.** Four quotas are enforced; several advertised features
-  (full ATS report, pack history, daily digest, "API access") are declared in the plans API
-  and not gated. `docs/PROJECT-STATUS.md` §9 is the honest list; keep it honest if you
-  change one.
-- **The licence is not settled.** There is no `LICENSE` file in the repository yet. If you
-  plan to redistribute or publish a modified copy, ask Johan first.
+- **Know what is enforced.** Four quotas are enforced (`cvs`, `packs`, `alerts`,
+  `jobResultsPerDay`) and the covering-letter flag is enforced; the other flags in
+  `plans.js` — full ATS report, pack history, daily digest, and the "API access" line in the
+  README — are declared and returned, not gated. "API access" has no key authentication
+  behind it. `docs/PROJECT-STATUS.md` §9 is the honest list; keep it honest if you change
+  one.
+- **The licence is not settled.** There is no `LICENSE` file in the repository, so default
+  copyright applies: GitHub's terms let you view and fork it, and nothing more is granted
+  yet. Treat redistribution and public deployment as questions for Johan.
 
 For the two-minute path from "I have the link" to a running copy, see
 [`docs/HANDOFF-FOR-A-FRIEND.md`](docs/HANDOFF-FOR-A-FRIEND.md). For how to contribute a

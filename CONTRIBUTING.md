@@ -22,8 +22,9 @@ type checker: the gate and a read of the diff are the review.
 
 ## Conventions this codebase actually uses
 
-- **ES modules throughout.** `package.json` sets `"type": "module"`; scripts and tests use
-  `.mjs` where a shebang or explicit module marker helps. No CommonJS, no transpiler.
+- **ES modules throughout.** `package.json` sets `"type": "module"`, so every `.js` file is
+  ESM. Entry scripts are `.mjs` or carry a shebang; module suites are `*.test.mjs` beside the
+  code, and the HTTP suites are `tests/*.test.js`. No CommonJS, no transpiler.
 - **One runtime dependency: Express.** No dev dependencies, no bundler, no client framework,
   no CSS framework. What is in `public/` is what the browser gets, so a commit is always the
   runnable artefact. Adding a dependency is a decision to discuss, not a detail.
@@ -98,7 +99,8 @@ node scripts/check.js
 ```
 
 The two suites are run separately so a module failure surfaces on its own; `node --test`
-with no argument discovers both. `npm test` and `npm run check` are the same commands.
+with no argument discovers both, which is what `npm test` runs. `npm run check` is the static
+check alone.
 
 The numbers move between commits, and the tree is written by several people, so do not
 treat a count in a document as a promise — run the command. If a change intentionally moves
@@ -154,7 +156,8 @@ issue.
 
 ## Licence
 
-There is no `LICENSE` file in the repository yet, which means the default rules apply: you
-may fork and modify your copy, but redistribution and public deployment are questions for
-Johan. Ask before you publish a modified copy, and ask before you point a public domain at
-your deployment.
+There is no `LICENSE` file in the repository yet, so the default rules apply: no permission
+is granted to copy, modify or redistribute beyond what GitHub's terms allow for a public
+repository (viewing and forking on GitHub). Treat redistribution and public deployment as
+questions for Johan. Ask before you publish a modified copy, and ask before you point a
+public domain at your deployment.

@@ -41,8 +41,10 @@ and kill **that** PID — never by command-line guess, that mistake cost two sta
 
 ## What requires Johan (do not do unattended)
 
-1. **Never write `luna-vault/**`** — it is sacred for missions. Produce a patch doc instead
-   (`docs/VAULT-PATCH.md` pattern).
+1. **Vault writes: AUTHORISED FOR THIS PROJECT ONLY (Johan, 28 Oct).** One note exists at
+   `luna-vault/Luna Vault/brain/applywright-platform.md`. You may update *that* note as the project
+   changes. Do not create other vault notes, do not edit other notes, and do not touch `_index.md`
+   without asking. Every vault write gets a line in `docs/OVERNIGHT-LOG.md`.
 2. **Never touch the hub repo's tracked files** (commit only inside `projects/applywright`).
 3. **Never import cookies or browser sessions** from LinkedIn or job boards, and never add
    LinkedIn scraping or auto-submission. This is the product's stated boundary.
@@ -52,6 +54,13 @@ and kill **that** PID — never by command-line guess, that mistake cost two sta
    arrive through the environment or a tool's own sign-in.
 6. **`estate-cua` / computer use is for interactive sessions only** — headless/unattended runs are
    closed by estate policy until B6.4. Use headless Chrome over CDP for browser checks.
+
+## Decisions recorded 28 Oct (don't relitigate overnight)
+
+- Licence **MIT**, friends work by **fork only** (no collaborator invites).
+- The public demo stays **open**: quick tunnel up, `REGISTRATION_OPEN` left at 1. If you restart the
+  server, keep it that way unless the log says otherwise.
+- Claude/Codex harnesses are **not** used for delegation right now; DSH agents, Gemini and Grok are.
 
 ## Tonight's queue (highest value first)
 

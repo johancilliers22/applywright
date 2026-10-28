@@ -12,10 +12,9 @@ Nothing else — no key, no database, no server, no cloud account.
 
 Open <https://github.com/johancilliers22/applywright> and read `README.md` § "What it
 refuses to do" and `PROJECT-STATUS.md` §1 (both in this repository). Three refusals shape
-the whole codebase: no LinkedIn scraping, no automated submission, no fabricated experience.
-If one of those reads
-as a gap to you rather than a decision, say so before you spend a day on it — that is the
-conversation worth having first.
+the whole codebase: no LinkedIn scraping, no automated submission, no fabricated
+experience. If one of those reads as a gap to you rather than a decision, say so before you
+spend a day on it — that is the conversation worth having first.
 
 ## 2. Fork it, clone your fork, add the upstream
 

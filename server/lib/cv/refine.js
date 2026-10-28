@@ -1210,8 +1210,13 @@ function validateModelReply(reply, { bulletCount }) {
     }
   }
 
-  if (typeof payload.coverLetter !== "string" || !payload.coverLetter.trim()) {
-    problems.push("coverLetter is missing, empty or not a string");
+  // The letter is optional: a CV-only edit (scope "cv", "summary", "experience"…)
+  // has no business rewriting a covering letter, and demanding one made DeepSeek's
+  // otherwise-usable replies fail validation and fall back to the rules engine.
+  if (payload.coverLetter === undefined || payload.coverLetter === null) {
+    output.coverLetter = "";
+  } else if (typeof payload.coverLetter !== "string") {
+    problems.push("coverLetter is present but is not a string");
   } else {
     output.coverLetter = payload.coverLetter;
   }
@@ -1225,7 +1230,7 @@ function buildModelCall({ pack, parsed, instruction, style, summary, bullets, le
     "You edit a candidate's existing CV pack on request.",
     "Rephrase only: never add or remove a number, employer, job title, date, qualification or name.",
     "Preserve every figure that the original text already states, and keep the same tense and voice unless asked.",
-    "Return only the JSON object described by the schema.",
+    "Include coverLetter only when the instruction concerns the covering letter; otherwise omit it." + " Return only the JSON object described by the schema.",
   ].join(" ");
 
   const header = [

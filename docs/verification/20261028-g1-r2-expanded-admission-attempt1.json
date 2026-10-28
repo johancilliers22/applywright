@@ -1,0 +1,9 @@
+{
+  "freeWindowsKiB": 12471408,
+  "phase": "G1_R2_NEW48_ORACLE_DIAGNOSTIC",
+  "lease": "full-lifetime EX; released on return",
+  "startedUtc": "2026-10-28T22:08:01.2704898Z",
+  "testsRan": true,
+  "exitCode": 1,
+  "endedUtc": "2026-10-28T22:08:02.9901742Z"
+}

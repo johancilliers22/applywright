@@ -14,9 +14,9 @@ not as it might be. Read after [`PROJECT-STATUS.md`](PROJECT-STATUS.md) and
 | Own git repository | **yes** — `.git` lives here; `git rev-parse --is-inside-work-tree` → `true` |
 | Branch | `main` — the trunk; it tracks `origin/main` |
 | First commit | `bc6731dfe734a5167a9579b8e4de98e5ef830629` — *"Applywright: CV scoring, grounded tailoring, job tracking and alerts"*; 12 commits at measurement |
-| Current HEAD | `e5b04f0` (see `git log --oneline -1`; docs lag commits, the repo is authoritative) — previously `7b88accb27afa4b0c6e7f2fe5123988371035492` — *"Enforce what the plans sell; make the Stripe webhook idempotent"* |
+| Current measured candidate | `86b74c3a1869255ce276cfe961474193d6080ca0`, clean `main == origin/main` at 28 Oct intake, 62 commits. Subsequent coordinator docs/evidence edits are uncommitted until explicitly recorded otherwise. |
 | Commit author | Johan Cilliers `<johannes.cilliers1@gmail.com>`, Wed 28 Oct 2026 05:52:21 +0000 |
-| Tracked files | **148** (`node_modules/` is ignored, not tracked) |
+| Tracked files | **332** at 28 Oct intake (`node_modules/` is ignored, not tracked) |
 | Remotes | `origin` → <https://github.com/johancilliers22/applywright.git> (**public**); `backup` → `../applywright-remote.git`, a local bare copy last pushed at `eb6dd75` |
 | Pushed anywhere | **yes** — `origin/main` is public and matched local `main` at measurement; `backup/main` is behind |
 

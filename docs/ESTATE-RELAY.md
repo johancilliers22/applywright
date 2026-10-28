@@ -1,5 +1,7 @@
 # Applywright — Estate relay
 
+**28 Oct current ownership:** the new Codex orchestrator is chat `01a183ff-e374-7d32-ae0e-1938714e813c`; do not create another. Native T3 review broker `46ac76de-4e76-42b4-a2b1-9f6d4e09c559` is live on JohansPC for the assigned finite reviews. Fresh candidate/gates: `86b74c3`, HTTP 150 pass, modules 346 pass/1 skip, static 0 errors/0 warnings (`verification/20261028-intake/gates.json`). E2E/live model NOT RUN. Estate remains the sole shared publisher and Hermes owner; Root's heartbeat remains with Root. Current commission and `CODEX-ORCHESTRATOR-HANDOFF.md` supersede older recipes and ownership wording below.
+
 *For an Estate orchestrator taking this project over. Codex usage has returned and the Codex
 desktop chat is now the main orchestrator and validator — see
 [`CLAUDE-ESTATE-RELAY.md`](CLAUDE-ESTATE-RELAY.md) for the handover, the validation checklist

@@ -1,0 +1,16 @@
+{
+    "startedUtc":  "2026-10-28T22:06:27.4920892Z",
+    "endedUtc":  "2026-10-28T22:06:27.7321063Z",
+    "source":  "C:/Users/johan/.t3/worktrees/applywright/t3-3669749d/scripts/e2e-browser-child.ps1",
+    "sha256Before":  "1178174738b9744ff1dbe30aaf5e6e024e05ffd3248464b7065dce03ff05a011",
+    "sha256After":  "1178174738b9744ff1dbe30aaf5e6e024e05ffd3248464b7065dce03ff05a011",
+    "sourceUnchanged":  true,
+    "parser":  "Windows PowerShell5.1 ParseFile only",
+    "parserExit":  0,
+    "compiler":  "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/csc.exe",
+    "compileExit":  0,
+    "artifactSha256":  "808b7ec8c42fed1d9ee64a9801ff34623a78b640926617b6adf09abbe26b8843",
+    "artifactLoaded":  false,
+    "nativeMethodsCalled":  false,
+    "resourceLock":  "Caller holds full-lifetime EX; this script creates no lease"
+}

@@ -1,0 +1,223 @@
+{
+  "candidate": "86b74c3a1869255ce276cfe961474193d6080ca0",
+  "atUtc": "2026-10-28T19:47:25.954Z",
+  "scope": "Synthetic fixtures; direct pure exported functions; no server, credentials, model/API/network, source writes or live data",
+  "cases": [
+    {
+      "name": "employer-opener",
+      "before": "Built services.",
+      "after": "Initech is my employer.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "hyphen-employer",
+      "before": "Worked on services.",
+      "after": "Worked at Initech-labs.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "unsupported-go",
+      "before": "Reduced deploy time by 40% by rebuilding the pipeline.",
+      "after": "Cut deploy time by 40% with Go-based services.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "ownership-adverb",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Effectively led 12 engineers.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "ownership-multiline",
+      "before": "Experience\nHelped with managing 12 engineers across two squads.",
+      "after": "Led a team of 12 engineers across two squads.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "degree-subject",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in medicine.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "seniority",
+      "before": "Worked as a software engineer.",
+      "after": "Worked as a principal software engineer.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "month-may",
+      "before": "Worked through spring.",
+      "after": "Worked through May.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "spelled-one",
+      "before": "Built services.",
+      "after": "Built one service.",
+      "assertGrounded": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "currency",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved $40,000 a year.",
+      "assertGrounded": {
+        "ok": false,
+        "reasons": [
+          "new currency amount $40,000 is not in the original"
+        ],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "ordinary-experience",
+      "before": "Built web services.",
+      "after": "Experience building web services.",
+      "assertGrounded": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "ordinary-collaborates",
+      "before": "Worked effectively with colleagues.",
+      "after": "Collaborates effectively with colleagues.",
+      "assertGrounded": {
+        "ok": false,
+        "reasons": [
+          "new name \"Collaborates\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": false,
+        "reasons": [
+          "new name \"Collaborates\" is not in the original"
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "ordinary-degree",
+      "before": "Completed work accurately.",
+      "after": "Completed work with a high degree of accuracy.",
+      "assertGrounded": {
+        "ok": false,
+        "reasons": [
+          "new qualification \"degree\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "groundChanges": {
+        "ok": false,
+        "reasons": [
+          "new qualification \"degree\" is not in the original"
+        ],
+        "warnings": []
+      }
+    }
+  ],
+  "softOpener": {
+    "ok": true,
+    "reasons": [],
+    "warnings": [
+      "kept the sentence opener \"Zephyria\", which the original does not contain — check it is the candidate's own word"
+    ]
+  }
+}

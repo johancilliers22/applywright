@@ -1,0 +1,12 @@
+{
+  "freeWindowsKiB": 9899600,
+  "sourceMain": "86b74c3a1869255ce276cfe961474193d6080ca0",
+  "productAcceptance": "NONE; known grounding issues remain in baseline",
+  "exitCode": 0,
+  "testsRan": true,
+  "lease": "full-lifetime EX; released on return",
+  "endedUtc": "2026-10-28T22:33:20.2590508Z",
+  "startedUtc": "2026-10-28T22:33:15.6033451Z",
+  "phase": "DOCUMENTATION_CHECKPOINT_BASELINE_MAIN_GATES",
+  "repairIntegrated": false
+}

@@ -2,7 +2,9 @@
 
 **Date:** 2026-10-28 (Europe/London)
 
-**Current state — authoritative:** measured on `main` at `f50ef22` ("Contact data: stop mining it from prose,
+**New Codex intake, 19:37 UTC:** the three mandatory non-browser gates were rerun on `86b74c3a1869255ce276cfe961474193d6080ca0`: HTTP 150/150, modules 346 pass/1 skip/0 fail, static 0 errors/0 warnings. See `verification/20261028-intake/gates.json`. `scripts/e2e-flow.mjs` and live-model calls are **NOT RUN** by this intake. The driver launches headless Chrome with a temporary profile and external job-board reads; fresh source/safety review and browser admission are required before invoking it. The records below are historical, not a rerun at current HEAD.
+
+**Historical authoritative E2E record:** measured on `main` at `f50ef22` ("Contact data: stop mining it from prose,
 and stop letting it block rewrites"), the commit that landed the `server/lib/cv/` contact-data work two other
 lanes had in flight during the earlier runs. The tree was clean apart from this document. **10/10 steps,
 235/235 assertions, exit 0**, on two consecutive runs back to back. The ledger below is one of those two; its

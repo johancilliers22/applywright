@@ -1,5 +1,7 @@
 # Applywright — Codex orchestrator handoff
 
+**22:34 UTC checkpoint:** frozen G1R3 passes80units and all131independent cases, with NEW independent source review still required. ContrastR4 passes21tests/58pairs and its final Sol review is running. E2ER1 Sol requires seven corrections; DSHR2 is active, native qualification/browser journey remain UNPROVED. Product source is baseline `86b74c3`; no repair integrated/accepted/deployed. Fresh baseline-main3gates pass(HTTP150; modules346+1skip; static0errors/0warnings) for the documentation checkpoint only. Exact current handles, hashes, results and next actions: [`verification/20261028-intake/CURRENT-CHECKPOINT.md`](verification/20261028-intake/CURRENT-CHECKPOINT.md).
+
 For a **Codex desktop chat that has never seen this project** and is now its main orchestrator and
 validator. Johan's 28 Oct decision: Codex owns the plan, routing and accept/reject call; DSH
 (DeepSeek) implements; T3 Mission Control tracks and delegates. Read
@@ -54,10 +56,7 @@ validator. Johan's 28 Oct decision: Codex owns the plan, routing and accept/reje
   `mission.cjs` refuses a paused provider (`mission.cjs:141`). Do not flip it silently. The
   `claude-*` presets are defined and work once Johan sets `enabled: true` and records why; a reset
   date enables nothing and schedules nothing.
-- **DSH is not a T3 provider and cannot be dispatched from T3.** `EXTENSIONS.md` is explicit: T3's
-  catalogue does not expose DSH, `mission.cjs` rejects unknown roles (`mission.cjs:20`), and the
-  ledger accepts Codex and Claude only. DSH runs through its own launcher (§4) and reaches a mission
-  through the coordinator's evidence file, not as a `delegate_task` child.
+- **Native T3 capability and the standalone pack schema are separate.** Root's commission records an actual estate dispatch through `acpRegistry_deepseek_ubuntu`; the universal claim that T3 cannot dispatch DSH was stale. This project's fresh Windows picker exposes DeepSeek Harness - Windows. Use the broker's current `orchestrator_capabilities` receipt for exact provider IDs/options. The unchanged pack roster defines Codex/Claude roles only; do not silently edit it or invent a DSH pack role.
 - **Codex's write surface is not granted by the pack** — the operator assigns it, which is why the
   three specs in `docs/t3/` are read-only or evidence-only.
 
@@ -325,13 +324,11 @@ Treat everything below as current, not prospective.
   directly through the estate loader (`MODEL-CONFIG.md`), which is a product dependency, not a Claude
   Code session. It was verified live this evening (`mode: model`, one accepted change, contact-data
   warning). Leave it alone unless it breaks, and never read or print the key.
-- **An automation already exists** in this Codex workspace ("Estate Codex co-orchestrator continuity",
-  every 2 hours). Use it as the heartbeat: each run should leave one log entry and, if it touched the
-  product, a commit. Do not create a second scheduler.
+- **Root's existing two-hour Estate continuity belongs to Root `01a183f2-68ec-7223-bb5b-0705764b0734`.** Do not adopt, retarget or duplicate it. Applywright has no commissioned scheduler. A Saturday reset neither transfers ownership nor wakes Claude.
 
 ### The living-docs contract
 
-Codex owns the documents from now on. A session that changes the product without updating them has
+This Codex chat owns the project documents from now on. The native T3 broker alone performs the assigned pack-ledger writes on its behalf; this chat writes final acceptance. Estate remains sole shared hub/A/B publisher. A session that changes the product without updating the project documents has
 left the next agent a lie, and that has already happened twice on this project (a handoff describing
 master/no-remote, and a CSS cleanup that looked safe and was a contrast regression).
 
@@ -343,13 +340,13 @@ master/no-remote, and a CSS cleanup that looked safe and was a contrast regressi
 | `docs/E2E-VERIFICATION.md` | the harness runs | the ledger and the commit it measured |
 | `docs/CODEX-ORCHESTRATOR-HANDOFF.md` (this file) | routing or ownership changes | the change and why |
 | `docs/T3-MISSIONS.md` and `docs/t3/*.json` | the flow or a spec changes | keep the specs runnable |
-| `docs/ESTATE-RELAY.md`, `docs/CLAUDE-ESTATE-RELAY.md` | superseded facts | correct or point here; do not leave two truths |
+| `docs/ESTATE-RELAY.md`, `docs/CLAUDE-ESTATE-RELAY.md` | superseded facts | correct or point here; do not leave two truths; never replay unsafe argv/env or key-output recipes |
 | vault `brain/applywright-platform.md` | the project's shape changes | this is the only vault file this project may write |
 
 ### Delegation, at the scale Johan has authorised
 
 - **DSH (DeepSeek) implements.** One worktree per mission (`git -C <repo> worktree add ..\applywright--<slug> -b wt/<slug>`), disjoint owned paths, and the brief written to a file before launching. The Lead commits named paths; DSH never merges.
-- **T3 records and verifies.** Mission ledger, receipts, read-only review/test children. No child writes this repo until Johan assigns a write surface, and the coordinator is the sole ledger writer.
+- **T3 records and verifies.** The commissioned native broker writes only its assigned spec/receipts/new ledger. Read-only review children write no project files. This chat alone accepts results; parent completion and model-selection receipts are not acceptance or served-identity proof.
 - **Cross-CLI is allowed.** Gemini (vision, long-context) and Grok (live web, legal/market) through their own sign-ins; a research note with citations lands in `docs/research/`. Never paste a key anywhere, and never route a provider through another provider's billing.
 - **"Unlimited agents" is capacity, not permission to skip gates.** Every claim ends with a command's output or a screenshot; the three gates and the E2E harness are cheap enough to run every session.
 

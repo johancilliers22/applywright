@@ -1,0 +1,40 @@
+﻿{
+    "startedUtc":  "2026-10-28T19:37:44.1582758Z",
+    "endedUtc":  "2026-10-28T19:37:48.0491556Z",
+    "candidate":  "86b74c3a1869255ce276cfe961474193d6080ca0",
+    "workspaceRoot":  "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+    "node":  "C:/Program Files/nodejs/node.exe",
+    "nodeVersion":  "v26.12.1",
+    "freeWindowsKiBAtAdmission":  6402736,
+    "resourceLock":  "/tmp/redline-heavy.lock, exclusive for full runner lifetime via flock",
+    "credentialPolicy":  "Named provider/billing environment variables cleared in this child process; no env files present; fixtures and scratch databases only",
+    "checks":  [
+                   {
+                       "command":  "node --test tests/",
+                       "startedUtc":  "2026-10-28T19:37:44.2213809Z",
+                       "endedUtc":  "2026-10-28T19:37:46.7891366Z",
+                       "exitCode":  0,
+                       "log":  "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261028-intake\\http.log",
+                       "sha256":  "53997b51d34132f81d0cd75f713073782bc112462e3a600c54c8917e1fdf8758"
+                   },
+                   {
+                       "command":  "node --test server/lib server/provider",
+                       "startedUtc":  "2026-10-28T19:37:46.8341497Z",
+                       "endedUtc":  "2026-10-28T19:37:47.9796660Z",
+                       "exitCode":  0,
+                       "log":  "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261028-intake\\modules.log",
+                       "sha256":  "8c437371dec3e9487dd5b37ae8660e4553ab9ff4ef8b034f96581d43994ea18f"
+                   },
+                   {
+                       "command":  "node scripts/check.js",
+                       "startedUtc":  "2026-10-28T19:37:47.9821953Z",
+                       "endedUtc":  "2026-10-28T19:37:48.0481520Z",
+                       "exitCode":  0,
+                       "log":  "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261028-intake\\static.log",
+                       "sha256":  "63bafe615c16f0670e0e06964ea67119b81722e7f669585a95e1e72cbb0bfa86"
+                   }
+               ],
+    "e2e":  "NOT RUN: browser admission and current source/safety review required",
+    "liveModel":  "NOT RUN",
+    "acceptance":  "PENDING independent T3 review"
+}

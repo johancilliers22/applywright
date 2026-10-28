@@ -1,0 +1,10 @@
+{
+  "observedUtc": "2026-10-28T22:31:43.8130684Z",
+  "target": "C:/Users/johan/Desktop/Coding/OpenClaw/luna-vault/Luna Vault/brain/applywright-platform.md",
+  "writer": "Estate sole A/B publisher; no direct operator vault write",
+  "lastWriteUtc": "2026-10-28T22:30:05.2978874Z",
+  "sha256": "a4477b6e77b65d4990235d8c9c5f3b9071d7a0c9fb16a3e0cc4b969517f1a4bb",
+  "bytes": 14197,
+  "verified": "Actual ACTIVE/INCOMPLETE named mission block present; prior note preserved",
+  "reconciliation": "Published22:24 block has two superseded live states; narrow delta ready in docs/VAULT-PATCH.md for same publisher"
+}

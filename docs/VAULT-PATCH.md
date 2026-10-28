@@ -1,186 +1,22 @@
-# Applywright — Obsidian vault patch
+# Applywright named vault-note publication delta
 
-**Why this file exists.** Missions cannot write the vault (`luna-vault/**` is sacred and
-off-limits to every mission, including hub-fired ones). So the vault update is delivered
-as this patch document for Johan to apply by hand. Nothing here has been written to
-`Luna Vault/` — copied, not moved, and not committed anywhere.
+Estate is the sole shared A/B publisher. Apply ONLY to `C:/Users/johan/Desktop/Coding/OpenClaw/luna-vault/Luna Vault/brain/applywright-platform.md`: insert or replace ONE28October operator-mission block below the existing title, preserving the remainder and its history. No other vault note, project folder, MOC, shared goal or FINAL-SAVE1/2 change. This supersedes the old broad vault/MOC proposal. No vault write has been performed by this project operator.
 
-**What to apply:** one note (a) and one optional row (b).
+## Ready publication block — actual evidence at22:32GMT
 
----
+> **28 October2026 Applywright operator mission — ACTIVE / INCOMPLETE.** Codex `01a183ff-e374-7d32-ae0e-1938714e813c` operates the project through existing native T3 parent **Applywright Native Review Broker**, `46ac76de-4e76-42b4-a2b1-9f6d4e09c559`. DSH official Flash/high implements in separate project worktrees; native Sol6.1/xhigh/Standard independently reviews. Root coordinates estate, Estate publishes shared A/B.
+>
+> Main/source was still `86b74c3a1869255ce276cfe961474193d6080ca0` at the current operator verification; no repair candidate has been accepted/integrated/pushed yet. Live local/public demo preserved, no restart/deployment. The product promise Nothing invented is a contract; current heuristic checks have known unsupported-claim bypasses and false rejections.
+>
+> **Grounding:** R2 independent Sol REQUEST_CHANGES. Actual unit70PASS/4FAIL of74; syntax4PASS; independent frozen52PASS and first-review31PASS, but new second-review48 comparisons yield12PASS/36FAIL. Combined independent131=95PASS/36FAIL. DSH R3 is actually running in `t3-e8d401d4`, request `applywright-grounding-g1-dsh-r3-dd4242e1-9f7e-4c3a-a4fb-f9797d2dadfa`; no frozen R3 output or independent acceptance yet. Preserve all negative and grounded-positive expectations; no fixture-specific weakening for green.
+>
+> **Contrast:** stopped DSH R4 in `t3-f66efc7c` corrects source-extension/leading-dot secret fixture exclusions. Actual R4 EX tests21/21PASS,58token comparisonsPASS (29light/29dark), static10pages/24modules/263CSSclasses,0errors/0warnings, source unchanged. After actual E2E review completion and fresh admission, NEW independent Sol R4 actually dispatched22:29:53, request `applywright-contrast-m1-sol-review-r4-c13adf89-71cf-4abf-ab9c-7ea5962e9f89`, currently RUNNING. Preserve earlier22:22 SH_BUSY/HOLD; no source acceptance inferred. Earlier R3 Sol REQUEST_CHANGES remains provenance. Token coverage is bounded; rendered component/state/axe coverage is separate.
+>
+> **E2E:** independent Sol R1 on stopped `t3-3669749d` completed/reaped22:27:30 REQUEST_CHANGES with seven concrete ownership/input/qualification/race/proof defects. New DSH R2 actually dispatched22:29:54, request `applywright-e2e-lifecycle-dsh-r2-83db129e-9722-43ee-840c-ebc96570fbf4`, currently RUNNING. It still needs NEW independent review and actual qualification after correction. Actual mocks18PASS/0FAIL/1SKIP, JavaScript syntax3PASS; original wrapper Windows5.1 parser and extracted-C#net48 compile exit0. Diagnostic DLL NEVERloaded/native methods NEVERcalled. Mandatory Windows owned child/grandchild qualification is hard-skipped and UNPROVED; it must become a safe real opt-in proper-EX test before lifecycle/browser acceptance.
+>
+> All actual test/compile leases above released, source hashes unchanged; fresh Windows4GiB/names-only already-running Ubuntu/canonical shared lock/native lifetime gates stay active. No forced unlock, guard/defaultslot/config changes, main Chrome, credential/auth copies or raw secret-store/env reads, PM2/fleet actions, app/WSL shutdown, or another publisher. Only accepted source may integrate after required gates. Source pushes/docs checkpoints are not repaired-site deployment or whole-goal completion.
+>
+> Exact current source/execution/handles/hash index: `agent-system/projects/applywright/docs/verification/20261028-intake/CURRENT-CHECKPOINT.md`; contributor closeout `docs/APPLYWRIGHT-HANDBACK-SUBMISSION-20261028.md`. All stopped candidates and worktrees are preserved; metadata inventory in `docs/verification/20261028-intake/WORKTREE-INVENTORY.txt`. Follow actual newer receipts if these live actors terminate. Schema/index/UI model-reporting repairs remain queued; DNS/Stripe/VAT/Scale decisions and live-provider evidence remain separate.
 
-## (a) New note — `Luna Vault/projects/applywright/_index.md`
-
-The vault's `projects/` folder uses one folder per project with an `_index.md`, linked
-from `projects/_index.md`. Create the folder `projects/applywright/` and paste the block
-below into `_index.md`. To keep it as a single loose note instead, save it as
-`projects/applywright.md` — but then the MOC row in (b) needs that path.
-
-````markdown
----
-type: project-index
-project: applywright
-confidence: verified
-last_verified: 2026-10-28
-source: agent-mission
-tags: [projects, product, applywright]
----
-
-# Applywright — CV tailoring platform (intelligentartificial.net)
-
-## What it is
-
-A CV scoring and tailoring web product by **Intelligent Artificial**. One CV is scored
-against a specific job description, rewritten using only facts the CV already contains,
-packaged into a print-ready ATS-safe CV with a covering letter and four screening answers,
-tracked through an application queue, and kept supplied by saved searches that poll three
-public job boards and drop matches into an inbox plus an RSS feed.
-
-Company Intelligent Artificial; tagline *Your CV, tailored for every job.* Built for people
-who are serious about a search, not a spray-and-pray bot.
-
-Three refusals by design, with code behind each: **no LinkedIn scraping or background
-crawling** (capture refuses LinkedIn/Indeed/Glassdoor URLs and only reads the three public
-job APIs plus Stripe), **no automated submission** (a pack ends at `pack_ready`; the human
-clicks apply and records the outcome), **no fabricated experience** (a grounding check
-rejects any rewrite that introduces a number, employer, title, date or qualification the
-CV does not contain).
-
-## Where the code and canon live
-
-- Code: `C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright`
-  — its **own git repo** (`main`; public `origin` at
-  <https://github.com/johancilliers22/applywright>, pushed and in sync; 12 commits,
-  `bc6731d` first).
-- It is **not a hub package**: the agent-system hub gitignores `projects/*/`, so the hub
-  cannot see it and a hub worktree does not provision it.
-- Canon, in reading order:
-  - `docs/PROJECT-STATUS.md` — the cold-start brief (what it is, stack, routes, modules,
-    data model, verification, sharing, known gaps);
-  - `docs/IMPLEMENTATION-PLAN.md` — phases with owners and acceptance checks;
-  - `docs/PIPELINE.md` — branch, commit, gate commands, push instructions;
-  - `docs/SPEC.md` — the product contract (data model, module signatures, decisions);
-  - `docs/design/` — design synthesis plus three directions and four research files;
-  - `docs/SHARE.md`, `docs/DOMAIN.md`, `docs/DEPLOY.md` — sharing and hosting.
-- Hub-level stub: `agent-system/docs/diagnostics/APPLYWRIGHT-PROJECT-STATUS-20261028.md`.
-
-## How to run and share it
-
-Run (one process, no build step, no external service required):
-
-```powershell
-cd C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright
-npm install
-Copy-Item .env.example .env.local   # optional; defaults boot
-node server/index.js                 # or: npm start
-```
-
-- `127.0.0.1:3160` by default. Node 22.5+ is required (`node:sqlite`).
-- Empty environment is a supported state: tailoring falls back to deterministic rules,
-  plans and quotas are visible, checkout answers 501.
-- `REGISTRATION_OPEN=0` closes public sign-up while keeping sign-in working; the demo is
-  currently public with registration open (Johan, 28 Oct).
-- Share: `pwsh -NoProfile -File scripts/share.ps1 -Mode tailscale -WhatIf` (dry run), then
-  `-Mode tailscale` (private, auto-picks https 8447 because 443 is taken on this host) or
-  `-Mode cloudflare` (public, ephemeral quick tunnel). `scripts/share-stop.ps1` undoes only
-  what it created.
-- Target home `intelligentartificial.net` via a named Cloudflare tunnel — **not executed**:
-  the domain is on GoDaddy nameservers, no record, tunnel, host or certificate exists.
-
-## The design system, in one paragraph
-
-Hand-written CSS on the **Meridian** token system: `public/assets/tokens.css` carries the
-palette (ink, bone, paper, a green interaction accent), the serif/sans/mono trio and the
-layout primitives; `theme.css` re-keys those tokens for the product and holds the dark
-scheme, applied by `html[data-theme="dark"]` and `theme.js` in the head so there is no
-flash; `motion.css` holds the permitted motion; `site.css` the marketing components and
-`public/app/app.css` the product surface. There is no framework, no hosted font and no
-build step — the files served are the files written. Two measured rules govern changes:
-interactive green `--accent` is deliberately a different value from semantic `--ok`, and
-the 48% ink rule is the only line allowed to identify a control (3:1 floor). The system is
-specified in **`docs/design/SPEC-V2.md`** (shipped 28 October 2026; it supersedes
-`docs/design/DESIGN-INPUTS.md` where they disagree, and `docs/SPEC.md` still wins on
-product truth). Part of the component work is shipped: the hero is now the advert→CV proof
-sheet (commit `342d621`) with the vernier gauge, and the old motion is retired. The
-*Pressproof* folios from `docs/design/DIRECTION-gemini.md` (paper artefacts, margin-gutter
-redlines with `[CV §n]` citations) are still queued, not shipped.
-
-## Decisions taken
-
-- **No scraping, no auto-submission, no invented experience.** These are the product, not
-  a policy layer; the capture endpoint refuses the blocked hosts and the tailor refuses an
-  ungrounded rewrite.
-- **Bring-your-own-copy connectors.** Every import parses text the user already holds.
-  There is no OAuth, no fetch, and **browser-cookie/session import is rejected by
-  decision** — it is automated access by another name and the user cannot revoke it.
-- **Rules fallback is a real path, not a stub.** With no `MODEL_API_KEY` the rewriter
-  segments, scores, re-orders and reuses the CV's own wording, and `mode` says `rules`.
-- **One process, local SQLite, no serverless.** In-process alert scanner, in-process rate
-  limits, one writer; a function host would lose the database and the sessions.
-- **Honest refusal over half-wired.** Stripe unconfigured means plans visible, checkout 501.
-- **Enforce what you display.** Four quotas are enforced (`cvs`, `packs`, `alerts`, job
-  results per day) and the capability flag list is exactly the three a handler gates
-  (`fullAtsReport`, `coverLetter`, `packHistory`), with `FLAG_FEATURES` equal to
-  `ENFORCED_FLAGS`. Scale is a quota tier — it adds unlimited CVs and packs and 50 saved
-  alerts, not features. `GET /api/export` is deliberately open to every plan for data
-  portability.
-- **One bookmarklet artifact, two entry points.** Settings inside `/app` is the primary
-  install; `/bookmarklet` is the same artifact made shareable to a signed-out person.
-- **No data without an exit.** CV text is stored as text, export is one route, delete is
-  hard and cascades.
-
-## Open questions
-
-- **VAT.** Prices are labelled "excluding VAT" and no VAT is modelled. Sell to UK consumers
-  and this becomes a legal question: rate, inclusive-or-exclusive display, and one function
-  that produces the line.
-- **PDF and OCR tooling.** PDF reads through a local `pdftotext`: Poppler 26.09 is on the
-  Windows user `PATH`, with the `wsl -e` fallback for a shell that lacks it. OCR is wired to
-  Tesseract, which is not on the Windows `PATH` but is installed in WSL
-  (`/usr/bin/tesseract`), so image uploads are read through the fallback; the capability
-  probe is cached per process. Make Tesseract a Windows requirement, or keep it optional?
-- **Bookmarklet vs extension.** The bookmarklet is shipped and compliant. An extension is
-  only a different install path for the same user-initiated read — is it worth the review
-  surface, and does it risk becoming a second capture implementation?
-- **Hosting.** Keep the public quick-tunnel demo, move to a named tunnel behind Cloudflare
-  Access, or a small VPS with Caddy — and who terminates TLS. Nothing is deployed; the
-  registrar, Cloudflare account and certificate decisions are Johan's.
-- **Password recovery delivery.** Recovery works without a mail server: an offline
-  recovery code saved at sign-up, a single-use expiring reset link via `/reset`, and an
-  operator CLI fallback (`scripts/reset-password.mjs`). The open question is delivery —
-  today an operator passes the link on, so which path (transactional mail, magic link)
-  before inviting strangers?
-- **Scale shape.** Single-process SQLite is right for now. If multi-tenant growth arrives,
-  move to a hosted Postgres and a real job runner — or accept one instance.
-````
-
----
-
-## (b) One row — `Luna Vault/projects/_index.md`
-
-Add this row to the table under the heading *Projects MOC*, keeping the existing rows and
-order untouched. It is a pure addition: one line in, nothing changed.
-
-```markdown
-| Applywright | applywright | active (MVP complete on the rules path; public repo, `main` pushed) | 2026-10-28 | [[projects/applywright/_index]] |
-```
-
-Place it after the *Brunel MSc AI (Online)* row so the table stays roughly in
-last-touched order, or at the end if you prefer append-only.
-
----
-
-## Applying it — checklist
-
-1. In Obsidian, create `projects/applywright/` and its `_index.md`; paste block (a).
-2. Open `projects/_index.md`; add the row from (b) to the table.
-3. Confirm the row renders as a link (the note path must be exactly
-   `projects/applywright/_index.md`).
-4. Commit in the vault repo **from the `Luna Vault` subdirectory**, not `luna-vault/`:
-   `cd "OpenClaw/luna-vault/Luna Vault"` then `git add projects/applywright/_index.md
-   projects/_index.md` and commit. (`luna-vault/` is not the git root.)
-
-**Not included on purpose:** there is no edit to `brain/_index.md`. This note is a project
-record, not cross-cutting canon, so it belongs under `projects/`, reached from the Projects
-MOC. If you decide it *is* canon, add the link to `brain/_index.md` yourself — that file is
-brain canon and the ownership rules there are stricter than a project note.
+Publisher must record actual note-write time/hash and authoritative contributor version; if a new accepted project commit arrives before publication, reconcile that concrete receipt. If no acceptance arrives, publish the incomplete state without converting the time window, diagnostics or green mocks into completion.
+**22:29 independent E2E review update:** Sol R1 actually completed/reaped at22:27:30 REQUEST_CHANGES, source unchanged. Seven findings: P1 synchronized Windows5.1 Console.In blocks completion/termination; hard-skipped native qualifier has no opt-in/readiness and inadequate timing; assignment-failure branch loses uncontained-process cleanup proof; P2 wrapper nonzero/signal/finalPID acceptance, abort-vs-exit race, early close-grace force-kill, ignored native CloseHandle/Terminate failures becoming proof fields. Exact full report `docs/t3/receipts/20261028-e2e-lifecycle/review/sol-review.FINDINGS.md`. No real browser/native-process qualification is authorised from this candidate. Standing same-pipeline DSH correction/new independent Sol remains necessary. Source-reviewed structure is useful, but green18mocks/compile0 did not certify ownership. G1 R3 report-file metadata has appeared; without terminal/frozen owner receipt it is still not a testable/copyable stopped candidate.

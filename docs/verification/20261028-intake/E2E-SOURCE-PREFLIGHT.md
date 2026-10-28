@@ -1,0 +1,13 @@
+# Existing E2E source/safety preflight — 28 October 2026
+
+Source inspection only. Driver `scripts/e2e-flow.mjs` SHA256 `caf619b0ea87de2eae943f224ca71f30557fe825f79a443f3425c1dbdb2bebe1`. No browser/E2E/live-model invocation performed by this continuation. This is preparatory evidence, not admission or runtime proof.
+
+The driver creates its own loopback servers at PORT0, explicit scratch DATABASE_PATH/dataDir, blank org/model keys, disabled alert scanner and high test-only mutation limit (1302–1323). The second model-path instance points to a local OpenAI-compatible stub, with dummy key and its own scratch DB (2112 onward). Public job-board reads in the alerts step remain real external public reads. Neither instance targets the live3160 database. The parent runner must still clear provider/billing variables and ensure no env-file fallback before executing.
+
+Browser launch (582 onward) selects installed Chrome/Edge, creates a new applywright-e2e-profile temporary directory and reads DevToolsActivePort only from that directory. It never attaches to main Chrome or imports cookies. The three browser processes are its main headless browser plus two one-shot fixture browsers; each is spawned with its own temporary user-data-dir. This is standalone product E2E automation, distinct from a headless agent harness obtaining CUA tools. A prior actual profile/harness denial must not be bypassed by running it through another route.
+
+Main-browser cleanup (1101 onward) closes its own CDP socket and kills only the ChildProcess object it spawned, then removes that temporary profile. The main finally closes the scratch server; failed-run artifacts remain, successful workDir is removed. No other app/PM2/process cleanup is in this driver.
+
+**Concrete source limitation:** oneShotChrome (1214 onward) resolves after a30s timer but does not kill/await its owned child on timeout and has no spawn-error handler. If a fixture Chrome hangs or fails to spawn, this may leave an owned child running or produce an unhandled error. The outer Browser.close only owns the main browser, not these one-shot handles. Before claiming safe bounded lifecycle, either qualify the current normal path under the explicit product-test admission with this limit recorded, or assign the small owned-child timeout/error cleanup fix to DSH and independently review it. Do not kill arbitrary Chrome processes or inspect foreign argv/env to recover an orphan.
+
+E2E remains pending a fresh full-lifetime EX test window, source candidate integration/readiness, appropriate temporary-browser admission and resource/seat checks. It cannot prove live provider quality, Stripe, DNS or absence of arbitrary grounding failures. The synthetic stub proves only the checked model path/refusal cases.

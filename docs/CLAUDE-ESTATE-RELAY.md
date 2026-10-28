@@ -1,4 +1,6 @@
-> **Status, 28 Oct evening — this relay has been executed.** Claude's usage limit is exhausted, so the
+> **28 Oct current correction:** Codex chat `01a183ff-e374-7d32-ae0e-1938714e813c` has been created and owns Applywright. Native T3 broker `46ac76de-4e76-42b4-a2b1-9f6d4e09c559` handles its finite review receipts; no second lead or project scheduler. Claude remains paused until explicit human handback. Direct org API is a separate guarded route within the shared $190 cycle cap; no new live call is proved. Historical recipes inspecting other-process CommandLine/env or piping keys to stdout are withdrawn and must not be executed. Use safe listener/PID/start/path metadata, public health and owned receipts. Fresh gates: `verification/20261028-intake/gates.json`.
+>
+> **Historical status, 28 Oct evening — this relay had been prepared.** Claude's usage limit is exhausted, so the
 > handover to Codex happened immediately rather than on Saturday: the Codex desktop chat is the
 > orchestrator, DSH implements, T3 tracks and verifies. Run §2 once to confirm the handoff is true, then
 > stop — the living-docs duty and the routing are in `CODEX-ORCHESTRATOR-HANDOFF.md` §10, which is now the

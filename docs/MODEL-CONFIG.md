@@ -4,13 +4,13 @@ Applywright runs in one of two modes, and the difference is visible in the UI:
 
 | Mode | When | What the agent can do |
 |---|---|---|
-| `rules` | no key in the server's environment | deterministic rephrasing only: shorten, formalise, strip filler, tighten a bullet. It cannot follow an instruction like "point this at IT sales roles" |
-| `model` | a key is present | real rewriting that follows the instruction — still every changed string is checked against the CV and reverts if it invents a fact |
+| `rules` | no configured client, a failed/invalid model reply, or no model changes surviving the engine's checks | deterministic rewriting; inspect warnings to distinguish the cause |
+| `model` | the refinement engine accepted model output internally | model-generated content passed the implemented predicate; assist may subsequently remove all accepted changes |
 
 `GET /api/health` reports `"provider": "live"` when a client could be constructed. That is **not** proof a
-call works — a wrong key reports the same. The proof is an assist/refine response whose `mode` is `model`.
+call works — a wrong key reports the same. `mode: model` is evidence of the engine path, not proof that a change survived assist's final filters, that the UI applied it, or that every fact is supported. A useful-task receipt needs the accepted final changes and final content as well as mode/provider evidence. See the 28 Oct independent disposition below.
 
-## Keys come from the loader, never from a file
+## Approved credential/runtime routes
 
 The estate stores credentials in a selected-variable loader. Two profiles are relevant:
 
@@ -19,30 +19,25 @@ estate-env-run claude-org-api  -- ...   # ANTHROPIC_ORG_API_KEY   (direct API on
 estate-env-run deepseek-api    -- ...   # DEEPSEEK_API_KEY        (OpenAI-compatible endpoint)
 ```
 
-`scripts/model-boot.mjs` starts the server with a key that arrives on **stdin**, so the value is never
-printed, written, or pasted into a config or a prompt. It reads stdin, refuses on an empty stream, and
-spawns `server/index.js` detached.
+These are profile names, not permission to inspect their values. The existing product may consume its approved runtime environment. A future model launch must keep credential transfer inside the reviewed selected-variable adapter and use the shared **$190 org-API cycle guard** with honest spent/pending accounting; UNKNOWN is not zero. Do not read env/auth/store files, echo/print a key, inspect other-process argv/env, copy auth/config homes, or map an org key onto `ANTHROPIC_API_KEY`.
 
-### Claude (org credits, recommended for quality)
+### Historical stdin bridge — unsafe recipes withdrawn
 
-```bash
-wsl -e bash -lc 'cd /mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright \
-  && estate-env-run claude-org-api -- bash -lc "printf %s \"\$ANTHROPIC_ORG_API_KEY\""' \
-  | BOOT_PROVIDER=anthropic node scripts/model-boot.mjs
-```
+`scripts/model-boot.mjs` is a stdin bridge that spawns the server. Earlier documentation fed it by printing credential values from a WSL child. Johan's 28 Oct commission explicitly withdraws those key-to-stdout recipes; they must not be executed. No replacement Windows product launcher is qualified by this document. Preserve the healthy running site and obtain the current reviewed adapter/guard receipt before a future restart that changes its model route.
 
 The org key is deliberately stored under its own name: mapping it to `ANTHROPIC_API_KEY` would flip Claude
 Code onto API billing, which is why `config.js` reads `ANTHROPIC_ORG_API_KEY` and nothing else.
 
-### DeepSeek (OpenAI-compatible, cheap bulk work)
-
-```bash
-wsl -e bash -lc '... estate-env-run deepseek-api -- bash -lc "printf %s \"\$DEEPSEEK_API_KEY\""' \
-  | node scripts/model-boot.mjs
-```
-
 Defaults: `MODEL_BASE_URL=https://api.deepseek.com/v1`, `MODEL_NAME=deepseek-chat`. Override with those env
 vars when a different OpenAI-compatible endpoint is wanted (Ollama, vLLM, Azure).
+
+These product-client defaults are distinct from agent routing: DSH implementation uses its own qualified harness/profile and preserved Estate model defaults. Claude subscription/Code remains paused; direct org API is a separate authorised product/provider route and does not wake or re-enable Claude agents.
+
+## 28 Oct independent validation — candidate REQUEST_CHANGES
+
+Both native Sol 6.1/xhigh reviewers returned REQUEST_CHANGES on `86b74c3`. The orchestrator independently reproduced invented employer/technology/qualification/seniority/date/count and ownership claims passing `assertGrounded`/`groundChanges`, plus a currency swap passing refinement and ordinary-language false refusals. Full synthetic inputs/results: `verification/20261028-intake/grounding-repros.json`; original reports: `t3/receipts/20261028-intake/*FINDINGS.md`.
+
+Every changed model field reaches a grounding predicate, but that predicate currently has demonstrated gaps. Additional source findings, not live-model proofs: empty summary validation can reject an otherwise valid edit; index coercion accepts null as zero; UI copy can misclassify transport/shape failures; assist can return `mode: model` after its second gate removes every change. These require scoped repairs and independent re-review. The historical successful example below is not a fresh validation or factuality guarantee. Current health returned provider live; no live model/API call was run by this intake.
 
 ## The bug this uncovered
 

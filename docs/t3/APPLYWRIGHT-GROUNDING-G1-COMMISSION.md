@@ -1,0 +1,28 @@
+# Grounding G1 — isolated DSH repair, then independent Sol review
+
+Codex orchestrator `01a183ff-e374-7d32-ae0e-1938714e813c` assigns this correctness repair under Johan's continuing commission. SAME native T3 broker `46ac76de-4e76-42b4-a2b1-9f6d4e09c559`; no second parent/scheduler. Initial grounding/model reviews are terminal REQUEST_CHANGES and recorded. Do not rerun them or accept the product. Read these parent-root artifacts, which are uncommitted and absent from a new worktree:
+
+- `docs/verification/20261028-intake/ORCHESTRATOR-DISPOSITION.md`
+- `docs/verification/20261028-intake/grounding-repros.json` and its `.mjs` fixture source
+- both `docs/t3/receipts/20261028-intake/*FINDINGS.md` reports
+
+The orchestrator independently reproduced their central P1 findings with pure synthetic calls. G1 outranks new product features. Contrast M1 remains disjoint and may continue; do not interrupt/reuse its worktree. Model-schema/index/HTTP/UI-mode repairs overlap refine.js and therefore FOLLOW G1, not a simultaneous writer there.
+
+Broker write scope extends ONLY to NEW `docs/t3/receipts/20261028-grounding-g1/**` native manifest/receipts. No shared pack/ROLES or source edits. Refresh native capabilities, actual inventory and RAM/heavy-lock admission. If admitted, dispatch ONE native DSH writer through currently qualified `acpRegistry_deepseek_windows`, model ID string `["deepseek-official","deepseek-flash"]`, `reasoning_effort=high`, Full access. Preserve Estate defaults, no artificial timeout/context reduction. Actual denial/unavailability => HOLD; no hidden fallback, bare API or Claude. Windows fits this Node-only task; a later WSL choice needs separate native-provider/home proof and ext4.
+
+Use native `delegate_task` with `isolation: worktree` in matching Applywright repo. Confirm actual path/branch/base and source hashes before writing. Product base must remain `86b74c3a1869255ce276cfe961474193d6080ca0`; parent docs are intentionally dirty. Supply the full bounded brief plus report/fixture contents or absolute READ-ONLY parent input paths. No data/env/auth/config copying. Workers are not alone: preserve other changes and disjoint scopes. One source writer; bounded read-only teammates may help without writing or accepting.
+
+DSH owns ONLY `server/lib/cv/tailor.js`, `refine.js`, `tailor.test.mjs`, `refine.test.mjs`, and explicitly requested own-worktree `GROUNDING-G1-RESULT.md`. No server/app/provider/UI/CSS/check.js/package/docs/ledger edits. No commit/merge/publish/main-checkout edits, live model/server/HTTP/browser/E2E, credentials, shared configuration, PM2 or app/WSL lifecycle changes. Never disable/weaken grounding or use reject-all/model-off as a fix.
+
+Required behavior:
+
+1. Close employer/technology/name bypasses from blanket sentence-opener/function-word/suffix/hyphen exemptions. Go-based is allowed when Go exists in the original, rejected when absent. Unknown factual summary/letter names cannot pass merely with softSentenceStart warnings. Preserve useful grammar through bounded contextual rules rather than blanket capital/suffix exemptions.
+2. Close adverb/introductory-phrase/later-clause and multiline ownership promotions. Support-only evidence cannot become execution/leadership. Legitimate leadership later in the original sentence remains usable. Unrelated leadership elsewhere cannot license a support bullet; no global newline bypass.
+3. Preserve claim units: computing-degree cannot become medicine-degree; engineer cannot acquire principal/senior without evidence; contextual date May cannot be invented, while modal may remains grammar; spelled one cannot evade a count check. groundChanges must preserve currency/unit identity, refusing GBP-to-USD swaps of the same number. Keep contact-data handling distinct from accomplishment claims.
+4. Keep grounded positives beside each negative: Experience/Collaborates wording, high degree of accuracy (not a qualification), existing Delivers/Use phrasing, source-backed Go-based, numeric/number-word equivalents and supported ownership. Explain unresolved ambiguities/residual risks. Heuristics are not proof against every possible factual invention.
+
+Tests must cover ALL orchestrator repro cases, BOTH exported predicates where applicable, and casing/punctuation/intro-phrase variants for sensitive-name and ownership mechanisms. Correct old tests explicitly accepting defective fabricated content; explain each contract correction rather than deleting cases or blindly changing expectations. Focused `node --test server/lib/cv/tailor.test.mjs server/lib/cv/refine.test.mjs` plus syntax checks, actual outputs/exits. No dependency install/broad HTTP/E2E. Report exact diff/source hashes/base/worktree, positives/negatives and residual limits. Writer stops before review and explicitly permits orchestrator/read-only reviewer inspection of the assigned candidate files.
+
+After DSH terminal result, save actual status/worktree/report/hashes, then dispatch ONE independent native Codex `gpt-6.1-sol`/xhigh/Standard read-only reviewer. Supply exact uncommitted worktree paths/hashes and owner inspection permission; a main-root reviewer cannot see that candidate automatically. Review adversarial variants, grounded positives, claim-unit/ownership logic, scoped diff and focused offline checks. No edits/delegates/live calls/acceptance. Return PASS/REQUEST_CHANGES/BLOCKED with exact repros/file:line evidence and residual limits. This chat alone integrates/accepts; broker must not run accept.
+
+Use native completion delivery, not a polling daemon; record initial/final/review checkpoints. Unknown cost/served identity/context stays UNKNOWN. Do not independently start the later overlapping model-schema/UI mission.

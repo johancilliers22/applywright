@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-28",
+  "operatorCommission": "APPLYWRIGHT-COMMISSION-20261028.md and Root's single-message GUI-broker instruction",
+  "driver": "estate-cua",
+  "session": "applywright-20261028",
+  "pid": 27240,
+  "windowId": 136396,
+  "admission": {
+    "seat": "Root explicitly ended its lifecycle and transferred the single interactive driver for this bounded setup",
+    "permissions": "Medium integrity, UIA and PostMessage available",
+    "windowsFreeKiBBeforeRelay": 7346720,
+    "heavyLockObservation": "lslocks showed no /tmp/redline-heavy.lock holder before relay; observation, not a lifetime lease",
+    "input": "background first; foreground text/key/scroll retries only after background_unavailable or observed no-op",
+    "browser": "No Chrome attachment or browser-profile operation"
+  },
+  "estateRelay": {
+    "environmentId": "581dec0a-e5df-4b43-9975-9136f2b84211",
+    "threadId": "3e09eb96-365d-4610-adfe-9de6d68ce445",
+    "title": "Estate Stand-in Queue Execution",
+    "messageSource": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/ROOT-POST-APPLYWRIGHT-ESTATE-RELEASE-20261028.md",
+    "queuedExactlyOnce": true,
+    "supportedSendNow": "Existing Send now button activated with targeted keyboard space after offscreen background click did not consume queue",
+    "delivered": true,
+    "deliverySnapshot": "s0000003b:184 is Text inside Group Conversation, no queued-message ancestry",
+    "composerSnapshot": "s0000003c:196 Edit Message Estate Stand-in Queue Execution has no value",
+    "acknowledgement": "NOT YET OBSERVED; delivery is not Estate task execution"
+  },
+  "applywrightParent": {
+    "duplicateCheck": "Native project/new-thread picker had no Applywright project; Applywright thread search found Estate message only before creation",
+    "draftId": "c54a3fd8-0881-49b1-bf6e-3dc85d225028",
+    "environmentId": "c9887cd0-5164-44d0-a8c0-acc6c583ca42",
+    "threadId": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+    "title": "Applywright Native Review Broker",
+    "project": "applywright",
+    "workspace": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+    "host": "JohansPC",
+    "workspaceMode": "Local checkout / main",
+    "modelPicker": "GPT-6.1-Sol",
+    "effortPicker": "Extra High",
+    "serviceTierPicker": "Standard, Fast removed before first submit",
+    "permissionsPicker": "Full access",
+    "contextOverride": "None; supported client defaults preserved; numeric capacity unverified",
+    "servedIdentity": "UNKNOWN; picker is routing evidence only",
+    "brief": "docs/t3/APPLYWRIGHT-NATIVE-PARENT-BRIEF-20261028.md",
+    "initialMessageDelivery": "Observed in conversation; initial working state and broker acknowledgement seen",
+    "tasks": "Pending broker's actual native receipts at this GUI checkpoint"
+  },
+  "release": "Bounded GUI transaction complete; this chat releases the single interactive driver to Root. Native broker continues without further GUI input. No scheduler created."
+}

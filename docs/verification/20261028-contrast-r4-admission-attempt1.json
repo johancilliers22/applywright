@@ -1,0 +1,9 @@
+{
+  "freeWindowsKiB": 11318676,
+  "exitCode": 0,
+  "endedUtc": "2026-10-28T22:21:18.9709357Z",
+  "startedUtc": "2026-10-28T22:21:16.3761347Z",
+  "phase": "CONTRAST_R4_DIAGNOSTIC",
+  "testsRan": true,
+  "lease": "full-lifetime EX; released on return"
+}

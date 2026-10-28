@@ -1,0 +1,496 @@
+{
+  "atUtc": "2026-10-28T22:08:02.756Z",
+  "candidateRoot": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-9aa48ded",
+  "hashes": {
+    "server/lib/cv/tailor.js": "19e05d11f3042c85b021f3b9bacc5e326d054cf28d4c8e552ffd10b4200d7d8a",
+    "server/lib/cv/refine.js": "d6f230372b28a438a757db3cea0a4e570e41d76fe047bfe34635674fd13e879c"
+  },
+  "provenance": "Synthetic cases fixed from independent Sol SOURCE report; existing two unit files additionally cover rejected-model diagnostic propagation",
+  "scope": "Direct pure functions only; no server/network/model/credentials/live data",
+  "comparisons": 31,
+  "passed": 31,
+  "failed": 0,
+  "rows": [
+    {
+      "name": "coordinated object promotion",
+      "predicate": "assertGrounded",
+      "before": "Helped with the migration and rollout.",
+      "after": "Delivered the rollout.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"delivered\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "coordinated object promotion",
+      "predicate": "groundChanges",
+      "before": "Helped with the migration and rollout.",
+      "after": "Delivered the rollout.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"delivered\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "intro without comma",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "In this role I led 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "intro without comma",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "In this role I led 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "leadership inflection",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Effectively leads 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"leads\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "leadership inflection",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Effectively leads 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"leads\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "backed later leadership",
+      "predicate": "assertGrounded",
+      "before": "Helped with the migration before I led the rollout.",
+      "after": "Led the rollout.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "backed later leadership",
+      "predicate": "groundChanges",
+      "before": "Helped with the migration before I led the rollout.",
+      "after": "Led the rollout.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "unrelated overlap",
+      "predicate": "assertGrounded",
+      "before": "Helped with testing.\nPersonally owned migration.",
+      "after": "Personally owned testing.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "unrelated overlap",
+      "predicate": "groundChanges",
+      "before": "Helped with testing.\nPersonally owned migration.",
+      "after": "Personally owned testing.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "unrelated context",
+      "predicate": "assertGrounded",
+      "before": "Helped with testing.",
+      "after": "Personally owned testing.",
+      "options": {
+        "context": "Personally owned migration."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "unrelated context",
+      "predicate": "groundChanges",
+      "before": "Helped with testing.",
+      "after": "Personally owned testing.",
+      "options": {
+        "context": "Personally owned migration."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "qualification conjunction",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in computing and medicine.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new qualification subject \"medicine\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "qualification conjunction",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in computing and medicine.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new qualification subject \"medicine\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "qualification prefix subject",
+      "predicate": "assertGrounded",
+      "before": "Holds a computing degree.",
+      "after": "Holds a medicine degree.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new qualification subject \"medicine\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "qualification prefix subject",
+      "predicate": "groundChanges",
+      "before": "Holds a computing degree.",
+      "after": "Holds a medicine degree.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new qualification subject \"medicine\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "long title seniority",
+      "predicate": "assertGrounded",
+      "before": "Worked as a backend software engineer.",
+      "after": "Worked as a principal backend software engineer.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new job title modifier \"principal\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "long title seniority",
+      "predicate": "groundChanges",
+      "before": "Worked as a backend software engineer.",
+      "after": "Worked as a principal backend software engineer.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new job title modifier \"principal\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "Go verb is not language",
+      "predicate": "assertGrounded",
+      "before": "Built services and chose to go remote.",
+      "after": "Built Go-based services and chose to go remote.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "Go verb is not language",
+      "predicate": "groundChanges",
+      "before": "Built services and chose to go remote.",
+      "after": "Built Go-based services and chose to go remote.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "this May date",
+      "predicate": "assertGrounded",
+      "before": "Worked through spring.",
+      "after": "Worked this May.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new month May is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "this May date",
+      "predicate": "groundChanges",
+      "before": "Worked through spring.",
+      "after": "Worked this May.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new month May is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "new one-day duration",
+      "predicate": "assertGrounded",
+      "before": "Completed work.",
+      "after": "Completed work in one day.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure one is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "new one-day duration",
+      "predicate": "groundChanges",
+      "before": "Completed work.",
+      "after": "Completed work in one day.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure one is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "one-day equivalent",
+      "predicate": "assertGrounded",
+      "before": "Completed work in one day.",
+      "after": "Completed work in 1 day.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "one-day equivalent",
+      "predicate": "groundChanges",
+      "before": "Completed work in one day.",
+      "after": "Completed work in 1 day.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "thirteen equivalent",
+      "predicate": "assertGrounded",
+      "before": "Built thirteen services.",
+      "after": "Built 13 services.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "thirteen equivalent",
+      "predicate": "groundChanges",
+      "before": "Built thirteen services.",
+      "after": "Built 13 services.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "forty equivalent",
+      "predicate": "assertGrounded",
+      "before": "Built forty services.",
+      "after": "Built 40 services.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "forty equivalent",
+      "predicate": "groundChanges",
+      "before": "Built forty services.",
+      "after": "Built 40 services.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "dropped phone stays warning",
+      "predicate": "groundChanges",
+      "expected": "accepted with contact warning",
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": [
+          "the rewrite dropped \"07700 900123\", which looks like contact data — check it is still in the contact block"
+        ]
+      },
+      "pass": true
+    }
+  ]
+}

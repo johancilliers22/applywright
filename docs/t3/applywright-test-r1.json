@@ -2,15 +2,15 @@
   "id": "applywright-test-r1",
   "objective": "Verify observable behaviour of Applywright against its own gates and its end-to-end browser journey, and report exactly what ran, what passed and what did not run.",
   "workspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
-  "parentWorkspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system",
-  "parentThreadId": "REPLACE_WITH_T3_THREAD_ID",
+  "parentWorkspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+  "parentThreadId": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
   "maxActiveChildren": 2,
   "tasks": [
     {
       "key": "test-gates-r1",
       "agent": "tester",
       "access": "shared",
-      "brief": "From the project root C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright run, in order: `node --test tests/`, `node --test server/lib server/provider`, `node scripts/check.js`, and `node scripts/e2e-flow.mjs` (the last one starts its own instance on PORT 0 with a temporary database and takes about 15 seconds). Report the exact summary lines for each command, the E2E ledger's step and assertion counts, and any failure with the failing assertion text. State explicitly anything you could NOT run and why (for example no network, no model key, no browser). Do not modify repository files; temporary files outside the repo are fine. Do not merge, publish or delegate further. Known baselines if you need to judge drift: 150 HTTP tests, 338 module tests, check.js 0 errors, E2E 10 steps / 235 assertions - but report what you measure, not what this brief expects.",
+      "brief": "Later mission only: this spec is not dispatched by the initial intake. From the explicit Applywright root, inspect source and scratch/runtime isolation before running node --test tests/, node --test server/lib server/provider, and node scripts/check.js under fresh resource/shared-heavy-lock admission. Use only approved named runtime variables with model/billing keys disabled for fixtures; never read/echo credentials, env/auth files or other-process argv/env. Run scripts/e2e-flow.mjs ONLY after current source/safety review and explicit browser/seat admission covering its headless Chrome temporary profile and external public job-board reads. An existing denial stays HOLD; no alternate raw CDP/harness workaround. Otherwise report E2E NOT RUN with the exact reason. Preserve the live site, apps, WSL, PM2 and data/. Report exact commands/exits/pass/fail/skip totals and artifact hashes; historical counts are not expected outputs. No writes to source/ledger, merge, publish or delegation; scratch artifacts outside the repo only. You are not alone in the codebase: preserve all changes. No Claude or live model/API call.",
       "inputPaths": [
         "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/package.json",
         "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/E2E-VERIFICATION.md",

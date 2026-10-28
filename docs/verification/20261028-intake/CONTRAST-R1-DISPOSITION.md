@@ -1,0 +1,11 @@
+# Contrast M1 first independent source review — REQUEST_CHANGES
+
+The orchestrator consumed `docs/t3/receipts/20261028-contrast-m1/sol-review.FINDINGS.md` and its actual native terminal receipt. Sol6.1/xhigh/Standard independently identified two fail-closed defects in the stopped DSH candidate: malformed functional RGB is normalized into a colour, and an empty later custom-property value is discarded instead of overriding the earlier value. Both are accepted for scoped correction; no runtime reproduction is claimed during the SOURCE phase.
+
+The grammar distinction is supported by the W3C's [CSS Color4 syntax](https://www.w3.org/TR/2026/CRD-css-color-4-20261007/#color-syntax): legacy comma-separated and modern space/slash-separated forms have different structures. A permissive split/filter plus JavaScript Number conversion is not validation of either grammar. The bounded gate may reject unsupported forms, but must not reinterpret malformed input as a passing colour.
+
+The W3C [custom-property value rule](https://www.w3.org/TR/css-variables/#guaranteed-invalid) explicitly treats a written empty value as a valid empty custom-property value. It therefore participates in cascading; the contrast checker must preserve it and report that it cannot supply the required colour. It must not revive an earlier declaration.
+
+The reviewer otherwise source-confirmed the29-pair-per-scheme set, named failures, source specificity for shipped root blocks, aliases/cycles, alpha arithmetic and unrounded thresholds. These are source findings, not executed acceptance. Runtime checks remain pending full-lifetime EX. A low-alpha process mutation and3.00 boundary case are useful adjacent regressions; fixture filtering/setup cleanup limitations must remain visible or be repaired within the existing test scope.
+
+The broker reaped this exact completed reviewer and preserved all candidate hashes. Its prepared DSH R2 request is `applywright-contrast-m1-dsh-r2-addd0462-91b3-4c85-8457-4d4f390b0440`; the20:18 fresh SH preflight returned EAGAIN, so no R2 dispatch was assumed. Original candidate/report/request/receipt history is retained. A new independent Sol review is required after a stopped DSH correction. No integration, product acceptance or test waiver.

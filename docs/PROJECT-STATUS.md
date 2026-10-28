@@ -1,9 +1,11 @@
 # Applywright — project status (cold-start brief)
 
+**22:34 UTC checkpoint:** frozen G1R3 passes80units and all131independent cases, with NEW independent source review still required. ContrastR4 passes21tests/58pairs and its final Sol review is running. E2ER1 Sol requires seven corrections; DSHR2 is active, native qualification/browser journey remain UNPROVED. Product source is baseline `86b74c3`; no repair integrated/accepted/deployed. Fresh baseline-main3gates pass(HTTP150; modules346+1skip; static0errors/0warnings) for the documentation checkpoint only. Exact current handles, hashes, results and next actions: [`verification/20261028-intake/CURRENT-CHECKPOINT.md`](verification/20261028-intake/CURRENT-CHECKPOINT.md).
+
 *Canonical brief. If you read one file before touching this project, read this one.*
-Last verified: 2026-10-28 against this checkout. Every number here was measured, and
-the commands to measure it again are in §7. The tree is being written by several agents
-in parallel, so re-run those commands before trusting a number.
+
+**19:47 UTC integrity disposition: REQUEST_CHANGES.** Both independent reviews completed. Synthetic offline reproducers confirm unsupported employers/technology/qualification/seniority/date/counts/ownership can pass the grounding predicates, and refinement permits a currency swap. Green tests do not certify the absolute factuality claims below. See `verification/20261028-intake/ORCHESTRATOR-DISPOSITION.md` and `grounding-repros.json`. Isolated native DSH contrast work is active; grounding G1 repair is separately commissioned, pending admission/dispatch. Main product/live site remain unchanged; no acceptance or release.
+Current intake verified: 2026-10-28 19:37 UTC against `86b74c3a1869255ce276cfe961474193d6080ca0`. Fresh gate outputs are in `verification/20261028-intake/gates.json`; older product/runtime claims below retain their historical verification boundary. Codex chat `01a183ff-e374-7d32-ae0e-1938714e813c` owns orchestration/acceptance; the native T3 broker runs read-only reviews. No product implementation is active at this checkpoint.
 
 ---
 
@@ -11,8 +13,7 @@ in parallel, so re-run those commands before trusting a number.
 
 - **Path:** `C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright`
 - **It is its own git repository** — branch `main`, HEAD
-  `7b88accb27afa4b0c6e7f2fe5123988371035492` ("Enforce what the plans sell; make the
-  Stripe webhook idempotent"), 12 commits, 332 tracked files.
+  `86b74c3a1869255ce276cfe961474193d6080ca0` ("Codex is live as orchestrator: relay executed, living-docs contract added"), 62 commits, 332 tracked files at intake.
   `origin` is the **public** repository
   (<https://github.com/johancilliers22/applywright.git>) and `main` is pushed and in sync
   with it; a local bare `backup` remote (`../applywright-remote.git`) is behind. Git and
@@ -328,8 +329,8 @@ Three commands are the gate. Run all three from the project root.
 
 | Command | What it covers | Measured 2026-10-28 |
 |---|---|---|
-| `node --test tests/` | The HTTP and storage suites: `spine.test.js` (schema, store, passwords) plus one file per API area; ephemeral port, temporary SQLite file, blank model key, no network, never touches `data/` | **113 tests, 113 pass, 0 fail** |
-| `node --test server/lib server/provider` | Module unit suites beside the code, including provider routing | **309 tests, 337 pass, 0 fail** (12 suites) |
+| `node --test tests/` | HTTP/storage/auth/fixture suites; scratch databases, provider/billing keys cleared in the test child; existing offline E2E helpers included | **150 tests, 150 pass, 0 fail, 0 skipped** (8 suites; 19:37 UTC) |
+| `node --test server/lib server/provider` | Module unit suites beside the code, including provider routing | **347 tests, 346 pass, 0 fail, 1 skipped** (12 suites; 19:37 UTC) |
 | `node scripts/check.js` | What the tests cannot see: one `<h1>` per page, `lang` + viewport, includes and asset references resolve, no inline script or handler (CSP), no remote resources, no placeholder link or TODO, no hype vocabulary, no literal credential, no `eval` | **`applywright check — 10 pages, 24 server modules, 263 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0** |
 
 Counts move whenever an agent lands a test or a page: treat any number here as

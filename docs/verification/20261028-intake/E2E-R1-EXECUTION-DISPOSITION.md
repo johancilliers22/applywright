@@ -1,0 +1,7 @@
+# E2E lifecycle R1 execution disposition
+
+Stopped DSH candidate `C:/Users/johan/.t3/worktrees/applywright/t3-3669749d`, base86b74c3; four owned code/test paths matched the saved owner raw hashes before admission and after execution. Fresh Windows RAM and strict names-only Ubuntu-running gates passed. Actual normal full-lifetime EX22:04:53.383010–22:04:54.190849Z, released.
+
+Executed: `node --check` for flow/helper/test all3PASS; `node --test tests/e2e-browser-child.test.mjs`19tests:18PASS,0FAIL,1SKIP. The Windows child/grandchild test is hard-skipped PENDING_EX. This mocks-only result does NOT prove PowerShell parsing/Add-Type, Job API ownership, descendant cleanup or browser behavior. No PowerShell/Win32/browser/model/network operation was run.
+
+Immutable receipt: `docs/verification/20261028-e2e-r1-diagnostic-attempt1/verification.json`, SHA256 `cab92faec2101ea7e98ab903555bee8d54036f853176419f8595420ca15de14e`. Exact raw logs and command exits are local. Independent Sol source review must require a genuinely runnable opt-in controlled Windows case for the proper EX phase, sound owned cleanup and finalizer behavior; no skipped assertion becomes completion. Source code stays unaccepted and off main.

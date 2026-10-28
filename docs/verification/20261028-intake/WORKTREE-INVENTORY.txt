@@ -1,0 +1,36 @@
+ObservedUtc 2026-10-28T22:27:44.5158314Z
+worktree C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/main
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-06b4af37
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/contrast-m1-r3-correction
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-3669749d
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/e2e-owned-browser-lifecycle
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-551ab369
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/contrast-gate
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-9a61eb7d
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/grounding-g1-repair
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-9aa48ded
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/grounding-g1-correction
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-c4597a35
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/contrast-m1-r2-revision
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-e8d401d4
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/g1-r3-source-corrections
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-f66efc7c
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/contrast-r4-source-correction

@@ -1,0 +1,7 @@
+# Grounding G1 R2 execution disposition
+
+Actual execution: 2026-10-28T21:54:37.475Z–21:54:38.769Z under normal full-lifetime EX, released. Candidate `t3-9aa48ded` stayed hash-identical. Immutable receipt `docs/verification/20261028-g1-diagnostic-r2-attempt1/verification.json`, SHA256 `2a72b30c683cc2cd0ce8fb3c306c69230c6cffe4f1a8bea2bacc3c2adcf1a254`.
+
+Four syntax checks pass. Two unit files: 74 tests, 70 pass, 4 fail, 0 skip. Frozen independent cases52/52 pass; independent source-review-derived cases31/31 pass. The four unit failures still prevent acceptance. Valid ordinary English in refine.test425 and equivalent currency representations in refine.test677 and tailor.test319/426 are falsely rejected by ownership alignment. Preserve the positive expectations and adversarial negatives; fix the implementation. Passing83 semantic comparisons is bounded progress, not absolute factuality proof.
+
+Actual logs and exact fixtures were sent once to native broker in the correct Conversation with empty composer at the21:57 intake. Current independent Sol R2 must finish without moving its candidate; consume all findings before the next DSH correction/NEW independent review. SOURCE workers run no tests. This chat retains integration, proper EX execution and acceptance. Product main remains baseline86b74c3.

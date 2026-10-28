@@ -1,0 +1,78 @@
+{
+  "phase": "ContrastDiagnostic",
+  "startedUtc": "2026-10-28T22:21:16.7769601Z",
+  "endedUtc": "2026-10-28T22:21:18.9078694Z",
+  "state": "PASS_EXECUTED_CHECKS_ONLY",
+  "node": "C:/Program Files/nodejs/node.exe",
+  "resourceLock": "Caller must hold /tmp/redline-heavy.lock EX for full runner lifetime; no lease is created by this script",
+  "sourceHashesBefore": [
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f66efc7c\\scripts\\check.js",
+      "relative": "scripts/check.js",
+      "sha256": "efbaffaf2628381d23b4cc3b9c9e6f6c9e9e53e2d0e4b156073855b222bc9136"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f66efc7c\\scripts\\contrast.js",
+      "relative": "scripts/contrast.js",
+      "sha256": "1d66bb9623830191d74e7d85eab18c467af9447c8fcfd1e694ccc532c00a53ae"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f66efc7c\\tests\\check-contrast.test.js",
+      "relative": "tests/check-contrast.test.js",
+      "sha256": "a49ee357484362669a21de928e90218dca7064ffbd2b662778486bd0dd6a810a"
+    }
+  ],
+  "sourceHashesAfter": [
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f66efc7c\\scripts\\check.js",
+      "relative": "scripts/check.js",
+      "sha256": "efbaffaf2628381d23b4cc3b9c9e6f6c9e9e53e2d0e4b156073855b222bc9136"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f66efc7c\\scripts\\contrast.js",
+      "relative": "scripts/contrast.js",
+      "sha256": "1d66bb9623830191d74e7d85eab18c467af9447c8fcfd1e694ccc532c00a53ae"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f66efc7c\\tests\\check-contrast.test.js",
+      "relative": "tests/check-contrast.test.js",
+      "sha256": "a49ee357484362669a21de928e90218dca7064ffbd2b662778486bd0dd6a810a"
+    }
+  ],
+  "sourceUnchanged": true,
+  "independentFixtureSha256": "64330fbe1845f23b3b7ac104defec791813eea7f6766407e455adb8b0c2fc8d6",
+  "checks": [
+    {
+      "label": "contrast-focused",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f66efc7c",
+      "command": "node --test tests/check-contrast.test.js",
+      "arguments": [
+        "--test",
+        "tests/check-contrast.test.js"
+      ],
+      "startedUtc": "2026-10-28T22:21:16.9688500Z",
+      "endedUtc": "2026-10-28T22:21:18.6898671Z",
+      "freeWindowsKiBAtStart": 11319464,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261028-contrast-r4-diagnostic-attempt1\\contrast-focused.log",
+      "sha256": "7ce0bf4625ddd581487eb853225dcb20ff829933c498f3d3ffe18839bfad8297"
+    },
+    {
+      "label": "contrast-static",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f66efc7c",
+      "command": "node scripts/check.js",
+      "arguments": [
+        "scripts/check.js"
+      ],
+      "startedUtc": "2026-10-28T22:21:18.8255272Z",
+      "endedUtc": "2026-10-28T22:21:18.8913002Z",
+      "freeWindowsKiBAtStart": 11320856,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261028-contrast-r4-diagnostic-attempt1\\contrast-static.log",
+      "sha256": "864395c04866a040f4928be651fc26cbdd8f2c073ef1f13f659ef9259ef392a9"
+    }
+  ],
+  "error": null,
+  "e2e": "NOT RUN by this runner; separate reviewed browser admission required",
+  "liveModel": "NOT RUN"
+}

@@ -2,8 +2,8 @@
   "id": "applywright-plan-r1",
   "objective": "Produce the next sprint plan for Applywright against the current tree, bounded to work that can be executed by DSH implementation agents and reviewed by Codex.",
   "workspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
-  "parentWorkspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system",
-  "parentThreadId": "REPLACE_WITH_T3_THREAD_ID",
+  "parentWorkspaceRoot": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+  "parentThreadId": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
   "maxActiveChildren": 2,
   "tasks": [
     {

@@ -1,0 +1,9 @@
+{
+  "lease": "full-lifetime EX in flock child; released on return",
+  "endedUtc": "2026-10-28T21:58:01.5650719Z",
+  "exitCode": 0,
+  "phase": "CONTRAST_R3_DIAGNOSTIC_ATTEMPT1",
+  "freeWindowsKiB": 12514148,
+  "startedUtc": "2026-10-28T21:57:59.3539080Z",
+  "testsRan": true
+}

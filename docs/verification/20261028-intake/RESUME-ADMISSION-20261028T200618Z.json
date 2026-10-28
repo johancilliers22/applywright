@@ -1,0 +1,21 @@
+{
+  "observedAt": "2026-10-28T20:06:18.125980Z",
+  "authority": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/ROOT-SOURCE-DISPATCH-LOCK-CLARIFICATION-20261028.md",
+  "scope": "SOURCE_OR_SAME_COORDINATOR_DISPATCH_ONLY_NOT_TEST_OR_LIVE_LEASE",
+  "windowsFreeKiB": 5287460,
+  "windowsGuiCoordinatorFloorKiB": 4194304,
+  "windowsGate": "PASS",
+  "canonicalLock": "/tmp/redline-heavy.lock",
+  "sourceProbe": "docs/verification/20261028-intake/source-admission-probe.py",
+  "sourceProbeSha256": "e3f2145e5f33d1f7bce3f5cfa7b5e5e697a753deb2af881dc7c0a5fad08239ee",
+  "probeMode": "nonblocking SH, existing no-follow inode, kernel waiter checks, released before return",
+  "canonicalSharedProbe": false,
+  "probeReleasedBeforeDispatch": true,
+  "exitCode": 75,
+  "reason": "EAGAIN: Resource temporarily unavailable",
+  "decision": "HOLD_ACTUAL_INCOMPATIBLE_LEASE",
+  "lifetimeLeaseClaim": false,
+  "providerControllerChanged": false,
+  "modelTestGuiInputAttempted": false,
+  "next": "Root coordinates a natural published phase change; retain exact pending request IDs and stopped contrast candidate. No repeated unchanged gate probe, foreign cancellation, argv/env/FD scan, fallback or scheduler."
+}

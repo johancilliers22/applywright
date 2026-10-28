@@ -1,0 +1,64 @@
+{
+  "observedUtc": "2026-10-28T22:19:12.3180575Z",
+  "scope": "Applywright only; public bounded identity projection, full native inventories remain local",
+  "parentThreadId": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+  "main": "86b74c3a1869255ce276cfe961474193d6080ca0",
+  "dispatches": [
+    {
+      "lane": "grounding-g1-r3",
+      "clientRequestId": "applywright-grounding-g1-dsh-r3-dd4242e1-9f7e-4c3a-a4fb-f9797d2dadfa",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r3-dd4242e1-9f7e-4c3a-a4fb-f9797d2dadfa",
+      "childThreadId": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r3-dd4242e1-9f7e-4c3a-a4fb-f9797d2dadfa",
+      "statusAtDispatch": "running",
+      "modelRequested": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "options": [
+        {
+          "id": "reasoning_effort",
+          "value": "high"
+        }
+      ],
+      "rawReceipt": "docs/t3/receipts/20261028-grounding-g1/r3/dsh-writer.dispatch.native.json",
+      "acceptance": "NOT ACCEPTED; source completion and actual tests separate",
+      "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-e8d401d4"
+    },
+    {
+      "lane": "contrast-m1-r4",
+      "clientRequestId": "applywright-contrast-m1-dsh-r4-2240c508-d351-42b9-8205-152b05d29dd3",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r4-2240c508-d351-42b9-8205-152b05d29dd3",
+      "childThreadId": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r4-2240c508-d351-42b9-8205-152b05d29dd3",
+      "statusAtDispatch": "running",
+      "modelRequested": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "options": [
+        {
+          "id": "reasoning_effort",
+          "value": "high"
+        }
+      ],
+      "rawReceipt": "docs/t3/receipts/20261028-contrast-m1/r4/dsh-writer.dispatch.native.json",
+      "acceptance": "NOT ACCEPTED; source completion and actual tests separate",
+      "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-f66efc7c"
+    },
+    {
+      "lane": "e2e-lifecycle-sol-r1",
+      "clientRequestId": "applywright-e2e-lifecycle-sol-review-r1-937911e9-5ff5-4edc-a661-025bbf4ed5d0",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r1-937911e9-5ff5-4edc-a661-025bbf4ed5d0",
+      "childThreadId": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r1-937911e9-5ff5-4edc-a661-025bbf4ed5d0",
+      "statusAtDispatch": "running",
+      "modelRequested": "gpt-6.1-sol",
+      "options": [
+        {
+          "id": "reasoningEffort",
+          "value": "xhigh"
+        },
+        {
+          "id": "serviceTier",
+          "value": "default"
+        }
+      ],
+      "rawReceipt": "docs/t3/receipts/20261028-e2e-lifecycle/review/sol-review.dispatch.native.json",
+      "acceptance": "NOT ACCEPTED; source completion and actual tests separate",
+      "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-3669749d (stopped R1; read-only reviewer)"
+    }
+  ],
+  "resource": "Initial22:12:55SOURCE_SH_HOLD preserved; real22:14:52no-lock-rows change led to fresh per-child admission22:16:28/29/30. Observation released before dispatch; provider lifetime admission separate."
+}

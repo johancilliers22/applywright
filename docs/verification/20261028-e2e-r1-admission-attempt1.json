@@ -1,0 +1,9 @@
+{
+  "phase": "E2E_R1_MOCK_DIAGNOSTIC_ATTEMPT1",
+  "exitCode": 0,
+  "endedUtc": "2026-10-28T22:04:54.2492919Z",
+  "freeWindowsKiB": 12066764,
+  "startedUtc": "2026-10-28T22:04:53.0627971Z",
+  "testsRan": true,
+  "lease": "full-lifetime EX in flock child; released on return"
+}

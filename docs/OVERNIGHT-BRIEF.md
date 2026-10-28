@@ -91,3 +91,20 @@ verified, what you changed, what you left, and the exact gate output. Johan read
 - Licence for the public repo (none chosen yet — do not add one)
 - Whether the public tunnel stays up overnight (it exposes open registration; `REGISTRATION_OPEN=0`
   closes sign-up, sign-in keeps working)
+
+## Handoff deliverables (Johan asked for these explicitly)
+
+| File | Audience | State |
+|---|---|---|
+| `FORK-AND-RUN.md` | the friend, on GitHub | shipped, MIT, fork-only |
+| `CONTRIBUTING.md` + `.github/ISSUE_TEMPLATE.md` | anyone forking | shipped |
+| `docs/HANDOFF-FOR-A-FRIEND.md` | the friend, five steps | shipped |
+| `docs/PROJECT-STATUS.md` | any cold agent | shipped |
+| `docs/ORCHESTRATOR-HANDOFF.md` | **Claude / Codex / Estate / projects orchestrators** | **TO WRITE — next shift** |
+
+`docs/ORCHESTRATOR-HANDOFF.md` must state: where the project sits and that it is an independent repo
+(hub ignores `projects/*`); the gates and how to read the exit codes; the file-ownership map; which
+decisions are settled (MIT, slogan, Pressproof, no OAuth, recovery-without-email) so an orchestrator
+does not relitigate them; the do-not list; how to hand work to DSH/Gemini/Grok agents with disjoint
+write scopes; and the estate conventions that still apply (named-path commits, no secret reads, no
+vault writes beyond `brain/applywright-platform.md`, no computer use unattended).

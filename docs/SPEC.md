@@ -52,7 +52,7 @@ What it actually does, in order:
 |---|---|---|---|---|---|
 | Free | £0 | 1 | 3 | 1 | job feed with 40 results/day |
 | Pro | £19 / month | 5 | 60 | 10 | full ATS reports, covering letters, pack history |
-| Scale | £49 / month | unlimited | unlimited | 50 | API access, priority refresh, export everything |
+| Scale | £49 / month | unlimited | unlimited | 50 | all of Pro, with unlimited quota |
 
 Annual: 10 months for 12 (Pro £190/yr, Scale £490/yr). Prices are in GBP and include any applicable tax.
 Cancel anytime; downgrade keeps existing packs readable.

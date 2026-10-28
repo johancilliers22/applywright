@@ -212,7 +212,7 @@ later".
 node --test server/lib/billing/plans.test.mjs
 ```
 
-62 tests, 12 suites, all passing, and `--experimental-test-coverage` reports 100% of
+63 tests, 12 suites, all passing, and `--experimental-test-coverage` reports 100% of
 lines, branches and functions in `plans.js`. They cover the exact prices and the
 ten-month annual rule, every quota in the table, the 2-of-3 boundary on both sides,
 unlimited plans, the null-on-the-wire form, unknown plan fallback, unknown features,

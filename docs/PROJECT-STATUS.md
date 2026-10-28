@@ -283,7 +283,7 @@ SPEC wins** — or the disagreement is a bug to report, not to quietly follow.
 | `server/lib/jobs/capture.js` | Parses a pasted posting: schema.org `JobPosting` JSON-LD first (the reliable path), then Greenhouse, Lever, Workable, Ashby, Workday. Returns `confidence` and `warnings`. Refuses the blocked hosts. | SPEC §5 `jobs/capture.js` |
 | `server/lib/jobs/match.js` | `matchRule` for saved searches (keywords, locations, `remoteOnly`, `minSalary`) and `scoreJobForProfile`. Unknown salary does not match, and says so. | SPEC §5 `jobs/match.js` |
 | `server/lib/packs/build.js` | `buildPack`: standalone ATS-safe CV HTML (A4, 18 mm margins, one column, real headings, no layout tables, no icon fonts, no images, no external URLs, inline print CSS), plain text, covering-letter Markdown, four screening answers. | SPEC §5 `packs/build.js` |
-| `server/lib/billing/plans.js` | `PLANS`, `entitlements`, `can`, `priceFor`, `stripeConfigured()`. Four quotas are enforced (`cvs`, `packs`, `alerts`, `jobResultsPerDay`); `ENFORCED_FLAGS` names the capability flags the handlers actually gate (`fullAtsReport`, `coverLetter`, `packHistory`), and §9 records the three that are still declared only. | SPEC §5 `billing/plans.js` |
+| `server/lib/billing/plans.js` | `PLANS`, `entitlements`, `can`, `priceFor`, `stripeConfigured()`. Four quotas are enforced (`cvs`, `packs`, `alerts`, `jobResultsPerDay`); `ENFORCED_FLAGS` names the capability flags the handlers actually gate (`fullAtsReport`, `coverLetter`, `packHistory`) and every declared flag is in it — §9 records the four that were withdrawn. | SPEC §5 `billing/plans.js` |
 | `server/provider/anthropic.js` | Anthropic Messages client for the `ANTHROPIC_ORG_API_KEY` route, alongside the OpenAI-compatible client in `server/model.js`. Never maps the org key onto `ANTHROPIC_API_KEY`. | SPEC §5 (model path) |
 
 Supporting server files, all Lead-owned: `index.js` (entry, banner, signals),
@@ -403,32 +403,34 @@ Current, verified against the code. Each is a real limitation, not a typo.
   probe is cached per process, so installing a tool mid-run needs a restart.
 - **Legacy binary Word (`.doc`) is refused**, with "save as `.docx` first". Modern
   `.docx`, `.odt`, `.rtf` and HTML all parse locally with no dependency.
-- **Three capability flags are enforced, one was removed, three are still declared
-  only.** `fullAtsReport` gates `POST /api/analyse`: Free gets the score, the five
-  subscores and the three highest-priority findings; the rest of the findings list and the
-  advice array are Pro, and the response says why in `fullAtsReport.locked`.
-  `packHistory` gates `GET /api/applications/:id`: Free can read the covering letter of
-  its most recent pack only — older packs return the lock message on the letter while
-  their CV and screening answers stay readable. `coverLetter` was already enforced in
-  `/api/tailor` and in the refine rebuild; the letter is now withheld from every copy of a
-  pack a plan cannot read (`coverLetterMd`, the stored `tailored.coverLetter` source, and
-  the letter entries in a refinement's change trail), not just from the rendered field.
-  `dailyDigest` is **removed** from `plans.js` and from the pricing copy: nothing in the
-  tree delivered a digest, so the flag could only ever be a promise. `apiAccess`,
-  `priorityRefresh` and `bulkExport` remain returned by the plans API and sold on the
-  pricing page with nothing gating them — "API access" has no key authentication,
-  priority refresh has no queue, and `/api/export` stays open to every plan because
-  exporting your own data is not a paid feature (so the account export does return a
-  user's own packs in full; that is data portability, not pack history). The in-app
-  billing screen still has a "Daily digest" label in `FLAG_LABELS`
-  (`public/app/app.js`); the API no longer returns the flag, so the label is unreachable
-  rather than misleading. `docs/SPEC.md` §2 still lists a daily digest in its plan table;
-  that is a SPEC contract change, not a copy fix.
-  `tests/flags-webhook.test.js` holds the line: every declared
-  flag is either enforced or named as declared-only, and a pricing page that sells an
-  undeclared flag fails the suite.
-- **VAT is not modelled.** Prices are stated and charged "excluding VAT"; there is no
-  VAT line, rate or calculation anywhere.
+- **All three capability flags are enforced; four were withdrawn.** `fullAtsReport`
+  gates `POST /api/analyse`: Free gets the score, the five subscores and the three
+  highest-priority findings; the rest of the findings list and the advice array are Pro,
+  and the response says why in `fullAtsReport.locked`. `packHistory` gates
+  `GET /api/applications/:id`: Free can read the covering letter of its most recent pack
+  only — older packs return the lock message on the letter while their CV and screening
+  answers stay readable. `coverLetter` was already enforced in `/api/tailor` and in the
+  refine rebuild; the letter is withheld from every copy of a pack a plan cannot read
+  (`coverLetterMd`, the stored `tailored.coverLetter` source, and the letter entries in a
+  refinement's change trail), not just from the rendered field. `dailyDigest`,
+  `apiAccess`, `priorityRefresh` and `bulkExport` are **removed** from `plans.js` and
+  from the pricing copy: nothing delivered a digest, there is no key authentication
+  behind "API access", priority refresh has no queue, and `/api/export` stays open to
+  every plan because exporting your own data is data portability, not a paid feature (so
+  the account export does return a user's own packs in full; that is portability, not
+  pack history). `can()` answers the unknown-feature shape for all four, and a test
+  asserts `FLAG_FEATURES` and `ENFORCED_FLAGS` are the same set, so nothing can be
+  declared without a handler behind it. Scale is therefore a quota tier, not a feature
+  tier: its flag array is identical to Pro's. The in-app billing screen still carries
+  three dead labels in `FLAG_LABELS` (`public/app/app.js:185-187`: `apiAccess`,
+  `priorityRefresh`, `bulkExport`); the API no longer returns those flags, so the labels
+  are unreachable rather than misleading. `docs/SPEC.md` §2 still lists a daily digest,
+  API access and priority refresh in its plan table; that is a SPEC contract change, not
+  a copy fix. `tests/flags-webhook.test.js` holds the line: the page must sell the
+  enforced flags, and a page that sells a withheld flag fails the suite.
+- **VAT is not modelled.** Prices are quoted and charged in GBP including any applicable
+  tax — the shipped copy, SPEC §2 and the footer say so — but there is no VAT line, rate
+  or calculation anywhere, and no invoice is produced.
 - **Password recovery has no email transport.** A recovery flow exists — an offline
   recovery code saved at sign-up (`POST /api/auth/recover`), and a single-use, expiring
   reset link (`POST /api/auth/forgot` → `/reset` → `POST /api/auth/reset`) — but with no

@@ -310,6 +310,61 @@ export function countWords(value) {
 }
 
 /**
+ * What to say before a save when the stored text did not parse into the sections
+ * this page shows. Pure — no DOM, no state — so tests can pin the shapes.
+ *
+ * The editor rebuilds the whole document from these sections on the first save
+ * after an edit, so a CV that came back as one blob under Summary would be
+ * written back as one blob under a Summary heading. That is a silent restructure
+ * of someone's CV, which is the worst outcome this product can produce; this
+ * notice has to appear before the save, not in the diff afterwards.
+ *
+ * @param {{ sections?: object }} document
+ * @returns {null | { code: string, title: string, body: string }}
+ */
+export function parseNotice({ sections } = {}) {
+  const s = sections && typeof sections === "object" ? sections : {};
+  const words = {
+    summary: countWords(s.summary),
+    experience: countWords(s.experience),
+    education: countWords(s.education),
+    skills: countWords(s.skills),
+    other: countWords(s.other),
+  };
+  const structured = words.summary + words.experience + words.education + words.skills;
+  const placed = words.experience + words.education + words.skills;
+  const total = structured + words.other;
+
+  if (total === 0) return null;
+
+  if (structured === 0) {
+    return {
+      code: "nothing-placed",
+      title: "No section headings were detected",
+      body: `All ${words.other} words are under Other. The document below is the raw text the server stored. Saving after an edit writes it back with the headings this page shows, so check the split before you save.`,
+    };
+  }
+
+  if (placed === 0 && words.summary >= 60) {
+    return {
+      code: "all-in-summary",
+      title: "No Experience, Education or Skills heading was recognised",
+      body: `${words.summary} words are sitting in Summary and the other sections are empty, so the split below is a guess from the raw text. Saving after an edit rewrites the stored CV in this split; fix the headings first if that is wrong.`,
+    };
+  }
+
+  if (words.experience === 0 && words.other >= 40) {
+    return {
+      code: "experience-in-other",
+      title: "No Experience section was recognised",
+      body: `Experience is empty and Other holds ${words.other} words. The roles are still in the document, but if their heading was not recognised they stay where they are now and a save keeps them there.`,
+    };
+  }
+
+  return null;
+}
+
+/**
  * Line diff for the "what changed on save" panel. Longest common subsequence
  * over lines, which is enough for a CV (a few hundred lines at most).
  * @param {string} before
@@ -699,6 +754,10 @@ function initialState() {
     parsedProfile: null,
     mergePlan: null,
     busy: false,
+    // DOM nodes created at boot: the proposal review block (moved out of the
+    // rail) and the parse notice that sits above the paper.
+    review: null,
+    notice: null,
   };
 }
 
@@ -733,6 +792,65 @@ function bootEditor() {
 
   function clear(node) {
     if (node) node.replaceChildren();
+  }
+
+  /* ------------------------------------------------------- page structure */
+
+  // The proposals are rendered into a 340px rail that scrolls on its own, below
+  // the instruction form: measured at 1440×900 the first hunk arrived at y=837,
+  // clipped by the fold, and accepting an edit meant discovering that the rail
+  // scrolls. They are the one thing on this page that must be read and acted on,
+  // so the host is moved into the primary column, above the document, and the
+  // block is revealed with a scroll when a proposal lands. The markup is
+  // editor.html's; nothing here depends on it beyond the host id.
+  {
+    const docPane = document_.querySelector(".ed-pane--doc");
+    const form = byId("ed-form");
+    const proposalHost = byId("ed-proposals");
+    const notice = el("aside", { class: "note", role: "note", hidden: true });
+    notice.style.margin = "0 0 var(--sp-4)";
+
+    if (docPane) {
+      if (proposalHost) {
+        state.review = el(
+          "section",
+          { class: "ed-review", hidden: true, tabindex: "-1" },
+          el("h2", { class: "ed-diff__title", text: "Proposed changes" }),
+          el("p", { class: "ed-diff__summary mono", text: "Nothing is saved until you accept a change." }),
+          proposalHost
+        );
+        docPane.insertBefore(state.review, form);
+      }
+      docPane.insertBefore(notice, state.review ?? form);
+    }
+    state.notice = notice;
+  }
+
+  function renderParseNotice(notice) {
+    const host = state.notice;
+    if (!host) return;
+    clear(host);
+    if (!notice) {
+      host.hidden = true;
+      return;
+    }
+    host.hidden = false;
+    host.append(el("strong", { text: `${notice.title}. ` }), el("span", { text: notice.body }));
+  }
+
+  function revealReview() {
+    const review = state.review;
+    if (!review) return;
+    review.hidden = false;
+    review.style.scrollMarginTop = "var(--sp-3)";
+    const reduced =
+      typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (typeof review.scrollIntoView === "function") {
+      review.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    }
+    // Sequential focus continues inside the new block instead of stranding a
+    // keyboard user on a button that has just scrolled out of view.
+    review.focus({ preventScroll: true });
   }
 
   /* --------------------------------------------------------------- network */
@@ -951,6 +1069,10 @@ function bootEditor() {
     byId("ed-loading").hidden = true;
     byId("ed-form").hidden = false;
     writeForm();
+    // Say it before an edit can be saved, not in the diff afterwards: an
+    // unrecognised parse is the one case where a save rewrites the shape of
+    // someone's CV.
+    renderParseNotice(parseNotice({ sections: state.sections }));
     setSaveState("saved");
     setBusy(false);
 
@@ -1073,6 +1195,7 @@ function bootEditor() {
     const status = byId("ed-assist-state");
     clearErrors();
     clear(byId("ed-proposals"));
+    if (state.review) state.review.hidden = true;
     state.proposal = null;
 
     if (instruction.length < 3) {
@@ -1220,6 +1343,10 @@ function bootEditor() {
         )
       );
     }
+
+    // Only a proposal with something to accept is worth interrupting for; a
+    // refusal stays in the rail's status line with its reasons.
+    if (changes.length) revealReview();
   }
 
   function focusNextPending(current) {

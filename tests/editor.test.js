@@ -25,6 +25,7 @@ import {
   documentFromProfile,
   exportFilename,
   markdownFor,
+  parseNotice,
   reconstructCvText,
   SECTION_HEADINGS,
   sectionsFromProfile,
@@ -668,5 +669,77 @@ describe("the grounding check in the assist route", () => {
       await server.close();
       await new Promise((resolve) => grounded.server.close(resolve));
     }
+  });
+});
+
+/**
+ * The warning that has to appear before a save, not in the diff afterwards.
+ * `parseNotice` is pure: the page decides where to render it, these tests pin
+ * when it fires and what it says.
+ */
+describe("the parse notice before a save", () => {
+  test("says nothing about a CV that parsed into section placeholders", () => {
+    assert.equal(
+      parseNotice({
+        sections: {
+          summary: "Product engineer with eight years in UK fintech.",
+          experience: "- Led a team of four engineers rebuilding the account-opening platform.",
+          education: "BSc Computer Science, University of Manchester.",
+          skills: "TypeScript, Node.js, PostgreSQL",
+          other: "",
+        },
+      }),
+      null
+    );
+  });
+
+  test("a CV that came back entirely under Other is reported by word count", () => {
+    const notice = parseNotice({ sections: { other: "word ".repeat(120) } });
+    assert.ok(notice, "a notice is expected");
+    assert.equal(notice.code, "nothing-placed");
+    assert.match(notice.title, /No section headings were detected/);
+    assert.match(notice.body, /All 120 words are under Other/);
+    // The consequence, not just the symptom: a save writes this split back.
+    assert.match(notice.body, /Saving after an edit writes it back/);
+  });
+
+  test("a blob in Summary with the other sections empty is called a guess from the raw text", () => {
+    const notice = parseNotice({ sections: { summary: "word ".repeat(190) } });
+    assert.ok(notice);
+    assert.equal(notice.code, "all-in-summary");
+    assert.match(notice.title, /Experience, Education or Skills/);
+    assert.match(notice.body, /190 words are sitting in Summary/);
+    assert.match(notice.body, /rewrites the stored CV in this split/);
+  });
+
+  test("roles stuck under Other are reported when Experience is empty", () => {
+    const notice = parseNotice({
+      sections: { summary: "Short summary.", other: "word ".repeat(80) },
+    });
+    assert.ok(notice);
+    assert.equal(notice.code, "experience-in-other");
+    assert.match(notice.title, /No Experience section/);
+    assert.match(notice.body, /Other holds 80 words/);
+  });
+
+  test("a short summary with real Experience is not a parse failure", () => {
+    assert.equal(
+      parseNotice({
+        sections: {
+          summary: "Eight years in fintech.",
+          experience: "- Rebuilt the account-opening platform for 2.4 million customers.",
+          education: "",
+          skills: "",
+          other: "",
+        },
+      }),
+      null
+    );
+  });
+
+  test("an empty document, and a missing one, produce no notice", () => {
+    assert.equal(parseNotice({ sections: {} }), null);
+    assert.equal(parseNotice({}), null);
+    assert.equal(parseNotice(), null);
   });
 });

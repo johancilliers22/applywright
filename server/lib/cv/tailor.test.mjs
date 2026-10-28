@@ -76,6 +76,29 @@ test("a legitimate rephrase still passes: worked with becomes partnered with", (
   assert.deepEqual(result.reasons, []);
 });
 
+test("a document is not judged for ownership: a model summary may open with a leadership verb", () => {
+  // The model path checks a summary against the whole CV. The CV opens with the
+  // candidate's name, so its "leading verb" is nothing; treating that as a low
+  // level would reject a true summary that opens "Led…". Only line-for-line
+  // rewrites are compared, and this is the case that would have been a wrong
+  // rejection.
+  const cv = [
+    "Ada Whitfield",
+    "ada.whitfield@example.com",
+    "",
+    "Experience",
+    "- Helped with managing 12 engineers across two squads.",
+  ].join("\n");
+
+  const summary = assertGrounded(cv, "Led a team of 12 engineers across two squads.");
+  assert.equal(summary.ok, true, `a document source is not a line claim: ${JSON.stringify(summary.reasons)}`);
+
+  // The same words over the bullet itself are still refused.
+  const bullet = assertGrounded("Helped with managing 12 engineers across two squads.", "Led a team of 12 engineers across two squads.");
+  assert.equal(bullet.ok, false);
+  assert.ok(saysOwnership(bullet));
+});
+
 /* ------------------------------------------------------------------ *
  * Names at the start of a sentence
  * ------------------------------------------------------------------ */

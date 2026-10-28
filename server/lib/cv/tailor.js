@@ -934,9 +934,10 @@ function ownershipLevel(text) {
  * (pass the full CV), because a rewrite may legitimately name something the CV
  * states — it may never name something the CV does not.
  *
- * Two further promises are mechanical here, not stylistic: a rewrite may not
- * promote the level of ownership (`ownership`), and it may not name a lower-case
- * tool or method the CV does not mention (`skills`).
+ * Two further promises are mechanical here, not stylistic: a rewrite of one line
+ * may not promote the level of ownership (`ownership`, line-for-line only), and a
+ * rewrite may not name a lower-case tool or method the CV does not mention
+ * (`skills`).
  *
  * @param {string} original source text (a bullet, or the whole CV)
  * @param {string} rewritten candidate rewrite
@@ -1075,7 +1076,14 @@ export function assertGrounded(original, rewritten, options = {}) {
   }
 
   // --- the level of ownership the line claims
-  if (check.ownership) {
+  //
+  // Only line-for-line rewrites are judged: a multi-line source is a document (the
+  // whole CV, a covering letter), and its opening verb says nothing about what a
+  // summary or letter derived from it may claim. Comparing those would reject a
+  // model summary that opens "Led a team of 12 engineers" over a CV whose first
+  // word is the candidate's name — a wrong rejection, which costs more than a
+  // missed one.
+  if (check.ownership && !/[\r\n]/.test(source)) {
     const claimed = leadingVerb(target);
     if (claimed && OWNERSHIP_LEVELS[claimed.level] > ownershipLevel(source)) {
       add(

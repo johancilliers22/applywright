@@ -1,6 +1,6 @@
 # Applywright — Codex orchestrator handoff
 
-**22:34 UTC checkpoint:** frozen G1R3 passes80units and all131independent cases, with NEW independent source review still required. ContrastR4 passes21tests/58pairs and its final Sol review is running. E2ER1 Sol requires seven corrections; DSHR2 is active, native qualification/browser journey remain UNPROVED. Product source is baseline `86b74c3`; no repair integrated/accepted/deployed. Fresh baseline-main3gates pass(HTTP150; modules346+1skip; static0errors/0warnings) for the documentation checkpoint only. Exact current handles, hashes, results and next actions: [`verification/20261028-intake/CURRENT-CHECKPOINT.md`](verification/20261028-intake/CURRENT-CHECKPOINT.md).
+**22:36 UTC checkpoint:** contrastM1 R4 independently reviewed PASS_SOURCE, exactly integrated and accepted after all3gates: HTTP171PASS, modules346PASS/1SKIP, static58comparisons/0errors0warnings. Plan2.3/7.4 closed for the bounded token contract. G1R3 passes80units/all131independent cases but still needs NEW independent Sol review/integration/gates. E2EDSHR2 remains active after seven R1findings; native qualifier/browser journey unproved. Live site preserved, no deployment. Actual receipt index: [`verification/20261028-intake/CURRENT-CHECKPOINT.md`](verification/20261028-intake/CURRENT-CHECKPOINT.md).
 
 For a **Codex desktop chat that has never seen this project** and is now its main orchestrator and
 validator. Johan's 28 Oct decision: Codex owns the plan, routing and accept/reject call; DSH

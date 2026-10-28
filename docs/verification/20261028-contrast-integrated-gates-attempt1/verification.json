@@ -1,0 +1,144 @@
+{
+  "phase": "Integrated",
+  "startedUtc": "2026-10-28T22:36:00.2102782Z",
+  "endedUtc": "2026-10-28T22:36:04.0973611Z",
+  "state": "PASS_EXECUTED_CHECKS_ONLY",
+  "node": "C:/Program Files/nodejs/node.exe",
+  "resourceLock": "Caller must hold /tmp/redline-heavy.lock EX for full runner lifetime; no lease is created by this script",
+  "sourceHashesBefore": [
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\tailor.js",
+      "relative": "server/lib/cv/tailor.js",
+      "sha256": "851bfb329b6b050fd22ebfec489e6428938a0e6682d6e8cca874d6eeb1b85d9f"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\refine.js",
+      "relative": "server/lib/cv/refine.js",
+      "sha256": "3a295364fce513b35b5c893af34ae187bc1bdbc21ed80b3720a25770fb75ef36"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\tailor.test.mjs",
+      "relative": "server/lib/cv/tailor.test.mjs",
+      "sha256": "b24e769dc53ac6d6a4231d988ae6c5f19053c7580d9967c75e48703254528c65"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\refine.test.mjs",
+      "relative": "server/lib/cv/refine.test.mjs",
+      "sha256": "e19784dc4fbcdd40c9813433df8f9d9ebee0dfc0ed7c570455498840a2547687"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\scripts\\check.js",
+      "relative": "scripts/check.js",
+      "sha256": "efbaffaf2628381d23b4cc3b9c9e6f6c9e9e53e2d0e4b156073855b222bc9136"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\scripts\\e2e-flow.mjs",
+      "relative": "scripts/e2e-flow.mjs",
+      "sha256": "caf619b0ea87de2eae943f224ca71f30557fe825f79a443f3425c1dbdb2bebe1"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\scripts\\contrast.js",
+      "relative": "scripts/contrast.js",
+      "sha256": "1d66bb9623830191d74e7d85eab18c467af9447c8fcfd1e694ccc532c00a53ae"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\tests\\check-contrast.test.js",
+      "relative": "tests/check-contrast.test.js",
+      "sha256": "a49ee357484362669a21de928e90218dca7064ffbd2b662778486bd0dd6a810a"
+    }
+  ],
+  "sourceHashesAfter": [
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\tailor.js",
+      "relative": "server/lib/cv/tailor.js",
+      "sha256": "851bfb329b6b050fd22ebfec489e6428938a0e6682d6e8cca874d6eeb1b85d9f"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\refine.js",
+      "relative": "server/lib/cv/refine.js",
+      "sha256": "3a295364fce513b35b5c893af34ae187bc1bdbc21ed80b3720a25770fb75ef36"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\tailor.test.mjs",
+      "relative": "server/lib/cv/tailor.test.mjs",
+      "sha256": "b24e769dc53ac6d6a4231d988ae6c5f19053c7580d9967c75e48703254528c65"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\refine.test.mjs",
+      "relative": "server/lib/cv/refine.test.mjs",
+      "sha256": "e19784dc4fbcdd40c9813433df8f9d9ebee0dfc0ed7c570455498840a2547687"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\scripts\\check.js",
+      "relative": "scripts/check.js",
+      "sha256": "efbaffaf2628381d23b4cc3b9c9e6f6c9e9e53e2d0e4b156073855b222bc9136"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\scripts\\e2e-flow.mjs",
+      "relative": "scripts/e2e-flow.mjs",
+      "sha256": "caf619b0ea87de2eae943f224ca71f30557fe825f79a443f3425c1dbdb2bebe1"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\scripts\\contrast.js",
+      "relative": "scripts/contrast.js",
+      "sha256": "1d66bb9623830191d74e7d85eab18c467af9447c8fcfd1e694ccc532c00a53ae"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\tests\\check-contrast.test.js",
+      "relative": "tests/check-contrast.test.js",
+      "sha256": "a49ee357484362669a21de928e90218dca7064ffbd2b662778486bd0dd6a810a"
+    }
+  ],
+  "sourceUnchanged": true,
+  "independentFixtureSha256": "64330fbe1845f23b3b7ac104defec791813eea7f6766407e455adb8b0c2fc8d6",
+  "checks": [
+    {
+      "label": "http",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node --test tests/",
+      "arguments": [
+        "--test",
+        "tests/"
+      ],
+      "startedUtc": "2026-10-28T22:36:00.3611212Z",
+      "endedUtc": "2026-10-28T22:36:02.7676486Z",
+      "freeWindowsKiBAtStart": 9702176,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261028-contrast-integrated-gates-attempt1\\http.log",
+      "sha256": "e0cc9ba779b4052e90608bc85693f9cfd86eadb980078338e8fd6b1cc9b84dd8"
+    },
+    {
+      "label": "modules",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node --test server/lib server/provider",
+      "arguments": [
+        "--test",
+        "server/lib",
+        "server/provider"
+      ],
+      "startedUtc": "2026-10-28T22:36:02.8842487Z",
+      "endedUtc": "2026-10-28T22:36:03.9117216Z",
+      "freeWindowsKiBAtStart": 9711268,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261028-contrast-integrated-gates-attempt1\\modules.log",
+      "sha256": "4634f563887879d4a3e613e59a15dfc60b533af69a257783b1e0ba3475c1fa0b"
+    },
+    {
+      "label": "static",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node scripts/check.js",
+      "arguments": [
+        "scripts/check.js"
+      ],
+      "startedUtc": "2026-10-28T22:36:04.0211550Z",
+      "endedUtc": "2026-10-28T22:36:04.0801600Z",
+      "freeWindowsKiBAtStart": 9710980,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261028-contrast-integrated-gates-attempt1\\static.log",
+      "sha256": "864395c04866a040f4928be651fc26cbdd8f2c073ef1f13f659ef9259ef392a9"
+    }
+  ],
+  "error": null,
+  "e2e": "NOT RUN by this runner; separate reviewed browser admission required",
+  "liveModel": "NOT RUN"
+}

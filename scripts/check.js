@@ -12,6 +12,8 @@ import { readFile, readdir } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { checkContrast } from "./contrast.js";
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC = join(ROOT, "public");
 const strict = process.argv.includes("--strict");
@@ -158,7 +160,19 @@ const definedClasses = await loadCssClasses();
 const pageCount = await checkPages(definedClasses);
 const sourceCount = await checkServer();
 
+let contrastLine = null;
+try {
+  const contrast = await checkContrast(ROOT);
+  for (const message of contrast.errors) fail(message);
+  contrastLine =
+    `contrast — ${contrast.light.pairCount} pairs light, ${contrast.dark.pairCount} pairs dark ` +
+    `(${contrast.pairCount} comparisons; 4.5:1 text, 3:1 indicators)`;
+} catch (error) {
+  fail(`contrast: ${error?.message ?? error}`);
+}
+
 console.log(`applywright check — ${pageCount} pages, ${sourceCount} server modules, ${definedClasses.size} css classes`);
+if (contrastLine) console.log(contrastLine);
 for (const message of warnings) console.log(`  warn  ${message}`);
 for (const message of errors) console.log(`  FAIL  ${message}`);
 

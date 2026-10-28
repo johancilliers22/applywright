@@ -1,0 +1,28 @@
+{
+  "copiedUtc": "2026-10-28T22:35:54.7072054Z",
+  "sourceWorktree": "C:/Users/johan/.t3/worktrees/applywright/t3-f66efc7c",
+  "sourceBase": "86b74c3a1869255ce276cfe961474193d6080ca0",
+  "targetHeadBefore": "6e7e68c55bad137c0efbe689431a6aca7fa90784",
+  "review": "docs/t3/receipts/20261028-contrast-m1/r4/review/sol-review.FINDINGS.md",
+  "reviewSha256": "56fa44626f1f064c9e5a612ceca8bcf375c80d01a850f70f553c1b3356eec394",
+  "independentVerdict": "PASS_SOURCE",
+  "focusedRuntime": "R4 actual21PASS+58pairsPASS at8947a9af…",
+  "exactCopies": [
+    {
+      "path": "scripts/contrast.js",
+      "sha256": "1d66bb9623830191d74e7d85eab18c467af9447c8fcfd1e694ccc532c00a53ae"
+    },
+    {
+      "path": "scripts/check.js",
+      "sha256": "efbaffaf2628381d23b4cc3b9c9e6f6c9e9e53e2d0e4b156073855b222bc9136"
+    },
+    {
+      "path": "tests/check-contrast.test.js",
+      "sha256": "a49ee357484362669a21de928e90218dca7064ffbd2b662778486bd0dd6a810a"
+    }
+  ],
+  "integrationAcceptance": "ACCEPTED_SOURCE_INTEGRATION: independent PASS_SOURCE + focused21PASS + integrated171HTTP/346modules1skip/static58PASS",
+  "liveDeployment": "NOT RUN",
+  "fullGateReceipt": "docs/verification/20261028-contrast-integrated-gates-attempt1/verification.json",
+  "fullGateSha256": "1966778da8003ff500e247334afb6bf589dea3c9d9e8a7858a7a0f835f501811"
+}

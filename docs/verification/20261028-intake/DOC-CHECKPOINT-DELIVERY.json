@@ -1,0 +1,19 @@
+{
+  "atUtc": "2026-10-28T22:35:31.8017210Z",
+  "repository": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+  "commit": "6e7e68c55bad137c0efbe689431a6aca7fa90784",
+  "subject": "Docs: checkpoint Applywright grounding and contrast verification",
+  "scope": "79 named documentation/evidence files only",
+  "productCodeChanges": 0,
+  "originMainVerified": "6e7e68c55bad137c0efbe689431a6aca7fa90784",
+  "backupMainVerified": "6e7e68c55bad137c0efbe689431a6aca7fa90784",
+  "sacredStaged": "clean79",
+  "sacredCommit": "clean79",
+  "mainBaselineGates": "HTTP150PASS; modules346PASS/1SKIP; static0errors0warnings",
+  "mainGateReceipt": "docs/verification/20261028-doc-checkpoint-main-gates-attempt1/verification.json",
+  "repairSourceIntegrated": false,
+  "deployment": "NOT RUN; live site preserved",
+  "goal": "ACTIVE/INCOMPLETE",
+  "rawNativeAndReviewEvidence": "preserved locally, unchanged and excluded from public checkpoint selection",
+  "worktrees": "all preserved, no archive/prune"
+}

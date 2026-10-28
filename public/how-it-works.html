@@ -47,17 +47,16 @@
       width: 100%;
       height: auto;
     }
+    /* The drawing scales with the column; the stroke must not. Without this a
+       1248-unit schematic on a 335px phone renders 0.4px hairlines. */
+    [data-art-pipeline] * { vector-effect: non-scaling-stroke; }
     [data-art-figure] figcaption {
       margin-top: var(--sp-3);
       max-width: var(--measure-reading);
       font-size: var(--fs-xs);
       line-height: 1.55;
     }
-    [data-art-corner] {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
+
     [data-art-divider] {
       margin-top: var(--sp-7);
       display: flex;
@@ -97,9 +96,8 @@
         padding-left: var(--sp-3);
       }
     }
-    @media (max-width: 899px) {
-      [data-art-corner] { display: none; }
-    }
+    /* The pipeline is a schematic rather than a sheet: it carries station marks\n       and folio corners of its own, so it does not take the corner ornament. */
+
 
     @media print { body::after { display: none; } }
   </style>
@@ -137,14 +135,7 @@
              a folio. The stage names are the figcaption's job — no text is baked
              into the drawing. -->
         <figure data-art-figure>
-          <div data-art-corner aria-hidden="true">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-              <path d="M1.5 47V1.5H47" />
-              <path d="M18 1.5v5M30 1.5v5M1.5 18h5M1.5 30h5" stroke-width="1" />
-              <circle cx="14" cy="14" r="4.5" />
-              <path d="M14 6v16M6 14h16" stroke-width="1" />
-            </svg>
-          </div>
+
           <svg data-art-pipeline viewBox="0 0 1248 360" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
             <path d="M48 24H1200" stroke-width="1" />
             <path d="M48 18v12M1200 18v12" stroke-width="1" />

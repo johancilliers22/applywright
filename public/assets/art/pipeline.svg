@@ -5,6 +5,9 @@
        ruled stations above and below. Decorative: the four stage names live in
        the figure's HTML caption, never in this file. -->
 
+  <!-- One 1.5px stroke weight at every size: the drawing scales, the stroke does not. -->
+  <style>path, rect, circle { vector-effect: non-scaling-stroke; }</style>
+
   <!-- station rule -->
   <path d="M48 24H1200" stroke-width="1" />
   <path d="M48 18v12M1200 18v12" stroke-width="1" />

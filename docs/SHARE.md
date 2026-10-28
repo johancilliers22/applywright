@@ -373,3 +373,13 @@ stopping or restarting the tunnel goes by PID so the env and the tunnel are owne
 ## Current live URL (28 Oct 2026)
 
 `https://logging-powered-warnings-manner.trycloudflare.com` — quick tunnel, registration open. Replace this line whenever the tunnel restarts; quick-tunnel hostnames do not survive a restart.
+
+## Status notes (28 Oct 2026)
+
+- **Current public URL is the quick tunnel in the header of this file**, not Tailscale: `tailscale serve
+  status` no longer lists 8447, so `https://johans-pc.tailf64125.ts.net:8447` refuses connections until
+  the mapping is restored (`tailscale serve --bg --https=8447 http://127.0.0.1:3160`).
+- `apply.intelligentartificial.net` does not resolve yet and the apex fails the TLS handshake — DNS is
+  not pointed at anything (see `docs/DOMAIN.md`; the GoDaddy nameservers still control the zone).
+- Quick-tunnel hostnames do not survive a restart: when the tunnel restarts, update the header URL and
+  the row below, because every other doc points here.

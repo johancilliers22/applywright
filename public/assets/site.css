@@ -94,12 +94,19 @@
   letter-spacing: -0.005em;
   padding-block: 0.35rem;
   border-bottom: 1px solid transparent;
-  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  /* --dur-xs, not --dur: a nav link is a state, not a transition. The underline
+     and the colour arrive together in 120ms so the pointer feels answered. */
+  transition: color var(--dur-xs) var(--ease), border-color var(--dur-xs) var(--ease);
 }
 
 .nav__links a:hover {
   color: var(--text);
   border-bottom-color: var(--line-strong);
+}
+
+/* Pressed: colour only. A nav link that moves is a link you cannot hit twice. */
+.nav__links a:active {
+  color: var(--accent);
 }
 
 .nav__links a[aria-current="page"] {
@@ -124,6 +131,13 @@
   border-radius: var(--r-sm);
   background: transparent;
   cursor: pointer;
+  transition: transform 90ms var(--ease-exit), border-color var(--dur-xs) var(--ease);
+}
+
+/* The menu button is the one control in the bar on a phone: it gets the same
+   press as a button, at the same 90ms, and nothing else. */
+.nav__toggle:active {
+  transform: scale(0.96);
 }
 
 .nav__toggle span {
@@ -226,6 +240,11 @@
    Buttons
    -------------------------------------------------------------------------- */
 
+/* Press and release are two different beats: the press answers the pointer in
+   90ms (any longer and the control feels unsure it was hit), the release settles
+   back over --dur-sm. The fast leg is declared on :active only, so it cannot
+   slow the hover in. Colour changes run at --dur-sm on both legs: a button that
+   snaps colour feels cheaper than one that settles 2% smaller. */
 .btn {
   --btn-bg: var(--ink);
   --btn-fg: var(--text-invert);
@@ -245,16 +264,22 @@
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease),
-    color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  /* `background` is the shorthand; --btn-bg is a colour in every variant, so
+     this animates background-color and nothing else. */
+  transition: transform 90ms var(--ease-exit), background var(--dur-sm) var(--ease),
+    color var(--dur-sm) var(--ease), border-color var(--dur-sm) var(--ease);
 }
 
 .btn:hover {
   transform: translateY(-1px);
 }
 
-.btn:active {
-  transform: translateY(0);
+/* 1.5% at 90ms is felt, not seen: the control gives under the finger and comes
+   back on release. `translateY(0)` alone (the previous :active) only cancelled
+   the hover lift, which reads as "nothing happened". */
+.btn:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: translateY(0) scale(0.985);
+  transition-duration: 60ms;
 }
 
 .btn--primary {
@@ -327,11 +352,20 @@
 
 .link-arrow::after {
   content: "→" / "";
-  transition: transform var(--dur) var(--ease);
+  /* --ease-settle, not --ease: the arrow is a small object travelling a small
+     distance, and an ease-out that decelerates reads as a nudge rather than a
+     slide. Hover pushes it 3px, press pulls it back to 1px — the release is the
+     feedback, so both legs are short. */
+  transition: transform var(--dur-sm) var(--ease-settle);
 }
 
 .link-arrow:hover::after {
   transform: translateX(3px);
+}
+
+.link-arrow:active::after {
+  transform: translateX(1px);
+  transition-duration: 60ms;
 }
 
 /* --------------------------------------------------------------------------
@@ -1123,7 +1157,9 @@ code:not(.code) {
   border-radius: var(--r-sm);
   background: var(--paper);
   font-size: var(--fs-sm);
-  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  /* Focus is a state, not an animation: 120ms to show the ring, 120ms to take
+     it away. Both properties are paint-only. */
+  transition: border-color var(--dur-xs) var(--ease), box-shadow var(--dur-xs) var(--ease);
 }
 
 .input:focus,
@@ -1247,7 +1283,7 @@ code:not(.code) {
   text-decoration: none;
   font-size: var(--fs-sm);
   opacity: 0.82;
-  transition: opacity var(--dur) var(--ease);
+  transition: opacity var(--dur-xs) var(--ease);
 }
 
 .footer a:hover {
@@ -1273,10 +1309,23 @@ code:not(.code) {
    Page header (inner pages)
    -------------------------------------------------------------------------- */
 
+/* The band's bottom space is the phone value at every width. The old clamp grew
+   it to 40px on a desktop and, stacked on the full 96px section rhythm below,
+   left 137px between the last line of the page head and the first line of the
+   next section on all four inner pages (measured 1440: pricing/about/
+   how-it-works 137px, security 158px to its different first block). */
 .page-head {
-  padding-block: clamp(2.75rem, 6vw, 4.5rem) clamp(1.75rem, 3vw, 2.5rem);
+  padding-block: clamp(2.75rem, 6vw, 4.5rem) 1.75rem;
   border-bottom: 1px solid var(--line);
   background: var(--bone);
+}
+
+/* The section under a page-head is not a new chapter — the rule above it already
+   separates it — so it starts at the 56px the section clamp already resolved to
+   on a phone instead of opening a whole desktop gap. 1440: 137px → 84px;
+   768 and 360: 85px → 85px, untouched. */
+.page-head + .section {
+  padding-block-start: 3.5rem;
 }
 
 .page-head .display,
@@ -1437,6 +1486,14 @@ code:not(.code) {
 
 .prose a {
   color: var(--accent-ink);
+  transition: color var(--dur-xs) var(--ease);
+}
+
+/* Links change colour when pressed, controls move: a link that shifts position
+   under the pointer is a link somebody misses. --accent is the lighter end of
+   the pair, which reads as the press denting the ink rather than lifting it. */
+.prose a:active {
+  color: var(--accent);
 }
 
 /* --------------------------------------------------------------------------

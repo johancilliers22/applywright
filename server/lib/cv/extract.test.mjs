@@ -6,7 +6,14 @@ import { delimiter, join } from "node:path";
 import test from "node:test";
 import { crc32, deflateRawSync } from "node:zlib";
 
-import { detectFormat, docxToText, extractText, segmentSections, setToolOverridesForTesting } from "./extract.js";
+import {
+  detectFormat,
+  docxToText,
+  extractText,
+  hasLayoutRisk,
+  segmentSections,
+  setToolOverridesForTesting,
+} from "./extract.js";
 
 // ---------------------------------------------------------------------------
 // A hand-written zip, so the DOCX fixture is a real OOXML package rather than a
@@ -112,14 +119,63 @@ const DOCUMENT_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </w:body>
 </w:document>`;
 
-function buildDocx({ store = false, withDocument = true } = {}) {
+function buildDocx({ store = false, withDocument = true, document = DOCUMENT_XML, extraParts = [] } = {}) {
   const parts = [
     zipPart("[Content_Types].xml", CONTENT_TYPES, { store }),
     zipPart("_rels/.rels", ROOT_RELS, { store }),
   ];
-  if (withDocument) parts.push(zipPart("word/document.xml", DOCUMENT_XML, { store }));
+  if (withDocument) parts.push(zipPart("word/document.xml", document, { store }));
+  for (const [name, xml] of extraParts) parts.push(zipPart(name, xml, { store }));
   return buildZip(parts);
 }
+
+const WORD_NS = `xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"`;
+
+/** A contact block where Word really puts it in many CVs: the page header. */
+const HEADER_CONTACT_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:hdr ${WORD_NS}>
+<w:p><w:r><w:t>Priya Raman</w:t></w:r></w:p>
+<w:p><w:r><w:t>ada@example.com | +44 7700 900123</w:t></w:r></w:p>
+<w:p><w:r><w:t>linkedin.com/in/priya</w:t></w:r></w:p>
+</w:hdr>`;
+
+/** A footer carrying page furniture plus one line of real content. */
+const FOOTER_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:ftr ${WORD_NS}>
+<w:p><w:r><w:t>Page 1 of 2</w:t></w:r></w:p>
+<w:p><w:r><w:t>References available on request</w:t></w:r></w:p>
+</w:ftr>`;
+
+/** Two-column table layout: the shape that flattens to spaces and scores clean. */
+const TABLE_DOCUMENT_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document ${WORD_NS}>
+<w:body>
+<w:p><w:r><w:t>Ada Lovelace</w:t></w:r></w:p>
+<w:tbl>
+<w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr>
+<w:tr><w:tc><w:p><w:r><w:t>2021 - 2024</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>Senior Engineer, Acme Payments</w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:tc><w:p><w:r><w:t>2019 - 2021</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>Engineer, Beta Ltd</w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+</w:body>
+</w:document>`;
+
+/** A section set to two text columns. */
+const COLUMNS_DOCUMENT_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document ${WORD_NS}>
+<w:body>
+<w:p><w:r><w:t>Ada Lovelace</w:t></w:r></w:p>
+<w:sectPr><w:cols w:num="2" w:space="720"/></w:sectPr>
+</w:body>
+</w:document>`;
+
+/** A text box, whose content Word also duplicates in an mc:Fallback shape. */
+const TEXTBOX_DOCUMENT_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document ${WORD_NS}>
+<w:body>
+<w:p><w:r><w:t>Ada Lovelace</w:t></w:r></w:p>
+<w:p><w:r><w:pict><v:shape xmlns:v="urn:schemas-microsoft-com:vml"><v:textbox><w:txbxContent><w:p><w:r><w:t>Boxed contact line</w:t></w:r></w:p></w:txbxContent></v:textbox></v:shape></w:pict></w:r></w:p>
+</w:body>
+</w:document>`;
 
 // ---------------------------------------------------------------------------
 // A hand-written single-page PDF with real text in an uncompressed content
@@ -410,6 +466,92 @@ test("a text file named .docx is read as text, with a warning", async () => {
 });
 
 // ---------------------------------------------------------------------------
+// DOCX parts outside the body, and layout that plain text cannot carry
+// ---------------------------------------------------------------------------
+
+test("a DOCX header contact block is read, in page order, and the warning names the part", async () => {
+  const buffer = buildDocx({ extraParts: [["word/header1.xml", HEADER_CONTACT_XML]] });
+  const result = await extractText({ buffer, filename: "cv.docx" });
+
+  assert.equal(result.format, "docx");
+  assert.ok(result.text.startsWith("Priya Raman"), `unexpected start: ${JSON.stringify(result.text.slice(0, 40))}`);
+  assert.ok(result.text.includes("ada@example.com | +44 7700 900123"), "header text was lost");
+  assert.ok(result.text.includes("She said"), "the body text was lost when the header was added");
+  assert.ok(docxToText(buffer).startsWith("Priya Raman"), "docxToText does not read the header either");
+
+  const warning = result.warnings.find((line) => line.includes("word/header1.xml"));
+  assert.ok(warning, `no warning named the part; warnings were ${JSON.stringify(result.warnings)}`);
+  assert.match(warning, /check the name, email and phone/);
+
+  // The point of reading the part: the contact block really lands in `contact`.
+  const profile = segmentSections(result.text);
+  assert.equal(profile.contact.name, "Priya Raman");
+  assert.equal(profile.contact.email, "ada@example.com");
+});
+
+test("a DOCX footer is read too, and page numbers are dropped as furniture", async () => {
+  const buffer = buildDocx({ extraParts: [["word/footer1.xml", FOOTER_XML]] });
+  const result = await extractText({ buffer, filename: "cv.docx" });
+
+  assert.ok(result.text.includes("References available on request"), "footer text was lost");
+  assert.ok(!result.text.includes("Page 1 of 2"), "page furniture was imported as CV content");
+  assert.ok(result.warnings.some((line) => line.includes("word/footer1.xml")));
+});
+
+test("a DOCX table is reported as a layout risk instead of scoring clean", async () => {
+  const result = await extractText({ buffer: buildDocx({ document: TABLE_DOCUMENT_XML }), filename: "cv.docx" });
+
+  assert.deepEqual(result.layout, { tables: 1, columns: 1, textBoxes: 0 });
+  assert.equal(hasLayoutRisk(result.layout), true, "a table must read as a layout risk");
+  const warning = result.warnings.find((line) => line.includes("laid out with"));
+  assert.ok(warning, `warnings were ${JSON.stringify(result.warnings)}`);
+  assert.match(warning, /1 table/);
+  assert.match(warning, /may read out of order/);
+
+  // The cell text still arrives; it is its order and shape that cannot be trusted.
+  assert.ok(result.text.includes("Senior Engineer, Acme Payments"));
+  assert.ok(result.text.includes("Beta Ltd"));
+});
+
+test("a DOCX with two text columns is reported as a layout risk", async () => {
+  const result = await extractText({ buffer: buildDocx({ document: COLUMNS_DOCUMENT_XML }), filename: "cv.docx" });
+  assert.deepEqual(result.layout, { tables: 0, columns: 2, textBoxes: 0 });
+  assert.equal(hasLayoutRisk(result.layout), true);
+  assert.match(result.warnings.join(" "), /2 text columns/);
+});
+
+test("a DOCX text box is counted and warned about", async () => {
+  const result = await extractText({ buffer: buildDocx({ document: TEXTBOX_DOCUMENT_XML }), filename: "cv.docx" });
+  assert.deepEqual(result.layout, { tables: 0, columns: 1, textBoxes: 1 });
+  assert.equal(hasLayoutRisk(result.layout), true);
+  assert.match(result.warnings.join(" "), /1 text box/);
+});
+
+test("a plain DOCX reports a clean layout signal and no layout warning", async () => {
+  const result = await extractText({ buffer: buildDocx(), filename: "cv.docx" });
+  assert.deepEqual(result.layout, { tables: 0, columns: 1, textBoxes: 0 });
+  assert.equal(hasLayoutRisk(result.layout), false);
+  assert.deepEqual(result.warnings, [], `unexpected warnings: ${JSON.stringify(result.warnings)}`);
+});
+
+test("hasLayoutRisk is total: absent, clean and risky signals", () => {
+  assert.equal(hasLayoutRisk(undefined), false);
+  assert.equal(hasLayoutRisk(null), false);
+  assert.equal(hasLayoutRisk({}), false);
+  assert.equal(hasLayoutRisk({ tables: 0, columns: 1, textBoxes: 0 }), false);
+  assert.equal(hasLayoutRisk({ tables: 1, columns: 1, textBoxes: 0 }), true);
+  assert.equal(hasLayoutRisk({ tables: 0, columns: 2, textBoxes: 0 }), true);
+  assert.equal(hasLayoutRisk({ tables: 0, columns: 1, textBoxes: 1 }), true);
+});
+
+test("plain text and Markdown carry a zero layout signal", async () => {
+  const txt = await extractText({ buffer: Buffer.from("Ada Lovelace\nEngineer"), filename: "cv.txt" });
+  assert.deepEqual(txt.layout, { tables: 0, columns: 1, textBoxes: 0 });
+  const md = await extractText({ buffer: Buffer.from("# Ada\n\n- built things"), filename: "cv.md" });
+  assert.deepEqual(md.layout, { tables: 0, columns: 1, textBoxes: 0 });
+});
+
+// ---------------------------------------------------------------------------
 // ODT (zip + OpenDocument text)
 // ---------------------------------------------------------------------------
 
@@ -417,7 +559,13 @@ test("an ODT keeps paragraph breaks, spans, tabs and entity text", async () => {
   const result = await extractText({ buffer: buildOdt(), filename: "cv.odt", mime: ODT_MIMETYPE });
 
   assert.equal(result.format, "odt");
-  assert.deepEqual(result.warnings, [], `unexpected warnings: ${JSON.stringify(result.warnings)}`);
+  assert.equal(result.layout.tables, 1, "the ODT fixture holds one table");
+  assert.equal(hasLayoutRisk(result.layout), true);
+  // The only warning this fixture earns is the layout one; the text itself is clean.
+  assert.ok(
+    result.warnings.every((line) => line.includes("laid out with")),
+    `unexpected warnings: ${JSON.stringify(result.warnings)}`
+  );
   assert.ok(result.text.startsWith("Ada Lovelace"), `unexpected start: ${JSON.stringify(result.text.slice(0, 40))}`);
   assert.ok(result.text.includes("Mathematician & writer based in London."), "paragraph text or entities were lost");
   assert.ok(result.text.includes("Skills: JavaScript, SQL AWS"), "spans, tabs or <text:s> runs were mishandled");
@@ -509,7 +657,12 @@ test("HTML is stripped to its text, with scripts, styles and the title dropped",
   const result = await extractText({ buffer: Buffer.from(HTML_CV), filename: "cv.html", mime: "text/html" });
 
   assert.equal(result.format, "html");
-  assert.deepEqual(result.warnings, [], `unexpected warnings: ${JSON.stringify(result.warnings)}`);
+  assert.equal(result.layout.tables, 1, "the HTML fixture holds one table");
+  assert.equal(hasLayoutRisk(result.layout), true);
+  assert.ok(
+    result.warnings.every((line) => line.includes("laid out with")),
+    `unexpected warnings: ${JSON.stringify(result.warnings)}`
+  );
   assert.ok(result.text.startsWith("Ada Lovelace"), `unexpected start: ${JSON.stringify(result.text.slice(0, 40))}`);
   assert.ok(result.text.includes("Mathematician & writer."), "entities or paragraph text were lost");
   assert.ok(result.text.includes("Based in London."), "a <br> did not become a line break");

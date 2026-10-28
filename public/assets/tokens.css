@@ -565,7 +565,7 @@ html.reveal-on .reveal.is-visible {
    The switch is one attribute on <html>, set by assets/theme.js before first
    paint: <html data-theme="dark">. There is no
    `@media (prefers-color-scheme: dark)` block on purpose. Pages that do not load
-   theme.js (sign-in, sign-up, /app) have no attribute, so they stay on the light
+   Every page, including /app and the auth screens, loads theme.js and sets data-theme,
    palette with their component rules intact instead of flipping tokens they
    have no dark overrides for. "System" is resolved by the script, not by CSS,
    so that a saved `light` choice beats a dark operating system and the two can

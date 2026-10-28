@@ -15,8 +15,9 @@
  *
  * The invariant is `groundChanges`: a refinement may rephrase, reorder, shorten or
  * lengthen, but it may never invent a number, an employer, a job title, a date, a
- * qualification or a name, and it may never lose one either. A change that fails
- * is reverted and reported in `warnings` — never shipped.
+ * qualification or a name, it may never lose one either, and it may never raise
+ * the level of ownership the line claims ("supported" must not become "led"). A
+ * change that fails is reverted and reported in `warnings` — never shipped.
  *
  * What this module does NOT do: rebuild the printable pack. `cvHtml` needs the
  * profile, the CV text and the job, which live in the HTTP layer; refining text
@@ -674,19 +675,31 @@ const HEDGES = [
   [/\bvery\s+/gi, ""],
 ];
 
+/**
+ * "More senior" may change emphasis and order; it may never change the level of
+ * ownership. `/how-it-works` promises that a rewrite "cannot upgrade *supported*
+ * to *led* unless the source says so", and this map used to do exactly that:
+ * "responsible for" became "Owned", "helped with" became "Drove", "tasked with"
+ * became "Led", "worked on" became "Delivered".
+ *
+ * The replacements below stay inside the level the source already claims:
+ * responsible for → Handled, helped with → Contributed to, tasked with → Worked on,
+ * assisted with → Supported, involved in / participated in → Contributed to.
+ * "Worked on" itself has no honest stronger form without inventing a claim, so
+ * that entry is gone: asking for a stronger bullet leaves it as written and says
+ * nothing changed. `assertGrounded` refuses a promoted verb mechanically if any
+ * other path (or the model) tries it anyway.
+ */
 const WEAK_OPENERS = [
-  [/^(?:i\s+was\s+|i\s+am\s+)?responsible\s+for\s+/i, "Owned "],
-  [/^i\s+helped\s+(?:to|with)\s+/i, "I drove "],
-  [/^helped\s+(?:to|with)\s+/i, "Drove "],
-  [/^i\s+worked\s+on\s+/i, "I delivered "],
-  [/^worked\s+on\s+/i, "Delivered "],
+  [/^(?:i\s+was\s+|i\s+am\s+)?responsible\s+for\s+/i, "Handled "],
+  [/^i\s+helped\s+(?:to|with)\s+/i, "I contributed to "],
+  [/^helped\s+(?:to|with)\s+/i, "Contributed to "],
   [/^i\s+assisted\s+(?:with|in)\s+/i, "I supported "],
   [/^assisted\s+(?:with|in)\s+/i, "Supported "],
   [/^(?:i\s+)?was\s+involved\s+in\s+/i, "Contributed to "],
-  [/^(?:i\s+)?(?:duties|tasks)\s+included\s+/i, "Delivered "],
-  [/^(?:i\s+)?(?:was\s+)?tasked\s+with\s+/i, "Led "],
   [/^(?:i\s+)?participated\s+in\s+/i, "Contributed to "],
   [/^(?:i\s+)?in\s+charge\s+of\s+/i, "Ran "],
+  [/^(?:i\s+)?(?:was\s+)?tasked\s+with\s+/i, "Worked on "],
 ];
 
 const OVERSTATED_PAIRS = [

@@ -7,21 +7,37 @@
    Every rule here is an enhancement. Delete this file, or block it, and every
    page still renders and reads exactly as it does now.
 
-   The set is deliberately the six rows of DESIGN-INPUTS §3 and nothing else:
-   page entrance, the hero's evidence trace, a disclosure, and state changes
-   that already live in site.css. Retired with no replacement (they were the
-   decorations the design pass measured and cut): the 620ms scroll reveal, the
-   900ms ring draw, the card hover lift and the infinite .pill--live pulse.
+   The contract, in one place:
 
-   Only transform / translate / opacity animate; no layout property, no scroll
-   listener, no parallax, nothing that fights the sticky nav, no loops.
+   1. ONE duration above 320ms: the hero's evidence trace (--dur-lg, 560ms),
+      once per load. It is the surface's one deliberate move, and it is the only
+      thing here allowed to take its time. The page entrance is --dur-md (260ms)
+      per element, fast enough to read as the page arriving rather than drifting
+      in. --dur-data (420ms) is not used on the marketing pages at all.
+   2. ONE move per surface, as SPEC-V2 §5 requires: the page entrance (page
+      surface), the evidence trace (hero-proof surface), the drawer disclosure,
+      and state changes that live in site.css. No second reveal system, no
+      parallax, no typewriter, no loop. Nothing is scroll-triggered.
+   3. Only transform / translate / opacity animate. No width, height, top,
+      margin, padding or background-position: those are the properties that
+      force layout or a full repaint on every frame.
+   4. The largest text is never faded. An element at opacity: 0 is not an LCP
+      candidate, so a fade on the H1 does not delay the metric — it moves the
+      metric onto the nav logo (measured: LCP became "SPAN, 2,178 px²" instead
+      of the H1's 88,830 px²). The H1 rises; it does not appear.
+   5. Cross-document view transitions are opt-in, progressive, and off under
+      reduced motion (section 6).
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    1. Page entrance — the hero (index) and the page-head band (inner pages)
-   One --dur-lg (560ms) rise per element, --ease-enter, one --stagger step
-   apart. Runs once per load; `both` fill means the delay holds the start frame
-   instead of showing finished content first.
+   One --dur-md rise per element, --ease-enter, one --stagger step apart. Runs
+   once per load; `both` fill means the delay holds the start frame instead of
+   showing finished content first.
+
+   The H1/display element runs `aw-rise`: translate only, no opacity. It is the
+   LCP candidate on every page it appears on, and hiding it from first paint is
+   the one thing an entrance must not do. Everything else fades as it rises.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
@@ -32,17 +48,26 @@
     }
   }
 
+  @keyframes aw-rise {
+    from {
+      translate: 0 10px;
+    }
+  }
+
   .hero .eyebrow,
-  .hero .display,
   .hero__sub,
   .hero__cta,
   .hero__meta,
   .page-head .eyebrow,
-  .page-head .h1,
-  .page-head .display,
   .page-head .lede,
   .page-head .small {
-    animation: aw-enter var(--dur-lg) var(--ease-enter) both;
+    animation: aw-enter var(--dur-md) var(--ease-enter) both;
+  }
+
+  .hero .display,
+  .page-head .h1,
+  .page-head .display {
+    animation: aw-rise var(--dur-md) var(--ease-enter) both;
   }
 
   .hero .display,
@@ -70,8 +95,13 @@
    2. The hero's one move — the score opening into named findings
    On the proof sheet, the stamp, then each advert/CV pair, then the rubric
    ledger settle in reading order, one --stagger step apart at --dur-lg /
-   --ease-enter. Transform and opacity only: no loop, no scroll trigger, no
+   --ease-enter. This is the single duration in the motion layer above 320ms,
+   and it is deliberately the hero's: it is the product's own claim, shown once
+   per visit. Transform and opacity only: no loop, no scroll trigger, no
    typewriter, and under reduced motion every element is simply present.
+
+   It is safe to fade these because none of them is the largest element on the
+   page (the H1 is), so the trace cannot become the LCP candidate.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
@@ -133,17 +163,101 @@
    4. prefers-reduced-motion — settle instead of moving
    The entrance, the evidence trace and the disclosure above are not rendered at
    all under reduce (they live inside no-preference blocks), so the page paints
-   complete. What is left is the button and link-arrow lift from site.css:
-   colour changes stay, movement does not.
+   complete. tokens.css already collapses every transition duration globally;
+   what is left is the movement site.css adds on hover and press. Colour changes
+   stay (colour is not motion), movement does not.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   .btn:hover,
-  .btn:active {
+  .btn:active,
+  /* The press rule in site.css is `:active:not(:disabled):not([aria-disabled])`
+     and outranks a bare `.btn:active`, so it has to be matched exactly here or
+     the 1.5% press survives the preference (measured: it did). */
+  .btn:active:not(:disabled):not([aria-disabled="true"]) {
     transform: none;
   }
 
-  .link-arrow:hover::after {
+  .link-arrow:hover::after,
+  .link-arrow:active::after {
     transform: none;
+  }
+
+  .nav__toggle:active {
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Cross-document view transitions — / → /pricing and back
+   A hard navigation between two pages of the same site replaces the document in
+   one frame: the nav, the footer and the paper all disappear and reappear at
+   once. A cross-document view transition crossfades the two snapshots instead,
+   and gives the shared chrome a name so it does not fade at all.
+
+   It is opt-in and progressive: `@view-transition { navigation: auto }` is a
+   no-op in every engine that does not implement it, and the whole block is
+   behind @supports plus a reduced-motion check. Nothing is added to the HTML
+   and no script runs, so the CSP and `scripts/check.js` are untouched.
+
+   The entrance is suppressed while a transition is revealing the new page: the
+   new document's first frame is the one the browser snapshots, so letting the
+   entrance run would cross-fade *to* an un-entered page and then play the
+   entrance again on top of it.
+   -------------------------------------------------------------------------- */
+
+@supports (view-transition-name: none) {
+  @media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+      navigation: auto;
+    }
+
+    /* The shared chrome holds still; only the page body crossfades. */
+    .nav {
+      view-transition-name: nav;
+    }
+
+    .footer {
+      view-transition-name: footer;
+    }
+
+    ::view-transition-old(root) {
+      animation: aw-vt-out var(--dur-sm) var(--ease-exit) both;
+    }
+
+    ::view-transition-new(root) {
+      animation: aw-vt-in var(--dur-sm) var(--ease-enter) both;
+    }
+
+    @keyframes aw-vt-out {
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes aw-vt-in {
+      from {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+@supports selector(:active-view-transition) {
+  html:active-view-transition .hero .eyebrow,
+  html:active-view-transition .hero .display,
+  html:active-view-transition .hero__sub,
+  html:active-view-transition .hero__cta,
+  html:active-view-transition .hero__meta,
+  html:active-view-transition .hero-proof__stamp,
+  html:active-view-transition .hero-proof__req,
+  html:active-view-transition .hero-proof__ans,
+  html:active-view-transition .hero-proof__score,
+  html:active-view-transition .page-head .eyebrow,
+  html:active-view-transition .page-head .h1,
+  html:active-view-transition .page-head .display,
+  html:active-view-transition .page-head .lede,
+  html:active-view-transition .page-head .small {
+    animation: none;
   }
 }

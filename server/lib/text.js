@@ -157,3 +157,21 @@ export function metrics(text) {
     words: source.split(/\s+/).filter(Boolean).length,
   };
 }
+
+/**
+ * Layout that an extractor had to flatten before the text could be read.
+ *
+ * Lives in the shared text layer because both the extractor (which measures it)
+ * and the scorer (which must dock formatting for it) need the same threshold, and
+ * the scorer is deliberately allowed exactly one project dependency.
+ *
+ * @param {{ tables?: number, columns?: number, textBoxes?: number }|null|undefined} layout
+ * @returns {boolean}
+ */
+export function hasLayoutRisk(layout) {
+  if (!layout || typeof layout !== "object") return false;
+  const tables = Number(layout.tables) || 0;
+  const columns = Number(layout.columns) || 1;
+  const textBoxes = Number(layout.textBoxes) || 0;
+  return tables > 0 || columns > 1 || textBoxes > 0;
+}

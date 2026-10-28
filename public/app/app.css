@@ -90,12 +90,15 @@
   cursor: pointer;
 }
 
+/* The two bars of the menu button are ink-on-paper marks, so they follow --mark
+   (which stays ink in both schemes) rather than --ink, whose dark value is the
+   press-black band and would vanish against this rail. */
 #app-menu > span[aria-hidden="true"] {
   position: relative;
   display: block;
   width: 16px;
   height: 1.5px;
-  background: var(--ink);
+  background: var(--mark);
 }
 
 #app-menu > span[aria-hidden="true"]::before,
@@ -105,7 +108,7 @@
   left: 0;
   width: 16px;
   height: 1.5px;
-  background: var(--ink);
+  background: var(--mark);
 }
 
 #app-menu > span[aria-hidden="true"]::before {
@@ -141,19 +144,43 @@
 #app-nav ul {
   display: grid;
   gap: 2px;
+  /* A <ul> is a list, not an indented list: the UA's 40px inline padding and
+     disc marker were both still in play, so every row carried a bullet and the
+     whole rail sat 40px right of the brand. The rail is a menu; the bullets are
+     removed here and the marker cleared explicitly for any engine that paints a
+     ::marker box before honouring list-style. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
+#app-nav li::marker {
+  content: "";
+}
+
+/* 18px icon column, so every label starts on the same x. The current page's
+   border is transparent on every row rather than present on one, which was
+   shifting its icon and label 1px right of the rest. */
 #app-nav a {
-  display: flex;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
   align-items: center;
   gap: 0.6rem;
   padding: 0.55rem 0.7rem;
+  border: 1px solid transparent;
   border-radius: var(--r-sm);
   font-size: var(--fs-sm);
   font-weight: 550;
   color: var(--text-soft);
   text-decoration: none;
-  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+  transition: background var(--dur-xs) var(--ease), color var(--dur-xs) var(--ease),
+    opacity var(--dur-xs) var(--ease);
+}
+
+/* Pressed, the row dims rather than moves: a rail that shifts under the pointer
+   is a rail you cannot hit twice. */
+#app-nav a:active {
+  opacity: 0.7;
 }
 
 /* The rail icons are inline <svg> in app.html: no sprite, no external asset,
@@ -163,7 +190,7 @@
   height: 17px;
   flex: none;
   stroke: currentColor;
-  transition: stroke var(--dur) var(--ease);
+  transition: stroke var(--dur-xs) var(--ease);
 }
 
 #app-nav a:hover {
@@ -173,7 +200,9 @@
 
 #app-nav a[aria-current="page"] {
   background: var(--paper);
-  border: 1px solid var(--line);
+  /* Only the colour changes: the 1px box is already there, transparent, so the
+     active row cannot knock its own icon and label one pixel off the column. */
+  border-color: var(--line);
   color: var(--text);
   box-shadow: var(--shadow-sm);
 }
@@ -422,6 +451,14 @@
   gap: var(--sp-2) var(--sp-3);
 }
 
+/* The dashboard's Next actions card was a 1113px box holding one 66ch list: the
+   four stat cards above it read as one system and this read as another. The
+   selector is the dashboard's own shape — the only section directly after the
+   metrics grid — so the same list card on /app/alerts keeps its full width. */
+#app-main > .aw-grid--metrics + .aw-section > .aw-card {
+  max-width: 42rem;
+}
+
 .aw-card__title {
   font-size: var(--fs-sm);
   font-weight: 650;
@@ -597,7 +634,10 @@
   stroke: var(--accent);
   stroke-width: 8;
   stroke-linecap: round;
-  transition: stroke-dasharray 600ms var(--ease);
+  /* A measurement settling when a value is replaced, not a fill growing from
+     zero on load (SPEC-V2 §5 forbids that). --dur-md keeps it under the 320ms
+     ceiling; 600ms read as computation that was not happening. */
+  transition: stroke-dasharray var(--dur-md) var(--ease-settle);
 }
 
 .aw-ring__label {
@@ -655,7 +695,11 @@
   height: 100%;
   border-radius: inherit;
   background: var(--accent);
-  transition: width 400ms var(--ease);
+  /* width is a layout property: transitioning it re-runs layout on every frame
+     of a 400ms animation. The bar now snaps to its measured value, which is
+     also the honest thing for a credit count, and costs one layout pass per
+     change instead of ~24. If a settle is ever wanted back, it needs
+     `transform: scaleX()` driven by a custom property from app.js, not width. */
 }
 
 .aw-meter__fill[data-tone="warn"] {
@@ -1506,6 +1550,13 @@ a.aw-cell-title:hover {
   box-shadow: var(--shadow-md);
 }
 
+/* Dark-only: --ink is the press-black band there, so a border in it disappears
+   against the card. --line-meaning is the token for a rule that carries meaning.
+   Scoped so the light scheme keeps the exact rule it shipped with. */
+html[data-theme="dark"] .aw-plan[data-current="true"] {
+  border-color: var(--line-meaning);
+}
+
 .aw-plan__flag {
   position: absolute;
   top: -0.65rem;
@@ -1685,20 +1736,20 @@ a.aw-cell-title:hover {
   background: var(--paper);
 }
 
+/* Loading states are inline placeholders, never a spinner with a lifecycle of
+   its own. The label already says which panel is being read ("Reading the job
+   boards…"), the box already occupies the answer's slot, and the 700ms infinite
+   rotation was both a loop the canon forbids and a WCAG 2.2.2 problem: five
+   seconds of it with no pause control. What is left is a static pip and the
+   sentence; if the panels ever want real skeletons, the markup has to carry
+   them (app.js builds these strings), and that is the app owner's change. */
 .aw-spinner {
-  width: 16px;
-  height: 16px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 2px solid var(--line-strong);
-  border-top-color: var(--accent);
-  animation: aw-spin 700ms linear infinite;
+  background: var(--accent);
+  opacity: 0.6;
   flex: none;
-}
-
-@keyframes aw-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1718,10 +1769,15 @@ a.aw-cell-title:hover {
   color: var(--text-invert);
   font-size: var(--fs-sm);
   line-height: 1.45;
-  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.6);
+  /* --shadow-md is the layer's depth token: it has a dark-scheme value, so the
+     toast lifts off a dark page the way it lifts off a light one. */
+  box-shadow: var(--shadow-md);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  /* A confirmation, not an arrival: 180ms is the same beat the press and the
+     focus states use. The only properties that move are opacity and a 1rem
+     translate, so the toast cannot re-layout the page it floats over. */
+  transition: opacity var(--dur-sm) var(--ease), transform var(--dur-sm) var(--ease);
 }
 
 #app-toast[data-show="true"] {
@@ -1735,6 +1791,14 @@ a.aw-cell-title:hover {
 
 #app-toast[data-tone="err"] {
   background: var(--err);
+}
+
+/* Both tones are a filled surface, and both fills are light in the dark scheme
+   (--accent-ink is jade there, --err a salmon). --text-invert would be cream on
+   cream: --paper is the surface colour that contrasts with the fill in either
+   scheme (cream on the dark greens, near-black on the light ones). */
+#app-toast[data-tone] {
+  color: var(--paper);
 }
 
 /* --------------------------------------------------------------------------
@@ -1801,6 +1865,10 @@ a.aw-cell-title:hover {
   }
 }
 
+/* Reduced motion: tokens.css collapses every duration to 0.01ms globally, which
+   is the floor. These are the two places that would still *move* rather than
+   change colour, so they are settled explicitly here as well. There is no
+   spinner to slow down any more. */
 @media (prefers-reduced-motion: reduce) {
   .aw-ring__value,
   .aw-meter__fill,
@@ -1808,7 +1876,11 @@ a.aw-cell-title:hover {
     transition: none;
   }
 
-  .aw-spinner {
-    animation-duration: 2.4s;
+  #app-toast {
+    transform: translate(-50%, 0);
+  }
+
+  #app-nav a:active {
+    opacity: 1;
   }
 }

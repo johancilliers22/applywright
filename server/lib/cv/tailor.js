@@ -8,10 +8,11 @@
  *
  * The invariant that matters: `tailorCv` never returns a bullet that fails
  * `assertGrounded`. A rewrite that introduces a figure, a currency amount, an
- * employer, a job title, a qualification or a date range that the source does
- * not contain is rejected; the bullet falls back to the CV's own wording and the
- * reason is recorded in `warnings`. Nothing here invents a fact, and nothing here
- * is a stub: when a model is unavailable the rules path does real work.
+ * employer, a job title, a qualification, a date range, a lower-case tool or
+ * method, or a stronger level of ownership than the source claims is rejected;
+ * the bullet falls back to the CV's own wording and the reason is recorded in
+ * `warnings`. Nothing here invents a fact, and nothing here is a stub: when a
+ * model is unavailable the rules path does real work.
  *
  * Scope note: this module reads `cvText`, `profile` and `job` and returns plain
  * data. It does not touch the database, the network or the clock.
@@ -214,6 +215,67 @@ const TITLE_WORDS = new Set([
 
 const EMPLOYER_MARKERS =
   /\b(?:ltd|limited|plc|inc|llc|gmbh|group|holdings|partners|university|college|hospital|council|agency|studio|labs?|systems|solutions|services|bank)\b/i;
+
+/**
+ * Lowercase tools and methods that the proper-noun check cannot see, because they
+ * are written in lower case ("terraform", "microservices", "cohort analysis").
+ *
+ * Deliberately modest and deliberately unambiguous: every entry is a term a
+ * candidate cannot use by accident, so a matching rewrite is a real claim about a
+ * tool or method the source does not mention. Ambiguous English words that are
+ * also product names — "excel", "spark", "react", "swift", "go", "rust" — are
+ * left out: rejecting an honest "react to incidents quickly" is worse than
+ * missing an invented tool.
+ */
+const SKILL_TERMS = [
+  "terraform",
+  "kubernetes",
+  "docker",
+  "graphql",
+  "postgresql",
+  "postgres",
+  "typescript",
+  "javascript",
+  "python",
+  "django",
+  "rails",
+  "node.js",
+  "microservices",
+  "microservice",
+  "ci/cd",
+  "selenium",
+  "pytest",
+  "jenkins",
+  "ansible",
+  "airflow",
+  "snowflake",
+  "databricks",
+  "tableau",
+  "looker",
+  "salesforce",
+  "jira",
+  "figma",
+  "kafka",
+  "redis",
+  "mongodb",
+  "mysql",
+  "sql",
+  "aws",
+  "azure",
+  "prometheus",
+  "grafana",
+  "opentelemetry",
+  "elasticsearch",
+  "rabbitmq",
+  "cloudformation",
+  "scrum",
+  "kanban",
+  "cohort analysis",
+  "a/b testing",
+  "etl",
+  "spss",
+  "matlab",
+];
 
 /** Pull an employer and a title out of a role header, conservatively. */
 function roleFacts(header) {
@@ -524,6 +586,11 @@ function isCapitalised(token) {
  * Capitalised phrases that are not at the start of a sentence. Some of these are
  * employers, some are job titles, some are technologies — all of them are
  * proper nouns, and all of them must come from the CV.
+ *
+ * A sentence-start capital is not evidence either way, so it is no longer skipped:
+ * "Kubernetes cluster migration cut deploy time…" used to be invisible to this
+ * check precisely because "Kubernetes" opened the sentence. What decides is the
+ * word itself — see `couldBeName`.
  */
 function properNounPhrases(text) {
   const tokens = toText(text).split(/\s+/).filter(Boolean);
@@ -540,7 +607,7 @@ function properNounPhrases(text) {
       !isCapitalised(token) ||
       ENTITY_STOP.has(token.toLowerCase()) ||
       MONTH_SET.has(token.toLowerCase().replace(/\.$/, ""));
-    if (blocked || sentenceStart) {
+    if (blocked || (sentenceStart && !couldBeName(token))) {
       index += 1;
       continue;
     }
@@ -571,9 +638,291 @@ function properNounPhrases(text) {
   return phrases;
 }
 
+/**
+ * Irregular past-tense verbs and letter greetings: words that really do open CV
+ * lines and letters without being names. Regular verbs and adverbs are covered by
+ * their endings in `couldBeName`.
+ */
+const SENTENCE_START_WORDS = new Set([
+  "led",
+  "built",
+  "ran",
+  "cut",
+  "drove",
+  "wrote",
+  "grew",
+  "saved",
+  "made",
+  "took",
+  "kept",
+  "set",
+  "spent",
+  "brought",
+  "found",
+  "held",
+  "bought",
+  "sold",
+  "taught",
+  "met",
+  "won",
+  "began",
+  "chose",
+  "dealt",
+  "did",
+  "went",
+  "gave",
+  "got",
+  "knew",
+  "left",
+  "lost",
+  "paid",
+  "put",
+  "read",
+  "saw",
+  "sent",
+  "showed",
+  "told",
+  "thought",
+  "understood",
+  "became",
+  "came",
+  "sought",
+  "caught",
+  "fought",
+  "threw",
+  "flew",
+  "drew",
+  "broke",
+  "spoke",
+  "stole",
+  "tore",
+  "dear",
+  "hi",
+  "hello",
+  "sincerely",
+  "faithfully",
+  "regards",
+  "yours",
+  "kind",
+  "best",
+  "thank",
+  "thanks",
+]);
+
+/**
+ * Could a capitalised token at the start of a sentence be a name, or is it
+ * capitalised only because of its position? CV lines open with verbs ("Improved…",
+ * "Cut…") and letters with greetings, so those are never names; any other
+ * capitalised word is a candidate and is checked like a mid-sentence proper noun.
+ * The bias is deliberate: a missed name is a missed claim, while a verb mistaken
+ * for a name would reject an honest rewrite.
+ */
+function couldBeName(token) {
+  if (SENTENCE_START_WORDS.has(token.toLowerCase())) return false;
+  // Regular past tense, gerund or adverb: "Improved", "Building", "Additionally".
+  if (/^[A-Za-z]{3,}(?:ed|ing|ly)$/.test(token)) return false;
+  return true;
+}
+
 // ---------------------------------------------------------------------------
-// The grounding check
+// Ownership level: a rewrite may change emphasis, never the level of ownership
 // ---------------------------------------------------------------------------
+
+/**
+ * `/how-it-works` promises that a rewrite "cannot upgrade *supported* to *led*
+ * unless the source says so". A prompt cannot keep that promise, so this does:
+ * classify the verb that governs the source line and the verb that governs the
+ * rewrite, and refuse a rewrite whose verb claims more ownership.
+ *
+ * Three levels, because that is the distinction a reader of a CV actually makes:
+ *   support    — helped, assisted, contributed, participated, worked on
+ *   execution  — designed, built, delivered, launched, migrated, scaled
+ *   leadership — led, owned, drove, managed, headed, directed, founded
+ *
+ * The check is one-sided and narrow. It only fires when the rewrite's own leading
+ * verb is on one of these lists and stronger than the source's level; anything
+ * else ("Cut checkout latency…") claims nothing this can measure and is allowed.
+ * A rejection costs the candidate an edit they asked for, so an unknown verb is
+ * never treated as an upgrade.
+ */
+const SUPPORT_VERBS = new Set([
+  "helped",
+  "help",
+  "helping",
+  "assisted",
+  "assist",
+  "assisting",
+  "supported",
+  "support",
+  "supporting",
+  "contributed",
+  "contribute",
+  "contributing",
+  "participated",
+  "participate",
+  "participating",
+  "worked",
+  "work",
+  "working",
+  "collaborated",
+  "collaborate",
+  "collaborating",
+  "involved",
+  "tasked",
+]);
+
+const EXECUTION_VERBS = new Set([
+  "designed",
+  "design",
+  "designing",
+  "architected",
+  "architect",
+  "architecting",
+  "built",
+  "build",
+  "building",
+  "delivered",
+  "deliver",
+  "delivering",
+  "launched",
+  "launch",
+  "launching",
+  "scaled",
+  "scale",
+  "scaling",
+  "implemented",
+  "implement",
+  "implementing",
+  "developed",
+  "develop",
+  "developing",
+  "created",
+  "create",
+  "creating",
+  "shipped",
+  "ship",
+  "shipping",
+  "migrated",
+  "migrate",
+  "migrating",
+  "automated",
+  "automate",
+  "automating",
+  "introduced",
+  "introduce",
+  "introducing",
+  "established",
+  "establish",
+  "establishing",
+  "streamlined",
+  "streamline",
+  "streamlining",
+  "rebuilt",
+  "rebuild",
+  "rebuilding",
+]);
+
+const LEADERSHIP_VERBS = new Set([
+  "led",
+  "lead",
+  "leading",
+  "drove",
+  "drive",
+  "driving",
+  "owned",
+  "own",
+  "owning",
+  "managed",
+  "manage",
+  "managing",
+  "headed",
+  "head",
+  "heading",
+  "directed",
+  "direct",
+  "directing",
+  "oversaw",
+  "oversee",
+  "overseeing",
+  "founded",
+  "found",
+  "founding",
+  "spearheaded",
+  "spearhead",
+  "spearheading",
+  "championed",
+  "champion",
+  "championing",
+]);
+
+const OWNERSHIP_LEVELS = { support: 1, execution: 2, leadership: 3 };
+
+/** Words that can sit before the verb without being it. */
+const LEAD_SKIP_WORDS = new Set([
+  "i",
+  "we",
+  "he",
+  "she",
+  "they",
+  "also",
+  "then",
+  "later",
+  "successfully",
+  "personally",
+  "have",
+  "has",
+  "had",
+  "was",
+  "were",
+  "been",
+  "being",
+  "am",
+  "is",
+  "are",
+  "and",
+  "but",
+  "so",
+  "subsequently",
+  "additionally",
+  "furthermore",
+  "again",
+]);
+
+/**
+ * Openers that set the level without a listed verb: "Responsible for…" claims
+ * less than "Owned…", and "Tasked with…" less than "Led…". Only recognised at the
+ * start of the line, never anywhere inside it ("Led the migration and was
+ * responsible for zero downtime" is a leadership line).
+ */
+const SUPPORT_OPENERS =
+  /^(?:i\s+(?:was|were|am|have\s+been|had\s+been)\s+)?(?:responsible\s+for|tasked\s+with|involved\s+in|part\s+of|a\s+part\s+of)\b/i;
+
+/** The first verb of the line, or null when the first content word is not one. */
+function leadingVerb(text) {
+  const source = collapse(toText(text)).replace(/^[^A-Za-z]+/, "");
+  if (!source) return null;
+  if (SUPPORT_OPENERS.test(source)) return { word: "responsible for", level: "support" };
+  const words = source.toLowerCase().match(/[a-z]+/g) ?? [];
+  for (const word of words) {
+    if (LEAD_SKIP_WORDS.has(word)) continue;
+    if (SUPPORT_VERBS.has(word)) return { word, level: "support" };
+    if (EXECUTION_VERBS.has(word)) return { word, level: "execution" };
+    if (LEADERSHIP_VERBS.has(word)) return { word, level: "leadership" };
+    return null;
+  }
+  return null;
+}
+
+/**
+ * The ownership level a line claims. An unrecognised line is treated as
+ * "execution", the middle: that lets "Improved latency by 40%" become "Delivered a
+ * 40% latency improvement" (same level) while still refusing "Led the latency
+ * work" (a level the line never claimed).
+ */
+function ownershipLevel(text) {
+  const verb = leadingVerb(text);
+  return verb ? OWNERSHIP_LEVELS[verb.level] : OWNERSHIP_LEVELS.execution;
+}
 
 /**
  * Does `rewritten` stay within the facts of `original`?
@@ -585,10 +934,15 @@ function properNounPhrases(text) {
  * (pass the full CV), because a rewrite may legitimately name something the CV
  * states — it may never name something the CV does not.
  *
+ * Two further promises are mechanical here, not stylistic: a rewrite may not
+ * promote the level of ownership (`ownership`), and it may not name a lower-case
+ * tool or method the CV does not mention (`skills`).
+ *
  * @param {string} original source text (a bullet, or the whole CV)
  * @param {string} rewritten candidate rewrite
  * @param {{ context?: string, figures?: boolean, dates?: boolean,
- *           qualifications?: boolean, titles?: boolean, names?: boolean }} [options]
+ *           qualifications?: boolean, titles?: boolean, names?: boolean,
+ *           skills?: boolean, ownership?: boolean }} [options]
  * @returns {{ ok: boolean, reasons: string[] }}
  */
 export function assertGrounded(original, rewritten, options = {}) {
@@ -601,6 +955,8 @@ export function assertGrounded(original, rewritten, options = {}) {
     qualifications: options.qualifications !== false,
     titles: options.titles !== false,
     names: options.names !== false,
+    skills: options.skills !== false,
+    ownership: options.ownership !== false,
   };
 
   if (!source.trim()) {
@@ -696,10 +1052,35 @@ export function assertGrounded(original, rewritten, options = {}) {
   }
 
   // --- employers, names and other proper nouns
+  const unknownNames = [];
   if (check.names) {
     for (const phrase of properNounPhrases(target)) {
       if (containsTerm(corpus, phrase)) continue;
+      unknownNames.push(phrase);
       add(`new name "${phrase}" is not in the original`);
+    }
+  }
+
+  // --- lower-case tools and methods ("terraform", "microservices")
+  if (check.skills) {
+    // A capitalised tool ("Kubernetes") is already reported by the name check;
+    // one cause deserves one reason.
+    const alreadyNamed = new Set(unknownNames.map((name) => name.toLowerCase()));
+    for (const skill of SKILL_TERMS) {
+      if (alreadyNamed.has(skill)) continue;
+      if (!containsTerm(target, skill)) continue;
+      if (containsTerm(corpus, skill)) continue;
+      add(`new skill "${skill}" is not in the original`);
+    }
+  }
+
+  // --- the level of ownership the line claims
+  if (check.ownership) {
+    const claimed = leadingVerb(target);
+    if (claimed && OWNERSHIP_LEVELS[claimed.level] > ownershipLevel(source)) {
+      add(
+        `the rewrite claims "${claimed.word}", a stronger level of ownership than the original line supports`
+      );
     }
   }
 
@@ -717,28 +1098,9 @@ const FILLER_OPENERS = [
   /^duties\s+included\s+/i,
   /^duties:\s*/i,
   /^tasks\s+included\s+/i,
-  /^tasked\s+with\s+/i,
-  // ownership-softening openers are deliberately NOT stripped: "Helped with
-  // managing 12 engineers" must not become "Managed 12 engineers".
-
-  // ownership-softening openers are deliberately NOT stripped: "Helped with
-  // managing 12 engineers" must not become "Managed 12 engineers".
-
-  // ownership-softening openers are deliberately NOT stripped: "Helped with
-  // managing 12 engineers" must not become "Managed 12 engineers".
-
-  // ownership-softening openers are deliberately NOT stripped: "Helped with
-  // managing 12 engineers" must not become "Managed 12 engineers".
-
-  // ownership-softening openers are deliberately NOT stripped: "Helped with
-  // managing 12 engineers" must not become "Managed 12 engineers".
-
-  // ownership-softening openers are deliberately NOT stripped: "Helped with
-  // managing 12 engineers" must not become "Managed 12 engineers".
-
-  // ownership-softening openers are deliberately NOT stripped: "Helped with
-  // managing 12 engineers" must not become "Managed 12 engineers".
-
+  // Ownership-softening openers are deliberately NOT stripped. "Helped with
+  // managing 12 engineers" must never become "Managed 12 engineers", and stripping
+  // "Tasked with" would hand the gerund to GERUND_TO_PAST, which would promote it.
   /^in\s+charge\s+of\s+/i,
   /^in\s+my\s+role\s+as\s+[^,]{1,40},\s*/i,
   /^as\s+part\s+of\s+my\s+role,?\s*/i,

@@ -611,6 +611,7 @@ export async function createApp(config) {
     let text = "";
     let format = "txt";
     let warnings = [];
+    let layout = null;
     let name = assertString(body.name, "name", { max: 120, required: false });
 
     if (typeof body.text === "string" && body.text.trim()) {
@@ -625,6 +626,7 @@ export async function createApp(config) {
       text = String(extracted.text ?? "").trim();
       format = extracted.format ?? "unknown";
       warnings = extracted.warnings ?? [];
+      layout = extracted.layout ?? null;
       if (!name) name = filename.replace(/\.[^.]+$/, "");
       if (!text) {
         throw new ApiError(422, "unreadable_cv", `no text could be read from that ${format} file${warnings.length ? `: ${warnings[0]}` : ""}`);
@@ -636,7 +638,10 @@ export async function createApp(config) {
     if (text.length < 80) throw badRequest("that CV is too short to analyse — paste the full text");
     if (text.length > 60_000) throw badRequest("that CV is longer than 60,000 characters");
 
-    const profile = segmentSections(text);
+    // Carry the extraction's layout signal into the profile: the plain text has
+    // already been flattened, so scoring cannot otherwise know that the source
+    // was a table or a two-column layout.
+    const profile = { ...segmentSections(text), layout };
     const isFirst = existing === 0;
     const cv = store.createCv({
       userId: req.user.id,
@@ -674,7 +679,10 @@ export async function createApp(config) {
     // heading or a date wrong: re-segment so profile, scores and packs follow it.
     if (body.text !== undefined) {
       patch.text = assertString(body.text, "text", { min: 80, max: 60_000 });
-      patch.profile = segmentSections(patch.text);
+      // Re-segment from the corrected text, but keep the layout signal the
+      // original extraction produced: editing the text cannot reveal a table.
+      const before = store.cvById(req.params.id, req.user.id);
+      patch.profile = { ...segmentSections(patch.text), layout: before?.profile?.layout ?? null };
     }
     const cv = store.updateCv(req.params.id, req.user.id, patch);
     if (!cv) throw notFound("CV not found");

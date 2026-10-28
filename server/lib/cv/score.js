@@ -12,7 +12,7 @@
  * number. Where the plain text cannot support a judgement, the report says so
  * instead of guessing.
  */
-import { bulletize, keywordCoverage, metrics, pct, sentences } from "../text.js";
+import { bulletize, hasLayoutRisk, keywordCoverage, metrics, pct, sentences } from "../text.js";
 
 /** Public weights, so the UI renders the same numbers the score uses. */
 export const WEIGHTS = Object.freeze({
@@ -483,6 +483,10 @@ function measure(ctx) {
     capsRun: longestCapsRun,
     pipeLines,
     tabLines: tabLines.length,
+    // Layout that the extraction step had to flatten (DOCX tables, multi-column
+    // sections, text boxes). The plain text cannot show it, so the score must not
+    // claim there is no layout risk just because the text reads cleanly.
+    layout: prof.layout ?? null,
   };
 }
 
@@ -538,8 +542,10 @@ function grade(facts) {
   if (facts.capsCount > 0) penalty += facts.capsCount >= 3 || facts.capsRun >= 3 ? FORMATTING.capsBlock : FORMATTING.capsFew;
   if (facts.experienceWords > 0 && facts.datedExperience.length === 0) penalty += FORMATTING.dates;
   // One line with pipes is usually a contact line and parses fine; two or more
-  // lines with two or more pipes each is the shape of a table.
-  if (facts.pipeLines.length >= 2 || facts.tabLines > 0) penalty += FORMATTING.table;
+  // lines with two or more pipes each is the shape of a table. Layout the
+  // extractor had to flatten counts as the same risk, even when the text reads
+  // cleanly — otherwise a table CV scores 10/10 for formatting.
+  if (facts.pipeLines.length >= 2 || facts.tabLines > 0 || hasLayoutRisk(facts.layout)) penalty += FORMATTING.table;
   let formatting = clamp(100 - penalty);
 
   // A CV too short to score cannot earn formatting credit for the parts it lacks.
@@ -877,7 +883,7 @@ function buildFindings(facts, points, coverage, keywordsMeasured, context) {
     facts.longBullets.length +
     facts.capsCount +
     (facts.experienceWords > 0 && facts.datedExperience.length === 0 ? 1 : 0) +
-    (facts.pipeLines.length >= 2 || facts.tabLines > 0 ? 1 : 0);
+    (facts.pipeLines.length >= 2 || facts.tabLines > 0 || hasLayoutRisk(facts.layout) ? 1 : 0);
 
   if (layoutRisks === 0) {
     const separators =

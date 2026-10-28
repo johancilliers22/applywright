@@ -23,6 +23,9 @@ import { spawnSync } from "node:child_process";
 import { accessSync, constants as fsConstants, statSync } from "node:fs";
 import { delimiter, join } from "node:path";
 import { inflateRawSync } from "node:zlib";
+import { hasLayoutRisk } from "../text.js";
+
+export { hasLayoutRisk };
 
 /** Refuse to inflate an absurd document part (zip bomb guard). */
 const MAX_ZIP_PART_BYTES = 64 * 1024 * 1024;
@@ -452,6 +455,10 @@ function normalisePlain(text) {
  * table rows become lines, tracked deletions and field instructions are dropped.
  * Tag stripping happens before entity decoding so an escaped `<w:p>` in the
  * author's text survives as text.
+ *
+ * This deliberately flattens layout: a table cell, a column and a text box all
+ * become spaces. `detectWordLayout` counts those constructs before they are lost
+ * so the result can still tell the truth about them.
  */
 function xmlToText(xml) {
   let text = String(xml ?? "");
@@ -470,6 +477,132 @@ function xmlToText(xml) {
   text = decodeEntities(text);
   return normaliseBlocks(text);
 }
+
+// ---------------------------------------------------------------------------
+// Layout signals
+// ---------------------------------------------------------------------------
+//
+// Layout dies the moment a document becomes plain text: table cells, columns and
+// text boxes flatten to spaces, so `score.js` can look at a two-column CV, find
+// no pipes and no tabs, and report "No layout risks in the plain text" about a
+// document an ATS will shred. These counters survive extraction so the caller can
+// dock formatting marks and tell the user, instead of the score lying.
+
+/** No layout facts: one column, no tables, no text boxes. */
+const NO_LAYOUT = Object.freeze({ tables: 0, columns: 1, textBoxes: 0 });
+
+
+/** Coerce whatever a reader reported into the documented shape. */
+function normaliseLayout(layout) {
+  if (!layout || typeof layout !== "object") return NO_LAYOUT;
+  return {
+    tables: Math.max(0, Math.trunc(Number(layout.tables) || 0)),
+    columns: Math.max(1, Math.trunc(Number(layout.columns) || 1)),
+    textBoxes: Math.max(0, Math.trunc(Number(layout.textBoxes) || 0)),
+  };
+}
+
+/** Count the WordprocessingML constructs whose text order plain extraction loses. */
+function detectWordLayout(xml) {
+  const source = String(xml ?? "");
+  const tables = (source.match(/<w:tbl\b/gi) || []).length;
+  const textBoxes = (source.match(/<w:txbxContent\b/gi) || []).length;
+  let columns = 1;
+  for (const match of source.matchAll(/<w:cols\b[^>]*>/gi)) {
+    const declared = /w:num\s*=\s*"(\d+)"/i.exec(match[0]);
+    if (declared) columns = Math.max(columns, Number.parseInt(declared[1], 10) || 1);
+  }
+  // Some writers emit one <w:col/> child per column instead of w:num.
+  for (const match of source.matchAll(/<w:cols\b[^>]*>([\s\S]*?)<\/w:cols>/gi)) {
+    const children = (match[1].match(/<w:col\b/gi) || []).length;
+    if (children > columns) columns = children;
+  }
+  return { tables, columns, textBoxes };
+}
+
+/** Count the OpenDocument layout constructs that flatten the same way. */
+function detectOdtLayout(xml) {
+  const source = String(xml ?? "");
+  return {
+    // (?=[\s>]) keeps <table:table-row> and <table:table-cell> out of the count.
+    tables: (source.match(/<table:table(?=[\s>])/gi) || []).length,
+    columns: 1,
+    textBoxes: (source.match(/<draw:text-box\b/gi) || []).length,
+  };
+}
+
+const LAYOUT_LABELS = new Map([
+  ["docx", "DOCX"],
+  ["odt", "ODT"],
+  ["rtf", "RTF"],
+  ["html", "HTML"],
+]);
+
+/**
+ * The sentence a layout risk deserves, or null when there is none.
+ * It says what is wrong and what to do, because a user cannot see a text box in
+ * the imported text.
+ */
+function layoutWarning(layout, format) {
+  if (!hasLayoutRisk(layout)) return null;
+  const facts = [];
+  if (layout.tables > 0) facts.push(`${layout.tables} table${layout.tables === 1 ? "" : "s"}`);
+  if (layout.columns > 1) facts.push(`${layout.columns} text columns`);
+  if (layout.textBoxes > 0) facts.push(`${layout.textBoxes} text box${layout.textBoxes === 1 ? "" : "es"}`);
+  const label = LAYOUT_LABELS.get(String(format ?? "").toLowerCase()) || "document";
+  return `This ${label} is laid out with ${joinList(facts)}, which plain text cannot preserve, so the extracted text may read out of order. Single-column, no tables and no text boxes parses everywhere.`;
+}
+
+// ---------------------------------------------------------------------------
+// DOCX parts outside word/document.xml
+// ---------------------------------------------------------------------------
+
+/** Word keeps body, header and footer in separate parts; this matches the latter two. */
+const HEADER_FOOTER_PART = /^word\/(header|footer)\d*\.xml$/i;
+
+/** "Page 1 of 2" and "2/5" are page furniture, not CV content. */
+const PAGE_NUMBER_LINE = /^(?:page\s+)?\d{1,3}(?:\s*(?:of|\/)\s*\d{1,3})?$/i;
+
+/**
+ * Read the header and footer parts of a DOCX.
+ * Real CVs put name, phone, email and links here as often as in the body, and
+ * reading word/document.xml alone loses them without a trace. The entry names are
+ * authoritative and need no relationship lookup: only document headers and
+ * footers can live at `word/header*.xml` / `word/footer*.xml`.
+ * @returns {{ header: string, footer: string, parts: string[] }}
+ */
+function readDocxChrome(buffer, entries) {
+  const candidates = entries
+    .filter((entry) => HEADER_FOOTER_PART.test(entry.name))
+    .sort((left, right) => (left.name < right.name ? -1 : left.name > right.name ? 1 : 0));
+  const headerBlocks = [];
+  const footerBlocks = [];
+  const parts = [];
+
+  for (const entry of candidates) {
+    if (entry.uncompressedSize > MAX_ZIP_PART_BYTES) continue;
+    const inflated = inflateEntry(buffer, entry);
+    if (inflated.error) continue;
+    const text = xmlToText(inflated.text)
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line && !PAGE_NUMBER_LINE.test(line))
+      .join("\n");
+    if (!text) continue;
+    parts.push(entry.name);
+    if (/^word\/header/i.test(entry.name)) headerBlocks.push(text);
+    else footerBlocks.push(text);
+  }
+
+  return { header: headerBlocks.join("\n\n"), footer: footerBlocks.join("\n\n"), parts };
+}
+
+/** Say which parts outside the body were used, so the user can check them. */
+function chromeWarning(parts) {
+  const list = parts.join(", ");
+  return `This DOCX keeps text in ${list}, outside word/document.xml; that text was added to the CV in page order, so check the name, email and phone came through.`;
+}
+
 
 /**
  * Convert OpenDocument text (content.xml) to plain text.
@@ -503,7 +636,9 @@ function odtXmlToText(xml) {
  * Open a zip and classify its document part.
  * DOCX and ODT are both zips, so the entry names decide; a `mimetype` entry is
  * read when present so an OpenDocument spreadsheet is not mistaken for a CV.
- * @returns {{ kind: 'docx'|'odt'|null, entry?: object, mimetype?: string|null, warnings: string[] } | { error: string }}
+ * `entries` comes back too, because a DOCX keeps headers and footers in sibling
+ * parts that the body part alone does not name.
+ * @returns {{ kind: 'docx'|'odt'|null, entry?: object, mimetype?: string|null, entries: object[], warnings: string[] } | { error: string }}
  */
 function readZipDocument(buffer) {
   if (buffer.length < 22) return { error: "The zip archive is too short to hold a central directory." };
@@ -519,7 +654,7 @@ function readZipDocument(buffer) {
   const warnings = directory.warning ? [directory.warning] : [];
 
   const documentEntry = entryNamed("word/document.xml");
-  if (documentEntry) return { kind: "docx", entry: documentEntry, warnings };
+  if (documentEntry) return { kind: "docx", entry: documentEntry, entries, warnings };
 
   const contentEntry = entryNamed("content.xml");
   if (contentEntry) {
@@ -529,10 +664,10 @@ function readZipDocument(buffer) {
       const read = inflateEntry(buffer, mimetypeEntry);
       if (!read.error) mimetype = read.text.trim().toLowerCase();
     }
-    return { kind: "odt", entry: contentEntry, mimetype, warnings };
+    return { kind: "odt", entry: contentEntry, mimetype, entries, warnings };
   }
 
-  return { kind: null, warnings };
+  return { kind: null, entries, warnings };
 }
 
 /**
@@ -564,7 +699,12 @@ function readZipText(buffer, declared, warnings) {
         "The file content is a zip archive holding word/document.xml, so it was read as a DOCX even though its name or MIME type suggested otherwise."
       );
     }
-    return { text: xmlToText(inflated.text), format: "docx", warnings };
+    const body = xmlToText(inflated.text);
+    const chrome = readDocxChrome(buffer, opened.entries);
+    if (chrome.parts.length) warnings.push(chromeWarning(chrome.parts));
+    // Page order: the header is what the reader sees first, the footer last.
+    const text = [chrome.header, body, chrome.footer].filter(Boolean).join("\n\n");
+    return { text, format: "docx", warnings, layout: detectWordLayout(inflated.text) };
   }
 
   if (opened.mimetype && !opened.mimetype.startsWith("application/vnd.oasis.opendocument.text")) {
@@ -579,7 +719,7 @@ function readZipText(buffer, declared, warnings) {
   if (!opened.mimetype) {
     warnings.push("The OpenDocument archive has no mimetype entry; it was read as a text document.");
   }
-  return { text: odtXmlToText(inflated.text), format: "odt", warnings };
+  return { text: odtXmlToText(inflated.text), format: "odt", warnings, layout: detectOdtLayout(inflated.text) };
 }
 
 /** Internal DOCX read: text plus the reasons any part failed. */
@@ -765,9 +905,11 @@ function rtfToText(source) {
 }
 
 function readRtf(bytes, warnings) {
-  const text = rtfToText(decodeText(bytes, warnings));
+  const source = decodeText(bytes, warnings);
+  const text = rtfToText(source);
   if (!text) warnings.push("The RTF contained no readable text.");
-  return { text, format: "rtf", warnings };
+  const tables = (source.match(/\\trowd\b/g) || []).length;
+  return { text, format: "rtf", warnings, layout: { tables, columns: 1, textBoxes: 0 } };
 }
 
 // ---------------------------------------------------------------------------
@@ -797,9 +939,11 @@ function htmlToText(source) {
 }
 
 function readHtml(bytes, warnings) {
-  const text = htmlToText(decodeText(bytes, warnings));
+  const source = decodeText(bytes, warnings);
+  const text = htmlToText(source);
   if (!text) warnings.push("The HTML contained no readable text.");
-  return { text, format: "html", warnings };
+  const tables = (source.match(/<table\b/gi) || []).length;
+  return { text, format: "html", warnings, layout: { tables, columns: 1, textBoxes: 0 } };
 }
 
 // ---------------------------------------------------------------------------
@@ -938,10 +1082,12 @@ function runInWsl(tool, args, input, probeArgs) {
   return { status: "failed", reason: `\`wsl -e ${tool} ${args.join(" ")}\` ${attempt.reason}` };
 }
 
-/** Join attempt descriptions the way the warnings read them. */
-function joinAttempts(tried) {
-  if (tried.length <= 1) return tried[0] ?? "no extractor is available";
-  return `${tried.slice(0, -1).join(", ")} and ${tried[tried.length - 1]}`;
+/** Join a short list the way the warnings read it: "a, b and c". */
+function joinList(items) {
+  const list = Array.isArray(items) ? items.filter(Boolean) : [];
+  if (list.length === 0) return "";
+  if (list.length === 1) return list[0];
+  return `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}`;
 }
 
 /**
@@ -1000,7 +1146,7 @@ function extractPdf(buffer, warnings) {
   const attempt = runExtractorChain({ binary: "pdftotext", args: STDIO_ARGS, input: buffer, probeArgs: ["-v"] });
   if (attempt.text === null) {
     warnings.push(
-      `This PDF could not be read: ${joinAttempts(attempt.tried)}. Install Poppler's pdftotext, or paste the CV text instead.`
+      `This PDF could not be read: ${joinList(attempt.tried)}. Install Poppler's pdftotext, or paste the CV text instead.`
     );
     return { text: "", format: "pdf", warnings };
   }
@@ -1024,7 +1170,7 @@ function extractImage(buffer, warnings) {
   const attempt = runExtractorChain({ binary: "tesseract", args: OCR_ARGS, input: buffer, probeArgs: ["--version"] });
   if (attempt.text === null) {
     warnings.push(
-      `No OCR could be run on this image: ${joinAttempts(attempt.tried)}. ${OCR_INSTALL_HINT}, or paste the CV text instead.`
+      `No OCR could be run on this image: ${joinList(attempt.tried)}. ${OCR_INSTALL_HINT}, or paste the CV text instead.`
     );
     return { text: "", format: "image", warnings };
   }
@@ -1045,13 +1191,12 @@ function extractImage(buffer, warnings) {
 // ---------------------------------------------------------------------------
 
 /**
- * Turn an uploaded file into text.
- * Always resolves to `{ text, format, warnings }`; malformed input never throws.
- * The reported format can differ from the filename when the bytes disagree
- * (a zip named .txt, a PDF named .docx, a UTF-16 file with no extension), and
- * every such difference is explained in `warnings`.
+ * Internal extraction: dispatch on the bytes, then on the name.
+ * Readers may report a `layout` signal; extractText() normalises it and adds the
+ * warning that goes with it, so every public result carries both.
+ * Always resolves and never throws.
  */
-export async function extractText({ buffer, filename, mime } = {}) {
+async function extractCore({ buffer, filename, mime } = {}) {
   const warnings = [];
   const supplied = buffer !== undefined && buffer !== null;
   const bytes = toBuffer(buffer);
@@ -1170,6 +1315,37 @@ export async function extractText({ buffer, filename, mime } = {}) {
     "The file type was not recognised. Supported formats are .txt, .md, .docx, .odt, .rtf, .html and .pdf, plus .png/.jpg images when Tesseract OCR is installed. Legacy binary Word (.doc) must be saved as .docx first."
   );
   return { text: "", format: "unknown", warnings };
+}
+
+/**
+ * Turn an uploaded file into text.
+ * Always resolves to `{ text, format, warnings, layout }`; malformed input never
+ * throws. The reported format can differ from the filename when the bytes
+ * disagree (a zip named .txt, a PDF named .docx, a UTF-16 file with no
+ * extension), and every such difference is explained in `warnings`.
+ *
+ * `layout` is the part plain text cannot carry: `{ tables, columns, textBoxes }`
+ * counted from the source document before flattening. It is always present —
+ * `{ tables: 0, columns: 1, textBoxes: 0 }` when nothing risky was found or the
+ * format has no layout to lose — so a caller can store it and later ask
+ * `hasLayoutRisk()` without null checks. When it is risky, `warnings` says so in
+ * words the user can act on.
+ *
+ * @param {{ buffer?: Buffer|Uint8Array|string, filename?: string, mime?: string }} [input]
+ * @returns {Promise<{
+ *   text: string,
+ *   format: 'txt'|'md'|'docx'|'odt'|'rtf'|'html'|'pdf'|'image'|'doc'|'unknown',
+ *   warnings: string[],
+ *   layout: { tables: number, columns: number, textBoxes: number }
+ * }>}
+ */
+export async function extractText(options) {
+  const result = await extractCore(options);
+  const layout = normaliseLayout(result.layout);
+  const warnings = Array.isArray(result.warnings) ? result.warnings.slice() : [];
+  const note = layoutWarning(layout, result.format);
+  if (note) warnings.push(note);
+  return { ...result, warnings, layout };
 }
 
 /**

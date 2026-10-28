@@ -12,6 +12,14 @@
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
   <link rel="stylesheet" href="/app/app.css" />
+  <!-- The same theme layer the marketing pages use, in the same place and the
+       same order: classic, blocking, after the stylesheets. It resolves the
+       saved or system scheme into data-theme on <html> before the first paint,
+       so a dark choice made on the site carries into the workspace with no
+       flash, and it injects its own control into .nav__actions in the rail.
+       Same-origin, so script-src 'self' covers it; no inline boot code, which
+       the CSP and scripts/check.js both forbid. -->
+  <script src="/assets/theme.js"></script>
 </head>
 <body>
   <a class="skip" href="#app-main">Skip to content</a>
@@ -27,10 +35,16 @@
           </svg>
           <span>Applywright</span>
         </a>
-        <button id="app-menu" type="button" aria-controls="app-nav" aria-expanded="false">
-          <span aria-hidden="true"></span>
-          <span class="sr-only">Menu</span>
-        </button>
+        <!-- The action slot theme.js looks for: it injects the theme control
+             here (before the menu button, matching the marketing order) and
+             keeps its polite status node beside it. nav__actions is site.css's
+             own class, so the app gets the same control, not a lookalike. -->
+        <div class="nav__actions" id="app-actions">
+          <button id="app-menu" type="button" aria-controls="app-nav" aria-expanded="false" data-nav-toggle>
+            <span aria-hidden="true"></span>
+            <span class="sr-only">Menu</span>
+          </button>
+        </div>
       </div>
 
       <nav id="app-nav" aria-label="Product">

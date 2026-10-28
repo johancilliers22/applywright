@@ -15,6 +15,18 @@
  * password recovery. Every assertion is checked twice where it matters: once on
  * the JSON the page used, once on the DOM the page rendered.
  *
+ * Asserting the claim, not the drawing
+ * ------------------------------------
+ * A browser test can rot for a reason that is not a bug: the product's visuals
+ * move and a selector that was never the contract stops matching. The donut score
+ * ring this harness first waited for was replaced by the vernier gauge in 0f9175a
+ * — same claim ("the page shows the score the API returned"), new markup. So the
+ * DOM assertions here read rendered **text** and **ARIA** wherever the claim can
+ * be expressed that way (`.aw-gauge__value`'s "N / 100", the gauge's
+ * `aria-label`, "Findings (3)", "Submitted (1)", the status select's value), and
+ * fall back to a class name only where there is no text equivalent (a count of
+ * finding blocks, an editor's save-state attribute).
+ *
  * The ledger
  * ----------
  * Each step prints PASS or FAIL with the exact assertion that ran. Console
@@ -1478,12 +1490,17 @@ async function run() {
 
         await browser.goto("/app/cv");
         await browser.wait('!!document.querySelector("#app-view")', "the CV screen");
-        await browser.waitCall((name) => !!document.querySelector(`#app-view article .aw-card__title`) && [...document.querySelectorAll("#app-view article .aw-card__title")].some((node) => node.textContent.trim() === name), [name], `the library card for ${name}`, 15_000);
-        const card = await browser.call((name) => {
-          const article = [...document.querySelectorAll("#app-view article.aw-cv")].find((node) => node.querySelector(".aw-card__title")?.textContent.trim() === name);
-          return article ? article.innerText : null;
-        }, name);
-        check(`${label}: the library shows the new CV with its format`, card !== null && card.toUpperCase().includes(String(format).toUpperCase()), card ?? "no card");
+        // Text, not card classes: the library claims to list the CV by name and to
+        // show the format it was read as, so assert exactly those two things from
+        // the rendered text. A restyle of the card cannot make this rot.
+        await browser.waitCall((name) => (document.querySelector("#app-view")?.innerText ?? "").includes(name), [name], `the library to list ${name}`, 15_000);
+        const libraryText = await browser.evaluate("document.querySelector('#app-view').innerText");
+        check(`${label}: the library lists the new CV by name`, libraryText.includes(name), libraryText.slice(0, 120));
+        check(
+          `${label}: the library shows the format it was read as`,
+          libraryText.toUpperCase().includes(String(format).toUpperCase()),
+          `format ${format} not in the library text`
+        );
 
         await browser.goto(`/editor?cv=${encodeURIComponent(cv.id)}`);
         await browser.wait('!!document.querySelector("#ed-form") && !document.querySelector("#ed-form").hidden', "the editor to load the CV", 20_000);
@@ -1573,17 +1590,38 @@ async function run() {
       check("POST /api/analyse answers 200", analysis.status === 200, `status ${analysis.status}`);
       const report = analysis.json?.report ?? {};
       check("the report carries a score of 0-100", Number.isInteger(report.score) && report.score >= 0 && report.score <= 100, String(report.score));
-      const ring = await browser.waitCall(
-        (score) => {
-          const node = document.querySelector("#app-view .aw-ring");
-          const label = node?.getAttribute("aria-label") ?? "";
-          return label === `Score ${score} out of 100` ? label : false;
+      // The score is a vernier gauge since 0f9175a; the donut `.aw-ring` it used
+      // to be is gone. What is asserted here is the claim, not the drawing: the
+      // number the page shows is the number the API returned. It is read from the
+      // visible text ("57 / 100"), and the accessible equivalent is the gauge's
+      // role="img" aria-label, which is what a reader using assistive tech gets
+      // (the visible legend is aria-hidden, so the label is not decoration).
+      const gauge = await browser.waitCall(
+        () => {
+          const node = document.querySelector("#app-view .aw-gauge");
+          if (!node) return false;
+          const text = (node.querySelector(".aw-gauge__value")?.textContent ?? "").trim();
+          if (!/^\d+\s*\/\s*100$/.test(text)) return false;
+          return { text, label: node.getAttribute("aria-label") ?? "" };
         },
-        [report.score],
-        "the score ring to show the API's score",
+        [],
+        "the score gauge to render a value",
         10_000
       );
-      check("the page renders the same score the API returned", ring === `Score ${report.score} out of 100`, String(ring));
+      const drawn = /^(\d+)\s*\/\s*100$/.exec(gauge.text);
+      check("the rendered score equals the API's score", Boolean(drawn) && Number(drawn[1]) === report.score, `${gauge.text} vs ${report.score}`);
+      check(
+        "the gauge's aria-label names the score",
+        gauge.label.includes(`Rubric score: ${report.score} out of 100`),
+        gauge.label
+      );
+      check(
+        "the gauge's aria-label names the strong-fit threshold",
+        /Strong fit starts at \d+\./.test(gauge.label),
+        gauge.label
+      );
+      const gaugeNote = await browser.text("#app-view .aw-gauge__note");
+      check("the gauge shows the threshold beside the value", /strong fit from \d+/i.test(gaugeNote ?? ""), String(gaugeNote));
       const subscoreNames = ["keywords", "structure", "achievements", "readability", "formatting"];
       const subscores = report.subscores ?? {};
       check("the report carries all five subscores", subscoreNames.every((name) => Number.isInteger(subscores[name])), JSON.stringify(subscores));
@@ -1923,9 +1961,20 @@ async function run() {
       const statusChange = await browser.waitHttp({ method: "PATCH", path: `/api/applications/${ctx.applicationId}` }, { timeout: 20_000 });
       check("PATCH /api/applications/:id answers 200", statusChange.status === 200, `status ${statusChange.status}`);
       check("the tracked status becomes submitted", statusChange.json?.application?.status === "submitted", String(statusChange.json?.application?.status));
-      await browser.waitCall(() => [...document.querySelectorAll("#app-view button.chip")].some((node) => node.textContent.trim() === "Submitted (1)"), [], "the Submitted count chip", 10_000);
+      // Text and control state, not class names: the queue is asserted by what it
+      // says ("Submitted (1)") and the row by the value of its status select.
+      await browser.waitCall(
+        () => (document.querySelector("#app-view")?.innerText ?? "").includes("Submitted (1)"),
+        [],
+        "the queue to recount the statuses",
+        10_000
+      );
       check("the queue recounts the statuses", (await browser.evaluate("document.querySelector('#app-view').innerText")).includes("Submitted (1)"));
-      check("the row's status field shows the new status", (await browser.call(() => document.querySelector('#app-view tbody tr .aw-status-field')?.dataset.status)) === "submitted");
+      const rowStatus = await browser.call(() => {
+        const select = document.querySelector('#app-view tbody tr select[aria-label^="Status for"]');
+        return select ? { value: select.value, label: select.getAttribute("aria-label") } : null;
+      });
+      check("the row's status control shows the new status", rowStatus?.value === "submitted", JSON.stringify(rowStatus));
 
       // --- alerts ----------------------------------------------------------
       await browser.goto("/app/alerts");

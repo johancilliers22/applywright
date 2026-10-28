@@ -2,27 +2,32 @@
 
 **Date:** 2026-10-28 (Europe/London)
 
-**Current state — authoritative:** product code at commit `3f59cee` ("One heading rule for every CV artefact",
-the D2 fix), measured on `main` at `9393039` (which adds a screenshot and nothing else). **10/10 steps,
-228/228 assertions, exit 0**, on four consecutive runs at this code, the last two back to back. The ledger
-below is one of those two.
+**Current state — authoritative:** product code at commit `706b741` ("Editor: a real empty state for the
+proposal rail, and a rule for which state leads"), measured on `main` at `bdf167c` (a docs-only commit on
+top). **10/10 steps, 235/235 assertions, exit 0**, on two consecutive runs back to back. The ledger below is
+one of those two.
 
-**Historical baseline — before the three fixes:** `1a0b17a`, **9/9 steps, 203/203 assertions, exit 0**, run in
-a throwaway git worktree. It is kept under "The ledger — historical" because it is the record of the defects
-as they were: that run's harness *recorded* D1 and D2 as notes rather than asserting the fixed behaviour, and
-D3 was not reachable at all. Both ledgers are verbatim.
+**Before the visual rework:** product code `3f59cee`, measured on `9393039` — also 10/10 steps, 228/228
+assertions. That run used the harness as it stood then, which waited for the donut score ring; it is not
+reproducible with the current harness and does not need to be (see "When the visual work moved, the harness
+followed the product"). Its numbers are recorded here for the sequence.
 
-**Driver:** `scripts/e2e-flow.mjs` is committed since `aa510d4`; the revision that produced the current ledger
-is SHA-256 `f509f70446db1049ae2a1c7bfa38ee946942aacb644a2226cdd6bf130f29d70b`. Its source line reads
-`main @ 9393039 + 4 uncommitted path(s)`: those four paths are this harness revision plus three `screenshots/`
-files from another lane. No product file was modified for this run.
+**Before the three defect fixes:** `1a0b17a` — 9/9 steps, 203/203 assertions, run in a throwaway git
+worktree. Kept under "The ledger — historical" because it is the record of the defects as they were: that
+run's harness *recorded* D1 and D2 as notes rather than asserting the fixed behaviour, and D3 was not
+reachable at all.
+
+**Driver:** `scripts/e2e-flow.mjs`, committed since `aa510d4`; the revision that produced the current ledger
+is SHA-256 `caf619b0ea87de2eae943f224ca71f30557fe825f79a443f3425c1dbdb2bebe1`. Its source line reads
+`main @ bdf167c + 1 uncommitted path(s)`: that path is this harness revision and nothing else. No product file
+was modified for the run.
 
 **Host:** Johan's Windows 11 PC. Node v26.12.1, Chrome `C:/Program Files/Google/Chrome/Application/chrome.exe`.
 Two environment notes that change how the run is configured: the PDF and OCR imports delegate to
 `pdftotext`/`tesseract` in WSL Ubuntu (the extractor's documented `wsl -e` fallback, present on this host), and
 the scratch instance raises `RATE_LIMIT_PER_MINUTE` because a scripted journey makes ~200 API calls in under a
-minute, more than the production cap of 120. The limiter is real and was seen returning 429 at the default
-cap; it is not what this journey measures.
+minute, more than the production cap of 120. The limiter is real and was seen returning 429 at the default cap;
+it is not what this journey measures.
 
 This is a real browser driving the real server: no API stubs, no mocked `fetch` in the page. The only test
 double is the local OpenAI-compatible model in step 9, and the report says so. One piece of state is set
@@ -31,7 +36,7 @@ keys here; § "What could not be exercised" is explicit about what that does and
 
 ## How to re-run
 
-A clean clone now works: the driver is in the repo.
+A clean clone works: the driver is in the repo.
 
 ```bash
 cd projects/applywright
@@ -74,15 +79,55 @@ cd <temp> && node scripts/e2e-flow.mjs
 git worktree remove <temp> --force
 ```
 
-## The ledger — current state, `9393039` (authoritative)
+## When the visual work moved, the harness followed the product
+
+The product's visuals are allowed to change; a browser test that encodes the old drawing is the thing that
+goes stale. That happened here, and it is worth recording exactly how it was handled.
+
+Commit `0f9175a` (`app-ui-aw`) deleted the 108px donut score ring (`.aw-ring`, `role="img"`,
+`aria-label="Score N out of 100"`) and replaced it with the marketing vernier gauge: `.aw-gauge` with
+`role="img"`, `aria-label="Rubric score: N out of 100. Strong fit starts at 70."`, a visible legend reading
+`N / 100` plus `strong fit from 70`, and a threshold marker. Nothing about the *claim* changed — the page
+shows the score the API returned — but the harness still waited for `.aw-ring`, so step 3 failed:
+9 passed, 1 failed, 213/214 assertions, exit 1, with `timed out waiting for the score ring to show the API's
+score`.
+
+That was a harness defect, not a product one. The fix, in step 3:
+
+1. Wait for `.aw-gauge__value` and require its text to match `N / 100`, then assert the rendered number
+   **equals the API's score** (`report.score`). The claim is the equality, not the element.
+2. Assert the gauge's `aria-label` names the score and the strong-fit threshold. The visible legend is
+   `aria-hidden`, so the label is what a reader using assistive tech actually gets — it is the accessible
+   equivalent of the ring's old label, and the right thing to pin.
+3. Assert the visible threshold note (`strong fit from 70`) as text.
+
+The rule that follows, now stated in the harness header: **assert rendered text and ARIA wherever the claim
+can be expressed that way, and fall back to a class name only when there is no text equivalent.** Other
+class-coupled assertions found while auditing the harness for this change:
+
+| Where | Was coupled to | Now |
+|---|---|---|
+| Step 3 score | `.aw-ring` (deleted) | `.aw-gauge__value` text + `.aw-gauge` `aria-label` |
+| Step 2 library card | `article.aw-cv` + `.aw-card__title` | `#app-view` text contains the CV name and its format |
+| Step 7 status recount | `button.chip` text nodes | `#app-view` text contains `Submitted (1)` |
+| Step 7 row status | `.aw-status-field[data-status]` | the status `<select aria-label="Status for …">` value |
+| Steps 3/4b findings count | `.aw-finding` count | still a class name — there is no text equivalent to a count of blocks; the heading text `Findings (3)` is asserted separately |
+| Step 3 subscores | `.aw-subscore__row` count | still a class name — same reason; the values themselves are asserted from the API |
+| Steps 5/9 proposals | `.ed-hunk` count and `data-state` | still class names — the editor's own contract, no text equivalent |
+| Step 6 print sheet | `#ed-print-doc h1` | still an id, but the heading *text* is what is asserted |
+
+Not asserted anywhere, so untouched by the visual work: the empty-state artwork (`.aw-empty__art`), the
+dashboard's two-tier metrics (`aw-metrics`), and the status pills' new shape marks (`.aw-pip` is read nowhere).
+
+## The ledger — current state, product code `706b741` (authoritative)
 
 ```text
 Applywright — end-to-end journey
-  base      http://127.0.0.1:59111   (ephemeral port, throwaway database)
-  database  C:\Users\johan\AppData\Local\Temp\applywright-e2e-4RcJmS\data\applywright.db
+  base      http://127.0.0.1:61924   (ephemeral port, throwaway database)
+  database  C:\Users\johan\AppData\Local\Temp\applywright-e2e-zQ7AJe\data\applywright.db
   chrome    C:/Program Files/Google/Chrome/Application/chrome.exe
-  source    main @ 9393039 + 4 uncommitted path(s)
-  workdir   C:\Users\johan\AppData\Local\Temp\applywright-e2e-4RcJmS
+  source    main @ bdf167c + 1 uncommitted path(s)
+  workdir   C:\Users\johan\AppData\Local\Temp\applywright-e2e-zQ7AJe
 
 STEP 1 · sign-up: account, eight recovery codes, download ................. PASS 17/17
    ✓ POST /api/auth/register answers 201
@@ -103,7 +148,7 @@ STEP 1 · sign-up: account, eight recovery codes, download ................. PAS
    ✓ the new session can read /api/auth/me
    ✓ the dashboard renders for the new account
 
-STEP 2 · import a CV: PDF, DOCX, OCR image and pasted text ................ PASS 48/48
+STEP 2 · import a CV: PDF, DOCX, OCR image and pasted text ................ PASS 52/52
    ✓ the PDF fixture is a real PDF produced by chrome --print-to-pdf
    ✓ the OCR fixture is a real PNG
    ✓ the DOCX fixture is a zip with a word/document.xml part
@@ -114,7 +159,8 @@ STEP 2 · import a CV: PDF, DOCX, OCR image and pasted text ................ PAS
    ✓ PDF: GET /api/cvs/:id returns the extracted text
    ✓ PDF: the extracted text keeps the CV's own content
    ✓ PDF: the text is segmented into sections the editor can load
-   ✓ PDF: the library shows the new CV with its format
+   ✓ PDF: the library lists the new CV by name
+   ✓ PDF: the library shows the format it was read as
    ✓ PDF: the text lands in the editor's sections
    ✓ the previous CV is removed so the Free plan's one-CV quota is not hit
    ✓ DOCX: POST /api/cvs answers 201
@@ -124,7 +170,8 @@ STEP 2 · import a CV: PDF, DOCX, OCR image and pasted text ................ PAS
    ✓ DOCX: GET /api/cvs/:id returns the extracted text
    ✓ DOCX: the extracted text keeps the CV's own content
    ✓ DOCX: the text is segmented into sections the editor can load
-   ✓ DOCX: the library shows the new CV with its format
+   ✓ DOCX: the library lists the new CV by name
+   ✓ DOCX: the library shows the format it was read as
    ✓ DOCX: the text lands in the editor's sections
    ✓ the previous CV is removed so the Free plan's one-CV quota is not hit
    ✓ OCR image: POST /api/cvs answers 201
@@ -135,7 +182,8 @@ STEP 2 · import a CV: PDF, DOCX, OCR image and pasted text ................ PAS
    ✓ OCR image: the extracted text keeps the CV's own content
    ✓ OCR image: the text is segmented into sections the editor can load
    ✓ OCR image: the warning says the text was read with OCR
-   ✓ OCR image: the library shows the new CV with its format
+   ✓ OCR image: the library lists the new CV by name
+   ✓ OCR image: the library shows the format it was read as
    ✓ OCR image: the text lands in the editor's sections
    ✓ the previous CV is removed so the Free plan's one-CV quota is not hit
    ✓ the score panel is absent before the first CV is imported
@@ -148,7 +196,8 @@ STEP 2 · import a CV: PDF, DOCX, OCR image and pasted text ................ PAS
    ✓ Pasted text: GET /api/cvs/:id returns the extracted text
    ✓ Pasted text: the extracted text keeps the CV's own content
    ✓ Pasted text: the text is segmented into sections the editor can load
-   ✓ Pasted text: the library shows the new CV with its format
+   ✓ Pasted text: the library lists the new CV by name
+   ✓ Pasted text: the library shows the format it was read as
    ✓ Pasted text: the text lands in the editor's sections
    ✓ the pasted CV has no extraction warnings to report
    ✓ the account holds exactly one CV at the end of the import step
@@ -156,10 +205,13 @@ STEP 2 · import a CV: PDF, DOCX, OCR image and pasted text ................ PAS
    · DOCX extraction warnings: []
    · OCR warnings: ["The text was read with OCR via `wsl -e tesseract stdin stdout`; check numbers and section headings against the original, and correct them in the editor."]
 
-STEP 3 · score a pasted advert: score, five subscores, Free truncation .... PASS 17/17
+STEP 3 · score a pasted advert: score, five subscores, Free truncation .... PASS 20/20
    ✓ POST /api/analyse answers 200
    ✓ the report carries a score of 0-100
-   ✓ the page renders the same score the API returned
+   ✓ the rendered score equals the API's score
+   ✓ the gauge's aria-label names the score
+   ✓ the gauge's aria-label names the strong-fit threshold
+   ✓ the gauge shows the threshold beside the value
    ✓ the report carries all five subscores
    ✓ each subscore is on the 0-100 scale
    ✓ the five subscores are the published rubric
@@ -285,7 +337,7 @@ STEP 7 · tracking and alerts: status change, alert run, notification ...... PAS
    ✓ PATCH /api/applications/:id answers 200
    ✓ the tracked status becomes submitted
    ✓ the queue recounts the statuses
-   ✓ the row's status field shows the new status
+   ✓ the row's status control shows the new status
    ✓ POST /api/alerts answers 201
    ✓ the alert keeps the keywords it was given
    ✓ the alert card shows its keywords
@@ -334,18 +386,18 @@ STEP 9 · model path (local stub): invented figure rejected, grounded change acc
    ✓ the page says a model produced it, then it was checked
    ✓ the grounded model change saves
    ✓ the saved CV carries the grounded rewrite
-   · stub model instance at http://127.0.0.1:49707
+   · stub model instance at http://127.0.0.1:51280
 
 LEDGER
   steps        10 passed, 0 failed, 10 run
-  assertions   228 passed, 0 failed
-  duration     12.6s
+  assertions   235 passed, 0 failed
+  duration     13.2s
 
 NOTES
   · STEP 2: PDF extraction warnings: []
   · STEP 2: DOCX extraction warnings: []
   · STEP 2: OCR warnings: ["The text was read with OCR via `wsl -e tesseract stdin stdout`; check numbers and section headings against the original, and correct them in the editor."]
-  · STEP 9: stub model instance at http://127.0.0.1:49707
+  · STEP 9: stub model instance at http://127.0.0.1:51280
 
 PASS — the whole journey behaved as the product claims.
 ```
@@ -354,7 +406,7 @@ PASS — the whole journey behaved as the product claims.
 
 Produced by the harness as it stood then: D1 and D2 appear as `·` notes because the screen was reloaded and
 the DOCX heading was asserted at its buggy value, and step 4b did not exist, so no covering letter was
-reached. Keep it as the "before" picture; the current ledger above is what the product does now.
+reached. Keep it as the "before" picture.
 
 ```text
 Applywright — end-to-end journey
@@ -613,12 +665,12 @@ PASS — the whole journey behaved as the product claims.
 |---|---|
 | 1 | A new account is created through the form, the API returns eight `aw-XXXX-XXXX` codes, the page renders exactly those eight, the download button writes `applywright-recovery-codes.txt` containing all eight and the email, and the page confirms it. |
 | 2 | Four ingest paths each store a CV: a real PDF printed by `chrome --print-to-pdf`, a synthesised minimal DOCX (a stored-zip with `word/document.xml`), a PNG read by Tesseract through the `wsl -e` fallback, and pasted text. Each reports its `format`, a `warnings` array (the OCR path carries the "read with OCR" warning), a section split, and the text loads into the editor's fields. The Free one-CV allowance is respected by deleting each CV before the next import. **D1 guard:** on the empty account the score panel does not exist before the paste import, and after it is mounted and usable with no navigation — the failure mode of `1a0b17a`. |
-| 3 | Scoring is done from pasted advert text: 57/100 with all five subscores (`keywords 24, structure 100, achievements 20, readability 100, formatting 100`), and a Free report that is provably truncated — three findings on the page and in the JSON out of six, `fullAtsReport.included === false`, `shownFindings < totalFindings`, empty `advice`, and the "part of Pro" lock shown where the advice block would be. |
+| 3 | Scoring is done from pasted advert text: 57/100 with all five subscores (`keywords 24, structure 100, achievements 20, readability 100, formatting 100`), and a Free report that is provably truncated — three findings on the page and in the JSON out of six, `fullAtsReport.included === false`, `shownFindings < totalFindings`, empty `advice`, and the "part of Pro" lock shown where the advice block would be. The rendered `N / 100` equals the API's score, and the gauge's `aria-label` names both the score and the threshold. |
 | 4 | A Free pack is tailored: `mode: "rules"`, `coverLetter === ""` with the lock message in the response, the stored pack and the page; the stored `tailored.coverLetter` is empty too (no back door); the printable CV and screening answers are present; and an independent fact check finds no number outside the CV and no name outside the CV or advert. |
 | 4b | The other side of the same gates, with the Pro plan set on the scratch database (the effect a Stripe webhook would have): the analyse response sets `fullAtsReport.included === true`, returns six findings and the advice array, the page renders all six and "What to change first", and the tailor response and stored pack carry a covering letter with no lock. **D3 guard:** the stored letter contains no `,,`, no dangling `At`, names the CV's own employer cleanly (`At Northwind Traders, I …`) and adds no figure the CV does not have. |
 | 5 | The editor loads `/editor?cv=<id>`, a section edit marks the document dirty, `Ctrl+S` (real key events over CDP) saves through `PATCH /api/cvs/:id`, the diff lists the added and removed lines, the save state returns to "saved". A proposal is `saved: false`, scoped to the summary, and writes nothing. A fabricated-number instruction ("cut costs by 37% and led 12 engineers at Initech") produces no change, no invented figure and no invented employer, and the refusal is visible. Accepting a valid hunk saves it and the diff updates. |
 | 6 | `.md` downloads with the section headings and the CV's facts; the print path builds the print-only sheet and `Page.printToPDF` produces a PDF whose `/MediaBox` is A4 (595.28 × 841.89 pt, within 1 pt); `.docx` downloads with a `PK` signature, opens as a zip with the four parts a Word document needs, and `word/document.xml` carries the CV's facts. **D2 guard:** the Markdown, the DOCX and the print sheet are all headed with the candidate's name ("Ada Lovelace"), the DOCX does not carry the CV record's name as its title, and the three artefacts agree. |
-| 7 | The queued pack appears in the applications table, changing its status through the select issues `PATCH /api/applications/:id` and the counts/row update. An alert is created, `POST /api/alerts/run` polls the public boards, at least one real notification is created and listed in the alerts inbox, marking it read drops the unread count by exactly one, and the RSS feed serves it without a session. |
+| 7 | The queued pack appears in the applications table, changing its status through the select issues `PATCH /api/applications/:id` and the queue text and row control update. An alert is created, `POST /api/alerts/run` polls the public boards, at least one real notification is created and listed in the alerts inbox, marking it read drops the unread count by exactly one, and the RSS feed serves it without a session. |
 | 8 | Sign-out clears the session and lands on `/sign-in`; a recovery code on `/reset` sets a new password; the same code is refused the second time (400); the new password signs in; `/api/auth/me` confirms the account; the old password is refused (401). |
 | 9 | With a local OpenAI-compatible stub (a test double, not a model) answering with an invented "37%", the assist route proposes no change, keeps `saved: false`, and names the refused figure in its warnings; with a grounded reply it proposes the change, reports `mode: "model"`, and accepting it saves. |
 
@@ -636,8 +688,8 @@ Honest list — none of these is covered by the ledgers above.
    `config.stripe.configured` is false and `POST /api/billing/checkout`, `/api/billing/portal` and
    `/api/billing/webhook` answer 501. **What step 4b does instead:** it sets the plan on the scratch database
    directly, which is the state change a verified webhook would make, and then measures Pro behaviour. So the
-   Pro *gates* are now exercised in a browser, but the checkout, the signature check, the webhook and the
-   upgrade itself are not.
+   Pro *gates* are exercised in a browser, but the checkout, the signature check, the webhook and the upgrade
+   itself are not.
 2. **A real model.** No model key. The product therefore ran its deterministic rules path, and `mode` is
    `rules` everywhere in steps 4, 4b and 5. Step 9 exercises the model call path and the grounding gate against
    a local OpenAI-compatible stub — it proves the gate rejects an invented figure and accepts a grounded
@@ -660,16 +712,17 @@ Honest list — none of these is covered by the ledgers above.
    not part of the current ledger. It was observed at the default ceiling earlier and is real.
 8. **Layout and theming.** Desktop 1440 × 1000 only, light theme, no reduced-motion emulation. Narrow widths,
    dark mode and zoom are covered by the existing screenshot lanes (`scripts/browser-preview.mjs`,
-   `screenshots/`, `docs/design/ACCESSIBILITY-AUDIT.md`).
+   `screenshots/`, `docs/design/ACCESSIBILITY-AUDIT.md`). The visual rework that removed the donut is covered
+   by its own lane; here it matters only because step 3 reads the gauge.
 9. **The OS print dialog and clipboard permissions.** `Page.printToPDF` stands in for the dialog's "Save as
    PDF"; the copy buttons were not clicked (the download buttons were).
 10. **The job boards themselves.** Step 7 depends on arbeitnow / remotive / remoteok being reachable and on
     their current content matching a broad keyword; the run reports each source's errors in its notes and fails
     the notification assertion rather than inventing a match. The number of notifications created varies with
     the boards' content, so the assertion is "at least one", not a count.
-11. **Tree state.** The current ledger's source line names `9393039 + 4 uncommitted path(s)`: this harness
-    revision and three screenshots from another lane. The product code is exactly `3f59cee`; commit the harness
-    revision and the source line becomes clean.
+11. **Tree state.** The current ledger's source line names `bdf167c + 1 uncommitted path(s)`: this harness
+    revision only. The product code is exactly `706b741`; commit the harness revision and the source line
+    becomes clean.
 
 ## Defects found — all three fixed
 
@@ -749,6 +802,9 @@ prints `At Northwind Traders, I reduced infrastructure cost by 32 percent across
 - **Two assertions per contract where it matters.** Every contract is checked on the JSON the page used
   (captured from `Network.responseReceived`/`getResponseBody`) *and* on the DOM the page rendered, so a page
   that shows the right thing from the wrong data still fails.
+- **Text and ARIA before class names.** The product's drawings are allowed to change (see "When the visual
+  work moved…"): the harness reads rendered text and `aria-label` where the claim can be expressed that way,
+  and uses a class name only where there is no text equivalent.
 - **Defect guards are shaped against the failure.** D1's guard never navigates between the import and the
   assertion; D2's guard compares three artefacts head-to-head; D3's guard reads the covering letter out of the
   stored pack, not out of the DOM, so a rendering accident cannot hide a bad sentence.
@@ -772,5 +828,5 @@ prints `At Northwind Traders, I reduced infrastructure cost by 32 percent across
 - `docs/EDITOR.md` — the editor's contract (propose, never save; the document is the text).
 - `docs/PIPELINE.md` — ingest → score → tailor → pack.
 - `docs/PASSWORD-RECOVERY.md` — recovery codes vs. operator-issued reset links.
-- `docs/PROJECT-STATUS.md` §9 — the enforced capability flags (`fullAtsReport`, `coverLetter`, `packHistory`); Scale is a quota tier, not a feature tier.
+- `docs/PROJECT-STATUS.md` §9 — declared-but-unenforced flags (`apiAccess`, `priorityRefresh`, `bulkExport`).
 - `scripts/browser-preview.mjs` — the screenshot/overflow pass this harness's CDP client is modelled on.

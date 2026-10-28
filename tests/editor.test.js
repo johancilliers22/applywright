@@ -12,7 +12,7 @@
 import { after, before, describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { mkdtemp } from "node:fs/promises";
+import { mkdtemp, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -27,6 +27,8 @@ import {
   exportFilename,
   markdownFor,
   parseNotice,
+  PROPOSAL_ART,
+  proposalEmptyStateVisible,
   reconstructCvText,
   SECTION_HEADINGS,
   sectionsFromProfile,
@@ -486,6 +488,35 @@ async function createCv(call, text = CV_TEXT) {
   assert.equal(created.status, 201, created.text);
   return created.json.cv;
 }
+
+describe("the proposal empty state", () => {
+  test("the artwork is the file it claims to be, and is decorative", async () => {
+    const svg = await readFile(new URL("../public/assets/art/empty-proposals.svg", import.meta.url), "utf8");
+    const flatten = (value) => value.replace(/\s+/g, " ").trim();
+    assert.equal(
+      flatten(PROPOSAL_ART),
+      flatten(svg),
+      "public/assets/art/empty-proposals.svg changed: update PROPOSAL_ART in public/assets/editor.js so the page and the art set cannot drift"
+    );
+    assert.ok(PROPOSAL_ART.trim().startsWith("<svg"), "it parses as an SVG document element");
+    assert.match(PROPOSAL_ART, /stroke="currentColor"/, "the drawing inherits the theme colour");
+    assert.match(PROPOSAL_ART, /aria-hidden="true"/, "the drawing is decorative");
+    assert.ok(!PROPOSAL_ART.includes("<script"), "no script in the artwork");
+  });
+
+  test("the drawing is absent whenever there is data, and when no CV is loaded", () => {
+    // The rail's rule, asserted directly: a loaded document with no proposal
+    // shows the empty state; a proposal of any kind — including one that
+    // proposed nothing — removes it; a document that failed to load leaves the
+    // "no CV chosen" state to lead.
+    assert.equal(proposalEmptyStateVisible({ loaded: true, proposal: null }), true, "loaded, nothing proposed yet");
+    assert.equal(proposalEmptyStateVisible({ loaded: true, proposal: { changes: [] } }), false, "a refusal is data too");
+    assert.equal(proposalEmptyStateVisible({ loaded: true, proposal: { changes: [{ section: "summary" }] } }), false);
+    assert.equal(proposalEmptyStateVisible({ loaded: false, proposal: null }), false, "no CV loads, so the document state leads");
+    assert.equal(proposalEmptyStateVisible({}), false);
+    assert.equal(proposalEmptyStateVisible(), false);
+  });
+});
 
 describe("the editor page", () => {
   test("is served once and loads its own stylesheet and script", async () => {

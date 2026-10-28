@@ -754,6 +754,41 @@ const SCOPE_LABELS = Object.freeze({
   other: "other",
 });
 
+/**
+ * The proposal empty state's drawing, as markup for `DOMParser`, never
+ * `innerHTML`. It is a byte-for-byte copy of `public/assets/art/empty-proposals.svg`
+ * (tests/editor.test.js asserts the two still match, so the file stays the
+ * source of truth); the copy exists because the page must render it without a
+ * second request and without injecting HTML.
+ */
+export const PROPOSAL_ART = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 168" fill="none" stroke="currentColor"
+     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Empty state: no proposals yet. A redline sheet with one line struck and
+       the change bar in the margin, waiting for a second mark. -->
+  <path d="M72 30h58l14 14v106H72z" />
+  <path d="M130 30v14h14" />
+  <path d="M88 62h60M88 84h52M88 106h60M88 128h44" stroke-width="1" />
+  <path d="M86 86l56-4" />
+  <path d="M60 62v66" />
+  <path d="M150 96h18" stroke-width="1" />
+  <circle cx="168" cy="96" r="2.5" />
+</svg>`;
+
+/**
+ * The two conditions for the rail's proposal empty state, in one place: a CV has
+ * loaded (otherwise the document's own "no CV chosen" state leads) and there is
+ * no proposal payload to act on. A *refused* proposal still counts as data — it
+ * carries reasons worth reading — so the drawing is absent then too. Exported so
+ * the rule is asserted by tests rather than inferred from the DOM.
+ *
+ * @param {{ loaded?: boolean, proposal?: unknown }} state
+ * @returns {boolean}
+ */
+export function proposalEmptyStateVisible(state) {
+  const source = state && typeof state === "object" ? state : {};
+  return Boolean(source.loaded) && !source.proposal;
+}
+
 /** The editor's state. Sections are the source of truth; the DOM mirrors it. */
 function initialState() {
   return {
@@ -774,8 +809,10 @@ function initialState() {
     mergePlan: null,
     busy: false,
     // DOM nodes created at boot: the proposal review block (moved out of the
-    // rail) and the parse notice that sits above the paper.
+    // rail), the rail's own empty state for the proposal slot, and the parse
+    // notice that sits above the paper.
     review: null,
+    railEmpty: null,
     notice: null,
   };
 }
@@ -843,6 +880,66 @@ function bootEditor() {
       docPane.insertBefore(notice, state.review ?? form);
     }
     state.notice = notice;
+
+    // The proposals host is moved into the primary column, so without this the
+    // agent card ended in a bare status line: a heading with no proposal slot
+    // under it. The rail keeps its own empty state for that slot, in the markup
+    // position the host left. Hidden until a CV has loaded — the document's own
+    // "no CV chosen" state leads — and rendered only when there is no proposal.
+    const agentStatus = byId("ed-assist-state");
+    if (agentStatus && agentStatus.parentElement) {
+      state.railEmpty = el("div", { class: "ed-proposals-empty", id: "ed-proposals-empty", hidden: true });
+      agentStatus.insertAdjacentElement("afterend", state.railEmpty);
+    }
+  }
+
+  /**
+   * `empty-proposals.svg`, parsed rather than injected. Decorative by
+   * construction (currentColor, aria-hidden), and `null` on any parse failure:
+   * a drawing that cannot be parsed costs the drawing, never the state.
+   */
+  function proposalArtwork() {
+    try {
+      const parsed = new DOMParser().parseFromString(PROPOSAL_ART, "image/svg+xml");
+      const root = parsed.documentElement;
+      if (!root || root.nodeName.toLowerCase() !== "svg") return null;
+      const art = document_.importNode(root, true);
+      art.classList.add("ed-empty__art");
+      art.setAttribute("aria-hidden", "true");
+      art.setAttribute("focusable", "false");
+      return art;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * The rail's empty state for the proposal slot. One rule: the drawing and the
+   * copy exist only while there is nothing to act on — no document loaded, or a
+   * document loaded with no proposal payload. When a proposal exists (even one
+   * with no changes, which still has its refusal reasons and warnings) the nodes
+   * are removed, not merely hidden, so a stuck empty state on a full rail cannot
+   * happen. The title and body carry the meaning; the drawing replaces nothing.
+   */
+  function renderRailEmptyProposal() {
+    const host = state.railEmpty;
+    if (!host) return;
+    const show = proposalEmptyStateVisible(state);
+    clear(host);
+    host.hidden = !show;
+    if (!show) return;
+    host.append(
+      el(
+        "div",
+        { class: "ed-empty" },
+        proposalArtwork(),
+        el("p", { class: "ed-empty__title", text: "Nothing proposed yet" }),
+        el("p", {
+          class: "ed-empty__body",
+          text: "Describe an edit above and ask for a proposal. Anything that passes the check appears above the document, one change at a time — nothing is applied or saved until you accept it.",
+        })
+      )
+    );
   }
 
   function renderParseNotice(notice) {
@@ -1094,6 +1191,7 @@ function bootEditor() {
     renderParseNotice(parseNotice({ sections: state.sections }));
     setSaveState("saved");
     setBusy(false);
+    renderRailEmptyProposal();
 
     // The section headings are anchor targets; tabindex lets a fragment jump
     // move focus there instead of only scrolling.
@@ -1102,6 +1200,12 @@ function bootEditor() {
   }
 
   function showFailure(title, body, label, href) {
+    // No document, so nothing can be proposed: the document-level state leads,
+    // and the rail's proposal empty state is suppressed rather than sitting
+    // beside it as a second, competing empty state.
+    state.loaded = false;
+    state.proposal = null;
+    renderRailEmptyProposal();
     const loading = byId("ed-loading");
     if (loading) {
       loading.hidden = false;
@@ -1216,6 +1320,7 @@ function bootEditor() {
     clear(byId("ed-proposals"));
     if (state.review) state.review.hidden = true;
     state.proposal = null;
+    renderRailEmptyProposal();
 
     if (instruction.length < 3) {
       status.dataset.tone = "err";
@@ -1253,6 +1358,7 @@ function bootEditor() {
         error.status === 401
           ? "Your session has expired. Reload and sign in again."
           : `No proposal: ${error.message}`;
+      renderRailEmptyProposal();
     } finally {
       setBusy(false);
     }
@@ -1266,6 +1372,9 @@ function bootEditor() {
     const warnings = Array.isArray(data.warnings) ? data.warnings : [];
     const mode = data.mode === "model" ? "model" : "rules";
 
+    // A proposal exists, so the rail's empty state goes — even when there is
+    // nothing to accept, because the refusal reasons are data worth showing.
+    renderRailEmptyProposal();
     clear(host);
     status.dataset.tone = "";
     const modeLine =

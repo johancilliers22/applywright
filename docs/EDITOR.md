@@ -249,6 +249,27 @@ Nothing on the page is fetched for the user. Each source is text they paste or a
 - The document fields are auto-sized to their text, so the page reads as a document rather than a
   form.
 
+### Empty states
+
+There are two, and they cannot appear at once:
+
+1. **The document's own state** (`#ed-loading`), for no `?cv=`, a 401, a 404, a CV with no sections,
+   or a load that failed. It leads: without a document there is nothing to propose about, so the
+   rail's proposal slot stays empty and "Ask for a proposal" is disabled.
+2. **The rail's proposal slot** (`#ed-proposals-empty`), in the agent card where the proposals host
+   used to sit before it moved into the primary column. It shows the `empty-proposals.svg` redline
+   sheet, the heading "Nothing proposed yet", and one sentence about what happens when you ask. The
+   drawing is decorative (`aria-hidden`, `focusable="false"`, `currentColor`, at most 200px wide);
+   the heading and body carry the meaning.
+
+The rule is `proposalEmptyStateVisible()` in `public/assets/editor.js`, exported so a test asserts it:
+the empty state exists only while **a CV is loaded and there is no proposal payload**. A proposal
+that proposed nothing still counts as data — it carries refusal reasons worth reading — so the
+drawing is removed then too. "Removed", not hidden: the nodes are not built when there is data, so a
+stuck empty state on a full rail cannot happen. The artwork is a byte-for-byte copy of
+`public/assets/art/empty-proposals.svg` parsed with `DOMParser` and imported with
+`document.importNode`, never `innerHTML`; a test fails if the copy and the art file drift apart.
+
 ## 7. Honest limits
 
 1. **The library does not link here yet** (`public/app/app.js` is outside the write scope). The URL
@@ -286,10 +307,11 @@ Run from `projects/applywright` on 28 October 2026:
 
 | Check | Command | Result |
 |---|---|---|
-| Unit and HTTP tests | `node --test tests/` | **141 tests, 141 pass, 0 fail** (29 of them in `tests/editor.test.js`) |
-| Static self-check | `node scripts/check.js` | **10 pages, 24 server modules, 247 css classes — 0 errors, 0 warnings** |
+| Unit and HTTP tests | `node --test tests/` | **143 tests, 143 pass, 0 fail** (31 of them in `tests/editor.test.js`) |
+| Static self-check | `node scripts/check.js` | **10 pages, 24 server modules, 253 css classes — 0 errors, 0 warnings** |
 | Editor in a real browser | headless Chrome over CDP (scratch server, ephemeral port, temp database) | **65/65 checks** — load, edit, `Ctrl+S`, diff, propose, reject-free accept, LinkedIn parse, advert coverage, `.md`, `.docx`, print sheet, `Page.printToPDF` A4, 1440/768/375 with no horizontal overflow, no console errors, light and dark schemes, the three error states |
 | Export heading (`documentTitle`) | headless Chrome over CDP, CV record "Pasted CV" / contact "Ada Lovelace" | **15/15 checks** — the DOCX, the Markdown and the print sheet are all headed "Ada Lovelace"; the page header keeps "Pasted CV"; the DOCX bytes contain no "Pasted CV"; no console errors |
+| Proposal empty state | headless Chrome over CDP; the drawing, the data condition, the no-CV ordering, and 375 × 812 with the rail scrolled to the block | **34/34 checks** — one `.ed-empty__art`, `aria-hidden`, 200px, `rgb(166,172,182)`, heading read out; 0 art once a hunk exists and 0 after a refusal; 0 art and "Ask" disabled with no CV, whose heading, body and `/app/cv` way out are unchanged and whose rail slot stays empty behind it; at 375 the scrolled block is fully in the viewport and hit-testable; no horizontal overflow; no console errors |
 | Exported DOCX | `python-docx` 1.2.0 | opens; 210 × 297 mm, 18 mm margins, `Heading 1` = the candidate's name, 4 `Heading 2`, 0 tables |
 
 The browser pass is not in the repository: it needs a Chrome install and a scratch server. The

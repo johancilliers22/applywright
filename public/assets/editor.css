@@ -552,6 +552,58 @@ body {
   margin-top: var(--sp-3);
 }
 
+/* --------------------------------------------------------------------------
+   The proposal empty state
+   The proposals host moves into the primary column, so the rail keeps this
+   block in the slot it left: an empty heading there was the whole problem. The
+   drawing is decorative — currentColor, aria-hidden, no more than 200px wide —
+   and the title and body beneath it carry the meaning. The page script removes
+   the nodes entirely whenever a proposal exists, so a stuck empty state on a
+   full rail is not possible.
+   -------------------------------------------------------------------------- */
+
+.ed-proposals-empty {
+  margin-top: var(--sp-3);
+}
+
+.ed-empty {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: center;
+  padding: var(--sp-3) var(--sp-3) var(--sp-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bone);
+}
+
+.ed-empty__art {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin-inline: auto;
+  height: auto;
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+.ed-empty__title {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  text-align: center;
+}
+
+.ed-empty__body {
+  margin: 0;
+  max-width: 38ch;
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+  color: var(--text-soft);
+  text-align: center;
+}
+
 .ed-hunk {
   border: 1px solid var(--line);
   border-left: 3px solid var(--accent);

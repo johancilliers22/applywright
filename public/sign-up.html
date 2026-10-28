@@ -46,32 +46,46 @@
         </div>
 
         <div>
-          <h1 class="auth__title">Create your account</h1>
-          <p class="auth__sub">Free plan: one CV, three tailored packs a month, one alert.</p>
+          <h1 class="auth__title" data-auth-title>Create your account</h1>
+          <p class="auth__sub" data-auth-sub>Free plan: one CV, three tailored packs a month, one alert.</p>
         </div>
 
-        <form class="auth__form" data-auth-form="register" novalidate>
-          <div class="field">
-            <label for="name">Name <span class="muted" style="font-weight:400">(optional)</span></label>
-            <input class="input" id="name" name="name" type="text" autocomplete="name" maxlength="120" />
+        <div data-register-shell>
+          <form class="auth__form" data-auth-form="register" novalidate>
+            <div class="field">
+              <label for="name">Name <span class="muted" style="font-weight:400">(optional)</span></label>
+              <input class="input" id="name" name="name" type="text" autocomplete="name" maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input class="input" id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field field__row">
+              <label for="password">Password</label>
+              <input class="input" id="password" name="password" type="password" autocomplete="new-password" required minlength="10" />
+              <button class="field__toggle" type="button" data-toggle-password aria-pressed="false">show</button>
+              <span class="hint">At least 10 characters. Length beats punctuation.</span>
+            </div>
+            <div class="field">
+              <label for="confirm">Confirm password</label>
+              <input class="input" id="confirm" name="confirm" type="password" autocomplete="new-password" required minlength="10" />
+            </div>
+            <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
+            <button class="btn btn--primary btn--lg btn--block" type="submit">Create account</button>
+          </form>
+        </div>
+
+        <!-- Shown once, immediately after registration: the only readable copy. -->
+        <section hidden data-recovery-panel>
+          <div class="auth__form">
+            <p class="note">Copy these, they are the only way back in without email. This build sends no reset mail, so store them somewhere other than this browser.</p>
+            <ul class="mono small" data-recovery-list></ul>
+            <button class="btn btn--primary btn--block" type="button" data-recovery-copy>Copy the codes</button>
+            <button class="btn btn--ghost btn--block" type="button" data-recovery-download>Download as a text file</button>
+            <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
+            <a class="btn btn--primary btn--lg btn--block" href="/app" data-recovery-continue>I have saved them — continue</a>
           </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input class="input" id="email" name="email" type="email" autocomplete="email" required />
-          </div>
-          <div class="field field__row">
-            <label for="password">Password</label>
-            <input class="input" id="password" name="password" type="password" autocomplete="new-password" required minlength="10" />
-            <button class="field__toggle" type="button" data-toggle-password aria-pressed="false">show</button>
-            <span class="hint">At least 10 characters. Length beats punctuation.</span>
-          </div>
-          <div class="field">
-            <label for="confirm">Confirm password</label>
-            <input class="input" id="confirm" name="confirm" type="password" autocomplete="new-password" required minlength="10" />
-          </div>
-          <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
-          <button class="btn btn--primary btn--lg btn--block" type="submit">Create account</button>
-        </form>
+        </section>
 
         <p class="auth__alt">Already have an account? <a href="/sign-in">Sign in</a></p>
         <p class="auth__legal">

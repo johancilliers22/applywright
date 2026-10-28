@@ -1150,6 +1150,15 @@ a.aw-cell-title:hover {
   gap: var(--sp-4);
 }
 
+/* The bookmarklet install block is site.css markup rendered inside the app;
+   its button rows wrap instead of stretching across the card. */
+#app .card__body > .form__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  justify-content: flex-start;
+}
+
 /* One line that states what a tailoring run costs, instead of a nag per card. */
 .aw-creditline {
   display: flex;

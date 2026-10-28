@@ -102,11 +102,38 @@ account, and `/app` for the product screens once you are signed in. `Ctrl+C` sto
 server and closes the database.
 
 The public routes are `/`, `/how-it-works`, `/pricing`, `/about`, `/security`,
-`/sign-in` and `/sign-up`, all served from `public/*.html` through a small include and
-token renderer (`server/pages.js`). `/app/*` is a single page: `public/app/app.html` plus
-`public/app/app.js` and `app.css`, served as static files from `/app`. A page whose HTML
-file is missing does not error — the route falls through to the 404 handler, so a wrong
-file name looks like a missing route.
+`/sign-in`, `/sign-up`, `/reset` and `/bookmarklet`, all served from `public/*.html`
+through a small include and token renderer (`server/pages.js`) — except `/bookmarklet`,
+which is rendered inline in `server/app.js` so it can substitute the public origin into
+the bookmarklet.
+`/app/*` is a single page: `public/app/app.html` plus `public/app/app.js` and `app.css`,
+served as static files from `/app`. A page whose HTML file is missing does not error — the
+route falls through to the 404 handler, so a wrong file name looks like a missing route.
+
+The bookmarklet is **one artifact, two entry points**: `public/assets/bookmarklet.js`
+(generated from the readable `bookmarklet.src.js`) is what both surfaces serve. Inside the
+product, `/app` → Settings → *Browser capture · Install once; no sign-in* substitutes
+`__ORIGIN__` with `location.origin` in the browser and is the primary install; the
+server-rendered `/bookmarklet` page substitutes `__ORIGIN__` with `PUBLIC_URL` and is the
+shareable one for someone who is not signed in. The artifact itself makes no network
+calls.
+
+Public sign-up is open by default. Set `REGISTRATION_OPEN=0` before exposing the app
+publicly: sign-in keeps working and `POST /api/auth/register` answers `403
+registration_closed`.
+
+Account recovery does not need a mail server. `/reset` accepts either a recovery code
+saved at sign-up (`POST /api/auth/recover`) or a single-use, expiring reset link issued on
+the host (`POST /api/auth/forgot` records the token; the operator passes it on). A
+signed-in session can also change the password, and `scripts/reset-password.mjs` is the
+operator's last resort.
+
+The visual system is hand-written CSS on the Meridian tokens: `public/assets/tokens.css`
+(palette, type scale, primitives), `theme.css` (the product re-key and the dark scheme),
+`motion.css`, `site.css` for the marketing pages and `public/app/app.css` for the product.
+The dark theme is applied by `html[data-theme="dark"]` and set from `theme.js` in each
+page head, so a saved preference does not flash. There is no CSS framework and no build
+step.
 
 ## Configuration
 
@@ -125,14 +152,18 @@ range rather than refused, so an out-of-range value silently becomes the nearest
 |---|---|---|
 | `PORT` | `3160` | Listens on 3160. Clamped to 0–65535; `0` asks the OS for a free port. |
 | `HOST` | `127.0.0.1` | Loopback only. Set `0.0.0.0` only if something in front of the app terminates TLS and you have deliberately chosen that. |
+| `PUBLIC_URL` | `http://127.0.0.1:3160` | Scheme and host, no trailing slash. Read once at boot for the RSS feed's self-link and the Stripe success, cancel and portal return URLs; a wrong value sends paying customers to the wrong site. Set it to the proxy or tunnel origin. |
 | `DATABASE_PATH` | `./data/applywright.db` in `.env.example` | **Not read by the config loader today.** The database is always `<repo>/data/applywright.db`; the variable is listed in `.env.example` but `server/config.js` resolves the path from the repo root. See [Limitations](#limitations). |
 | `TRUST_PROXY` | `0` | `req.ip` is the socket address and `X-Forwarded-For` is ignored. `1` (or `true`/`yes`/`on`) trusts exactly one proxy hop, which also makes `X-Forwarded-Proto` decide `req.protocol`. |
 | `SECURE_COOKIES` | `0` | The `aw_session` cookie is sent without `Secure`. `1` adds `Secure`, so the browser will only return it over HTTPS — correct behind a TLS proxy, wrong on plain `http://`. |
+| `REGISTRATION_OPEN` | `1` | Public sign-up. `0`/`false`/`no`/`off` refuses `POST /api/auth/register` with `403 registration_closed`; sign-in, sessions and every other route keep working. Set it to `0` before exposing the app publicly and create accounts by invitation. |
 | `MODEL_API_KEY` | empty | Tailoring stays on the deterministic rule-based rewriter and `mode` is `rules`. When set, one JSON-mode chat completion is made per pack. |
 | `MODEL_BASE_URL` | `https://api.deepseek.com/v1` | The OpenAI-compatible base; `/chat/completions` is appended. Trailing slashes are stripped. |
 | `MODEL_NAME` | `deepseek-chat` | Sent as the `model` field. |
 | `MODEL_TIMEOUT_MS` | `60000` | Per-request timeout for the model call; clamped to 5000–300000. |
 | `MODEL_MAX_TOKENS` | `2000` | `max_tokens` on the model call; clamped to 256–8192. |
+| `MODEL_PROVIDER` | inferred | `anthropic` when `ANTHROPIC_ORG_API_KEY` is set, `openai` when `MODEL_API_KEY` is, `none` when neither is. Set it explicitly to force one route. |
+| `ANTHROPIC_ORG_API_KEY` | empty | Routes tailoring through the Anthropic Messages client in `server/provider/anthropic.js` instead of the OpenAI-compatible one. Deliberately a separate variable: the loader never maps it onto `ANTHROPIC_API_KEY`. Also accepts `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`, `ANTHROPIC_TIMEOUT_MS`, `ANTHROPIC_MAX_TOKENS`. Neither key is listed in `.env.example`. |
 | `STRIPE_SECRET_KEY` | empty | Checkout answers 501 `not_configured`. Both Stripe secrets must be present for billing to count as configured. |
 | `STRIPE_WEBHOOK_SECRET` | empty | Webhooks answer 501, and without it billing is not "configured" even if the secret key is set. |
 | `STRIPE_PRICE_PRO_MONTHLY` | empty | `POST /api/billing/checkout` for `pro`/`month` answers 501 naming the missing price. |
@@ -285,6 +316,7 @@ with 403. Errors are `{ "error": { "code", "message" } }`.
 | `GET` | `/feed/:token.rss` | token | RSS 2.0 of the account's notifications. |
 | `GET` | `/api/billing/plans` | yes | Plans, prices and `stripeConfigured`. |
 | `POST` | `/api/billing/checkout` | yes | Create a Stripe Checkout session; 501 when unconfigured. |
+| `POST` | `/api/billing/portal` | yes | Create a Stripe customer-portal session; 501 when unconfigured. |
 | `POST` | `/api/billing/webhook` | signature | Stripe events, verified against `STRIPE_WEBHOOK_SECRET`. |
 | `GET` | `/api/export` | yes | Everything the account owns, as a JSON download. |
 | `DELETE` | `/api/account` | yes | Hard delete; requires the password. |
@@ -312,15 +344,18 @@ refused request carries `retry-after` with status 429.
 ## Tests and the static check
 
 ```bash
-node --test
-node scripts/check.js
+node --test tests/                       # HTTP and storage suites
+node --test server/lib server/provider   # module suites beside the code
+node scripts/check.js                    # static check over pages and server sources
 ```
 
 `node --test` discovers two kinds of suite: the module tests beside the code
-(`server/lib/**/*.test.mjs`) and the HTTP and storage suites in `tests/` — `spine.test.js`
-for the schema, store and password layer, plus one `*.test.js` file per API area. The HTTP
-suites call `startServer()` with an ephemeral port, a temporary SQLite file and a blank
-model key, so a run binds loopback, never reaches the internet and never touches `data/`.
+(`server/lib/**/*.test.mjs`, plus `server/provider/*.test.mjs`) and the HTTP and storage
+suites in `tests/` — `spine.test.js` for the schema, store and password layer, plus one
+`*.test.js` file per API area. The HTTP suites call `startServer()` with an ephemeral port,
+a temporary SQLite file and a blank model key, so a run binds loopback, never reaches the
+internet and never touches `data/`. The gate runs the two suites separately so a module
+failure surfaces on its own; `node --test` with no argument runs both.
 
 `node scripts/check.js` performs the checks the test suite cannot. It walks every page
 under `public/` except the `public/partials/` includes and asserts: exactly one `<h1>` per
@@ -330,9 +365,9 @@ by an `img`, `script`, `link`, media or frame tag, no placeholder link and no TO
 no hype vocabulary, no obvious literal credential and no `eval`. It exits non-zero on an
 error; `--strict` also fails on warnings.
 
-Both commands are fast enough to run on every change, and the exit code is the answer.
-This file deliberately quotes no test count: the tree is being written, and a number here
-would be stale before you read it.
+All three are fast enough to run on every change, and the exit code is the answer. This
+file deliberately quotes no test count; the measured numbers at the last handoff, and the
+commands to reproduce them, are in [docs/PROJECT-STATUS.md](docs/PROJECT-STATUS.md) §7.
 
 ## Seeding a demo account
 
@@ -397,12 +432,15 @@ public/
   index.html          marketing pages, one file per route in the PAGES map
   sign-in.html        auth pages, served from public/assets/auth.js
   partials/           nav and footer includes, expanded by server/pages.js
-  assets/             CSS, JS and the favicon
+  assets/             tokens.css, theme.css, motion.css, site.css, auth.css, JS, the
+                      bookmarklet (source + artifact) and the favicon
   app/                the signed-in single page: app.html, app.js, app.css
 scripts/              check.js (static check), seed.mjs (demo), browser-preview.mjs
 tests/                spine.test.js plus one HTTP suite per API area
 screenshots/          PNGs written by scripts/browser-preview.mjs
-docs/                 SPEC.md, DEPLOY.md and research notes
+docs/                 SPEC.md and the handoff set (PROJECT-STATUS.md,
+                      IMPLEMENTATION-PLAN.md, PIPELINE.md, VAULT-PATCH.md),
+                      DEPLOY/DOMAIN/SHARE/LINKEDIN-CAPTURE, design/ and research/ notes
 data/                 SQLite database, WAL files, contact.jsonl (gitignored)
 ```
 

@@ -76,8 +76,10 @@
   gap: 0.5rem;
 }
 
+/* Painted arrow, not a spoken one: without the empty alternative text the
+   glyph becomes the first thing in each fact's accessible name. */
 .auth__facts li::before {
-  content: "→";
+  content: "→" / "";
   color: var(--lime);
   flex: none;
 }

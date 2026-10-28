@@ -1,12 +1,19 @@
 /**
  * CV ingest: file bytes in, plain text plus a coarse section map out.
  *
- * Two rules shape this module:
+ * Three rules shape this module:
  *   1. Nothing here throws on bad input. A corrupt upload must become a CV row
  *      with an honest warning, not a 500.
- *   2. Nothing here reaches the network. DOCX is parsed locally by reading the
- *      zip central directory and inflating word/document.xml; PDF is delegated
- *      to `pdftotext` only when that binary is already on PATH.
+ *   2. Nothing here reaches the network, and nothing needs installing. DOCX and
+ *      ODT are parsed locally by reading the zip central directory and
+ *      inflating the document part; RTF and HTML are stripped in-process. PDF
+ *      and image uploads are delegated to a local `pdftotext` / `tesseract`
+ *      binary, tried on the Windows PATH first and then inside WSL (`wsl -e`),
+ *      because this host has Poppler in WSL but not on the Windows PATH.
+ *   3. Anything a parser cannot do is said out loud, with the next step. Plain
+ *      text and Markdown are the reliable path, and the dashboard paste box
+ *      plus `PATCH /api/cvs/:id { text }` is the correction path when an
+ *      extractor gets a heading or a date wrong.
  *
  * The module is deliberately synchronous in its parsing and async only at the
  * public boundary, so callers cannot accidentally depend on timing.
@@ -16,10 +23,27 @@ import { accessSync, constants as fsConstants, statSync } from "node:fs";
 import { delimiter, join } from "node:path";
 import { inflateRawSync } from "node:zlib";
 
-/** Refuse to inflate an absurd word/document.xml (zip bomb guard). */
-const MAX_DOCX_XML_BYTES = 64 * 1024 * 1024;
-const PDFTOTEXT_TIMEOUT_MS = 20_000;
-const PDFTOTEXT_MAX_BUFFER = 32 * 1024 * 1024;
+/** Refuse to inflate an absurd document part (zip bomb guard). */
+const MAX_ZIP_PART_BYTES = 64 * 1024 * 1024;
+/** A hung extractor must not hold a request forever. */
+const TOOL_TIMEOUT_MS = 20_000;
+/** Ceiling on one extractor's raw stdout, so a pathological PDF cannot exhaust memory. */
+const TOOL_MAX_BUFFER = 32 * 1024 * 1024;
+/** Ceiling on the text we hand back, so one upload cannot bloat a CV row. */
+const MAX_EXTRACTED_TEXT_BYTES = 4 * 1024 * 1024;
+/** The first `wsl -e` of a session pays a VM start, so probe it a little longer. */
+const WSL_PROBE_TIMEOUT_MS = 10_000;
+
+/** Shared by the PDF and OCR paths: read stdin, write stdout. */
+const STDIO_ARGS = ["-", "-"];
+/** tesseract spells its stdout sink as a name, not a dash. */
+const OCR_ARGS = ["-", "stdout"];
+
+const LEGACY_DOC_WARNING =
+  "Legacy binary Word (.doc) is not supported and no text was read. Open the file in Word or LibreOffice and save it as .docx, or paste the CV text instead.";
+
+const OCR_INSTALL_HINT =
+  "Install Tesseract OCR with `winget install UB-Mannheim.TesseractOCR` on Windows or `sudo apt install tesseract-ocr` in WSL";
 
 const EOCD_SIGNATURE = 0x06054b50;
 const CENTRAL_SIGNATURE = 0x02014b50;
@@ -34,7 +58,21 @@ const EXTENSION_FORMATS = new Map([
   ["markdown", "md"],
   ["mdown", "md"],
   ["docx", "docx"],
+  ["odt", "odt"],
+  ["rtf", "rtf"],
+  ["html", "html"],
+  ["htm", "html"],
+  ["xhtml", "html"],
   ["pdf", "pdf"],
+  ["png", "image"],
+  ["jpg", "image"],
+  ["jpeg", "image"],
+  ["gif", "image"],
+  ["bmp", "image"],
+  ["tif", "image"],
+  ["tiff", "image"],
+  ["webp", "image"],
+  ["doc", "doc"],
 ]);
 
 const MIME_FORMATS = new Map([
@@ -42,7 +80,20 @@ const MIME_FORMATS = new Map([
   ["text/markdown", "md"],
   ["text/x-markdown", "md"],
   ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx"],
+  ["application/msword", "doc"],
+  ["application/vnd.oasis.opendocument.text", "odt"],
+  ["application/vnd.oasis.opendocument.text-template", "odt"],
+  ["application/rtf", "rtf"],
+  ["text/rtf", "rtf"],
+  ["text/html", "html"],
+  ["application/xhtml+xml", "html"],
   ["application/pdf", "pdf"],
+  ["image/png", "image"],
+  ["image/jpeg", "image"],
+  ["image/gif", "image"],
+  ["image/bmp", "image"],
+  ["image/tiff", "image"],
+  ["image/webp", "image"],
 ]);
 
 // ---------------------------------------------------------------------------
@@ -54,7 +105,11 @@ const MIME_FORMATS = new Map([
  * The extension is the more specific signal: browsers send generic
  * `application/octet-stream` for plenty of files, but almost never invent a
  * misleading extension.
- * @returns {'txt'|'md'|'docx'|'pdf'|'unknown'}
+ *
+ * `doc` is a deliberate dead end: legacy binary Word is detected and refused
+ * with instructions rather than read as mojibake. `image` means "OCR this".
+ *
+ * @returns {'txt'|'md'|'docx'|'odt'|'rtf'|'html'|'pdf'|'image'|'doc'|'unknown'}
  */
 export function detectFormat(filename, mime) {
   const name = typeof filename === "string" ? filename.trim().toLowerCase() : "";
@@ -67,19 +122,65 @@ export function detectFormat(filename, mime) {
   return MIME_FORMATS.get(type) ?? "unknown";
 }
 
-/** Magic-byte check. Returns null when the bytes are not a recognisable container. */
+/** The first eight bytes of an OLE2 container: legacy .doc, .xls, .ppt. */
+const OLE2_MAGIC = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1];
+
+const IMAGE_MAGIC = [
+  { bytes: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] }, // PNG
+  { bytes: [0xff, 0xd8, 0xff] }, // JPEG
+  { bytes: [0x47, 0x49, 0x46, 0x38] }, // GIF8
+  { bytes: [0x49, 0x49, 0x2a, 0x00] }, // TIFF, little endian
+  { bytes: [0x4d, 0x4d, 0x00, 0x2a] }, // TIFF, big endian
+];
+
+function startsWithBytes(buffer, bytes) {
+  if (buffer.length < bytes.length) return false;
+  for (let index = 0; index < bytes.length; index += 1) {
+    if (buffer[index] !== bytes[index]) return false;
+  }
+  return true;
+}
+
+/**
+ * True only when the document *starts* like HTML, so a CV that merely mentions
+ * a tag (or a Markdown file with an inline snippet) is not treated as a page.
+ */
+function looksLikeHtml(buffer) {
+  const head = buffer.toString("utf8", 0, Math.min(buffer.length, 2048)).replace(/^\ufeff/, "").trimStart();
+  return /^(?:<!doctype\s+html|<html[\s>]|<head[\s>]|<meta[\s>]|<body[\s>])/i.test(head);
+}
+
+/**
+ * Magic-byte check. Returns null when the bytes are not a recognisable container.
+ * A zip is reported as `zip`, not as DOCX, because ODT is a zip too.
+ * @returns {'pdf'|'zip'|'rtf'|'html'|'image'|'doc'|'utf16'|null}
+ */
 function sniffFormat(buffer) {
+  if (buffer.length >= 5 && buffer.toString("latin1", 0, 5) === "%PDF-") return "pdf";
   if (buffer.length >= 4 && buffer[0] === 0x50 && buffer[1] === 0x4b) {
     const third = buffer[2];
     const fourth = buffer[3];
     const zip =
       (third === 0x03 || third === 0x05 || third === 0x07) &&
       (fourth === 0x04 || fourth === 0x06 || fourth === 0x08);
-    if (zip) return "docx";
+    if (zip) return "zip";
   }
-  if (buffer.length >= 5 && buffer.toString("latin1", 0, 5) === "%PDF-") return "pdf";
+  if (buffer.length >= 5 && buffer.toString("latin1", 0, 5) === "{\\rtf") return "rtf";
+  for (const magic of IMAGE_MAGIC) {
+    if (startsWithBytes(buffer, magic.bytes)) return "image";
+  }
+  // "BM" alone would match prose like "BMW", so require a plausible BMP size field.
+  if (buffer.length >= 6 && buffer[0] === 0x42 && buffer[1] === 0x4d) {
+    const declaredSize = buffer.readUInt32LE(2);
+    if (declaredSize === 0 || declaredSize === buffer.length) return "image";
+  }
+  if (buffer.length >= 12 && startsWithBytes(buffer, [0x52, 0x49, 0x46, 0x46])) {
+    if (buffer.toString("latin1", 8, 12) === "WEBP") return "image";
+  }
+  if (startsWithBytes(buffer, OLE2_MAGIC)) return "doc";
   if (buffer.length >= 2 && buffer[0] === 0xff && buffer[1] === 0xfe) return "utf16";
   if (buffer.length >= 2 && buffer[0] === 0xfe && buffer[1] === 0xff) return "utf16";
+  if (looksLikeHtml(buffer)) return "html";
   return null;
 }
 
@@ -133,7 +234,7 @@ function decodeText(buffer, warnings) {
 }
 
 // ---------------------------------------------------------------------------
-// DOCX (zip + WordprocessingML)
+// Zip containers: DOCX (word/document.xml) and ODT (content.xml)
 // ---------------------------------------------------------------------------
 
 /** Find the end-of-central-directory record, scanning back over the up-to-64 KiB comment. */
@@ -227,7 +328,7 @@ function readDirectory(buffer, eocd) {
   const count = buffer.readUInt16LE(eocd + 10);
   const offset = buffer.readUInt32LE(eocd + 16);
   if (count === 0xffff || offset === ZIP64_SENTINEL) {
-    return { entries: [], error: "The DOCX uses a Zip64 end-of-central-directory record, which this reader does not support." };
+    return { entries: [], error: "The zip container uses a Zip64 end-of-central-directory record, which this reader does not support." };
   }
   const entries = [];
   let warning = null;
@@ -235,7 +336,7 @@ function readDirectory(buffer, eocd) {
   for (let index = 0; index < count; index += 1) {
     const entry = readCentralEntry(buffer, cursor);
     if (!entry) {
-      warning = "The DOCX central directory ends early; the file may be truncated.";
+      warning = "The zip central directory ends early; the file may be truncated.";
       break;
     }
     entries.push(entry);
@@ -244,31 +345,35 @@ function readDirectory(buffer, eocd) {
   return { entries, warning };
 }
 
+/**
+ * Inflate one zip entry that should hold a text document part.
+ * @returns {{ text: string } | { error: string }}
+ */
 function inflateEntry(buffer, entry) {
-  if (entry.flags & 0x0001) return { error: "word/document.xml is encrypted and cannot be read." };
+  if (entry.flags & 0x0001) return { error: `${entry.name} is encrypted and cannot be read.` };
   if (entry.localOffset + 30 > buffer.length) {
-    return { error: "The zip entry for word/document.xml points outside the file." };
+    return { error: `The zip entry for ${entry.name} points outside the file.` };
   }
   if (buffer.readUInt32LE(entry.localOffset) !== LOCAL_SIGNATURE) {
-    return { error: "The zip entry for word/document.xml has no local header." };
+    return { error: `The zip entry for ${entry.name} has no local header.` };
   }
   const nameLength = buffer.readUInt16LE(entry.localOffset + 26);
   const extraLength = buffer.readUInt16LE(entry.localOffset + 28);
   const start = entry.localOffset + 30 + nameLength + extraLength;
   const end = start + entry.compressedSize;
-  if (end > buffer.length) return { error: "The word/document.xml data is truncated." };
+  if (end > buffer.length) return { error: `The ${entry.name} data is truncated.` };
   const compressed = buffer.subarray(start, end);
 
-  if (entry.method === 0) return { xml: compressed.toString("utf8") };
+  if (entry.method === 0) return { text: compressed.toString("utf8") };
   if (entry.method !== 8) {
-    return { error: `word/document.xml uses unsupported zip compression method ${entry.method}.` };
+    return { error: `${entry.name} uses unsupported zip compression method ${entry.method}.` };
   }
   try {
-    const xml = inflateRawSync(compressed, { maxOutputLength: MAX_DOCX_XML_BYTES });
-    return { xml: xml.toString("utf8") };
+    const text = inflateRawSync(compressed, { maxOutputLength: MAX_ZIP_PART_BYTES });
+    return { text: text.toString("utf8") };
   } catch (error) {
     const code = error && typeof error === "object" && "code" in error ? error.code : "unknown error";
-    return { error: `word/document.xml could not be inflated (${code}).` };
+    return { error: `${entry.name} could not be inflated (${code}).` };
   }
 }
 
@@ -361,35 +466,124 @@ function xmlToText(xml) {
   return normaliseBlocks(text);
 }
 
+/**
+ * Convert OpenDocument text (content.xml) to plain text.
+ * Paragraph and heading closes become newlines, `<text:s>` runs become spaces,
+ * tabs become spaces, line breaks and table rows end a line, and table cells are
+ * separated. Tag stripping happens before entity decoding, as for DOCX.
+ */
+function odtXmlToText(xml) {
+  let text = String(xml ?? "");
+  text = text.replace(/<\?xml[\s\S]*?\?>/gi, " ");
+  text = text.replace(/<!--[\s\S]*?-->/g, " ");
+  text = text.replace(/<office:annotation\b[\s\S]*?<\/office:annotation>/gi, " ");
+  text = text.replace(/<text:tracked-changes\b[\s\S]*?<\/text:tracked-changes>/gi, " ");
+  text = text.replace(/<text:s\b([^>]*)\/>/g, (_match, attributes) => {
+    const found = /(?:text:)?c\s*=\s*"(\d+)"/.exec(attributes);
+    const count = found ? Number.parseInt(found[1], 10) : 1;
+    const safe = Number.isFinite(count) && count > 0 ? Math.min(count, 64) : 1;
+    return " ".repeat(safe);
+  });
+  text = text.replace(/<text:tab\b[^>]*\/?>/gi, " ");
+  text = text.replace(/<text:line-break\b[^>]*\/?>/gi, "\n");
+  text = text.replace(/<\/text:(?:p|h)>/gi, "\n");
+  text = text.replace(/<\/table:table-cell>/gi, "  ");
+  text = text.replace(/<\/table:table-row>/gi, "\n");
+  text = text.replace(/<[^>]*>/g, "");
+  text = decodeEntities(text);
+  return normaliseBlocks(text);
+}
+
+/**
+ * Open a zip and classify its document part.
+ * DOCX and ODT are both zips, so the entry names decide; a `mimetype` entry is
+ * read when present so an OpenDocument spreadsheet is not mistaken for a CV.
+ * @returns {{ kind: 'docx'|'odt'|null, entry?: object, mimetype?: string|null, warnings: string[] } | { error: string }}
+ */
+function readZipDocument(buffer) {
+  if (buffer.length < 22) return { error: "The zip archive is too short to hold a central directory." };
+  const eocd = findEndOfCentralDirectory(buffer);
+  if (eocd < 0) {
+    return { error: "No zip end-of-central-directory record was found; the file may be truncated or not a zip archive." };
+  }
+  const directory = readDirectory(buffer, eocd);
+  if (directory.error) return { error: directory.error };
+
+  const entries = directory.entries;
+  const entryNamed = (name) => entries.find((candidate) => candidate.name.toLowerCase() === name);
+  const warnings = directory.warning ? [directory.warning] : [];
+
+  const documentEntry = entryNamed("word/document.xml");
+  if (documentEntry) return { kind: "docx", entry: documentEntry, warnings };
+
+  const contentEntry = entryNamed("content.xml");
+  if (contentEntry) {
+    const mimetypeEntry = entryNamed("mimetype");
+    let mimetype = null;
+    if (mimetypeEntry) {
+      const read = inflateEntry(buffer, mimetypeEntry);
+      if (!read.error) mimetype = read.text.trim().toLowerCase();
+    }
+    return { kind: "odt", entry: contentEntry, mimetype, warnings };
+  }
+
+  return { kind: null, warnings };
+}
+
+/**
+ * Turn zip-container bytes into text, reporting which format was actually found.
+ * Always returns the `{ text, format, warnings }` shape so extractText can pass
+ * it straight through.
+ * @returns {{ text: string, format: string, warnings: string[] }}
+ */
+function readZipText(buffer, declared, warnings) {
+  const fallbackFormat = declared === "docx" || declared === "odt" ? declared : "unknown";
+  const opened = readZipDocument(buffer);
+  if (opened.error) return { text: "", format: fallbackFormat, warnings: [...warnings, opened.error] };
+  warnings.push(...opened.warnings);
+
+  if (!opened.kind) {
+    warnings.push("The zip archive contains neither word/document.xml (DOCX) nor content.xml (ODT), so no text could be read.");
+    return { text: "", format: fallbackFormat, warnings };
+  }
+  if (opened.entry.uncompressedSize > MAX_ZIP_PART_BYTES) {
+    warnings.push(`${opened.entry.name} is larger than 64 MiB; it was not read.`);
+    return { text: "", format: opened.kind, warnings };
+  }
+  const inflated = inflateEntry(buffer, opened.entry);
+  if (inflated.error) return { text: "", format: opened.kind, warnings: [...warnings, inflated.error] };
+
+  if (opened.kind === "docx") {
+    if (declared !== "docx") {
+      warnings.push(
+        "The file content is a zip archive holding word/document.xml, so it was read as a DOCX even though its name or MIME type suggested otherwise."
+      );
+    }
+    return { text: xmlToText(inflated.text), format: "docx", warnings };
+  }
+
+  if (opened.mimetype && !opened.mimetype.startsWith("application/vnd.oasis.opendocument.text")) {
+    warnings.push(`The OpenDocument file is not a text document (its mimetype is ${opened.mimetype}), so it was not read.`);
+    return { text: "", format: "odt", warnings };
+  }
+  if (declared !== "odt") {
+    warnings.push(
+      "The file content is an OpenDocument text file, so it was read as an ODT even though its name or MIME type suggested otherwise."
+    );
+  }
+  if (!opened.mimetype) {
+    warnings.push("The OpenDocument archive has no mimetype entry; it was read as a text document.");
+  }
+  return { text: odtXmlToText(inflated.text), format: "odt", warnings };
+}
+
 /** Internal DOCX read: text plus the reasons any part failed. */
 function readDocx(input) {
   const buffer = toBuffer(input);
   if (buffer.length === 0) return { text: "", warnings: ["The DOCX file is empty."] };
-  if (buffer.length < 22) {
-    return { text: "", warnings: ["The DOCX file is too short to be a zip archive."] };
-  }
-  const eocd = findEndOfCentralDirectory(buffer);
-  if (eocd < 0) {
-    return {
-      text: "",
-      warnings: ["No zip end-of-central-directory record was found; the DOCX may be truncated or not a zip file."],
-    };
-  }
-  const directory = readDirectory(buffer, eocd);
-  if (directory.error) return { text: "", warnings: [directory.error] };
-
-  const entry = directory.entries.find((candidate) => candidate.name.toLowerCase() === "word/document.xml");
-  if (!entry) {
-    return { text: "", warnings: ["The DOCX archive does not contain word/document.xml."] };
-  }
-  if (entry.uncompressedSize > MAX_DOCX_XML_BYTES) {
-    return { text: "", warnings: ["word/document.xml is larger than 64 MiB; it was not read."] };
-  }
-  const inflated = inflateEntry(buffer, entry);
-  if (inflated.error) return { text: "", warnings: [inflated.error] };
-
-  const warnings = directory.warning ? [directory.warning] : [];
-  return { text: xmlToText(inflated.xml), warnings };
+  const result = readZipText(buffer, "docx", []);
+  if (result.format !== "docx") return { text: "", warnings: result.warnings };
+  return { text: result.text, warnings: result.warnings };
 }
 
 /**
@@ -402,8 +596,218 @@ export function docxToText(input) {
 }
 
 // ---------------------------------------------------------------------------
-// PDF via pdftotext
+// RTF
 // ---------------------------------------------------------------------------
+
+/**
+ * cp1252 code points for the 0x80-0x9f range, which a plain latin1 decode gets
+ * wrong. Word writes smart quotes and dashes as `\'hh` escapes, so this is the
+ * difference between "Ada's CV" and control characters in the output.
+ */
+const CP1252_HIGH = [
+  "\u20ac", null, "\u201a", "\u0192", "\u201e", "\u2026", "\u2020", "\u2021",
+  "\u02c6", "\u2030", "\u0160", "\u2039", "\u0152", null, "\u017d", null,
+  null, "\u2018", "\u2019", "\u201c", "\u201d", "\u2022", "\u2013", "\u2014",
+  "\u02dc", "\u2122", "\u0161", "\u203a", "\u0153", null, "\u017e", "\u0178",
+];
+
+/** Destinations whose whole group is metadata or binary, never CV text. */
+const RTF_SKIP_DESTINATIONS = new Set([
+  "fonttbl", "colortbl", "stylesheet", "info", "pict", "object", "objdata",
+  "header", "headerl", "headerr", "headerf", "footer", "footerl", "footerr",
+  "footerf", "footnote", "annotation", "datastore", "themedata", "colorschememapping",
+  "latentstyles", "listtable", "listoverridetable", "rsidtbl", "generator",
+  "xmlnstbl", "filetbl", "revtbl", "nonshppict", "panose", "falt",
+]);
+
+const RTF_WHITESPACE = new Set(["\r", "\n", " ", "\t"]);
+
+/** Undo the cp1252 gap for one byte value from a `\'hh` escape. */
+function cp1252Char(code) {
+  if (code >= 0x80 && code <= 0x9f) return CP1252_HIGH[code - 0x80] ?? String.fromCharCode(code);
+  return String.fromCharCode(code);
+}
+
+/**
+ * Convert RTF to plain text: strip control words and destination groups, keep
+ * the words. `\par` and `\line` become newlines, `\tab` a space, `\'hh` and
+ * `\uN` are decoded, and formatting-only groups disappear.
+ *
+ * Deliberately cheap: this is a CV, not a desktop publisher. Object groups,
+ * fonts, colours, styles, headers and footers are dropped whole.
+ */
+function rtfToText(source) {
+  const rtf = String(source ?? "");
+  const out = [];
+  const groups = [];
+  let skipDepth = 0;
+  let index = 0;
+
+  const markSkip = () => {
+    const group = groups[groups.length - 1];
+    if (!group || group.skip) return;
+    group.skip = true;
+    skipDepth += 1;
+  };
+
+  while (index < rtf.length) {
+    const char = rtf[index];
+
+    if (char === "{") {
+      groups.push({ skip: false });
+      index += 1;
+      continue;
+    }
+    if (char === "}") {
+      const group = groups.pop();
+      if (group && group.skip) skipDepth -= 1;
+      index += 1;
+      continue;
+    }
+
+    if (char !== "\\") {
+      if (skipDepth === 0) out.push(RTF_WHITESPACE.has(char) ? " " : char);
+      index += 1;
+      continue;
+    }
+
+    index += 1;
+    const symbol = rtf[index];
+    if (symbol === undefined) break;
+
+    // Escaped literal characters.
+    if (symbol === "\\" || symbol === "{" || symbol === "}") {
+      if (skipDepth === 0) out.push(symbol);
+      index += 1;
+      continue;
+    }
+    // `\*` marks the rest of the group as an ignorable destination.
+    if (symbol === "*") {
+      markSkip();
+      index += 1;
+      if (rtf[index] === " ") index += 1;
+      continue;
+    }
+    // `\'hh` is one byte in the document code page.
+    if (symbol === "'") {
+      const hex = rtf.slice(index + 1, index + 3);
+      if (/^[0-9a-f]{2}$/i.test(hex)) {
+        if (skipDepth === 0) out.push(cp1252Char(Number.parseInt(hex, 16)));
+        index += 3;
+      } else {
+        index += 1;
+      }
+      continue;
+    }
+    // Control symbols that carry text.
+    if (symbol === "~") {
+      if (skipDepth === 0) out.push(" ");
+      index += 1;
+      continue;
+    }
+    if (symbol === "_") {
+      if (skipDepth === 0) out.push("-");
+      index += 1;
+      continue;
+    }
+    if (symbol === "-") {
+      index += 1;
+      continue;
+    }
+
+    // A control word: letters, an optional numeric parameter, an optional
+    // single trailing space that acts as the delimiter.
+    const wordMatch = /^([a-z]+)/i.exec(rtf.slice(index, index + 32));
+    if (!wordMatch) {
+      index += 1;
+      continue;
+    }
+    const word = wordMatch[1].toLowerCase();
+    index += word.length;
+    const parameterMatch = /^-?\d{1,6}/.exec(rtf.slice(index, index + 8));
+    const parameter = parameterMatch ? Number.parseInt(parameterMatch[0], 10) : null;
+    if (parameterMatch) index += parameterMatch[0].length;
+    if (rtf[index] === " ") index += 1;
+
+    if (word === "par" || word === "line" || word === "sect" || word === "page") {
+      if (skipDepth === 0) out.push("\n");
+      continue;
+    }
+    if (word === "tab") {
+      if (skipDepth === 0) out.push(" ");
+      continue;
+    }
+    // RTF CVs are often laid out in tables; keep the cells from running together.
+    if (word === "cell") {
+      if (skipDepth === 0) out.push("  ");
+      continue;
+    }
+    if (word === "row") {
+      if (skipDepth === 0) out.push("\n");
+      continue;
+    }
+    if (word === "u" && parameter !== null) {
+      const code = parameter < 0 ? parameter + 65536 : parameter;
+      if (code > 0 && skipDepth === 0) out.push(String.fromCharCode(code));
+      // The spec puts one ANSI fallback byte after \uN; swallow it.
+      if (rtf[index] !== undefined && rtf[index] !== "\\" && rtf[index] !== "{") index += 1;
+      continue;
+    }
+    if (RTF_SKIP_DESTINATIONS.has(word)) markSkip();
+  }
+
+  return normaliseBlocks(out.join(""));
+}
+
+function readRtf(bytes, warnings) {
+  const text = rtfToText(decodeText(bytes, warnings));
+  if (!text) warnings.push("The RTF contained no readable text.");
+  return { text, format: "rtf", warnings };
+}
+
+// ---------------------------------------------------------------------------
+// HTML
+// ---------------------------------------------------------------------------
+
+const HTML_BLOCK_ENDS =
+  /<\/(?:p|div|h[1-6]|li|ul|ol|dl|dt|dd|tr|table|thead|tbody|section|article|header|footer|main|nav|aside|blockquote|pre|figure|figcaption|form|fieldset|address)\s*>/gi;
+
+/**
+ * Convert an HTML CV (a Google Docs or Word "save as web page" export, or a
+ * page saved from a portfolio) to plain text. Block ends and `<br>` become line
+ * breaks, table cells are separated, and scripts, styles and the title are
+ * dropped rather than read as prose.
+ */
+function htmlToText(source) {
+  let text = String(source ?? "");
+  text = text.replace(/<!--[\s\S]*?-->/g, " ");
+  text = text.replace(/<(script|style|template|noscript|svg|title)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ");
+  text = text.replace(/<br\b[^>]*\/?>/gi, "\n");
+  text = text.replace(/<hr\b[^>]*\/?>/gi, "\n");
+  text = text.replace(HTML_BLOCK_ENDS, "\n");
+  text = text.replace(/<\/(?:td|th)\s*>/gi, "  ");
+  text = text.replace(/<[^>]*>/g, "");
+  text = decodeEntities(text);
+  return normaliseBlocks(text);
+}
+
+function readHtml(bytes, warnings) {
+  const text = htmlToText(decodeText(bytes, warnings));
+  if (!text) warnings.push("The HTML contained no readable text.");
+  return { text, format: "html", warnings };
+}
+
+// ---------------------------------------------------------------------------
+// External extractors: local binary first, WSL second
+// ---------------------------------------------------------------------------
+//
+// PDF and image ingest need a real tool. Both are optional on this machine:
+//   * Poppler's `pdftotext` lives at /usr/bin/pdftotext inside WSL, not on the
+//     Windows PATH, so `wsl -e pdftotext - -` is the working route here.
+//   * `tesseract` is not installed anywhere, so image uploads answer with the
+//     install command instead of pretending to read them.
+// The WSL capability probe runs once per process and is cached; the `wsl`
+// binary itself is re-resolved each call, so a changed PATH is always honoured.
 
 /** Locate an executable on PATH without spawning anything. */
 function findOnPath(name) {
@@ -429,47 +833,169 @@ function findOnPath(name) {
   return null;
 }
 
+function errorCode(error) {
+  if (error && typeof error === "object" && "code" in error) return String(error.code);
+  if (error && typeof error === "object" && "message" in error) return String(error.message);
+  return "unknown error";
+}
+
+/**
+ * Run an extractor with the file on stdin and the text on stdout.
+ * Bounded twice: a hard timeout so a hung binary cannot hold a request, and a
+ * pipe ceiling so a pathological file cannot exhaust memory.
+ * @returns {{ ok: true, text: string } | { ok: false, reason: string }}
+ */
+function runExtractor(binary, args, input, timeout = TOOL_TIMEOUT_MS) {
+  let result;
+  try {
+    result = spawnSync(binary, args, {
+      input,
+      encoding: "utf8",
+      timeout,
+      maxBuffer: TOOL_MAX_BUFFER,
+      windowsHide: true,
+    });
+  } catch (error) {
+    return { ok: false, reason: `could not be started (${errorCode(error)})` };
+  }
+
+  if (result.error) {
+    const code = errorCode(result.error);
+    if (code === "ENOENT") return { ok: false, reason: "is not executable" };
+    if (code === "ETIMEDOUT") return { ok: false, reason: `did not finish within ${Math.round(timeout / 1000)} seconds` };
+    if (code === "ENOBUFS") return { ok: false, reason: "produced more than 32 MiB of output" };
+    return { ok: false, reason: `failed (${code})` };
+  }
+  if (result.status !== 0) {
+    const detail = String(result.stderr ?? "").trim().split(/\r?\n/).find(Boolean) ?? "";
+    return { ok: false, reason: `exited with code ${result.status}${detail ? `: ${detail.slice(0, 160)}` : ""}` };
+  }
+  return { ok: true, text: String(result.stdout ?? "") };
+}
+
+/** Probe results for `wsl -e <tool>`, cached per tool for the life of the process. */
+const wslToolCache = new Map();
+
+/**
+ * Can WSL run this tool? Probed once and cached.
+ * A missing `wsl` on PATH is *not* cached: PATH is the caller's to change, and
+ * the tests rely on hiding it.
+ */
+function wslHasTool(tool, probeArgs) {
+  const cached = wslToolCache.get(tool);
+  if (cached !== undefined) return cached;
+  const wsl = findOnPath("wsl");
+  if (!wsl) return false;
+  const probe = runExtractor(wsl, ["-e", tool, ...probeArgs], Buffer.alloc(0), WSL_PROBE_TIMEOUT_MS);
+  wslToolCache.set(tool, probe.ok);
+  return probe.ok;
+}
+
+/**
+ * Run a tool through WSL: `wsl -e <tool> <args>` with the file on stdin.
+ * @returns {{ status: 'ok', text: string } | { status: 'unavailable'|'failed', reason: string }}
+ */
+function runInWsl(tool, args, input, probeArgs) {
+  const wsl = findOnPath("wsl");
+  if (!wsl) return { status: "unavailable", reason: "there is no `wsl` on the Windows PATH" };
+  if (!wslHasTool(tool, probeArgs)) {
+    return { status: "unavailable", reason: `WSL is installed but \`${tool}\` is not installed inside it` };
+  }
+  const attempt = runExtractor(wsl, ["-e", tool, ...args], input);
+  if (attempt.ok) return { status: "ok", text: attempt.text };
+  return { status: "failed", reason: `\`wsl -e ${tool} ${args.join(" ")}\` ${attempt.reason}` };
+}
+
+/** Join attempt descriptions the way the warnings read them. */
+function joinAttempts(tried) {
+  if (tried.length <= 1) return tried[0] ?? "no extractor is available";
+  return `${tried.slice(0, -1).join(", ")} and ${tried[tried.length - 1]}`;
+}
+
+/**
+ * Try an extractor on the Windows PATH, then inside WSL.
+ * Returning `text: null` means both routes are exhausted and `tried` explains
+ * each one, which is what the caller's warning quotes back to the user.
+ * @returns {{ text: string, source: string } | { text: null, tried: string[] }}
+ */
+function runExtractorChain({ binary, args, input, probeArgs }) {
+  const tried = [];
+  const native = findOnPath(binary);
+  if (native) {
+    const attempt = runExtractor(native, args, input);
+    if (attempt.ok) return { text: attempt.text, source: binary };
+    tried.push(`the Windows ${binary} ${attempt.reason}`);
+  } else {
+    tried.push(`no ${binary} binary is on the Windows PATH`);
+  }
+
+  const viaWsl = runInWsl(binary, args, input, probeArgs);
+  if (viaWsl.status === "ok") return { text: viaWsl.text, source: `wsl ${binary}` };
+  tried.push(viaWsl.status === "failed" ? viaWsl.reason : `${viaWsl.reason} (\`wsl -e ${binary} ${probeArgs.join(" ")}\` did not run)`);
+  return { text: null, tried };
+}
+
+/**
+ * Keep at most MAX_EXTRACTED_TEXT_BYTES from one extractor.
+ * The process pipe already caps raw stdout; this caps what reaches a CV row, so
+ * one absurd PDF cannot bloat the database or the dashboard.
+ */
+function capExtractedText(text, warnings, label) {
+  const value = String(text ?? "");
+  if (Buffer.byteLength(value, "utf8") <= MAX_EXTRACTED_TEXT_BYTES) return value;
+  const capped = Buffer.from(value, "utf8")
+    .subarray(0, MAX_EXTRACTED_TEXT_BYTES)
+    .toString("utf8")
+    .replace(/\ufffd$/, "");
+  warnings.push(`${label} produced more than 4 MiB of text; the rest was discarded.`);
+  return capped;
+}
+
+/** True when OCR could actually run, so advice is only offered when it is actionable. */
+function tesseractAvailable() {
+  return Boolean(findOnPath("tesseract")) || wslHasTool("tesseract", ["--version"]);
+}
+
+/** What to tell someone whose PDF turned out to be a scan. */
+function ocrAdvice() {
+  if (tesseractAvailable()) return "Save each page as a PNG or JPEG and upload those instead, which can be read with OCR.";
+  return `OCR would need Tesseract. ${OCR_INSTALL_HINT}.`;
+}
+
 function extractPdf(buffer, warnings) {
-  const binary = findOnPath("pdftotext");
-  if (!binary) {
+  const attempt = runExtractorChain({ binary: "pdftotext", args: STDIO_ARGS, input: buffer, probeArgs: ["-v"] });
+  if (attempt.text === null) {
     warnings.push(
-      "No pdftotext binary was found on PATH, so this PDF could not be read. Install Poppler (pdftotext) or paste the CV text instead."
+      `This PDF could not be read: ${joinAttempts(attempt.tried)}. Install Poppler's pdftotext, or paste the CV text instead.`
     );
     return { text: "", format: "pdf", warnings };
   }
 
-  let result;
-  try {
-    result = spawnSync(binary, ["-", "-"], {
-      input: buffer,
-      encoding: "utf8",
-      timeout: PDFTOTEXT_TIMEOUT_MS,
-      maxBuffer: PDFTOTEXT_MAX_BUFFER,
-      windowsHide: true,
-    });
-  } catch (error) {
-    const code = error && typeof error === "object" && "code" in error ? error.code : "unknown error";
-    warnings.push(`pdftotext could not be started (${code}). The PDF was not read.`);
-    return { text: "", format: "pdf", warnings };
-  }
-
-  if (result.error) {
-    const code = result.error.code ?? result.error.message;
-    warnings.push(`pdftotext could not be run (${code}). The PDF was not read.`);
-    return { text: "", format: "pdf", warnings };
-  }
-  if (result.status !== 0) {
-    const detail = String(result.stderr ?? "").trim().split(/\r?\n/).find(Boolean) ?? "";
-    const suffix = detail ? `: ${detail.slice(0, 200)}` : ".";
-    warnings.push(`pdftotext exited with code ${result.status}${suffix} The PDF may be scanned or encrypted.`);
-    return { text: "", format: "pdf", warnings };
-  }
-
-  const text = normalisePlain(result.stdout ?? "");
+  // pdftotext separates pages with a form feed; treat it as a paragraph break.
+  const text = normalisePlain(capExtractedText(attempt.text.replace(/\f/g, "\n"), warnings, "pdftotext"));
   if (!text) {
-    warnings.push("pdftotext returned no text; the PDF is probably a scan, which needs OCR.");
+    warnings.push(`pdftotext returned no text, so this PDF is a scan rather than real text. ${ocrAdvice()}`);
   }
   return { text, format: "pdf", warnings };
+}
+
+/**
+ * Read an image with OCR, or say precisely why it could not be read.
+ * There is no cloud call and no dependency: if Tesseract is absent, the upload
+ * gets the install command and the paste path instead of a silent empty string.
+ */
+function extractImage(buffer, warnings) {
+  const attempt = runExtractorChain({ binary: "tesseract", args: OCR_ARGS, input: buffer, probeArgs: ["--version"] });
+  if (attempt.text === null) {
+    warnings.push(
+      `No OCR could be run on this image: ${joinAttempts(attempt.tried)}. ${OCR_INSTALL_HINT}, or paste the CV text instead.`
+    );
+    return { text: "", format: "image", warnings };
+  }
+
+  const text = normalisePlain(capExtractedText(attempt.text, warnings, "tesseract"));
+  if (!text) warnings.push("OCR ran but found no text in that image; try a sharper, straight-on scan.");
+  return { text, format: "image", warnings };
 }
 
 // ---------------------------------------------------------------------------
@@ -494,6 +1020,8 @@ export async function extractText({ buffer, filename, mime } = {}) {
 
   const sniffed = sniffFormat(bytes);
 
+  // Content that is unmistakably itself wins over the filename, and every
+  // disagreement between bytes and name is reported rather than silently accepted.
   if (sniffed === "pdf") {
     if (declared !== "pdf") {
       warnings.push("The file content is a PDF even though its name or MIME type suggested otherwise; it was read as a PDF.");
@@ -501,16 +1029,38 @@ export async function extractText({ buffer, filename, mime } = {}) {
     return extractPdf(bytes, warnings);
   }
 
-  if (sniffed === "docx") {
-    if (declared !== "docx") {
-      warnings.push("The file content is a zip archive, so it was read as a DOCX even though its name or MIME type suggested otherwise.");
+  if (sniffed === "zip") return readZipText(bytes, declared, warnings);
+
+  if (sniffed === "doc") {
+    if (declared === "doc") {
+      warnings.push(LEGACY_DOC_WARNING);
+      return { text: "", format: "doc", warnings };
     }
-    const result = readDocx(bytes);
-    warnings.push(...result.warnings);
-    if (!result.text && result.warnings.length === 0) {
-      warnings.push("The DOCX contained no readable text.");
+    warnings.push(
+      "The file content is a legacy OLE2 binary document (an old .doc, .xls or .ppt), which is not supported; save it in a modern format or paste the text."
+    );
+    return { text: "", format: "unknown", warnings };
+  }
+
+  if (sniffed === "rtf") {
+    if (declared !== "rtf") {
+      warnings.push("The file content is RTF even though its name or MIME type suggested otherwise; it was read as RTF.");
     }
-    return { text: result.text, format: "docx", warnings };
+    return readRtf(bytes, warnings);
+  }
+
+  if (sniffed === "html") {
+    if (declared !== "html") {
+      warnings.push("The file content is HTML even though its name or MIME type suggested otherwise; it was read as HTML with the tags removed.");
+    }
+    return readHtml(bytes, warnings);
+  }
+
+  if (sniffed === "image") {
+    if (declared !== "image") {
+      warnings.push("The file content is an image even though its name or MIME type suggested otherwise; it was read with OCR.");
+    }
+    return extractImage(bytes, warnings);
   }
 
   if (sniffed === "utf16") {
@@ -522,38 +1072,77 @@ export async function extractText({ buffer, filename, mime } = {}) {
     return { text: decoded, format: declared === "md" ? "md" : "txt", warnings };
   }
 
+  // No recognisable magic bytes: trust the name, but never hand mojibake to the
+  // segmenter just because an extension said so.
   if (declared === "pdf") return extractPdf(bytes, warnings);
 
-  if (declared === "docx") {
-    if (!looksLikeText(bytes)) {
-      const result = readDocx(bytes);
-      return { text: "", format: "docx", warnings: [...warnings, ...result.warnings] };
-    }
-    warnings.push("The file is named as a DOCX but its bytes are not a zip archive; it was read as plain text.");
-    const text = normalisePlain(decodeText(bytes, warnings));
-    if (!text) warnings.push("The file contained no text.");
-    return { text, format: "txt", warnings };
+  if (declared === "docx" || declared === "odt") {
+    if (!looksLikeText(bytes)) return readZipText(bytes, declared, warnings);
+    warnings.push(`The file is named as a ${declared.toUpperCase()} but its bytes are not a zip archive; it was read as plain text.`);
+    return readTextLike(bytes, "txt", warnings);
   }
 
-  if (declared === "txt" || declared === "md") {
+  if (declared === "doc") {
+    if (looksLikeText(bytes)) {
+      warnings.push("The file is named as a legacy .doc but its bytes are plain text; it was read as plain text.");
+      return readTextLike(bytes, "txt", warnings);
+    }
+    warnings.push(LEGACY_DOC_WARNING);
+    return { text: "", format: "doc", warnings };
+  }
+
+  if (declared === "rtf") {
     if (!looksLikeText(bytes)) {
-      warnings.push("The file contains binary data and could not be read as text.");
+      warnings.push("The file is named as RTF but its bytes are not RTF, so no text could be read.");
       return { text: "", format: "unknown", warnings };
     }
-    const text = normalisePlain(decodeText(bytes, warnings));
-    if (!text) warnings.push("The file contained no text.");
-    return { text, format: declared, warnings };
+    warnings.push("The file is named as RTF but its bytes are plain text; it was read as plain text.");
+    return readTextLike(bytes, "txt", warnings);
   }
+
+  if (declared === "html") {
+    if (looksLikeText(bytes)) {
+      warnings.push("The file is named as HTML but its bytes are plain text; it was read as plain text.");
+      return readTextLike(bytes, "txt", warnings);
+    }
+    return readHtml(bytes, warnings);
+  }
+
+  if (declared === "image") {
+    if (looksLikeText(bytes)) {
+      warnings.push("The file is named as an image but its bytes are plain text; it was read as plain text.");
+      return readTextLike(bytes, "txt", warnings);
+    }
+    warnings.push("The file is named as an image but is not a PNG, JPEG, GIF, BMP, TIFF or WebP image, so no OCR could run on it.");
+    return { text: "", format: "image", warnings };
+  }
+
+  if (declared === "txt" || declared === "md") return readTextLike(bytes, declared, warnings);
 
   if (looksLikeText(bytes)) {
     warnings.push("The file type was not recognised from its name or MIME type; the content was read as plain text.");
-    const text = normalisePlain(decodeText(bytes, warnings));
-    if (!text) warnings.push("The file contained no text.");
-    return { text, format: "txt", warnings };
+    return readTextLike(bytes, "txt", warnings);
   }
 
-  warnings.push("The file type was not recognised. Supported formats are .txt, .md, .docx and .pdf.");
+  warnings.push(
+    "The file type was not recognised. Supported formats are .txt, .md, .docx, .odt, .rtf, .html and .pdf, plus .png/.jpg images when Tesseract OCR is installed. Legacy binary Word (.doc) must be saved as .docx first."
+  );
   return { text: "", format: "unknown", warnings };
+}
+
+/**
+ * Decode bytes that should be text: refuse binary, strip a BOM, normalise line
+ * endings and trailing spaces. Shared by every "read it as text" route.
+ * @returns {{ text: string, format: string, warnings: string[] }}
+ */
+function readTextLike(bytes, format, warnings) {
+  if (!looksLikeText(bytes)) {
+    warnings.push("The file contains binary data and could not be read as text.");
+    return { text: "", format: "unknown", warnings };
+  }
+  const text = normalisePlain(decodeText(bytes, warnings));
+  if (!text) warnings.push("The file contained no text.");
+  return { text, format, warnings };
 }
 
 // ---------------------------------------------------------------------------

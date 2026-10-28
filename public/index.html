@@ -3,39 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Applywright · Your CV, tailored for every job</title>
+  <title>Applywright · Your numbers stay. The wording moves</title>
   <meta name="description" content="Score your CV against a real job description, see every point explained by a named finding, and get a tailored pack built only from facts you already have. You send the application." />
   <meta name="theme-color" content="#0b0c0e" />
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/assets/tokens.css" />
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
-  <style>
-    /* Index only: the score ring inside the hero mock. Everything else is site.css. */
-    [data-ring] svg {
-      width: 112px;
-      height: 112px;
-      display: block;
-    }
-    [data-ring] circle {
-      fill: none;
-      stroke-width: 9;
-      stroke-linecap: round;
-    }
-    [data-ring] circle:first-of-type {
-      stroke: var(--line-invert);
-    }
-    [data-ring] circle:last-of-type {
-      stroke: var(--lime);
-    }
-    [data-ring] text {
-      fill: var(--text-invert);
-      font-family: var(--mono);
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-  </style>
+  <!-- The score-ring rules that used to live here are gone with the ring: the
+       hero now shows the rubric readout and the vernier gauge
+       (.hero-gauge, styled in theme.css). No page-specific CSS is left. -->
   <!-- Blocking and after the stylesheets on purpose: it applies the saved or
        system theme before the first paint (no flash) and reads the palette back
        from the CSS. Same-origin, so script-src 'self' covers it; no inline boot

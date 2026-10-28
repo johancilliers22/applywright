@@ -18,12 +18,19 @@ import { createModelClient } from "./model.js";
 import { createPageRenderer } from "./pages.js";
 import {
   COOKIE_NAME,
+  RECOVERY_CODE_COUNT,
   assertSameOrigin,
   clearCookie,
+  createAuthStore,
   hashPassword,
+  newRecoveryCode,
+  newResetToken,
   newSessionId,
+  normaliseRecoveryCode,
   parseCookies,
   publicUser,
+  recordResetToken,
+  resetExpiryIso,
   sessionCookie,
   sessionExpiry,
   unauthorized,
@@ -68,6 +75,7 @@ const PAGES = new Map([
   ["/security", "security.html"],
   ["/sign-in", "sign-in.html"],
   ["/sign-up", "sign-up.html"],
+  ["/reset", "reset.html"],
 ]);
 
 const APP_ROUTE = /^\/app(\/.*)?$/;
@@ -271,6 +279,7 @@ function requireQuota(store, user, feature, used, message) {
 export async function createApp(config) {
   const db = openDatabase(config.databasePath);
   const store = createStore(db);
+  const accounts = createAuthStore(db);
   const model = createModelClient(config);
   const pages = createPageRenderer({ publicDir: config.publicDir, site: config.site });
   store.purgeExpiredSessions();
@@ -299,7 +308,10 @@ export async function createApp(config) {
   // --- rate limits ---------------------------------------------------------
   app.use("/api", (req, res, next) => {
     const key = req.ip || req.socket?.remoteAddress || "unknown";
-    const isAuth = /^\/auth\/(register|login)$/.test(req.path);
+    // Every credential-bearing route shares the auth bucket: a recovery code and a
+    // reset token are secrets, and guessing either must cost the same as guessing
+    // a password.
+    const isAuth = /^\/auth\/(register|login|change-password|recover|forgot|forgot-username|reset)$/.test(req.path);
     const state = (isAuth ? authLimiter : apiLimiter).hit(key);
     res.setHeader("x-ratelimit-limit", String(isAuth ? config.limits.authPerMinute : config.limits.apiPerMinute));
     res.setHeader("x-ratelimit-remaining", String(state.remaining));
@@ -331,6 +343,12 @@ export async function createApp(config) {
 
     const { hash, salt } = hashPassword(password);
     const user = store.createUser({ email, passwordHash: hash, passwordSalt: salt, name });
+
+    // The only moment these exist in readable form: they are hashed in the
+    // database and returned once, so the client can save them somewhere.
+    const recoveryCodes = Array.from({ length: RECOVERY_CODE_COUNT }, () => newRecoveryCode());
+    accounts.issueRecoveryCodes(user.id, recoveryCodes);
+
     const session = store.createSession({
       userId: user.id,
       userAgent: req.get("user-agent"),
@@ -338,7 +356,9 @@ export async function createApp(config) {
       days: config.limits.sessionDays,
     });
     res.setHeader("set-cookie", sessionCookie(session.id, { secure: config.secureCookies, maxAgeDays: config.limits.sessionDays }));
-    res.status(201).json({ user: publicUser(user) });
+    // A response carrying one-time codes must not sit in any cache.
+    res.setHeader("cache-control", "no-store");
+    res.status(201).json({ user: publicUser(user), recoveryCodes });
   });
 
   app.post("/api/auth/login", (req, res) => {
@@ -379,6 +399,111 @@ export async function createApp(config) {
       entitlements: entitlements(plan),
       model: model ? "live" : "rules",
     });
+  });
+
+  // --------------------------------------------------------------- recovery
+  /**
+   * One message for every failed recovery attempt. A wrong code, a spent code and
+   * an address with no account have to be indistinguishable, or this endpoint
+   * becomes an account oracle.
+   */
+  const INVALID_RECOVERY_CODE = "That email and recovery code do not match an unused code.";
+
+  app.post("/api/auth/change-password", requireUser, (req, res) => {
+    const body = req.body ?? {};
+    const currentPassword = assertString(body.currentPassword, "currentPassword", { min: 0, max: 200, required: false });
+    const newPassword = validatePassword(body.newPassword);
+    // An empty or wrong current password is a refusal, never a partial change.
+    if (!verifyPassword(currentPassword, req.user.pass_hash, req.user.pass_salt)) {
+      throw new ApiError(401, "invalid_credentials", "current password is incorrect");
+    }
+    const { hash, salt } = hashPassword(newPassword);
+    accounts.setPassword(req.user.id, { hash, salt });
+    // This browser stays signed in; every other device is signed out. A reset link
+    // issued before the change is withdrawn, since the password just changed.
+    const revoked = accounts.revokeOtherSessions(req.user.id, req.sessionId);
+    accounts.clearPendingResets(req.user.id);
+    res.json({ ok: true, revokedSessions: revoked });
+  });
+
+  app.post("/api/auth/recover", (req, res) => {
+    const body = req.body ?? {};
+    const email = assertString(body.email, "email", { max: 254 });
+    // The new password is checked before the code is spent, so a password that is
+    // too short never costs the user one of their eight codes.
+    const password = validatePassword(body.password);
+    const code = normaliseRecoveryCode(body.code);
+    const user = store.userByEmail(email);
+    if (!user || !code || !accounts.consumeRecoveryCode(user.id, code)) {
+      throw new ApiError(400, "invalid_recovery_code", INVALID_RECOVERY_CODE);
+    }
+    const { hash, salt } = hashPassword(password);
+    accounts.setPassword(user.id, { hash, salt });
+    accounts.revokeSessions(user.id);
+    accounts.clearPendingResets(user.id);
+    res.setHeader("set-cookie", clearCookie());
+    res.json({ ok: true });
+  });
+
+  /**
+   * Reset and username requests are recorded for the operator — this host has no
+   * SMTP, so nothing is emailed and nothing is echoed back. Both kinds answer
+   * 200 {ok:true} whether or not the address has an account, so neither can be
+   * used to test for one. What "notified" means is the host files the recovery
+   * script reads: see docs/PASSWORD-RECOVERY.md.
+   */
+  const recordRecoveryRequest = async (kind, req) => {
+    const raw = typeof req.body?.email === "string" ? req.body.email.trim() : "";
+    const email = raw.toLowerCase();
+    const user = email && isValidEmail(email) ? store.userByEmail(email) : null;
+
+    if (user && kind === "forgot") {
+      const token = newResetToken();
+      const expiresAt = resetExpiryIso();
+      accounts.issuePasswordReset(user.id, { token, expiresAt });
+      // The database keeps only sha256(token); the plaintext rides in a host-only
+      // ledger so the operator can print the link. A failure to write it must not
+      // turn into a 500 that tells the caller the address exists.
+      await recordResetToken(config.dataDir, { email, token, expiresAt }).catch(() => {});
+    }
+
+    await appendFile(
+      join(config.dataDir, "recovery-requests.jsonl"),
+      `${JSON.stringify({ at: nowIso(), kind, email: email || null, account: Boolean(user), requestId: req.requestId })}\n`,
+      "utf8"
+    ).catch(() => {});
+
+    return { ok: true };
+  };
+
+  app.post("/api/auth/forgot", async (req, res) => {
+    res.json(await recordRecoveryRequest("forgot", req));
+  });
+
+  app.post("/api/auth/forgot-username", async (req, res) => {
+    res.json(await recordRecoveryRequest("forgot-username", req));
+  });
+
+  app.post("/api/auth/reset", (req, res) => {
+    const body = req.body ?? {};
+    const token = assertString(body.token, "token", { max: 300 });
+    const password = validatePassword(body.password);
+    const row = accounts.passwordResetByToken(token);
+    const invalid = (message) => new ApiError(400, "invalid_reset_token", message);
+    if (!row) throw invalid("That reset link is not valid. Request a new one.");
+    if (row.used_at) throw invalid("That reset link has already been used. Request a new one.");
+    if (row.expires_at <= nowIso()) throw invalid("That reset link has expired. Request a new one.");
+    // A single conditional UPDATE: two tabs submitting the same link cannot both
+    // reset the account.
+    if (!accounts.consumePasswordReset(token)) {
+      throw invalid("That reset link has already been used. Request a new one.");
+    }
+    const { hash, salt } = hashPassword(password);
+    accounts.setPassword(row.user_id, { hash, salt });
+    accounts.revokeSessions(row.user_id);
+    accounts.clearPendingResets(row.user_id);
+    res.setHeader("set-cookie", clearCookie());
+    res.json({ ok: true });
   });
 
   // -------------------------------------------------------------------- cvs
@@ -1159,7 +1284,15 @@ ${items}
   app.get("/bookmarklet", async (req, res, next) => {
     try {
       const source = await readFile(join(config.publicDir, "assets", "bookmarklet.js"), "utf8");
-      const script = source.replace(/__ORIGIN__/g, config.site.publicUrl);
+      // The artifact is banner-first: a provenance comment, then the scheme. A
+      // bookmarklet URL must START with javascript:, and a banner-first paste
+      // silently parses as an http: URL, so strip the leading comment block and
+      // guarantee the scheme before substituting the origin.
+      const address = source
+        .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, "")
+        .replace(/__ORIGIN__/g, config.site.publicUrl)
+        .trim();
+      const script = address.startsWith("javascript:") ? address : `javascript:${address}`;
       const escaped = script.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
       res.setHeader("cache-control", "no-cache");
       res.type("html").send(`<!doctype html>

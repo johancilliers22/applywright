@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en-GB" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recover your account · Applywright</title>
+  <meta name="description" content="Get back into Applywright with a recovery code you saved at sign-up, or with a reset link issued by the operator." />
+  <meta name="theme-color" content="#0b0c0e" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/tokens.css" />
+  <link rel="stylesheet" href="/assets/theme.css" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="/assets/auth.css" />
+</head>
+<body>
+  <main class="auth">
+    <aside class="auth__aside">
+      <a class="brand" href="/">
+        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+          <circle class="m-ring" cx="16" cy="16" r="13.25" stroke-width="1.5" />
+          <circle class="m-core" cx="16" cy="16" r="5" />
+          <path class="m-ring" d="M16 2.75v4.1M16 25.15v4.1M2.75 16h4.1M25.15 16h4.1" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Applywright</span>
+      </a>
+      <p class="auth__quote">Three honest ways back in, and none of them needs a mail server.</p>
+      <ul class="auth__facts">
+        <li>A recovery code you saved at sign-up works offline, once per code.</li>
+        <li>A reset link is issued on the host and passed on by the operator.</li>
+        <li>Setting a new password ends every other session on the account.</li>
+      </ul>
+    </aside>
+
+    <div class="auth__main">
+      <div class="auth__card">
+        <div class="auth__top">
+          <a class="brand" href="/">
+            <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+              <circle class="m-ring" cx="16" cy="16" r="13.25" stroke-width="1.5" />
+              <circle class="m-core" cx="16" cy="16" r="5" />
+            </svg>
+            <span>Applywright</span>
+          </a>
+          <a class="link-arrow" href="/">Back to site</a>
+        </div>
+
+        <div>
+          <h1 class="auth__title">Recover your account</h1>
+          <p class="auth__sub" data-reset-sub>Use a recovery code you saved, or ask the operator for a reset link. The username is the email address you signed up with.</p>
+        </div>
+
+        <!-- Set new password: shown when the page is opened with ?token=... -->
+        <section hidden data-reset-panel="token">
+          <div class="auth__form">
+            <h2 class="legend">Choose a new password</h2>
+            <form class="auth__form" data-auth-form="reset" novalidate>
+              <div class="field">
+                <label for="password-reset">New password</label>
+                <input class="input" id="password-reset" name="password" type="password" autocomplete="new-password" required minlength="10" />
+                <span class="hint">At least 10 characters. Length beats punctuation.</span>
+              </div>
+              <div class="field">
+                <label for="confirm-reset">Confirm new password</label>
+                <input class="input" id="confirm-reset" name="confirm" type="password" autocomplete="new-password" required minlength="10" />
+              </div>
+              <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
+              <button class="btn btn--primary btn--lg btn--block" type="submit">Set the new password</button>
+            </form>
+            <p class="auth__legal">This link works once and expires an hour after it was issued. Setting the password signs out every other session.</p>
+          </div>
+        </section>
+
+        <!-- No token: the two paths that start here. -->
+        <section data-reset-panel="request">
+          <div class="auth__form">
+            <h2 class="legend">Use a recovery code</h2>
+            <p class="auth__sub">The eight codes shown when you signed up. Each one works once.</p>
+            <form class="auth__form" data-auth-form="recover" novalidate>
+              <div class="field">
+                <label for="email-recover">Email</label>
+                <input class="input" id="email-recover" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="code-recover">Recovery code</label>
+                <input class="input mono" id="code-recover" name="code" type="text" autocomplete="one-time-code" placeholder="aw-XXXX-XXXX" required />
+                <span class="hint">Any capitalisation works; the dashes are optional.</span>
+              </div>
+              <div class="field">
+                <label for="password-recover">New password</label>
+                <input class="input" id="password-recover" name="password" type="password" autocomplete="new-password" required minlength="10" />
+                <span class="hint">At least 10 characters.</span>
+              </div>
+              <div class="field">
+                <label for="confirm-recover">Confirm new password</label>
+                <input class="input" id="confirm-recover" name="confirm" type="password" autocomplete="new-password" required minlength="10" />
+              </div>
+              <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
+              <button class="btn btn--primary btn--lg btn--block" type="submit">Use the code</button>
+            </form>
+          </div>
+
+          <div class="auth__form">
+            <h2 class="legend">Request a reset link</h2>
+            <p class="note">This server has no email transport. A reset link is issued to the operator, not emailed, in this build — you will need to reach the operator to collect it.</p>
+            <form class="auth__form" data-auth-form="forgot" novalidate>
+              <div class="field">
+                <label for="email-request">Email</label>
+                <input class="input" id="email-request" name="email" type="email" autocomplete="email" required />
+              </div>
+              <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
+              <button class="btn btn--primary btn--lg btn--block" type="submit">Request a reset link</button>
+            </form>
+          </div>
+
+          <div class="auth__form">
+            <h2 class="legend">Forgotten your username?</h2>
+            <p class="auth__sub">The username is the email address on your account.</p>
+            <form class="auth__form" data-auth-form="forgot-username" novalidate>
+              <div class="field">
+                <label for="email-username">Email</label>
+                <input class="input" id="email-username" name="email" type="email" autocomplete="email" required />
+              </div>
+              <p class="auth__status" data-auth-status role="status" aria-live="polite"></p>
+              <button class="btn btn--ghost btn--block" type="submit">Ask the operator</button>
+            </form>
+          </div>
+        </section>
+
+        <p class="auth__alt">Remembered it? <a href="/sign-in">Sign in</a></p>
+        <p class="auth__legal">
+          A reset link is never returned by the API and never emailed: it is issued on the host and read there by the
+          operator, then passed on by hand. Recovery codes are stored only as hashes, so we cannot read yours back.
+        </p>
+      </div>
+    </div>
+  </main>
+  <script src="/assets/auth.js" type="module"></script>
+</body>
+</html>

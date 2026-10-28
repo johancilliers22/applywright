@@ -8,7 +8,7 @@ import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS users (
@@ -134,6 +134,27 @@ CREATE TABLE IF NOT EXISTS meta (
   value TEXT NOT NULL
 );
 
+-- Account recovery. Neither table ever holds a password, and neither holds a
+-- usable bearer credential: only sha256 digests are stored, so a database copy
+-- is not a set of password-reset links. ON DELETE CASCADE keeps a deleted
+-- account from leaving codes behind.
+CREATE TABLE IF NOT EXISTS recovery_codes (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  code_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  used_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS password_resets (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token_hash TEXT NOT NULL UNIQUE,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  used_at TEXT
+);
+
 CREATE INDEX IF NOT EXISTS idx_jobs_fetched ON jobs(fetched_at);
 CREATE INDEX IF NOT EXISTS idx_jobs_source ON jobs(source);
 CREATE INDEX IF NOT EXISTS idx_apps_user ON applications(user_id, updated_at);
@@ -142,6 +163,10 @@ CREATE INDEX IF NOT EXISTS idx_usage_user ON usage(user_id, feature, at);
 CREATE INDEX IF NOT EXISTS idx_sessions_expiry ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_reports_user ON reports(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_cvs_user ON cvs(user_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_recovery_user ON recovery_codes(user_id, used_at);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_recovery_code ON recovery_codes(user_id, code_hash);
+CREATE INDEX IF NOT EXISTS idx_resets_token ON password_resets(token_hash);
+CREATE INDEX IF NOT EXISTS idx_resets_user ON password_resets(user_id, expires_at);
 `;
 
 export function openDatabase(path) {

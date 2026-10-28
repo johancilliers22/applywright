@@ -316,7 +316,7 @@
 }
 
 .link-arrow::after {
-  content: "→";
+  content: "→" / "";
   transition: transform var(--dur) var(--ease);
 }
 
@@ -646,8 +646,11 @@
   gap: 0.4rem;
 }
 
+/* Painted, not spoken: the row marker is decoration, and without the empty
+   alternative text it lands in the paragraph's accessible name ("black
+   right-pointing small triangle Grounding check passed…"). */
 .mock__tool::before {
-  content: "▸";
+  content: "▸" / "";
 }
 
 /* --------------------------------------------------------------------------
@@ -855,8 +858,10 @@
   align-items: flex-start;
 }
 
+/* Tick and dash are decoration on a list item that already reads as a list
+   entry; the empty alternative keeps "✓" out of the item's accessible name. */
 .price-list li::before {
-  content: "✓";
+  content: "✓" / "";
   color: var(--ok);
   font-size: 0.8rem;
   line-height: 1.5;
@@ -868,7 +873,7 @@
 }
 
 .price-list li.is-muted::before {
-  content: "—";
+  content: "—" / "";
   color: var(--text-muted);
 }
 
@@ -959,8 +964,14 @@ table.compare caption {
   display: none;
 }
 
+/* The disclosure glyph is decoration, so it is painted with an empty
+   alternative text (`content: "+" / ""`). Without the second value every
+   browser puts the glyph in the summary's accessible name, and the name then
+   changes with the state — a screen reader hears "Do you apply for me? plus,
+   collapsed" and then a different label once it is open. The state is already
+   carried by the native disclosure role and its expanded flag. */
 .faq summary::after {
-  content: "+";
+  content: "+" / "";
   font-family: var(--mono);
   color: var(--text-muted);
   flex: none;
@@ -969,7 +980,7 @@ table.compare caption {
 }
 
 .faq details[open] summary::after {
-  content: "−";
+  content: "−" / "";
 }
 
 .faq details p {
@@ -1148,6 +1159,25 @@ code:not(.code) {
   margin-top: var(--sp-3);
 }
 
+/* WCAG 1.4.1 (Use of Color). This is the only inline link that sits inside a
+   sentence on the site, and .footer a's 0.82 opacity pulls the link to #cbc9c2
+   against #a9aeb6 of the surrounding text — 1.34:1, i.e. a colour-only cue.
+   The underline is the non-colour cue; the colour itself is untouched, so the
+   footer reads exactly as before for anyone not looking for the distinction. */
+.footer__tag a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.footer__tag a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* h3 as well as h4: the column labels are the deepest headings on the page and
+   sit under a section h2 in main, so h3 is the correct level (the h4→h3 swap is
+   footer.html's owner's change; the styling must not shift when they make it). */
+.footer h3,
 .footer h4 {
   font-family: var(--mono);
   font-size: var(--fs-xs);

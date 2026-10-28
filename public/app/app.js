@@ -1587,13 +1587,13 @@ async function renderCvScreen(mount, { signal }) {
 
   /* --- create by uploading a file ------------------------------------ */
   const uploadName = textInput({ placeholder: "Take the name from the file", autocomplete: "off" });
-  const fileInput = el("input", { type: "file", accept: ".txt,.md,.docx,.pdf", "aria-describedby": "cv-file-hint" });
+  const fileInput = el("input", { type: "file", accept: ".txt,.md,.docx,.pdf,.odt,.rtf,.html,.htm", "aria-describedby": "cv-file-hint" });
   const uploadStatus = statusLine();
   const uploadErrors = el("div", { class: "aw-stack" });
   const uploadForm = el(
     "form",
     { class: "aw-form", novalidate: true },
-    field("File", fileInput, "TXT, MD or DOCX. PDF only when this server has pdftotext installed, otherwise the upload is refused with that reason."),
+    field("File", fileInput, "TXT, MD, DOCX, PDF, ODT, RTF or HTML. PDFs are read with pdftotext (native, or through WSL); scanned images need OCR, which is not installed."),
     field("Name (optional)", uploadName),
     el("div", { class: "aw-form__actions" }, el("button", { class: "btn btn--primary", type: "submit", text: "Upload and add" }), uploadStatus),
     uploadErrors
@@ -3574,15 +3574,30 @@ async function bookmarkletInstallBlock() {
     lastStep.textContent = "Open the CV library, paste the text there, and choose “Read this profile”.";
   }
 
+  // So did the closing note: it says "nothing is sent until you choose Read my
+  // profile", which this block no longer offers.
+  const note = block.querySelector(".note");
+  if (note) {
+    note.textContent =
+      "The bookmarklet copies the profile text inside your own browser. Paste it in the CV library and choose “Read this profile”: the text then goes to POST /api/connectors/linkedin with your session and nowhere else, and you can edit or delete the CV afterwards.";
+  }
+
   const source = block.querySelector("[data-bookmarklet-source]");
   const copyButton = block.querySelector("[data-bookmarklet-copy]");
   if (!source || !copyButton) return block;
 
   try {
-    const response = await fetch("/assets/bookmarklet.js", { credentials: "same-origin" });
+    const response = await fetch("/assets/bookmarklet.js", { cache: "no-store", credentials: "same-origin" });
     if (response.ok) {
-      const body = (await response.text()).trim();
-      source.value = `javascript:${body.replace(/__ORIGIN__/g, location.origin)}`;
+      const text = (await response.text()).trim();
+      // Exactly one __ORIGIN__, in the bookmarklet's CONFIG.origin.
+      let address = text.replace("__ORIGIN__", location.origin);
+      // Defensive, not a decoration: a usable address must begin with the
+      // scheme. Today's artifact starts with its provenance comment and carries
+      // `javascript:` at index 186, so this branch is what makes it installable;
+      // if the build ever moves the scheme to index 0, this becomes a no-op.
+      if (!address.startsWith("javascript:")) address = `javascript:${address}`;
+      source.value = address;
     }
   } catch {
     /* the copy button explains itself once the address is missing */
@@ -3731,8 +3746,15 @@ async function renderSettingsScreen(mount, { signal }) {
     ),
   });
 
+  // Distribution for the browser capture, cloned once from the inert template.
+  const bookmarkletBlock = await bookmarkletInstallBlock().catch(() => null);
+  if (signal.aborted) throw abortError();
+
   mount.replaceChildren(
     section({ title: "Account", children: el("div", { class: "aw-grid aw-grid--2" }, accountCard, exportCard) }),
+    ...(bookmarkletBlock
+      ? [section({ title: "Browser capture", meta: "Install once; no sign-in", children: bookmarkletBlock })]
+      : []),
     section({ title: "Danger zone", children: el("div", { class: "aw-card" }, dangerCard) })
   );
 }

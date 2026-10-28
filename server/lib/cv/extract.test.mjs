@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, rmSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import test from "node:test";
 import { crc32, deflateRawSync } from "node:zlib";
 
@@ -121,6 +122,133 @@ function buildDocx({ store = false, withDocument = true } = {}) {
 }
 
 // ---------------------------------------------------------------------------
+// A hand-written single-page PDF with real text in an uncompressed content
+// stream, built here rather than committed as a fixture, so the PDF test is
+// deterministic and needs no PDF-writing library.
+// ---------------------------------------------------------------------------
+
+function buildPdf(lines) {
+  const escape = (value) => String(value).replace(/[\\()]/g, (character) => `\\${character}`);
+  const content = [
+    "BT",
+    "/F1 16 Tf",
+    "72 720 Td",
+    ...lines.flatMap((line, index) => (index === 0 ? [] : ["0 -24 Td"]).concat([`(${escape(line)}) Tj`])),
+    "ET",
+    "",
+  ].join("\n");
+
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+    `<< /Length ${Buffer.byteLength(content, "latin1")} >>\nstream\n${content}endstream`,
+  ];
+
+  let pdf = "%PDF-1.4\n";
+  const offsets = [];
+  for (let index = 0; index < objects.length; index += 1) {
+    offsets.push(Buffer.byteLength(pdf, "latin1"));
+    pdf += `${index + 1} 0 obj\n${objects[index]}\nendobj\n`;
+  }
+  const xrefOffset = Buffer.byteLength(pdf, "latin1");
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  for (const offset of offsets) pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
+  return Buffer.from(pdf, "latin1");
+}
+
+// ---------------------------------------------------------------------------
+// Host capability probes. The PDF fallback and OCR tests are skipped, with a
+// reason, on a machine that cannot exercise them, so the suite stays green
+// everywhere while still proving the WSL route on this one.
+// ---------------------------------------------------------------------------
+
+/** Is this binary a file on the current PATH? Checks file presence only. */
+function nativeBinaryOnPath(name) {
+  const pathValue = process.env.PATH ?? process.env.Path ?? "";
+  const extensions =
+    process.platform === "win32" ? (process.env.PATHEXT ?? ".COM;.EXE;.BAT;.CMD").split(";").filter(Boolean) : [""];
+  for (const directory of pathValue.split(delimiter)) {
+    if (!directory) continue;
+    for (const extension of extensions) {
+      try {
+        if (statSync(join(directory, name + extension)).isFile()) return true;
+      } catch {
+        // Not in this directory.
+      }
+    }
+  }
+  return false;
+}
+
+/** Run a probe command quietly and report whether it succeeded. */
+function probeSucceeds(binary, args) {
+  const result = spawnSync(binary, args, {
+    input: Buffer.alloc(0),
+    encoding: "utf8",
+    timeout: 20_000,
+    windowsHide: true,
+  });
+  return !result.error && result.status === 0;
+}
+
+// ---------------------------------------------------------------------------
+// ODT fixture: a real OpenDocument text package (stored mimetype + content.xml)
+// ---------------------------------------------------------------------------
+
+const ODT_MIMETYPE = "application/vnd.oasis.opendocument.text";
+
+const ODT_CONTENT_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0">
+<office:body><office:text>
+<text:h text:outline-level="1">Ada Lovelace</text:h>
+<text:p>Mathematician &amp; writer<text:s text:c="3"/>based in London.</text:p>
+<text:p>Skills: <text:span text:style-name="T1">JavaScript</text:span>, SQL<text:tab/>AWS</text:p>
+<text:p>Line one<text:line-break/>Line two</text:p>
+<text:p>Fran&#231;ois O&apos;Brien</text:p>
+<table:table><table:table-row><table:table-cell><text:p>2021 - 2024</text:p></table:table-cell><table:table-cell><text:p>Senior Engineer</text:p></table:table-cell></table:table-row></table:table>
+</office:text></office:body>
+</office:document-content>`;
+
+function buildOdt({ mimetype = ODT_MIMETYPE, content = ODT_CONTENT_XML } = {}) {
+  const parts = [zipPart("mimetype", mimetype, { store: true })];
+  if (content !== null) parts.push(zipPart("content.xml", content));
+  return buildZip(parts);
+}
+
+// ---------------------------------------------------------------------------
+// RTF fixture: fonts, colours, an ignorable destination, a field, cp1252
+// escapes, a unicode escape, escaped braces and \par/\tab formatting.
+// ---------------------------------------------------------------------------
+
+const RTF_CV = String.raw`{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\froman Times New Roman;}}
+{\colortbl;\red0\green0\blue0;}
+{\*\generator Riched20 10.0.19041;}\viewkind4\uc1\pard\f0\fs22 Ada Lovelace\par
+She said \'93ship it\'94 and then left.\par
+Skills\tab JavaScript, SQL, AWS\par
+Fran\'e7ois O\'92Brien \u8212? and a brace \{here\}\par
+{\field{\*\fldinst{HYPERLINK "https://example.com"}}{\fldrslt{Portfolio}}}\par
+}`;
+
+// ---------------------------------------------------------------------------
+// HTML fixture: the shape a "save as web page" export has, including markup that
+// must not be read as CV text.
+// ---------------------------------------------------------------------------
+
+const HTML_CV = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Ada Lovelace CV</title>
+<style>body { font-family: serif; }</style><script>console.log("nope")</script></head>
+<body>
+<h1>Ada Lovelace</h1>
+<p>Mathematician &amp; writer.<br>Based in London.</p>
+<ul><li>Built a difference engine</li><li>Wrote the 1843 notes</li></ul>
+<table><tr><td>2021 - 2024</td><td>Senior Engineer</td></tr></table>
+<p>Email: ada@example.com &nbsp;|&nbsp; +44 7700 900123</p>
+</body></html>`;
+
+// ---------------------------------------------------------------------------
 // detectFormat
 // ---------------------------------------------------------------------------
 
@@ -136,9 +264,29 @@ test("detectFormat reads extensions first and MIME types second", () => {
   assert.equal(detectFormat("cv", "text/plain"), "txt");
   assert.equal(detectFormat("cv", "application/pdf"), "pdf");
   assert.equal(detectFormat("", "text/markdown; charset=utf-8"), "md");
-  assert.equal(detectFormat("cv.doc", "application/msword"), "unknown");
   assert.equal(detectFormat(null, null), "unknown");
   assert.equal(detectFormat(undefined, "application/octet-stream"), "unknown");
+
+  // Legacy binary Word is detected so it can be refused with instructions.
+  assert.equal(detectFormat("cv.doc", "application/msword"), "doc");
+  assert.equal(detectFormat("cv.DOC"), "doc");
+
+  // The formats added alongside the OCR path.
+  assert.equal(detectFormat("cv.odt"), "odt");
+  assert.equal(detectFormat("cv", "application/vnd.oasis.opendocument.text"), "odt");
+  assert.equal(detectFormat("cv.rtf"), "rtf");
+  assert.equal(detectFormat("cv", "application/rtf"), "rtf");
+  assert.equal(detectFormat("cv.html"), "html");
+  assert.equal(detectFormat("cv.HTM"), "html");
+  assert.equal(detectFormat("cv", "text/html; charset=utf-8"), "html");
+  assert.equal(detectFormat("scan.png"), "image");
+  assert.equal(detectFormat("scan.JPG"), "image");
+  assert.equal(detectFormat("scan.jpeg", "application/octet-stream"), "image");
+  assert.equal(detectFormat("scan.tiff"), "image");
+  assert.equal(detectFormat("scan.webp"), "image");
+  assert.equal(detectFormat("scan.bmp"), "image");
+  assert.equal(detectFormat("scan.gif"), "image");
+  assert.equal(detectFormat("scan", "image/png"), "image");
 });
 
 // ---------------------------------------------------------------------------
@@ -196,6 +344,183 @@ test("a text file named .docx is read as text, with a warning", async () => {
   assert.equal(result.format, "txt");
   assert.equal(result.text, "Ada Lovelace\nada@example.com");
   assert.ok(result.warnings.some((warning) => warning.includes("not a zip archive")));
+});
+
+// ---------------------------------------------------------------------------
+// ODT (zip + OpenDocument text)
+// ---------------------------------------------------------------------------
+
+test("an ODT keeps paragraph breaks, spans, tabs and entity text", async () => {
+  const result = await extractText({ buffer: buildOdt(), filename: "cv.odt", mime: ODT_MIMETYPE });
+
+  assert.equal(result.format, "odt");
+  assert.deepEqual(result.warnings, [], `unexpected warnings: ${JSON.stringify(result.warnings)}`);
+  assert.ok(result.text.startsWith("Ada Lovelace"), `unexpected start: ${JSON.stringify(result.text.slice(0, 40))}`);
+  assert.ok(result.text.includes("Mathematician & writer based in London."), "paragraph text or entities were lost");
+  assert.ok(result.text.includes("Skills: JavaScript, SQL AWS"), "spans, tabs or <text:s> runs were mishandled");
+  assert.ok(result.text.includes("Line one\nLine two"), "a <text:line-break/> did not become a line break");
+  assert.ok(result.text.includes("Fran\u00e7ois O'Brien"), "numeric or apostrophe entities were not decoded");
+  assert.ok(result.text.includes("2021 - 2024"), "table cell text was lost");
+  assert.ok(result.text.includes("Senior Engineer"), "table cell text was lost");
+  assert.ok(!result.text.includes("<text:"), "XML tags leaked into the CV");
+  assert.ok(!result.text.includes("&amp;"), "entities were not decoded");
+
+  const again = await extractText({ buffer: buildOdt(), filename: "cv.odt" });
+  assert.equal(again.text, result.text, "ODT extraction is not deterministic");
+});
+
+test("an ODT named .docx is read as an ODT, with a warning", async () => {
+  const result = await extractText({ buffer: buildOdt(), filename: "cv.docx" });
+  assert.equal(result.format, "odt");
+  assert.ok(result.text.includes("Ada Lovelace"));
+  assert.ok(result.warnings.some((warning) => warning.includes("OpenDocument")));
+});
+
+test("an OpenDocument text package with no mimetype entry is read with a warning", async () => {
+  const buffer = buildZip([zipPart("content.xml", ODT_CONTENT_XML)]);
+  const result = await extractText({ buffer, filename: "cv.odt" });
+  assert.equal(result.format, "odt");
+  assert.ok(result.text.includes("Ada Lovelace"));
+  assert.ok(result.warnings.some((warning) => warning.includes("mimetype")));
+});
+
+test("an OpenDocument spreadsheet is refused rather than read as a CV", async () => {
+  const buffer = buildOdt({ mimetype: "application/vnd.oasis.opendocument.spreadsheet" });
+  const result = await extractText({ buffer, filename: "cv.ods" });
+  assert.equal(result.format, "odt");
+  assert.equal(result.text, "");
+  assert.ok(
+    result.warnings.some((warning) => warning.includes("not a text document")),
+    `warnings were ${JSON.stringify(result.warnings)}`
+  );
+});
+
+test("a zip holding neither document part is explained, not guessed at", async () => {
+  const buffer = buildZip([zipPart("hello.txt", "not a CV")]);
+  const result = await extractText({ buffer, filename: "cv.odt" });
+  assert.equal(result.text, "");
+  assert.ok(result.warnings.some((warning) => warning.includes("content.xml")));
+  assert.ok(result.warnings.some((warning) => warning.includes("word/document.xml")));
+});
+
+// ---------------------------------------------------------------------------
+// RTF
+// ---------------------------------------------------------------------------
+
+test("RTF keeps the words and drops fonts, colours, fields and control words", async () => {
+  const result = await extractText({ buffer: Buffer.from(RTF_CV, "latin1"), filename: "cv.rtf", mime: "application/rtf" });
+
+  assert.equal(result.format, "rtf");
+  assert.deepEqual(result.warnings, [], `unexpected warnings: ${JSON.stringify(result.warnings)}`);
+  assert.ok(result.text.startsWith("Ada Lovelace"), `unexpected start: ${JSON.stringify(result.text.slice(0, 40))}`);
+  assert.ok(result.text.includes("She said \u201cship it\u201d and then left."), "cp1252 escapes were decoded wrongly");
+  assert.ok(result.text.includes("Skills JavaScript, SQL, AWS"), "\\tab did not become a space");
+  assert.ok(result.text.includes("Fran\u00e7ois O\u2019Brien \u2014 and a brace {here}"), "escaping was mishandled");
+  assert.ok(result.text.includes("Portfolio"), "the visible text of a field was lost");
+  assert.ok(!result.text.includes("HYPERLINK"), "field instructions leaked into the CV");
+  assert.ok(!result.text.includes("Times New Roman"), "the font table leaked into the CV");
+  assert.ok(!result.text.includes("fonttbl"), "control words leaked into the CV");
+  assert.ok(!result.text.includes("Riched20"), "an ignorable destination leaked into the CV");
+  assert.ok(!result.text.includes("\\par"), "control words leaked into the CV");
+});
+
+test("a .doc that is really RTF is read as RTF", async () => {
+  const result = await extractText({ buffer: Buffer.from(RTF_CV, "latin1"), filename: "cv.doc", mime: "application/msword" });
+  assert.equal(result.format, "rtf");
+  assert.ok(result.text.includes("Ada Lovelace"));
+  assert.ok(result.warnings.some((warning) => warning.includes("RTF")));
+});
+
+test("a text file named .rtf is read as text, with a warning", async () => {
+  const result = await extractText({ buffer: Buffer.from("Ada Lovelace\nEngineer"), filename: "cv.rtf" });
+  assert.equal(result.format, "txt");
+  assert.equal(result.text, "Ada Lovelace\nEngineer");
+  assert.ok(result.warnings.some((warning) => warning.includes("plain text")));
+});
+
+// ---------------------------------------------------------------------------
+// HTML
+// ---------------------------------------------------------------------------
+
+test("HTML is stripped to its text, with scripts, styles and the title dropped", async () => {
+  const result = await extractText({ buffer: Buffer.from(HTML_CV), filename: "cv.html", mime: "text/html" });
+
+  assert.equal(result.format, "html");
+  assert.deepEqual(result.warnings, [], `unexpected warnings: ${JSON.stringify(result.warnings)}`);
+  assert.ok(result.text.startsWith("Ada Lovelace"), `unexpected start: ${JSON.stringify(result.text.slice(0, 40))}`);
+  assert.ok(result.text.includes("Mathematician & writer."), "entities or paragraph text were lost");
+  assert.ok(result.text.includes("Based in London."), "a <br> did not become a line break");
+  assert.ok(result.text.includes("Built a difference engine"), "list item text was lost");
+  assert.ok(result.text.includes("Wrote the 1843 notes"), "list item text was lost");
+  assert.ok(result.text.includes("2021 - 2024") && result.text.includes("Senior Engineer"), "table text was lost");
+  assert.ok(result.text.includes("ada@example.com"), "contact text was lost");
+  assert.ok(!result.text.includes("<"), "a tag leaked into the CV");
+  assert.ok(!result.text.includes("&amp;"), "entities were not decoded");
+  assert.ok(!result.text.includes("console.log"), "a script leaked into the CV");
+  assert.ok(!result.text.includes("font-family"), "a stylesheet leaked into the CV");
+});
+
+test("a page saved as .txt is read as HTML, with a warning", async () => {
+  const result = await extractText({ buffer: Buffer.from(HTML_CV), filename: "cv.txt" });
+  assert.equal(result.format, "html");
+  assert.ok(result.text.includes("Ada Lovelace"));
+  assert.ok(result.warnings.some((warning) => warning.includes("HTML")));
+});
+
+// ---------------------------------------------------------------------------
+// Legacy binary Word
+// ---------------------------------------------------------------------------
+
+test("a legacy binary .doc is refused with a clear next step", async () => {
+  const ole2 = Buffer.concat([
+    Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]),
+    Buffer.alloc(512),
+  ]);
+  const result = await extractText({ buffer: ole2, filename: "cv.doc", mime: "application/msword" });
+
+  assert.equal(result.format, "doc");
+  assert.equal(result.text, "");
+  const warning = result.warnings.join(" ");
+  assert.match(warning, /not supported/i);
+  assert.match(warning, /\.docx/);
+  assert.match(warning, /paste/i);
+  assert.ok(!warning.includes("tesseract"), "the OCR advice has nothing to do with a .doc");
+});
+
+// ---------------------------------------------------------------------------
+// Images and OCR: honest when the tool is absent
+// ---------------------------------------------------------------------------
+
+test("an image upload with no OCR anywhere names the install command and the paste path", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "applywright-ocr-"));
+  const savedPath = process.env.PATH;
+  try {
+    // An empty directory guarantees neither tesseract nor wsl is found, whatever the host has.
+    process.env.PATH = directory;
+    const png = Buffer.concat([
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+      Buffer.alloc(32),
+    ]);
+    const result = await extractText({ buffer: png, filename: "cv.png", mime: "image/png" });
+
+    assert.equal(result.format, "image");
+    assert.equal(result.text, "");
+    const warning = result.warnings.join(" ");
+    assert.match(warning, /tesseract/i);
+    assert.match(warning, /winget install UB-Mannheim\.TesseractOCR/);
+    assert.match(warning, /sudo apt install tesseract-ocr/);
+    assert.match(warning, /paste/i);
+  } finally {
+    process.env.PATH = savedPath;
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("binary bytes named as an image are refused without pretending OCR ran", async () => {
+  const result = await extractText({ buffer: Buffer.from([0x00, 0x01, 0x02, 0x03, 0x00]), filename: "cv.jpg" });
+  assert.equal(result.format, "image");
+  assert.equal(result.text, "");
+  assert.ok(result.warnings.some((warning) => warning.includes("not a PNG, JPEG, GIF, BMP, TIFF or WebP image")));
 });
 
 // ---------------------------------------------------------------------------
@@ -266,11 +591,11 @@ test("extractText never throws on odd input", async () => {
 // PDF
 // ---------------------------------------------------------------------------
 
-test("a PDF without pdftotext returns the format and a clear warning", async () => {
+test("a PDF with no pdftotext anywhere names both routes and the paste path", async () => {
   const directory = mkdtempSync(join(tmpdir(), "applywright-extract-"));
   const savedPath = process.env.PATH;
   try {
-    // An empty directory guarantees the binary is not found, whatever the host has.
+    // An empty directory guarantees neither pdftotext nor wsl is found, whatever the host has.
     process.env.PATH = directory;
     const result = await extractText({
       buffer: Buffer.from("%PDF-1.7\n1 0 obj\n<<>>\nendobj\n", "latin1"),
@@ -279,11 +604,62 @@ test("a PDF without pdftotext returns the format and a clear warning", async () 
     });
     assert.equal(result.format, "pdf");
     assert.equal(result.text, "");
-    assert.ok(result.warnings.some((warning) => warning.includes("pdftotext")));
+    const warning = result.warnings.join(" ");
+    assert.ok(warning.includes("pdftotext"));
+    assert.ok(warning.includes("wsl"), "the warning must name the WSL route that was tried");
+    assert.ok(warning.includes("paste"), "the warning must name the correction path");
   } finally {
     process.env.PATH = savedPath;
     rmSync(directory, { recursive: true, force: true });
   }
+});
+
+test("an unreadable PDF reports every route it tried instead of failing silently", async () => {
+  const result = await extractText({
+    buffer: Buffer.from("%PDF-1.7\nthis claims to be a PDF but has no trailer\n", "latin1"),
+    filename: "cv.pdf",
+    mime: "application/pdf",
+  });
+  assert.equal(result.format, "pdf");
+  assert.equal(result.text, "");
+  const warning = result.warnings.join(" ");
+  assert.match(warning, /could not be read/i);
+  assert.match(warning, /pdftotext/);
+  assert.match(warning, /paste/);
+  // Whichever host this runs on, the WSL route is part of the story.
+  assert.match(warning, /wsl/i);
+});
+
+test("a PDF with real text is read through the WSL pdftotext fallback", async (t) => {
+  // This host has Poppler in WSL and nothing on the Windows PATH, which is the
+  // exact situation the fallback exists for. Any other host skips with a reason
+  // rather than passing on the strength of a native binary.
+  if (nativeBinaryOnPath("pdftotext")) {
+    t.skip("a native pdftotext is on PATH, so the WSL fallback is not the route this run would exercise");
+    return;
+  }
+  if (!probeSucceeds("wsl", ["-e", "pdftotext", "-v"])) {
+    t.skip("no `wsl` with pdftotext on this host, so the WSL fallback cannot be exercised");
+    return;
+  }
+
+  const buffer = buildPdf(["Ada Lovelace", "Senior Engineer at Acme Payments", "ada@example.com"]);
+  const result = await extractText({ buffer, filename: "cv.pdf", mime: "application/pdf" });
+
+  assert.equal(result.format, "pdf");
+  assert.deepEqual(result.warnings, [], `unexpected warnings: ${JSON.stringify(result.warnings)}`);
+  assert.match(result.text, /Ada Lovelace/, `extracted text was ${JSON.stringify(result.text)}`);
+  assert.match(result.text, /Senior Engineer at Acme Payments/);
+  assert.match(result.text, /ada@example\.com/);
+  assert.ok(!result.text.includes("\f"), "a page break leaked into the text");
+
+  const again = await extractText({ buffer, filename: "cv.pdf" });
+  assert.equal(again.text, result.text, "PDF extraction is not deterministic");
+
+  // The extracted text must be usable end to end, not merely present.
+  const profile = segmentSections(result.text);
+  assert.equal(profile.contact.name, "Ada Lovelace", `name was ${JSON.stringify(profile.contact.name)}`);
+  assert.equal(profile.contact.email, "ada@example.com", "the extracted PDF text did not segment");
 });
 
 // ---------------------------------------------------------------------------

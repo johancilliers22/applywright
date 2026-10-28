@@ -122,6 +122,38 @@ async function checkServer() {
   return files.length;
 }
 
+/**
+ * A bookmarklet is a URL, not just JavaScript: `node --check` passes on a file
+ * whose scheme is on line 186, and that file is silently a relative path in a
+ * browser. This asserts the properties that actually matter.
+ */
+async function checkBookmarklet() {
+  let source;
+  try {
+    source = (await read(join(PUBLIC, "assets", "bookmarklet.js"))).trim();
+  } catch {
+    return 0;
+  }
+  const label = "public/assets/bookmarklet.js";
+  let protocol = null;
+  try {
+    protocol = new URL(source).protocol;
+  } catch {
+    protocol = null;
+  }
+  const schemes = (source.match(/javascript:/g) ?? []).length;
+  const tokens = (source.match(/__ORIGIN__/g) ?? []).length;
+  if (protocol !== "javascript:") {
+    fail(`${label}: address does not parse as a javascript: URL (got ${protocol ?? "no scheme"}) — a banner-first line is a relative http path and never runs`);
+  }
+  if (schemes !== 1) fail(`${label}: expected exactly one "javascript:" scheme, found ${schemes}`);
+  if (tokens !== 1) fail(`${label}: expected exactly one __ORIGIN__ token, found ${tokens}`);
+  if (/\r?\n/.test(source)) fail(`${label}: the bookmarklet must be a single line`);
+  if (/\bfetch\s*\(|XMLHttpRequest|sendBeacon/.test(source)) fail(`${label}: must not make network calls`);
+  return 1;
+}
+
+const bookmarkletChecked = await checkBookmarklet();
 const definedClasses = await loadCssClasses();
 const pageCount = await checkPages(definedClasses);
 const sourceCount = await checkServer();

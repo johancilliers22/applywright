@@ -58,6 +58,37 @@ browser:
 Some browsers strip the `javascript:` prefix when you paste into the **address bar**, so
 paste into the bookmark's editor instead of the omnibox.
 
+### Rendering it from a page
+
+If a screen fetches the file to display the address, this is the whole recipe:
+
+```js
+const text = await (await fetch("/assets/bookmarklet.js", { cache: "no-store" })).text();
+let address = text.trim().replace("__ORIGIN__", location.origin);
+// Defensive only: the served line already starts with the scheme.
+if (!address.startsWith("javascript:")) address = "javascript:" + address;
+```
+
+- **The line really does start with the scheme.** The build emits
+  `javascript:/* provenance banner */;<code>`, so `new URL(line).protocol` is `javascript:`
+  and the file's single line is the complete, installable address. (Do not put the banner
+  before the scheme: a bookmark whose URL begins `/* …` is a relative path, and the browser
+  resolves it as `http(s):` and runs nothing. That was a real bug in the first build of this
+  file, caught in integration.)
+- **`__ORIGIN__` appears exactly once**, in `CONFIG.origin`, and is replaced with
+  `location.origin`. Leaving it unreplaced is allowed — the bookmarklet then asks for the
+  address once and remembers it.
+- **Never prefix a second `javascript:`.** If something has already produced a doubled
+  address (`javascript:/…;javascript:(…)`), it still executes — the second occurrence parses
+  as a JavaScript label — but it is eleven wasted characters that read as a mistake.
+- The provenance banner is **inside** the address, straight after the scheme, on purpose: it
+  is the only "do not edit by hand" notice in the artifact and it names this document.
+  Display and copy exactly what the file contains, so the text a user copies is the text
+  this document and `node --check` describe.
+- Measured: 24,356 characters after trimming the trailing newline, plus the length of the
+  origin that replaces the 10-character token — 24,367 for a 21-character origin such as
+  `http://127.0.0.1:3160`.
+
 **About our Content-Security-Policy.** Applywright serves `script-src 'self'`
 (`SECURITY_HEADERS` in `server/app.js`), which means a `javascript:` link *clicked while
 you are on one of our pages* is blocked by the browser. That is deliberate and we are not
@@ -218,14 +249,27 @@ licence we are claiming to LinkedIn's.
 `public/assets/bookmarklet.js` is generated. From the project root:
 
 ```powershell
-node -e "const fs=require('fs');const head='/* Built from public/assets/bookmarklet.src.js - do not edit by hand. This one line is the bookmarklet URL; paste it whole into a bookmark address. Rebuild: docs/LINKEDIN-CAPTURE.md. */;javascript:';const body=fs.readFileSync('public/assets/bookmarklet.src.js','utf8').split(/\r?\n/).map(l=>l.trim()).filter(l=>l&&l.indexOf('//')!==0).join(' ');fs.writeFileSync('public/assets/bookmarklet.js',head+body+'\n')"
+node -e "const fs=require('fs');const head='javascript:/* Built from public/assets/bookmarklet.src.js - do not edit by hand. This one line is the bookmarklet URL; paste it whole into a bookmark address. Rebuild: docs/LINKEDIN-CAPTURE.md. */;';const body=fs.readFileSync('public/assets/bookmarklet.src.js','utf8').split(/\r?\n/).map(l=>l.trim()).filter(l=>l&&l.indexOf('//')!==0).join(' ');fs.writeFileSync('public/assets/bookmarklet.js',head+body+'\n')"
 ```
 
-The build drops whole-line comments, trims each line and joins the rest into one line,
-prefixed with the `javascript:` scheme. It works because the source keeps every comment on
-its own line and every statement self-terminating — so do not add a trailing comment to a
-code line. `node --check` still passes on the built file: `javascript:` parses as an
-ordinary JavaScript label.
+The scheme comes **first, before the banner**, so the line is a real URL: `javascript:` +
+`/* banner */;` + the code. The build drops whole-line comments, trims each line and joins
+the rest into one line. It works because the source keeps every comment on its own line and
+every statement self-terminating — so do not add a trailing comment to a code line.
+`node --check` still passes on the built file, because after the scheme the text is ordinary
+JavaScript: `javascript:` parses as a label applied to an empty statement, then the
+immediately-invoked function runs.
+
+Verify the artifact after building — these two must hold:
+
+```powershell
+node -e "const fs=require('fs');const line=fs.readFileSync('public/assets/bookmarklet.js','utf8').trim();console.log('protocol', new URL(line).protocol);console.log('scheme count', (line.match(/javascript:/g)||[]).length);console.log('token count', (line.match(/__ORIGIN__/g)||[]).length)"
+```
+
+Expected: `protocol javascript:`, `scheme count 1`, `token count 1`. The first build of this
+file put the banner before the scheme; a bookmark whose address begins `/* …` is a relative
+path, the browser resolves it as `http(s):`, and nothing runs. That is why the order is
+asserted rather than assumed.
 
 Checks that must stay green:
 

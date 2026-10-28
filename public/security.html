@@ -123,7 +123,7 @@
 
         <h3>Export and delete</h3>
         <p>Five endpoints, all of them real:</p>
-        <pre class="code">GET    /api/export                      JSON attachment of everything you own
+        <pre class="code" tabindex="0" role="region" aria-label="Export and delete endpoints">GET    /api/export                      JSON attachment of everything you own
 DELETE /api/account                     {"password": "…"} — deletes the account
 DELETE /api/cvs/:id                     one CV
 DELETE /api/applications/:id            one application and its pack
@@ -278,7 +278,7 @@ DELETE /api/alerts/:id                  one alert</pre>
 
         <h3>Tailoring: exactly what is sent</h3>
         <p>If <code>MODEL_API_KEY</code> is set, <code>POST /api/tailor</code> makes one JSON-mode call from the server to <code>MODEL_BASE_URL</code> — by default <code>https://api.deepseek.com/v1</code> with the model <code>deepseek-chat</code>, temperature 0.2, at most 2,000 tokens and a 60-second timeout. The request contains:</p>
-        <pre class="code">job title, company, and the first 6,000 characters of the description
+        <pre class="code" tabindex="0" role="region" aria-label="The five field groups a tailoring request sends">job title, company, and the first 6,000 characters of the description
 up to 30 keywords extracted from the posting
 your profile: name, current role, notice period, salary expectation
 your CV text — the first 12,000 characters

@@ -141,7 +141,12 @@
           </p>
         </div>
 
-        <div class="table-wrap">
+        <!-- The table is 620px at its minimum, so it scrolls sideways below
+             that width. A scroll container has to be reachable from the
+             keyboard or the columns cannot be read without a pointer (WCAG
+             2.1.1); tabindex makes it a focus stop in every engine and the
+             labelled region says why focus just landed there. -->
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Score components and their weights">
           <table class="compare">
             <caption>
               Each component is scored out of 100 and then weighted, so the five weights add up to the total

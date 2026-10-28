@@ -273,18 +273,69 @@ test("formal and plain registers", async () => {
   assert.equal(plain.refined.summary, "Also, I use Kubernetes to manage the payments platform.");
 });
 
-test("senior strengthens a weak opener, junior softens an overstated one", async () => {
+test("senior strengthens a weak opener without raising the level of ownership", async () => {
+  // The old map promoted: "Responsible for…" → "Owned…", "helped with…" → "Drove…",
+  // "tasked with…" → "Led…". `/how-it-works` says the product cannot upgrade
+  // *supported* to *led*, so the expectation changed with the fix — this assertion
+  // is the evidence that the defect is closed, not a test bent to pass.
   const senior = await refine({
     pack: summaryPack("Responsible for the payments platform and worked on the reporting service."),
     instruction: "make the summary sound more senior",
   });
-  assert.equal(senior.refined.summary, "Owned the payments platform and worked on the reporting service.");
+  assert.equal(senior.refined.summary, "Handled the payments platform and worked on the reporting service.");
+
+  const helped = await refine({
+    pack: summaryPack("Helped with managing 12 engineers."),
+    instruction: "make the summary sound more senior",
+  });
+  assert.equal(helped.refined.summary, "Contributed to managing 12 engineers.");
+  assert.doesNotMatch(helped.refined.summary, /\b(?:Led|Managed|Drove|Owned)\b/);
+
+  const tasked = await refine({
+    pack: summaryPack("Tasked with managing the migration of 14 services."),
+    instruction: "make the summary more senior",
+  });
+  assert.equal(tasked.refined.summary, "Worked on managing the migration of 14 services.");
+
+  // "Worked on" has no honest stronger form, so the strongest wording leaves it
+  // exactly as the candidate wrote it and says so.
+  const worked = await refine({
+    pack: summaryPack("Worked on the reporting service."),
+    instruction: "make the summary sound more senior",
+  });
+  assert.equal(worked.refined.summary, "Worked on the reporting service.");
+  assert.ok(worked.warnings.some((warning) => /no change was needed/.test(warning)));
 
   const junior = await refine({
     pack: summaryPack("Spearheaded the payments rebuild."),
     instruction: "make the summary less senior",
   });
   assert.equal(junior.refined.summary, "Contributed to the payments rebuild.");
+});
+
+test("a model rewrite that promotes a verb is reverted by the grounding check", async () => {
+  const model = {
+    async complete() {
+      return { summary: "Managed 12 engineers.", bullets: [], coverLetter: LETTER };
+    },
+  };
+  const result = await refine({
+    pack: summaryPack("Helped with managing 12 engineers."),
+    instruction: "make the summary sound more senior",
+    model,
+  });
+
+  // The model's promotion is refused, so nothing it offered survives and the rules
+  // path answers instead.
+  assert.equal(result.mode, "rules");
+  assert.equal(result.refined.summary, "Contributed to managing 12 engineers.");
+  assert.ok(!result.refined.summary.includes("Managed 12 engineers"));
+  assert.ok(
+    result.warnings.some((warning) =>
+      /reverted because it failed the grounding check: .*stronger level of ownership/.test(warning)
+    ),
+    `expected an ownership rejection in: ${JSON.stringify(result.warnings)}`
+  );
 });
 
 test("technical writes numbers as digits and drops hedging without changing a claim", async () => {
@@ -428,6 +479,20 @@ test("groundChanges rejects a dropped figure and accepts a faithful rephrase", (
   const faithful = groundChanges("Cut cloud spend by £240,000 a year.", "Reduced annual cloud spend by £240k.");
   assert.equal(faithful.ok, true);
   assert.deepEqual(faithful.reasons, []);
+});
+
+test("groundChanges refuses a rewrite that raises the level of ownership", () => {
+  // The same shared check runs under refine, the assist route and the tailor, so
+  // this is where the product promise ("cannot upgrade supported to led") is kept.
+  const promoted = groundChanges("Helped with managing 12 engineers.", "Managed 12 engineers.");
+  assert.equal(promoted.ok, false);
+  assert.ok(promoted.reasons.some((reason) => /stronger level of ownership/.test(reason)));
+
+  const led = groundChanges("Helped with managing 12 engineers.", "Led 12 engineers.");
+  assert.equal(led.ok, false);
+
+  const faithful = groundChanges("Helped with managing 12 engineers.", "Contributed to managing 12 engineers.");
+  assert.equal(faithful.ok, true);
 });
 
 test("a rejected change is reverted, never shipped", async () => {

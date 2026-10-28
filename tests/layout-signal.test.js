@@ -26,6 +26,8 @@ const PROFILE = {
 
 const JOB = "platform engineer with measurable delivery and small team work";
 
+const formatting = (report) => report.subscores.formatting;
+
 test("hasLayoutRisk is total and treats a missing layout as clean", () => {
   assert.equal(hasLayoutRisk(null), false);
   assert.equal(hasLayoutRisk(undefined), false);
@@ -39,29 +41,31 @@ test("hasLayoutRisk is total and treats a missing layout as clean", () => {
 });
 
 test("a flattened table is docked formatting marks", () => {
-  const clean = scoreCv({ jobText: JOB, cvText: CV, profile: PROFILE });
-  const table = scoreCv({
-    jobText: JOB,
-    cvText: CV,
-    profile: { ...PROFILE, layout: { tables: 1, columns: 1, textBoxes: 0 } },
-  });
+  const clean = formatting(scoreCv({ jobText: JOB, cvText: CV, profile: PROFILE }));
+  const table = formatting(
+    scoreCv({ jobText: JOB, cvText: CV, profile: { ...PROFILE, layout: { tables: 1, columns: 1, textBoxes: 0 } } }),
+  );
 
-  assert.ok(clean.formatting > table.formatting, `expected the table CV to score lower (${clean.formatting} vs ${table.formatting})`);
+  assert.ok(clean > table, `expected the table CV to score lower (${clean} vs ${table})`);
   // The penalty is the table rule, not a blanket collapse.
-  assert.ok(table.formatting >= 60, `a table should cost a few marks, not most of them (got ${table.formatting})`);
+  assert.ok(table >= 60, `a table should cost a few marks, not most of them (got ${table})`);
 });
 
 test("multi-column and text-box layouts are docked too, and the clean CV keeps its marks", () => {
-  const clean = scoreCv({ jobText: JOB, cvText: CV, profile: PROFILE });
+  const clean = formatting(scoreCv({ jobText: JOB, cvText: CV, profile: PROFILE }));
   for (const layout of [{ columns: 2 }, { textBoxes: 1 }]) {
-    const risky = scoreCv({ jobText: JOB, cvText: CV, profile: { ...PROFILE, layout } });
-    assert.ok(risky.formatting < clean.formatting, `${JSON.stringify(layout)} should cost formatting marks`);
+    const risky = formatting(scoreCv({ jobText: JOB, cvText: CV, profile: { ...PROFILE, layout } }));
+    assert.ok(risky < clean, `${JSON.stringify(layout)} should cost formatting marks (${risky} vs ${clean})`);
   }
-  assert.equal(clean.formatting, scoreCv({ jobText: JOB, cvText: CV, profile: PROFILE }).formatting, "scoring must stay deterministic");
+  assert.equal(
+    clean,
+    formatting(scoreCv({ jobText: JOB, cvText: CV, profile: PROFILE })),
+    "scoring must stay deterministic",
+  );
 });
 
 test("a missing profile does not throw and does not invent a layout risk", () => {
   const report = scoreCv({ jobText: JOB, cvText: CV, profile: undefined });
-  assert.equal(typeof report.formatting, "number");
-  assert.ok(report.formatting > 0);
+  assert.equal(typeof formatting(report), "number");
+  assert.ok(formatting(report) > 0);
 });

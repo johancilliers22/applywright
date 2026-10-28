@@ -178,13 +178,13 @@ function statusLabel(status) {
   return STATUS_LABELS[status] ?? String(status ?? "Unknown").replace(/_/g, " ");
 }
 
+// Only flags plans.js still grants. apiAccess, priorityRefresh and bulkExport
+// were withdrawn there, so their labels were unreachable and are gone: the
+// billing list renders from PLANS.*.flags, which no longer contains them.
 const FLAG_LABELS = {
   fullAtsReport: "Full ATS report",
   coverLetter: "Covering letters",
   packHistory: "Pack history",
-  apiAccess: "API access",
-  priorityRefresh: "Priority refresh",
-  bulkExport: "Export everything",
 };
 
 const SUBSCOPE_LABELS = [
@@ -526,10 +526,65 @@ function loadingState(label = "Loading…") {
   );
 }
 
-function emptyState({ title, body, action }) {
+/*
+ * Empty-state artwork, inlined rather than <img> so it inherits currentColor and
+ * works in both schemes without a second file. Each one is copied verbatim from
+ * public/assets/art/ (the source of truth for the drawing); the strings are
+ * trusted constants, never user input, and are parsed as SVG — not assigned to
+ * innerHTML — so nothing here can inject markup.
+ */
+const EMPTY_ART = {
+  cvs: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 168" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Empty state: no CVs yet. A blank folio, a loose sheet behind it, and the
+       corner registration marks that say "a sheet is expected here". -->
+  <rect x="82" y="18" width="96" height="120" rx="2" stroke-width="1" stroke-opacity="0.45" />
+  <path d="M72 30h58l14 14v106H72z" />
+  <path d="M130 30v14h14" />
+  <path d="M88 76h60" stroke-width="1" stroke-opacity="0.55" />
+  <path d="M64 150h-6M64 150v-6M176 150h6M176 150v-6" stroke-width="1.5" />
+</svg>`,
+  applications: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 168" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Empty state: no applications. A ruled ledger with one open row: the rule
+       stops short, and the status box at the end is still empty. -->
+  <rect x="52" y="40" width="136" height="96" rx="2" />
+  <path d="M52 64h136" stroke-width="1" />
+  <path d="M52 88h136M52 112h136" stroke-width="1" />
+  <path d="M96 64v72" stroke-width="1" />
+  <path d="M104 88h44" stroke-width="1" stroke-opacity="0.55" />
+  <path d="M148 88h26" stroke-width="1" stroke-dasharray="3 4" />
+  <rect x="164" y="82" width="12" height="12" rx="1.5" />
+  <path d="M70 76h16M70 100h16M70 124h16" stroke-width="1" />
+</svg>`,
+};
+
+/** Parse one of the trusted illustrations into a decorative, currentColor SVG. */
+function emptyArt(name) {
+  const markup = EMPTY_ART[name];
+  if (!markup) return null;
+  try {
+    const doc = new DOMParser().parseFromString(markup, "image/svg+xml");
+    const root = doc.documentElement;
+    if (!root || root.nodeName.toLowerCase() !== "svg") return null;
+    const node = document.importNode(root, true);
+    node.setAttribute("class", "aw-empty__art");
+    node.setAttribute("aria-hidden", "true");
+    node.setAttribute("focusable", "false");
+    return node;
+  } catch {
+    // A failed parse costs the drawing, never the state: the copy still reads.
+    return null;
+  }
+}
+
+/**
+ * The empty state. The illustration is decorative and the heading carries the
+ * meaning, so `art` never substitutes for the copy.
+ */
+function emptyState({ title, body, action, art }) {
   return el(
     "div",
     { class: "aw-empty" },
+    art ? emptyArt(art) : null,
     el("p", { class: "aw-empty__title", text: title }),
     body ? el("p", { class: "aw-empty__body", text: body }) : null,
     action ?? null
@@ -678,8 +733,30 @@ function checkField(labelText, checked, onchange) {
   return el("label", { class: "aw-check" }, input, el("span", { text: labelText }));
 }
 
+/*
+ * A status carries three channels: the dot's colour, a shape mark, and the word.
+ * The shape is what survives greyscale and colour blindness, and it uses the
+ * marketing pages' own vocabulary (○ pending, ✓ done, → sent, × refused, – out).
+ * The mark is aria-hidden: the word beside it is the accessible label.
+ */
+const STATUS_MARKS = {
+  pack_ready: "○",
+  approved: "✓",
+  submitted: "→",
+  interview: "◇",
+  offer: "★",
+  rejected: "×",
+  withdrawn: "–",
+};
+
 function statusPip(status) {
-  return el("span", { class: "aw-pip", dataset: { status }, text: statusLabel(status) });
+  const mark = STATUS_MARKS[status];
+  return el(
+    "span",
+    { class: "aw-pip", dataset: { status } },
+    mark ? el("span", { class: "aw-pip__mark", "aria-hidden": "true", text: mark }) : null,
+    statusLabel(status)
+  );
 }
 
 function severityBadge(severity) {
@@ -849,32 +926,35 @@ function meter({ value, max, label, tone }) {
   );
 }
 
-function scoreRing(score) {
+/**
+ * The score, drawn as the marketing hero's vernier gauge rather than a donut:
+ * a flat 22px scale, a tick every 10%, the published "strong fit" threshold as a
+ * 1px rule, a 2px-inset fill, and the value as tabular mono text beside a note.
+ * A score should read the same on the cover and in the workspace. Geometry is
+ * identical to .hero-gauge; the colours come from the app's own tokens because
+ * the hero is drawn on a frozen ink band and these surfaces are paper.
+ */
+const GAUGE_THRESHOLD = 70; // the same "strong fit from 70" the index hero states
+
+function scoreGauge(score) {
   const value = clamp(Math.round(Number(score) || 0), 0, 100);
-  const radius = 46;
-  const circumference = 2 * Math.PI * radius;
-  const filled = (circumference * value) / 100;
+  const fill = el("span", { class: "aw-gauge__fill" });
+  fill.style.setProperty("--value", `${value}%`);
+  const threshold = el("span", { class: "aw-gauge__threshold" });
+  threshold.style.setProperty("--at", `${GAUGE_THRESHOLD}%`);
   return el(
     "div",
-    { class: "aw-ring", role: "img", "aria-label": `Score ${value} out of 100` },
-    svgEl(
-      "svg",
-      { viewBox: "0 0 108 108", "aria-hidden": "true", focusable: "false" },
-      svgEl("circle", { class: "aw-ring__track", cx: 54, cy: 54, r: radius }),
-      svgEl("circle", {
-        class: "aw-ring__value",
-        cx: 54,
-        cy: 54,
-        r: radius,
-        transform: "rotate(-90 54 54)",
-        "stroke-dasharray": `${filled.toFixed(2)} ${(circumference - filled).toFixed(2)}`,
-      })
-    ),
+    {
+      class: "aw-gauge",
+      role: "img",
+      "aria-label": `Rubric score: ${value} out of 100. Strong fit starts at ${GAUGE_THRESHOLD}.`,
+    },
+    el("span", { class: "aw-gauge__scale", "aria-hidden": "true" }, fill, threshold),
     el(
-      "div",
-      { class: "aw-ring__label" },
-      el("span", { class: "aw-ring__number", text: String(value) }),
-      el("span", { class: "aw-ring__of", text: "of 100" })
+      "span",
+      { class: "aw-gauge__legend", "aria-hidden": "true" },
+      el("span", { class: "mono aw-gauge__value", text: `${value} / 100` }),
+      el("span", { class: "mono aw-gauge__note", text: `strong fit from ${GAUGE_THRESHOLD}` })
     )
   );
 }
@@ -972,17 +1052,47 @@ function reportActionError(container, error) {
  * 7. Dashboard
  * ------------------------------------------------------------------------- */
 
-function metricCard({ kicker, value, unit, note, action, children, variant }) {
+function metricCard({ kicker, value, unit, note, action, children, variant, lead = false }) {
   // Numerals may be display size; a document title is not a metric.
   const valueClass = variant === "doc" ? "aw-value aw-value--doc" : "aw-value aw-value--lg";
   return el(
     "section",
-    { class: "aw-card" },
+    { class: classNames("aw-card", lead ? "aw-card--lead" : null) },
     el("p", { class: "aw-kicker", text: kicker }),
     el("p", { class: valueClass }, el("span", { text: value }), unit ? el("small", { text: unit }) : null),
     note ? el("p", { class: "aw-note", text: note }) : null,
     children ?? null,
     action ? el("div", { class: "aw-actions" }, action) : null
+  );
+}
+
+/**
+ * The demoted half of the dashboard summary: one quiet card, two rows, no
+ * oversized numerals. These are context ("which CV", "how many hits"), not the
+ * two numbers a reader is meant to act on.
+ */
+function quietStats(items) {
+  return el(
+    "section",
+    { class: "aw-card aw-card--quiet" },
+    items.map((item) =>
+      el(
+        "div",
+        { class: "aw-quiet" },
+        el(
+          "div",
+          { class: "aw-quiet__head" },
+          el("p", { class: "aw-kicker", text: item.kicker }),
+          item.action ?? null
+        ),
+        el(
+          "p",
+          { class: classNames("aw-quiet__value", item.doc ? "aw-quiet__value--doc" : null) },
+          el("span", { text: item.value })
+        ),
+        item.note ? el("p", { class: "aw-note", text: item.note }) : null
+      )
+    )
   );
 }
 
@@ -1101,6 +1211,7 @@ async function renderDashboard(mount, { signal }) {
   const unread = Number(me?.usage?.unreadNotifications ?? hits.length);
 
   const packsCard = metricCard({
+    lead: true,
     kicker: "Tailored packs this month",
     value: String(packs.used),
     unit: packs.unlimited ? "no limit" : `of ${packs.limit}`,
@@ -1111,19 +1222,14 @@ async function renderDashboard(mount, { signal }) {
     action: packs.unlimited ? null : linkButton("Plans", "/app/billing", { variant: "ghost", size: "sm" }),
   });
 
-  const metrics = el(
+  // Two numbers lead (the last score and the pack allowance); the two that give
+  // context are demoted to one quiet row underneath, so the page has depth
+  // instead of four tiles of equal weight.
+  const leadMetrics = el(
     "div",
-    { class: "aw-grid aw-grid--metrics" },
+    { class: "aw-grid aw-grid--2 aw-metrics-lead" },
     metricCard({
-      kicker: "Primary CV",
-      value: primary ? primary.name : "None yet",
-      variant: "doc",
-      note: primary
-        ? `${String(primary.format ?? "").toUpperCase()} · added ${formatDate(primary.createdAt) ?? "earlier"}`
-        : "Add a CV to score it and to tailor packs from it.",
-      action: linkButton(primary ? "Open library" : "Add a CV", "/app/cv", { variant: "ghost", size: "sm" }),
-    }),
-    metricCard({
+      lead: true,
       kicker: "Last score",
       value: lastReport ? String(lastReport.score) : "—",
       unit: lastReport ? "of 100" : null,
@@ -1132,14 +1238,28 @@ async function renderDashboard(mount, { signal }) {
         : "No CV has been scored yet.",
       action: linkButton("Score a CV", "/app/cv", { variant: "ghost", size: "sm" }),
     }),
-    packsCard,
-    metricCard({
+    packsCard
+  );
+
+  const quietMetrics = quietStats([
+    {
+      kicker: "Primary CV",
+      value: primary ? primary.name : "None yet",
+      doc: true,
+      note: primary
+        ? `${String(primary.format ?? "").toUpperCase()} · added ${formatDate(primary.createdAt) ?? "earlier"}`
+        : "Add a CV to score it and to tailor packs from it.",
+      action: linkButton(primary ? "Open library" : "Add a CV", "/app/cv", { variant: "ghost", size: "sm" }),
+    },
+    {
       kicker: "Unread alert hits",
       value: String(unread),
       note: unread ? "Saved searches have found postings you have not read." : "No unread hits from your saved searches.",
       action: linkButton("Open alerts", "/app/alerts", { variant: "ghost", size: "sm" }),
-    })
-  );
+    },
+  ]);
+
+  const metrics = el("div", { class: "aw-stack aw-metrics" }, leadMetrics, quietMetrics);
 
   const recentApplications = applications.slice(0, 5);
   const recentBlock = recentApplications.length
@@ -1318,15 +1438,15 @@ function reportPanel(report, { onTailor, advisory } = {}) {
       el(
         "div",
         { class: "aw-score" },
-        scoreRing(report?.score ?? 0),
         el(
           "div",
-          { class: "aw-stack aw-stack--tight aw-grow" },
+          { class: "aw-stack aw-stack--tight" },
           el("p", { class: "aw-kicker", text: "Score against this posting" }),
+          scoreGauge(report?.score ?? 0),
           el("p", { class: "aw-body-text", text: "Five sections, weighted into one total. Every point below has a finding and a fix behind it." }),
-          advisory ? el("p", { class: "aw-note", text: advisory }) : null,
-          subscoreNodes.length ? el("div", { class: "aw-stack aw-stack--tight" }, subscoreNodes) : null
-        )
+          advisory ? el("p", { class: "aw-note", text: advisory }) : null
+        ),
+        subscoreNodes.length ? el("div", { class: "aw-stack aw-stack--tight" }, subscoreNodes) : null
       )
     ),
     coverageBlock,
@@ -1429,6 +1549,7 @@ async function renderCvScreen(mount, { signal }) {
         emptyState({
           title: "No CVs yet",
           body: "Import a profile, paste the text or upload a file. The text is what gets scored and tailored — the original file is never kept.",
+          art: "cvs",
           action: el("div", { class: "aw-actions" }, el("a", { class: "btn btn--ghost", href: "#cv-add", text: "Add one below" })),
         })
       );
@@ -2075,9 +2196,12 @@ async function renderCvScreen(mount, { signal }) {
       })
     );
 
-    // An empty account gets the drawer first (and open); one with a CV gets the
-    // library and the score panel first, with ingestion folded away.
-    mount.replaceChildren(...(hasCvs ? [librarySection, analyseSection, ingest] : [ingest, librarySection]));
+    // The empty state leads either way, so its illustration and copy are the
+    // first thing on the page (on a phone the rail already costs 57px, and an
+    // illustration below a 500px import form is one nobody sees). An account
+    // with no CV gets the drawer open underneath; one with a CV gets the score
+    // panel second and the drawer folded away last.
+    mount.replaceChildren(...(hasCvs ? [librarySection, analyseSection, ingest] : [librarySection, ingest]));
   }
 
   /** Re-render from state: the one rule every mutation obeys. */
@@ -2583,6 +2707,7 @@ async function renderApplicationsScreen(mount, { signal }) {
         children: emptyState({
           title: "No packs in the queue",
           body: "A pack is created when you tailor your CV for a job. It arrives here as “pack ready”; you approve it, apply on the employer's page, then record the status as it moves.",
+          art: "applications",
           action: el(
             "div",
             { class: "aw-actions" },
@@ -2910,10 +3035,12 @@ async function renderApplicationsScreen(mount, { signal }) {
         },
       });
 
+      const statusMark = STATUS_MARKS[application.status];
       const statusField = el(
         "span",
         { class: "aw-status-field", dataset: { status: application.status } },
         el("span", { class: "aw-status-dot", "aria-hidden": "true" }),
+        statusMark ? el("span", { class: "aw-status-mark", "aria-hidden": "true", text: statusMark }) : null,
         select
       );
 

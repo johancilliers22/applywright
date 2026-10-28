@@ -372,8 +372,7 @@
 }
 
 @media (min-width: 720px) {
-  .aw-grid--2,
-  .aw-grid--metrics {
+  .aw-grid--2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -381,12 +380,6 @@
 @media (min-width: 1080px) {
   .aw-grid--3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1240px) {
-  .aw-grid--metrics {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -443,6 +436,78 @@
   border-color: color-mix(in srgb, var(--accent) 26%, transparent);
 }
 
+/* The dashboard summary has two tiers: two numbers lead (the last score and the
+   pack allowance), two pieces of context sit quietly beneath them. Four equal
+   tiles read as one density; the page needed a first and second read. */
+.aw-metrics {
+  gap: var(--sp-3);
+}
+
+.aw-metrics-lead {
+  gap: var(--sp-4);
+  align-items: stretch;
+}
+
+.aw-card--lead {
+  padding: clamp(1.35rem, 2.6vw, 1.9rem);
+  gap: var(--sp-3);
+}
+
+.aw-card--lead .aw-kicker {
+  color: var(--text-soft);
+}
+
+/* Only the lead numerals get display size; the tile is wide enough for them. */
+.aw-card--lead .aw-value--lg {
+  font-size: clamp(3rem, 2.2rem + 2.6vw, 4.25rem);
+  line-height: 0.95;
+}
+
+.aw-card--quiet {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.aw-quiet {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.8rem clamp(1rem, 2vw, 1.25rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.aw-quiet:last-child {
+  border-bottom: 0;
+}
+
+.aw-quiet__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.aw-quiet__value {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  min-width: 0;
+}
+
+.aw-quiet__value--doc {
+  font-family: var(--display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
 .aw-card__head {
   display: flex;
   flex-wrap: wrap;
@@ -452,10 +517,10 @@
 }
 
 /* The dashboard's Next actions card was a 1113px box holding one 66ch list: the
-   four stat cards above it read as one system and this read as another. The
-   selector is the dashboard's own shape — the only section directly after the
-   metrics grid — so the same list card on /app/alerts keeps its full width. */
-#app-main > .aw-grid--metrics + .aw-section > .aw-card {
+   stat cards above it read as one system and this read as another. The selector
+   is the dashboard's own shape — the only section directly after the metrics —
+   so the same list card on /app/alerts keeps its full width. */
+#app-view > .aw-metrics + .aw-section > .aw-card {
   max-width: 42rem;
 }
 
@@ -600,66 +665,71 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Score ring + quota meter
+   5. The score gauge + quota meter
+   The gauge is the marketing hero's vernier gauge, restated on the app's tokens:
+   a flat 22px scale with a tick every 10%, a 1px threshold rule, a 2px-inset fill
+   and a tabular value/note legend. Same anatomy as .hero-gauge in theme.css; the
+   hero is drawn on a frozen ink band, so its --text-invert/--lime colours cannot
+   be reused on paper. The number is always present as text, so the bar is never
+   the only carrier of the value and a subtle track is legitimate.
    -------------------------------------------------------------------------- */
 
 .aw-score {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  display: grid;
   gap: var(--sp-4);
 }
 
-.aw-ring {
-  position: relative;
-  flex: none;
-  width: 108px;
-  height: 108px;
-}
-
-.aw-ring svg {
-  width: 108px;
-  height: 108px;
-  display: block;
-}
-
-.aw-ring__track {
-  fill: none;
-  stroke: var(--line);
-  stroke-width: 8;
-}
-
-.aw-ring__value {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 8;
-  stroke-linecap: round;
-  /* A measurement settling when a value is replaced, not a fill growing from
-     zero on load (SPEC-V2 §5 forbids that). --dur-md keeps it under the 320ms
-     ceiling; 600ms read as computation that was not happening. */
-  transition: stroke-dasharray var(--dur-md) var(--ease-settle);
-}
-
-.aw-ring__label {
-  position: absolute;
-  inset: 0;
+.aw-gauge {
   display: grid;
-  place-content: center;
-  text-align: center;
+  gap: 0.5rem;
 }
 
-.aw-ring__number {
-  font-family: var(--display);
-  font-size: 1.9rem;
-  line-height: 1;
-  letter-spacing: -0.03em;
+.aw-gauge__scale {
+  position: relative;
+  display: block;
+  height: 22px;
+  border: 1px solid var(--line-meaning);
+  border-radius: var(--r-folio);
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--line-strong) 0 1px,
+    transparent 1px 10%
+  );
+  overflow: hidden;
 }
 
-.aw-ring__of {
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+.aw-gauge__fill {
+  position: absolute;
+  inset: 2px auto 2px 2px;
+  width: var(--value, 0%);
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+.aw-gauge__threshold {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: var(--at, 70%);
+  width: 1px;
+  background: var(--mark);
+}
+
+.aw-gauge__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+
+.aw-gauge__value {
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.aw-gauge__note {
+  font-variant-numeric: tabular-nums;
   color: var(--text-muted);
 }
 
@@ -736,6 +806,38 @@
   border-radius: 50%;
   flex: none;
   background: var(--text-muted);
+}
+
+/* The shape mark is the channel that survives greyscale: ○ pending, ✓ done,
+   → sent, ◇ in progress, ★ offer, × refused, – out. The dot keeps the colour,
+   the word keeps the accessible name. */
+.aw-pip__mark {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--text-muted);
+}
+
+.aw-pip[data-status="pack_ready"] .aw-pip__mark {
+  color: var(--text-soft);
+}
+
+.aw-pip[data-status="approved"] .aw-pip__mark,
+.aw-pip[data-status="offer"] .aw-pip__mark {
+  color: var(--ok);
+}
+
+.aw-pip[data-status="submitted"] .aw-pip__mark {
+  color: var(--accent-ink);
+}
+
+.aw-pip[data-status="interview"] .aw-pip__mark {
+  color: var(--warn);
+}
+
+.aw-pip[data-status="rejected"] .aw-pip__mark {
+  color: var(--err);
 }
 
 .aw-pip[data-status="pack_ready"]::before {
@@ -888,6 +990,34 @@
 .aw-status-field[data-status="withdrawn"] .aw-status-dot {
   background: transparent;
   border: 1px solid var(--line-strong);
+}
+
+/* The table's status control keeps the dot for colour and adds the same shape
+   vocabulary the pills use, so the state is readable in greyscale. The <select>
+   beside it carries the accessible name. */
+.aw-status-mark {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  flex: none;
+  color: var(--text-muted);
+}
+
+.aw-status-field[data-status="approved"] .aw-status-mark,
+.aw-status-field[data-status="offer"] .aw-status-mark {
+  color: var(--ok);
+}
+
+.aw-status-field[data-status="submitted"] .aw-status-mark {
+  color: var(--accent-ink);
+}
+
+.aw-status-field[data-status="interview"] .aw-status-mark {
+  color: var(--warn);
+}
+
+.aw-status-field[data-status="rejected"] .aw-status-mark {
+  color: var(--err);
 }
 
 .aw-chip--match {
@@ -1717,6 +1847,19 @@ html[data-theme="dark"] .aw-plan[data-current="true"] {
   letter-spacing: -0.01em;
 }
 
+/* The illustration is decorative and sits above the heading, centred, at no more
+   than 200px. It is inlined in app.js so it inherits currentColor and follows the
+   theme; the copy beneath it is unchanged and still carries the meaning. */
+.aw-empty__art {
+  display: block;
+  justify-self: center;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
 .aw-empty__body,
 .aw-error__body {
   font-size: var(--fs-sm);
@@ -1870,7 +2013,7 @@ html[data-theme="dark"] .aw-plan[data-current="true"] {
    change colour, so they are settled explicitly here as well. There is no
    spinner to slow down any more. */
 @media (prefers-reduced-motion: reduce) {
-  .aw-ring__value,
+  .aw-gauge__fill,
   .aw-meter__fill,
   #app-toast {
     transition: none;

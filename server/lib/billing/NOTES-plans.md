@@ -14,7 +14,8 @@ Contract: SPEC section 5, `server/lib/billing/plans.js`.
 | `PLANS` | `{ free, pro, scale }`, frozen, prices in pence, quotas as numbers |
 | `PLAN_IDS` | `["free", "pro", "scale"]` in display order |
 | `QUOTA_FEATURES` | `["cvs", "packs", "alerts", "jobResultsPerDay"]` |
-| `FLAG_FEATURES` | the seven capability flags |
+| `FLAG_FEATURES` | the six capability flags |
+| `ENFORCED_FLAGS` | `["fullAtsReport", "coverLetter", "packHistory"]` — the flags a handler actually gates; the rest are declared only |
 | `UNLIMITED` | `Infinity`; use it instead of writing `Infinity` at call sites |
 | `CURRENCY` | `"GBP"` |
 | `isUnlimited(limit)` | `true` for `Infinity` or `null` (the JSON form) |
@@ -148,13 +149,24 @@ the table does not describe would be worse:
 | `fullAtsReport` | Pro: full ATS reports | no | yes | yes |
 | `coverLetter` | Pro: covering letters | no | yes | yes |
 | `packHistory` | Pro: pack history | no | yes | yes |
-| `dailyDigest` | Pro: daily digest | no | yes | yes |
 | `apiAccess` | Scale: API access | no | no | yes |
 | `priorityRefresh` | Scale: priority refresh | no | no | yes |
 | `bulkExport` | Scale: export everything | no | no | yes |
 
 Scale includes every Pro flag; a test asserts that hierarchy so a future edit
 cannot quietly break it.
+
+`dailyDigest` is **not** in `FLAG_FEATURES`: nothing in the tree delivered a digest, so
+the flag was removed rather than sold. The remaining six split in three:
+
+- **Enforced** (`ENFORCED_FLAGS`): `fullAtsReport` gates the tail of `POST /api/analyse`,
+  `coverLetter` gates the letter in `/api/tailor` and the refine rebuild, and
+  `packHistory` gates the older covering letters in `GET /api/applications/:id`.
+- **Declared but unenforced**: `apiAccess`, `priorityRefresh` and `bulkExport` are
+  returned by the plans API and gated nowhere — "API access" has no key authentication
+  and priority refresh has no queue. `GET /api/export` stays open to every plan on
+  purpose: exporting your own data is data portability, not pack history.
+- **Removed**: `dailyDigest`, from the table and from the pricing copy.
 
 ## What this module deliberately does not do
 
@@ -174,10 +186,11 @@ cannot quietly break it.
 1. **Unknown plan in `priceFor()` returns `null`, not free's 0.** SPEC section 5 only
    says `can()` falls back to free. Pricing a typo at £0 would produce a checkout
    that looks free, so the price path refuses instead.
-2. **`fullAtsReport` is a presentation hint, not a gate on scoring.** The SPEC table
-   says Pro gets "full ATS reports", but the score module is core to every plan, so
-   free users must still see their score and findings. Gate the full-report export on
-   this flag, not the analysis.
+2. **`fullAtsReport` gates the report, not the score.** The SPEC table says Pro gets
+   "full ATS reports"; the score, the five subscores and the top three findings stay on
+   Free, because the score is core to every plan, while the rest of the findings and the
+   advice array are Pro. `plans.js` names it in `ENFORCED_FLAGS`; the handler in
+   `server/app.js` is the gate.
 3. **`bulkExport`, not `exportAll`.** SPEC section 1 and section 6 require
    `GET /api/export` and account deletion to work on every plan. Naming Scale's flag
    `bulkExport` keeps the privacy export from being gated by mistake.

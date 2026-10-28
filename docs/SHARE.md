@@ -154,8 +154,7 @@ Two safety behaviours worth knowing:
 - A quick tunnel has no token at all, so none can be leaked. Never paste a named-tunnel
   token into a command line or a doc.
 
-Treat the URL as burned as soon as the tunnel stops. Keep it short-lived, and read section 6
-before handing it out.
+Treat the URL as burned as soon as the tunnel stops. Read section 6 before handing it out.
 
 ---
 
@@ -183,15 +182,19 @@ pwsh -NoProfile -File scripts/share-stop.ps1 -RevertEnv      # also set TRUST_PR
 
 ## 6. Security posture while the app is exposed
 
-Say it plainly: **public sign-up is open.** `POST /api/auth/register` needs no invitation,
-no email verification and no CAPTCHA. Its only brake is a rate limit of 10 requests per
-minute per IP (`AUTH_RATE_LIMIT_PER_MINUTE`). There is **no environment switch to close
-registration** — `server/config.js` and `server/app.js` have no such flag (checked). So
-exposure control is the control.
+Say it plainly: **public sign-up is open** — that is the current demo posture (Johan, 28
+Oct): a public quick tunnel with `REGISTRATION_OPEN` left at 1. `POST /api/auth/register`
+needs no invitation, no email verification and no CAPTCHA. Its brakes are a rate limit of
+10 requests per minute per IP (`AUTH_RATE_LIMIT_PER_MINUTE`) and **`REGISTRATION_OPEN`**
+(`server/config.js`, enforced in `server/app.js`): set it to `0` and register answers `403
+registration_closed`, while sign-in keeps working. Exposure control is otherwise the
+control.
 
 Under Tailscale (Option A) that is fine: only invited devices reach the app at all.
-Under a quick tunnel (Option B) anyone with the URL can create an account. Keep the window
-short and prefer a named tunnel behind Cloudflare Access for anything longer (section 7).
+Under a quick tunnel (Option B) anyone with the URL can create an account. The demo is
+left that way on purpose while it is open (Johan, 28 Oct); close it with
+`REGISTRATION_OPEN=0`, and prefer a named tunnel behind Cloudflare Access for anything
+longer-lived (section 7).
 
 What is already in place, so you know what you are relying on:
 
@@ -219,16 +222,15 @@ Hardening steps, in order of value:
    creates or signs in to that account. If the demo account is not needed, delete it: the
    account-delete endpoint requires that account's password, so log in and delete, or
    remove the row from a copy of `data/applywright.db` while the app is stopped.
-3. **Close registration if the window is long.** No config flag exists, so the real options
-   are: keep it tailnet-only (Option A), put **Cloudflare Access** in front of a named
-   tunnel (Option 7), or change `server/app.js` to gate `POST /api/auth/register` behind an
-   invite code or `ALLOW_REGISTRATION=0`. That last one is a code change in the app, not a
-   script setting — and it should come with a test, since registration is covered by the
-   suite.
-4. **Keep the exposure window short** for Option B, and glance at `data/contact.jsonl` and
-   `data/applywright.db` afterwards for junk accounts or spam.
-5. **Do not leave a quick tunnel running overnight.** Its URL is unauthenticated and it
-   outlives your attention.
+3. **Close registration when the window ends.** Set `REGISTRATION_OPEN=0` and restart:
+   `POST /api/auth/register` answers `403 registration_closed`, sign-in keeps working, and
+   no code change is needed. For a longer-lived public deployment, prefer **Cloudflare
+   Access** in front of a named tunnel (section 7).
+4. **Keep an eye on the exposure window** for Option B, and glance at `data/contact.jsonl`
+   and `data/applywright.db` for junk accounts or spam.
+5. **The quick tunnel is deliberately left up overnight** for the public demo (Johan, 28
+   Oct): its URL is unauthenticated and `REGISTRATION_OPEN` stays at 1 while that choice
+   stands. Stopping the tunnel or closing sign-up gets a line in `docs/OVERNIGHT-LOG.md`.
 
 ### Environment variables the app needs behind a proxy
 
@@ -362,7 +364,8 @@ while another was live, and touching the pm2 `luna-tunnel`. Not verifiable from 
 friend's side of the invite, the Cloudflare named tunnel and Access policy (needs Johan's
 Cloudflare account), and the domain change (needs the registrar/Cloudflare).
 
-One thing to check before sharing publicly: at the time of writing a quick tunnel started by
-another process was live against this app with the app still on default env
-(`TRUST_PROXY=0`, `SECURE_COOKIES=0`). If that was not deliberate, stop that process by PID
-and re-expose through the script so the env and the tunnel are owned together.
+The public demo is now deliberate (Johan, 28 Oct): a quick tunnel is left up with
+registration open. At the time of writing that tunnel had been started by another process
+while the app still ran on default env (`TRUST_PROXY=0`, `SECURE_COOKIES=0`). Those two
+flags are still worth setting on the next restart (`share.ps1 -WriteEnv` writes them), and
+stopping or restarting the tunnel goes by PID so the env and the tunnel are owned together.

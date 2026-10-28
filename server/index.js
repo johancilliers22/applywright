@@ -6,7 +6,7 @@ const instance = await startServer();
 
 const banner = [
   "",
-  "  Applywright  ·  your CV, tailored for every job.",
+  "  Applywright  ·  your numbers stay, the wording moves.",
   "",
   `  URL        ${instance.url}`,
   `  tailoring  ${instance.model ? `live model (${instance.model.name})` : "deterministic rules (no MODEL_API_KEY)"}`,

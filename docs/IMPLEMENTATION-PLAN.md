@@ -39,8 +39,9 @@ The product works end to end today on the rules path with no external services.
 | 0.8 | **DONE** — Saved searches, in-process scan, notifications inbox, RSS feed | `server/lib/jobs/match.js`, `server/alerts-runner.js`, `GET /api/notifications`, `GET /feed/:token.rss` | `POST /api/alerts/run` creates notifications for matching jobs; the feed validates as RSS 2.0 | The search has to keep running between sessions. |
 | 0.9 | **DONE** — Plans, prices, four enforced quotas, 402 with upgrade path | `server/lib/billing/plans.js`, `GET /api/billing/plans` | Exceed `packs` on Free: `402 quota_exceeded` with `error.upgrade` and the `upgrade` header | Displayed numbers must come from the code that enforces them. |
 | 0.10 | **DONE** — Accounts, sessions, scrypt passwords, export, hard delete, same-origin mutation check, CSP and response headers | `server/auth.js`, `server/app.js`, `/api/export`, `/api/account` | `node --test tests/` passes; register → export → delete → sign-in fails | This app holds CV text: export and delete are product features, not extras. |
-| 0.11 | **DONE** — Marketing pages, auth pages (including `/reset`), the `/app` SPA, `/bookmarklet` page | `public/*.html`, `public/app/`, `server/pages.js` | `node scripts/check.js` → 0 errors (9 pages) | The product has to be explainable before it is usable. |
-| 0.12 | **DONE** — Verification regime in place and green | `tests/`, `server/lib/**/*.test.mjs`, `scripts/check.js` | 80 / 303 / 0 errors (see §P7) | Every claim below is checked against these. |
+| 0.11 | **DONE** — Marketing pages, auth pages (including `/reset`), the `/app` SPA, `/bookmarklet` page | `public/*.html`, `public/app/`, `server/pages.js` | `node scripts/check.js` → 0 errors (10 pages) | The product has to be explainable before it is usable. |
+| 0.12 | **DONE** — Verification regime in place and green | `tests/`, `server/lib/**/*.test.mjs`, `scripts/check.js` | 113 / 309 / 0 errors (see §P7) | Every claim below is checked against these. |
+| 0.13 | **DONE** — CV editor: `/editor?cv=<id>`, section editing, grounded AI proposals, `.md` / print-PDF / `.docx` exports | `public/editor.html`, `public/assets/editor.css`, `public/assets/editor.js`, `tests/editor.test.js`; `GET /editor` and `POST /api/cvs/:id/assist` in `server/app.js` | `node --test tests/editor.test.js` passes; load → edit → save (PATCH re-segments) → assist returns proposals only → a fabricated number appears in `rejected`, never applied → the three exports produce files | A CV as editable text is the surface the grounding promise is checked against. |
 
 ---
 
@@ -54,18 +55,19 @@ means the capability-dependent PDF/OCR cases were exercised on this host, not sk
 
 | # | Item | Owner (module/file) | Acceptance check | Why it matters |
 |---|---|---|---|---|
-| 1.1 | **DONE** — PDF via a local `pdftotext`, native `PATH` first and `wsl -e` second | `server/lib/cv/extract.js` (`runExtractorChain`, `wslHasTool`, cached probe) | A real PDF returns text. On this PC that route is the WSL fallback (`/usr/bin/pdftotext`, absent from the Windows `PATH`); a host with Poppler installed takes the native path | PDF is the format most people actually have. |
+| 1.1 | **DONE** — PDF via a local `pdftotext`, native `PATH` first and `wsl -e` second | `server/lib/cv/extract.js` (`runExtractorChain`, `wslHasTool`, cached probe) | A real PDF returns text. On this PC Poppler 26.09 is on the Windows user `PATH` (`%LOCALAPPDATA%\poppler\poppler-26.09.0\Library\bin`), so the native route runs; a shell that predates that `PATH` change still falls back to `/usr/bin/pdftotext` through WSL | PDF is the format most people actually have. |
 | 1.2 | **DONE** — ODT support | `server/lib/cv/extract.js` (zip central directory + `content.xml`, no dependency) | `detectFormat("cv.odt")` → `'odt'`; a real ODT package parses to paragraphs; fixture test passes | LibreOffice and government portals emit ODT. |
 | 1.3 | **DONE** — RTF support | `server/lib/cv/extract.js` (control words stripped in-process, `cp1252` handled, fields kept) | Fixture RTF parses; hyperlink field text survives; test passes | Older CVs and some recruitment portals still use RTF. |
 | 1.4 | **DONE** — HTML support | `server/lib/cv/extract.js` (`htmlToText`: block ends and `<br>` to breaks, cells separated, script/style/title dropped, entities decoded) | A "save as web page" export parses; no markup appears as prose; test passes | People export profiles and portfolios as HTML. |
-| 1.5 | **DONE** — OCR through Tesseract, with an honest absence path | `server/lib/cv/extract.js` (image formats, `ocrAdvice()`, Tesseract probe native then WSL) | Image upload with Tesseract absent is refused with the exact install command; with Tesseract present it reads. A scanned PDF advises uploading page images | Detection without a false success is the honest minimum; Tesseract stays optional. |
+| 1.5 | **DONE** — OCR through Tesseract, with an honest absence path | `server/lib/cv/extract.js` (image formats, `ocrAdvice()`, Tesseract probe native then WSL) | Image uploads are read through `wsl -e tesseract` here (Tesseract 5.3.4 is in WSL, not on the Windows `PATH`); with no Tesseract at all they are refused with the exact install command, and a scanned PDF advises uploading page images | Detection without a false success is the honest minimum; Tesseract stays optional. |
 | 1.6 | **DONE** — DOCX with no dependency | `server/lib/cv/extract.js` (`node:zlib`, central directory parsed by hand) | Fixture `.docx` parses; no new `package.json` entry | Proves DOCX support does not need a zip library. |
 | 1.7 | **DONE** — Legacy binary `.doc` refused precisely | `server/lib/cv/extract.js` | Uploading a `.doc` names `.docx` as the fix instead of returning mojibake | A wrong-looking result is worse than a clear refusal. |
 
 **Remaining risk in this phase:** the WSL fallback costs a process round trip per upload
 and depends on `wsl` being on `PATH`; the capability probe is cached per process, so
-installing Poppler mid-run needs a restart to be picked up. Installing Poppler for Windows
-removes both caveats.
+installing a tool mid-run needs a restart to be picked up. Poppler is now installed for
+Windows, so the PDF caveats only affect a shell with a stale `PATH`; Tesseract is still
+reached through WSL.
 
 **Rule for all of P1:** never throw on malformed input — return
 `{ text, format, warnings }`. A failed extraction must be explainable in the UI.
@@ -77,14 +79,19 @@ removes both caveats.
 **Owner: `a11y-aw`. Contract: `docs/SPEC.md` §9 (labels, focus, keyboard, 4.5:1
 contrast, no colour-only status, responsive 375/768/1440).** The measured colour pairs
 and the three failing ones are already written down in
-[`design/DESIGN-INPUTS.md`](design/DESIGN-INPUTS.md) §2.
+[`design/DESIGN-INPUTS.md`](design/DESIGN-INPUTS.md) §2. The shipped audit is
+[`design/ACCESSIBILITY-AUDIT.md`](design/ACCESSIBILITY-AUDIT.md) (28 October 2026): the
+axe matrix over the marketing pages went **44 → 16 violation nodes**, all 16 the
+best-practice `heading-order` rule and **since fixed by the footer `<h3>` change**, with
+**0 WCAG-tagged failures**. It covers the marketing pages, not `/app` or `/editor`, and
+it is a document, not a gate.
 
 | # | Item | Owner (module/file) | Acceptance check | Why it matters |
 |---|---|---|---|---|
 | 2.1 | **IN PROGRESS** — Keyboard paths and visible focus on every interactive surface | `public/assets/site.css`, `motion.css`, `public/app/app.css` | Tab through `/`, `/pricing`, `/sign-up`, `/app` and every action is reachable with a visible focus ring; the menu, dialogs and the SPA routes are operable without a mouse | The audience is applying for jobs, often on a laptop with a trackpad and a deadline. |
 | 2.2 | **IN PROGRESS** — Contrast: fix the measured failing pairs | `public/assets/theme.css`, `site.css` | `--line-strong` on an input boundary moves to `--line-meaning` (3:1 floor); `.btn--primary` foreground uses `--on-accent`; `--mark` replaces `--ink` in ink-on-paper parts; ratios in `DESIGN-INPUTS.md` §2 recomputed and passing | 1.65:1 on a field boundary is not a decorative issue; it is an unusable form. |
 | 2.3 | **QUEUED** — Contrast assertions in the static check | `scripts/check.js`, `package.json` | `node scripts/check.js` fails when a documented pair drops below its threshold; ratios asserted unrounded | A hand-measured table drifts the moment a token changes. |
-| 2.4 | **QUEUED** — axe-core as a dev dependency, run over all nine pages | `package.json`, a new audit script | `npx` run over the nine pages reports zero serious or critical violations; the dependency never ships in `public/` | Catches the machine-checkable 60% so review can spend attention on the rest. |
+| 2.4 | **QUEUED** — axe-core as a dev dependency, run over all ten pages | `package.json`, a new audit script | `npx` run over the ten pages reports zero serious or critical violations; the dependency never ships in `public/` | Catches the machine-checkable 60% so review can spend attention on the rest. |
 | 2.5 | **IN PROGRESS** — Status never carried by colour alone | `public/app/app.js`, `app.css` | Status chips carry a word or mark; a colour-blind or monochrome check still distinguishes them | Status is the core of the tracking surface. |
 | 2.6 | **QUEUED** — State changes announced | `public/app/app.js` | Score replacement, capture success and errors land in a live region; the evidence trace renders complete when motion is reduced | Silent state change is a WCAG failure and a usability failure. |
 
@@ -102,13 +109,13 @@ ordered changes are in [`design/DESIGN-INPUTS.md`](design/DESIGN-INPUTS.md).
 
 | # | Item | Owner (module/file) | Acceptance check | Why it matters |
 |---|---|---|---|---|
-| 3.1 | **DONE** — Meridian tokens, light and dark, with `html[data-theme]` and a no-flash head script | `tokens.css`, `theme.css`, `theme.js`, every page head | Toggle the theme on all nine pages; no flash, `theme-color` meta follows the scheme, preference persists | The product is read for long stretches; a second palette cannot be an afterthought. |
+| 3.1 | **DONE** — Meridian tokens, light and dark, with `html[data-theme]` and a no-flash head script | `tokens.css`, `theme.css`, `theme.js`, every page head | Toggle the theme on all ten pages; no flash, `theme-color` meta follows the scheme, preference persists | The product is read for long stretches; a second palette cannot be an afterthought. |
 | 3.2 | **DONE** — Product re-key: interactive green split from semantic status | `theme.css` `:root` | `--accent` (`#0f5c43`) and `--ok` (`#1d7d46`) are different values and both pass on `--paper`; a link and a "verified" tick are distinguishable | At the previous shared value a link and a status tick were the same colour. |
 | 3.3 | **QUEUED** — *Pressproof* folio component (`.aw-folio`) | `public/app/app.css`, `app.js`; spec in `design/DIRECTION-gemini.md` §3 | `.aw-folio` exists in CSS (it does not today): paper surface, 2 px corners, hairline, stacked-sheet offset shadow, mono registration stamp; used for CV and pack artefacts | Makes the site look like the thing it produces, and marks which surfaces are user artefacts rather than chrome. |
 | 3.4 | **QUEUED** — Ruled margin-gutter redlines with `[CV §n]` citations | `app.css`, `app.js` | A tailored bullet shows source → rewrite with the surviving fact cited; the trace renders complete with reduced motion | The grounding promise is currently a claim in copy; this is how it becomes visible. |
 | 3.5 | **QUEUED** — Vernier gauge instead of the donut ring | `app.css`, `app.js` | Score readout is a flat scale with a 70 threshold marked `STRONG FIT`, tabular `n / 100` | A precision instrument matches the product; a donut is generic SaaS. |
-| 3.6 | **QUEUED** — Hero recomposition | `public/index.html`, `site.css`, `motion.css` | `.mock`, `.mock__msg`, `.mock__bubble` and `.hero__grad` are gone (all present today); the hero is an A4 proof sheet with real findings | The current hero is a chatbot mock for a product with no chat. |
-| 3.7 | **QUEUED** — Motion cut to the six permitted rows | `motion.css`, `public/assets/site.js` | `.reveal`, the ring draw, card lift and the infinite `.pill--live` pulse are deleted, not given a pause button | The pulse runs automatically with no pause control; the rest delays the reading it decorates. |
+| 3.6 | **DONE** — Hero recomposition: the chatbot mock is replaced by an advert→CV proof sheet | `public/index.html`, `site.css`, `theme.css` | `.mock`, `.mock__msg`, `.mock__bubble` and `.hero__grad` are gone from `public/index.html`; the hero is a proof sheet pairing advert lines with cited CV §2 facts, over the 75/100 rubric gauge (commit `342d621`) | A product with no chat was illustrated with a chat mock. |
+| 3.7 | **DONE** — Motion cut to the permitted rows | `motion.css`, `public/assets/site.js` | `site.js` records the scroll reveal, its observer and `reveal-on`/`is-visible` retired; the ring draw, card lift and infinite `.pill--live` pulse are gone; the dead `.reveal` block still in `tokens.css` is cleanup, not live motion | The pulse ran with no pause control; the rest delayed the reading it decorated. |
 | 3.8 | **DONE** — The design canon exists, so the `SPEC-V2.md` citations resolve | `docs/design/SPEC-V2.md`, cited from `tokens.css`, `theme.css` | The file is present (29 KB, "shipped, 28 October 2026") and the six CSS citations resolve; it supersedes `DESIGN-INPUTS.md` where they disagree, with `docs/SPEC.md` still winning on product truth | Six citations previously pointed at a file that did not exist. |
 | 3.9 | **DONE** — Design docs that exist and are the reference | `docs/design/` | `SPEC-V2.md`, `DESIGN-INPUTS.md`, `DIRECTION-codex.md`, `DIRECTION-gemini.md`, `DIRECTION-grok.md`, four `RESEARCH-*.md` all present | A cold agent must not be told a doc is missing when it is there. |
 
@@ -142,10 +149,10 @@ in `billing/NOTES-plans.md`.
 
 | # | Item | Owner (module/file) | Acceptance check | Why it matters |
 |---|---|---|---|---|
-| 5.1 | **QUEUED** — Enforce or withdraw the declared flags `fullAtsReport`, `packHistory`, `dailyDigest` | `plans.js` flags, the handlers that produce the artefact, `app.js` billing copy | Either a Free account cannot obtain the gated artefact (and the UI says why), or the flag is removed from `PLANS` and the pricing copy. A test asserts the chosen behaviour | Three features are sold on the pricing page and enforced nowhere. |
+| 5.1 | **DONE** — `fullAtsReport` and `packHistory` enforced; `dailyDigest` withdrawn | `plans.js` (`ENFORCED_FLAGS`), `/api/analyse` and `GET /api/applications/:id` handlers, `app.js` billing copy | Free gets the top three findings and only its most recent covering letter, with the lock reason in the response; `dailyDigest` is gone from `plans.js` and the pricing copy; `apiAccess`, `priorityRefresh` and `bulkExport` are named as declared-only; `node --test tests/flags-webhook.test.js` passes | Three features were sold on the pricing page and enforced nowhere. |
 | 5.2 | **DONE** — `coverLetter` is enforced | `server/app.js` `/api/tailor` and the refine rebuild | On a fresh Free account the stored pack has empty `coverLetterMd` and the lock message; Pro gets the letter | This was the one flag with a bypass; the refine path re-gates the rebuilt pack before it is stored. |
 | 5.3 | **QUEUED** — VAT | `plans.js` (prices), checkout creation, pricing copy | Decide the rate and whether prices are VAT-inclusive at display; a single function returns the VAT line; the pricing page and the API agree | Prices are currently labelled "excluding VAT" with no VAT anywhere. Selling to consumers in the UK makes this a legal question, not a cosmetic one. |
-| 5.4 | **QUEUED** — Stripe webhook idempotency | `server/app.js` `/api/billing/webhook` | A redelivered `checkout.session.completed` does not re-apply the change; the event id is recorded and checked before the plan write | Stripe retries. The handler is correct-looking today and is not safe under replay. |
+| 5.4 | **DONE** — Stripe webhook idempotency | `server/app.js` `/api/billing/webhook`, `server/db.js` (`stripe_events`, schema v3), `server/store.js` | A redelivered event answers `{received: true, duplicate: true}` and changes nothing; an older `current_period_end` is ignored; a bad signature writes nothing, not even an event row | Stripe retries, so replay safety is correctness, not polish. |
 | 5.5 | **QUEUED** — Live Stripe verification | env only | Checkout, the portal and the webhook signature all pass against a real test-mode account; the price IDs are set | Nothing here has touched live or test-mode Stripe. |
 | 5.6 | **DONE** — Password recovery without a mail server | `server/app.js` (`/api/auth/recover`, `/forgot`, `/forgot-username`, `/reset`, `/change-password`), `public/reset.html`, `store.js`, `tests/auth-recovery.test.js` | An offline recovery code saved at sign-up signs in once; a reset link is single-use and expiring; a used or expired token is refused with a distinct message; `node --test tests/` covers it | Recovery that needs a mail server would be no recovery at all on this host. |
 | 5.7 | **DONE** — Operator recovery fallback | `scripts/reset-password.mjs` (list / generate / set; prints only the email and the new password, never a hash or token) | `node scripts/reset-password.mjs --list` lists accounts; `--email … --generate` resets one; that account can sign in with the new password | Last resort when the user still has a recovery code and cannot use it. |
@@ -162,7 +169,7 @@ Runbooks: `docs/SHARE.md`, `docs/DOMAIN.md`, `docs/DEPLOY.md`.**
 | # | Item | Owner (module/file) | Acceptance check | Why it matters |
 |---|---|---|---|---|
 | 6.1 | **DONE** — Tailscale Serve sharing | `scripts/share.ps1 -Mode tailscale`, `scripts/share-stop.ps1` | `-WhatIf` runs end to end and changes nothing; a real serve maps 8447 → `127.0.0.1:3160`; stop removes only that mapping | Private, HTTPS, survives reboot, no router ports. The fastest way to show one trusted person. |
-| 6.2 | **DONE** — Cloudflare quick tunnel | `scripts/share.ps1 -Mode cloudflare` | Prints a `*.trycloudflare.com` URL; refuses to start a second tunnel when one it did not start is already on 3160; state under `%LOCALAPPDATA%\Applywright\share\` | The only option for someone who cannot install Tailscale — and it is public, so it is time-boxed. |
+| 6.2 | **DONE** — Cloudflare quick tunnel | `scripts/share.ps1 -Mode cloudflare` | Prints a `*.trycloudflare.com` URL; refuses to start a second tunnel when one it did not start is already on 3160; state under `%LOCALAPPDATA%\Applywright\share\` | The only option for someone who cannot install Tailscale. It is public, so the demo pairs it with `REGISTRATION_OPEN` control. |
 | 6.3 | **DONE** — Security posture documented with the exposure path | `docs/SHARE.md` §6 | `TRUST_PROXY`, `SECURE_COOKIES`, `PUBLIC_URL` explained; registration switch documented | Exposure without the proxy flags produces wrong client IPs and cookie-less sessions. |
 | 6.4 | **DONE** — `REGISTRATION_OPEN` exists | `server/config.js`, `server/app.js` | `REGISTRATION_OPEN=0` makes register answer 403 `registration_closed`; sign-in still works | Public sign-up was previously uncloseable without a code change. |
 | 6.5 | **BLOCKED** — Named Cloudflare tunnel + `intelligentartificial.net` | operator, with `docs/DOMAIN.md` | `https://apply.intelligentartificial.net/api/health` answers 200 through the tunnel; the RSS self-link shows the public origin; the certificate is Cloudflare's and the zone is on Cloudflare nameservers | **Blocked on Johan:** registrar access (GoDaddy), Cloudflare account, tunnel creation and the ACME/Universal-SSL decision are account actions no agent can hold. |
@@ -179,11 +186,11 @@ a command that re-runs green.
 
 | # | Item | Owner (module/file) | Acceptance check | Why it matters |
 |---|---|---|---|---|
-| 7.1 | **DONE** — HTTP and storage suites | `tests/*.test.js` | `node --test tests/` → **80 pass, 0 fail** (measured 2026-10-28) | Covers auth, password recovery, CVs, analyse/tailor, jobs, alerts, notifications, billing, account, errors and isolation. |
-| 7.2 | **DONE** — Module unit suites | `server/lib/**/*.test.mjs`, `server/provider/*.test.mjs` | `node --test server/lib server/provider` → **303 pass, 0 fail**, 12 suites | Pure functions, fixtures instead of network, no database. |
-| 7.3 | **DONE** — Static check | `scripts/check.js` | `node scripts/check.js` → `9 pages, 24 server modules, 175 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0 | Catches the CSP, include, asset, honesty and secret mistakes tests cannot see. |
+| 7.1 | **DONE** — HTTP and storage suites | `tests/*.test.js` | `node --test tests/` → **113 pass, 0 fail** (measured 2026-10-28) | Covers auth, password recovery, CVs, analyse/tailor, jobs, alerts, notifications, billing, account, errors and isolation. |
+| 7.2 | **DONE** — Module unit suites | `server/lib/**/*.test.mjs`, `server/provider/*.test.mjs` | `node --test server/lib server/provider` → **309 pass, 0 fail**, 12 suites | Pure functions, fixtures instead of network, no database. |
+| 7.3 | **DONE** — Static check | `scripts/check.js` | `node scripts/check.js` → `10 pages, 24 server modules, 253 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0 | Catches the CSP, include, asset, honesty and secret mistakes tests cannot see. |
 | 7.4 | **QUEUED** — Contrast assertions inside `check.js` | `scripts/check.js` | Removing a documented pair from passing makes the check fail | The design table is measured by hand once and then rots. |
-| 7.5 | **QUEUED** — axe-core audit in the regime | `package.json`, new script | Zero serious/critical violations over the nine pages | Accessibility becomes a gate, not a review note. |
+| 7.5 | **QUEUED** — axe-core audit in the regime | `package.json`, new script | Zero serious/critical violations over the ten pages | Accessibility becomes a gate, not a review note. |
 | 7.6 | **QUEUED** — Seeded demo + browser preview used routinely | `scripts/seed.mjs`, `scripts/browser-preview.mjs` | `node scripts/seed.mjs` then `node scripts/browser-preview.mjs` writes `screenshots/` and reports no console errors or horizontal overflow | The only end-to-end look at the real UI. Needs a running server, the demo account and Chrome/Edge — so it is supplementary, never the gate. |
 | 7.7 | **Ongoing** — Keep the counts honest | whoever changes the tree | Re-run all three gate commands and update `PROJECT-STATUS.md` §7 if a number moved | Stale numbers are worse than no numbers. |
 | 7.8 | **QUEUED** — Regression-test the static check's bookmarklet guard | `scripts/check.js` (the guard, written), `tests/` (the missing regression case) | A `tests/` case copies the project to a temp root, mutates **only** `public/assets/bookmarklet.js` — banner-first, doubled scheme, two lines, `fetch(` — runs the copy's own `check.js` as a subprocess, and asserts a non-zero exit plus the specific expected message per case | `check.js` now asserts the artifact parses as a `javascript:` URL, carries exactly one scheme and exactly one `__ORIGIN__`, is a single line, and makes no network calls. That guard is verified **only by hand** today (three independent mutation probes, all of which correctly failed); a hand check does not survive the next edit to either file. |
@@ -200,14 +207,14 @@ Two footnotes for 7.8, recorded because they cost time:
 
 ## Sequenced next steps (what a cold orchestrator should do tomorrow)
 
-1. **Finish P1** (PDF on this machine first — it is the largest hole), then re-run the
-   gate and update the counts.
+1. **P1 is done** — PDF takes the native `pdftotext` route on this PC and OCR reads through
+   WSL. Re-run the gate and update the counts before starting anything new.
 2. **Finish P2** — add the contrast assertions and axe-core (2.3, 2.4) so accessibility
    stops depending on memory, then work the keyboard and focus pass against that gate.
-3. **P3.6 hero** and **P3.3 folio** in one change: the hero is the only place the mock
-   still ships, and the folio is the component the hero is supposed to show.
-4. **P5.1** (enforce or withdraw the three flags) and **P5.4** (webhook idempotency) —
-   both are small, both are correctness rather than polish, and 5.1 decides copy.
+3. **P3.3 folio** next: the hero proved the proof-sheet idea (P3.6 and P3.7 are done),
+   but the product's CV and pack artefacts still render without the `.aw-folio` component.
+4. **P5.1 and P5.4 are done** (`7b88acc`). The next correctness item in P5 is P5.3 (VAT),
+   which is a decision for Johan, not an engineering task.
 5. **P6.5** stays blocked until Johan does the registrar and Cloudflare steps; do not
    start work that assumes a hostname exists.
 6. **P4.3** is a small SPA change that stops the bookmarklet's parsed metadata being

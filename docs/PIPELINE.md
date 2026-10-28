@@ -12,12 +12,13 @@ not as it might be. Read after [`PROJECT-STATUS.md`](PROJECT-STATUS.md) and
 |---|---|
 | Path | `C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright` |
 | Own git repository | **yes** — `.git` lives here; `git rev-parse --is-inside-work-tree` → `true` |
-| Branch | `master` |
-| Initial (and only) commit | `bc6731dfe734a5167a9579b8e4de98e5ef830629` — *"Applywright: CV scoring, grounded tailoring, job tracking and alerts"* |
+| Branch | `main` — the trunk; it tracks `origin/main` |
+| First commit | `bc6731dfe734a5167a9579b8e4de98e5ef830629` — *"Applywright: CV scoring, grounded tailoring, job tracking and alerts"*; 12 commits at measurement |
+| Current HEAD | `7b88accb27afa4b0c6e7f2fe5123988371035492` — *"Enforce what the plans sell; make the Stripe webhook idempotent"* |
 | Commit author | Johan Cilliers `<johannes.cilliers1@gmail.com>`, Wed 28 Oct 2026 05:52:21 +0000 |
-| Tracked files | **126** (`node_modules/` is ignored, not tracked) |
-| Remotes | **none** (`git remote` is empty) |
-| Pushed anywhere | **no** — nothing has left this machine |
+| Tracked files | **148** (`node_modules/` is ignored, not tracked) |
+| Remotes | `origin` → <https://github.com/johancilliers22/applywright.git> (**public**); `backup` → `../applywright-remote.git`, a local bare copy last pushed at `eb6dd75` |
+| Pushed anywhere | **yes** — `origin/main` is public and matched local `main` at measurement; `backup/main` is behind |
 
 **It is not a hub package.** The hub repo
 (`agent-system`) ignores every project directory with a single rule at `.gitignore:66`
@@ -68,7 +69,7 @@ commit, revert or judge — leave it in place and work around it.
 
 ## 3. Branch and commit here
 
-`master` is the trunk and is currently the only branch. For any non-trivial change:
+`main` is the trunk and is currently the only branch. For any non-trivial change:
 
 ```bash
 cd C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright
@@ -90,10 +91,10 @@ Rules for this repo:
    `data/` holds CV text and application history — personal data.
 4. **Leave the gate green** (§4) before you commit. If a change intentionally moves a
    number, update `PROJECT-STATUS.md` §7 in the same commit.
-5. **Merge back with `--no-ff`** (`git switch master && git merge --no-ff feat/slug`) so
+5. **Merge back with `--no-ff`** (`git switch main && git merge --no-ff feat/slug`) so
    the branch survives in history, or fast-forward if the branch is a single tidy commit.
    There is no CI and no PR requirement today; the gate and a read of the diff are the
-   review.
+   review. Push `main` when it is green (§5).
 
 ---
 
@@ -110,9 +111,9 @@ node scripts/check.js
 
 | Command | Proves | Expected (measured 2026-10-28) |
 |---|---|---|
-| `node --test tests/` | HTTP, storage, auth, isolation, billing, errors | **80 pass, 0 fail** |
-| `node --test server/lib server/provider` | Pure-module behaviour, provider routing, fixtures instead of network | **303 pass, 0 fail**, 12 suites |
-| `node scripts/check.js` | Page structure, includes/assets resolve, CSP compliance, no remote resources, no placeholder/TODO, no hype vocabulary, no literal credential, no `eval` | `9 pages, 24 server modules, 175 css classes` then `ok — 0 errors, 0 warning(s)`, exit 0 |
+| `node --test tests/` | HTTP, storage, auth, isolation, billing, errors | **113 pass, 0 fail** |
+| `node --test server/lib server/provider` | Pure-module behaviour, provider routing, fixtures instead of network | **309 pass, 0 fail**, 12 suites |
+| `node scripts/check.js` | Page structure, includes/assets resolve, CSP compliance, no remote resources, no placeholder/TODO, no hype vocabulary, no literal credential, no `eval` | `10 pages, 24 server modules, 253 css classes` then `ok — 0 errors, 0 warning(s)`, exit 0 |
 
 Notes:
 
@@ -129,50 +130,44 @@ around it.
 
 ---
 
-## 5. Publishing — nothing has been pushed, and there is no remote
+## 5. Publishing — the public remote is live
 
-**Current state: no remote, no push, no GitHub repository linked from this checkout.**
-The push below needs credentials only Johan can supply; an agent must not hold, paste or
-echo a token.
+**Current state: `origin` is <https://github.com/johancilliers22/applywright.git>, it is
+public, and `main` is pushed.** A second remote, `backup`, points at
+`../applywright-remote.git` — a local bare copy — and is one push behind. Credentials are
+not stored in this checkout; a push uses the machine's Git credential helper, and an agent
+must not hold, paste or echo a token.
 
-### 5.1 What Johan does (account steps)
+### 5.1 What is already done (do not repeat)
 
-1. Create an empty repository on GitHub (no README, no licence — this tree already has a
-   first commit). Suggested name: `applywright`.
-2. Authenticate the machine once, either:
-   - `gh auth login` (interactive; choose HTTPS and the browser or device flow), or
-   - create a personal access token and let git's credential helper store it — **never by
-     putting it in a remote URL or on a command line**, where it lands in shell history
-     and process listings.
+The repository exists on GitHub, empty at creation, and received this tree's history with
+`git push -u origin main`. Authentication was set up once by Johan (`gh auth login` or a
+credential helper). Nothing else is needed before a push.
 
-### 5.2 What then runs (safe to script once auth exists)
+### 5.2 Pushing now
 
 ```bash
 cd C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright
 
-git remote add origin https://github.com/<owner>/applywright.git
-git push -u origin master
+git push origin main            # the trunk
+git push origin feat/<slug>     # a branch, while it is being reviewed
+git push backup main            # the local bare copy, after origin
 ```
 
-For further branches: `git push -u origin feat/<slug>`.
+Do not put a token in a remote URL or on a command line; if the push is refused, the fix
+is the credential helper, not the URL.
 
-If `gh` is authenticated, the first two steps collapse to:
-
-```bash
-gh repo create applywright --private --source . --remote origin --push
-```
-
-Do not paste a token into either command. If the push is refused, the fix is the
-credential helper, not the URL.
-
-### 5.3 After the first push
+### 5.3 After a push
 
 - Add a `.github/workflows/` job only if you also accept the maintenance: it must run the
   three gate commands on Node 22.5+ (for `node:sqlite`) with no network access, or it will
-  fail on the first feed test that expects fixtures.
-- The repo will still be the origin of truth on this PC. There is no deploy pipeline:
-  deployment is `pm2 restart applywright --update-env` on this machine, or the runbook in
-  [`DEPLOY.md`](DEPLOY.md) for a host. See `PROJECT-STATUS.md` §8 and `DOMAIN.md`.
+  fail on the first feed test that expects fixtures. `.github/` holds only
+  `ISSUE_TEMPLATE.md` today.
+- The repo is public: commits and contents leave this machine. Do not commit a key, a
+  `.env.local`, or anything under `data/` — the history is not private.
+- There is no deploy pipeline: deployment is `pm2 restart applywright --update-env` on
+  this machine, or the runbook in [`DEPLOY.md`](DEPLOY.md) for a host. See
+  `PROJECT-STATUS.md` §8 and `DOMAIN.md`.
 
 ---
 
@@ -201,5 +196,5 @@ git switch -c feat/<slug>
 # work, then:
 node --test tests/ && node --test server/lib server/provider && node scripts/check.js
 git add <named paths> && git commit -m "<area>: <what changed>"
-# merge to master when green; push only once a remote exists and Johan has supplied auth
+# merge to main when green, then push origin (and backup) — see §5
 ```

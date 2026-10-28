@@ -10,7 +10,7 @@ genuinely wrong, say so in your report instead of silently deviating.
 **Applywright** turns one CV into a tailored application for every job worth
 applying to, and keeps the paperwork straight while you do it.
 
-Company: Applywright. Tagline: *Your CV, tailored for every job.*
+Product: Applywright. Company and site: Intelligent Artificial. Tagline: *Your CV, tailored for every job.*
 Positioning: an application workspace for people who are serious about a search —
 not a spray-and-pray bot.
 
@@ -51,7 +51,7 @@ What it actually does, in order:
 | Plan | Price | CVs | Tailored packs / month | Alerts | Other |
 |---|---|---|---|---|---|
 | Free | £0 | 1 | 3 | 1 | job feed with 40 results/day |
-| Pro | £19 / month | 5 | 60 | 10 | full ATS reports, covering letters, pack history, daily digest |
+| Pro | £19 / month | 5 | 60 | 10 | full ATS reports, covering letters, pack history |
 | Scale | £49 / month | unlimited | unlimited | 50 | API access, priority refresh, export everything |
 
 Annual: 10 months for 12 (Pro £190/yr, Scale £490/yr). Prices exclude VAT.

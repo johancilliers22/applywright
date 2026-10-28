@@ -8,13 +8,17 @@ those pages, and the shared stylesheets (`tokens.css`, `theme.css`, `site.css`, 
 (`nav.html`, `footer.html`), `theme.js` and `site.js` — those have other owners and changes that
 need them are listed in §6 instead of made here.
 
-**Result:** 44 → 16 axe violation nodes over the 24-run matrix (see §3). The 16 that remain are
-one best-practice rule, `heading-order`, caused entirely by `partials/footer.html`; every
-WCAG-tagged rule is at zero. Nothing was added to the project's dependencies.
+**Result:** the 24-run matrix measured **44 → 16 axe violation nodes**, and the WCAG-tagged
+subset went **2 → 0 nodes**. All 16 remaining were one best-practice rule, `heading-order`,
+caused entirely by the `h4` column labels in `partials/footer.html`; the `<h3>` change in
+`0f19177` fixed them, which is why the same work is summarised as "44 → 0" elsewhere (the
+commit subject and the vault note). Read that shorthand precisely: **16 was the
+best-practice `heading-order` count at audit time, since fixed; 0 is the WCAG-tagged count.**
+Nothing was added to the project's dependencies.
 
 - **Verdict: WCAG 2.2 A/AA — no automated failures left in the audited surface.**
-- Remaining work is one markup change in a file this pass does not own (§6.1) plus four
-  lower-severity items for the `site.js`, `nav.html` and auth/SPA owners.
+- Remaining work is the four lower-severity items for the `site.js`, `nav.html` and auth/SPA
+  owners; the §6.1 footer markup change has since landed in `0f19177`.
 
 ---
 

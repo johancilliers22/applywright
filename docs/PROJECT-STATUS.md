@@ -10,10 +10,13 @@ in parallel, so re-run those commands before trusting a number.
 ## 0. Where it is, and what kind of thing it is
 
 - **Path:** `C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright`
-- **It is its own git repository** — `master`, initial commit
-  `bc6731dfe734a5167a9579b8e4de98e5ef830629` ("Applywright: CV scoring, grounded
-  tailoring, job tracking and alerts"), 126 tracked files, **no remote and nothing
-  pushed**. Git and delivery detail: [`PIPELINE.md`](PIPELINE.md).
+- **It is its own git repository** — branch `main`, HEAD
+  `7b88accb27afa4b0c6e7f2fe5123988371035492` ("Enforce what the plans sell; make the
+  Stripe webhook idempotent"), 12 commits, 148 tracked files.
+  `origin` is the **public** repository
+  (<https://github.com/johancilliers22/applywright.git>) and `main` is pushed and in sync
+  with it; a local bare `backup` remote (`../applywright-remote.git`) is behind. Git and
+  delivery detail: [`PIPELINE.md`](PIPELINE.md).
 - **It is NOT a hub package.** The hub `.gitignore:66` ignores `projects/*/`; `git
   check-ignore -v projects/applywright/docs/SPEC.md` in the hub returns that rule, so
   the project is invisible to the hub repo. No hub commit is involved and no checkout
@@ -76,7 +79,7 @@ uploaded binary; `GET /api/export` returns everything the account owns; `DELETE
   30 days; scrypt password hashing (N=16384), minimum 10 characters.
 - **One process.** Rate-limit buckets, the job-feed cache and the alert scanner all
   live in process; SQLite has one writer. Run exactly one instance.
-- **126 tracked files**, no `devDependencies` (no axe-core, no Playwright in
+- **148 tracked files**, no `devDependencies` (no axe-core, no Playwright in
   `package.json`; `browser-preview.mjs` drives Chrome over the DevTools protocol with no
   npm package).
 
@@ -118,12 +121,16 @@ npm install && cp .env.example .env.local && npm start
   `.rtf`, `.html`/`.htm`/`.xhtml`, `.pdf`, and images for OCR; legacy binary `.doc` is
   refused with "save as `.docx` first". PDF and image text need a real tool, and
   `server/lib/cv/extract.js` tries the native `PATH` first, then falls back to
-  `wsl -e <tool>`. **On this PC the working PDF route is the WSL fallback**: `pdftotext`
-  is at `/usr/bin/pdftotext` and absent from the Windows `PATH`, so PDFs are read through
-  `wsl -e pdftotext`. **Tesseract is not installed anywhere on this machine**, so image
-  uploads are refused with the install command rather than half-read. See §9.
+  `wsl -e <tool>`. **On this PC both routes are live.** Poppler 26.09 is installed at
+  `%LOCALAPPDATA%\poppler\poppler-26.09.0\Library\bin` and is on the Windows **user**
+  `PATH`, so `pdftotext` takes the native route in a fresh shell; a process started
+  before that `PATH` change still falls back to `/usr/bin/pdftotext` through `wsl -e`.
+  **Tesseract is not on the Windows `PATH` but is present at `/usr/bin/tesseract`
+  (5.3.4) in WSL**, so image uploads are read through `wsl -e tesseract` rather than
+  refused. See §9.
 - **First screens:** `/` public pages, `/sign-up` to create an account, `/app` the
-  product once signed in, `/bookmarklet` the browser-capture install page.
+  product once signed in, `/editor?cv=<id>` the CV editor (its own page, not an SPA
+  screen), `/bookmarklet` the browser-capture install page.
 
 The full environment table, with defaults and clamping ranges, is in
 [`README.md`](../README.md#configuration) and `.env.example`. One trap worth knowing
@@ -164,6 +171,7 @@ cookie.
 | `PATCH` | `/api/cvs/:id` | yes | Rename, or make primary |
 | `DELETE` | `/api/cvs/:id` | yes | Delete |
 | `POST` | `/api/cvs/from-profile` | yes | Turn a parsed connector profile into a CV; counts against the CV quota |
+| `POST` | `/api/cvs/:id/assist` | yes | The editor's agent: returns grounded rewrite proposals for the current document; saves nothing |
 
 ### Analyse and tailor
 
@@ -238,6 +246,7 @@ cookie.
 | `/`, `/how-it-works`, `/pricing`, `/about`, `/security`, `/sign-in`, `/sign-up`, `/reset` | `public/*.html` through the include/token renderer in `server/pages.js` |
 | `/bookmarklet` | Server-rendered install page; substitutes `__ORIGIN__` with `PUBLIC_URL` and serves the bookmarklet as selectable text. 200, no sign-in required |
 | `/app/*` | The signed-in SPA shell: `public/app/app.html` + `app.js` + `app.css` |
+| `/editor` | Server-rendered CV editor: `public/editor.html` + `public/assets/editor.css` + `editor.js`; its API calls need the session cookie |
 | `/assets/*` | Static CSS/JS/favicon, `cache-control: no-cache` |
 | `/favicon.ico` | 301 to `/assets/favicon.svg` |
 
@@ -274,7 +283,7 @@ SPEC wins** — or the disagreement is a bug to report, not to quietly follow.
 | `server/lib/jobs/capture.js` | Parses a pasted posting: schema.org `JobPosting` JSON-LD first (the reliable path), then Greenhouse, Lever, Workable, Ashby, Workday. Returns `confidence` and `warnings`. Refuses the blocked hosts. | SPEC §5 `jobs/capture.js` |
 | `server/lib/jobs/match.js` | `matchRule` for saved searches (keywords, locations, `remoteOnly`, `minSalary`) and `scoreJobForProfile`. Unknown salary does not match, and says so. | SPEC §5 `jobs/match.js` |
 | `server/lib/packs/build.js` | `buildPack`: standalone ATS-safe CV HTML (A4, 18 mm margins, one column, real headings, no layout tables, no icon fonts, no images, no external URLs, inline print CSS), plain text, covering-letter Markdown, four screening answers. | SPEC §5 `packs/build.js` |
-| `server/lib/billing/plans.js` | `PLANS`, `entitlements`, `can`, `priceFor`, `stripeConfigured()`. Four quotas are enforced (`cvs`, `packs`, `alerts`, `jobResultsPerDay`); the capability flags are declared only (§9). | SPEC §5 `billing/plans.js` |
+| `server/lib/billing/plans.js` | `PLANS`, `entitlements`, `can`, `priceFor`, `stripeConfigured()`. Four quotas are enforced (`cvs`, `packs`, `alerts`, `jobResultsPerDay`); `ENFORCED_FLAGS` names the capability flags the handlers actually gate (`fullAtsReport`, `coverLetter`, `packHistory`), and §9 records the three that are still declared only. | SPEC §5 `billing/plans.js` |
 | `server/provider/anthropic.js` | Anthropic Messages client for the `ANTHROPIC_ORG_API_KEY` route, alongside the OpenAI-compatible client in `server/model.js`. Never maps the org key onto `ANTHROPIC_API_KEY`. | SPEC §5 (model path) |
 
 Supporting server files, all Lead-owned: `index.js` (entry, banner, signals),
@@ -289,13 +298,14 @@ scanner).
 ## 6. Data model
 
 SQLite, one file `data/applywright.db` (plus `-wal` and `-shm`), `PRAGMA journal_mode =
-WAL`, `foreign_keys = ON`, `busy_timeout = 5000`. Schema version 1, forward-only and
+WAL`, `foreign_keys = ON`, `busy_timeout = 5000`. Schema version 3, forward-only and
 idempotent on every boot (`server/db.js`).
 
-Eleven tables: `users`, `sessions`, `cvs`, `jobs`, `reports`, `applications`, `alerts`,
-`notifications`, `usage`, `settings`, and `meta` (schema version). Every table carries
-`user_id` except `users` and `jobs` — `jobs` is a shared cache keyed by a UNIQUE
-`dedupe_hash`. Deleting a user cascades through their rows.
+Twelve tables: `users`, `sessions`, `cvs`, `jobs`, `reports`, `applications`, `alerts`,
+`notifications`, `usage`, `settings`, `meta` (schema version), and `stripe_events` — one
+row per applied Stripe event id, whose primary key is what makes the webhook idempotent.
+Every table carries `user_id` except `users`, `jobs` and `stripe_events` — `jobs` is a
+shared cache keyed by a UNIQUE `dedupe_hash`. Deleting a user cascades through their rows.
 
 - Application statuses: `pack_ready` → `approved` → `submitted` → `interview` →
   `rejected` → `offer`, plus `withdrawn`.
@@ -318,14 +328,12 @@ Three commands are the gate. Run all three from the project root.
 
 | Command | What it covers | Measured 2026-10-28 |
 |---|---|---|
-| `node --test tests/` | The HTTP and storage suites: `spine.test.js` (schema, store, passwords) plus one file per API area; ephemeral port, temporary SQLite file, blank model key, no network, never touches `data/` | **80 tests, 80 pass, 0 fail** |
-| `node --test server/lib server/provider` | Module unit suites beside the code, including provider routing | **303 tests, 303 pass, 0 fail** (12 suites) |
-| `node scripts/check.js` | What the tests cannot see: one `<h1>` per page, `lang` + viewport, includes and asset references resolve, no inline script or handler (CSP), no remote resources, no placeholder link or TODO, no hype vocabulary, no literal credential, no `eval` | **`applywright check — 9 pages, 24 server modules, 175 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0** |
+| `node --test tests/` | The HTTP and storage suites: `spine.test.js` (schema, store, passwords) plus one file per API area; ephemeral port, temporary SQLite file, blank model key, no network, never touches `data/` | **113 tests, 113 pass, 0 fail** |
+| `node --test server/lib server/provider` | Module unit suites beside the code, including provider routing | **309 tests, 309 pass, 0 fail** (12 suites) |
+| `node scripts/check.js` | What the tests cannot see: one `<h1>` per page, `lang` + viewport, includes and asset references resolve, no inline script or handler (CSP), no remote resources, no placeholder link or TODO, no hype vocabulary, no literal credential, no `eval` | **`applywright check — 10 pages, 24 server modules, 253 css classes` / `ok — 0 errors, 0 warning(s)`, exit 0** |
 
-Both counts moved while this brief was being written, as the handoff team landed tests:
-`tests/` from 64 to 80 (adding `auth-recovery.test.js`) and the module suites from 288 to
-303 (`server/lib/cv/extract.test.mjs` alone runs 35). Treat any number here as
-measured-on-a-date, not as a promise — re-run the command.
+Counts move whenever an agent lands a test or a page: treat any number here as
+measured-on-a-date, not as a promise — re-run the command before quoting it.
 
 Supplementary, not part of the gate:
 
@@ -358,8 +366,9 @@ bystander's tailnet invite is Johan's step, not the script's.
 **Cloudflare quick tunnel** (public, ephemeral) — `scripts/share.ps1 -Mode cloudflare`
 runs the Windows `cloudflared` binary beside the app and prints a random
 `*.trycloudflare.com` URL; state and log live under
-`%LOCALAPPDATA%\Applywright\share\`. Anyone with the URL can register an account:
-close it with `REGISTRATION_OPEN=0`, keep the window short, or use the named tunnel with
+`%LOCALAPPDATA%\Applywright\share\`. Anyone with the URL can register an account; that is
+the current demo posture — public quick tunnel, registration open (Johan, 28 Oct). Set
+`REGISTRATION_OPEN=0` and restart to close sign-up, or use the named tunnel with
 Cloudflare Access.
 
 **The real home: `intelligentartificial.net`.** Registered and delegated to GoDaddy
@@ -382,24 +391,42 @@ network share, or use Cloudflare "Flexible" SSL.
 
 Current, verified against the code. Each is a real limitation, not a typo.
 
-- **PDF extraction depends on a local `pdftotext`, reached through WSL here.**
-  `cv/extract.js` tries the native `PATH` first, then `wsl -e pdftotext - -`. On this PC
-  `pdftotext` is **at `/usr/bin/pdftotext` and absent from the Windows `PATH`**, so PDFs
-  are read through the WSL fallback: it works, but it costs a WSL round trip per upload,
-  depends on `wsl` being on `PATH`, and its capability probe is cached per process.
-  Install Poppler on Windows to take the direct route.
-- **Image OCR needs Tesseract, which is not installed anywhere on this machine.** Image
-  uploads (`.png`, `.jpg`, `.gif`, `.bmp`, `.tif`, `.webp`) and image-only PDFs are
-  detected, and refused with the exact install command
-  (`winget install UB-Mannheim.TesseractOCR` / `sudo apt install tesseract-ocr`) rather
-  than half-read. A scanned PDF now advises uploading page images instead.
+- **PDF and OCR extraction depend on external binaries.** `cv/extract.js` tries the
+  native `PATH` first, then `wsl -e`. Poppler 26.09 is installed on Windows at
+  `%LOCALAPPDATA%\poppler\poppler-26.09.0\Library\bin` and is on the user `PATH`, so a
+  PDF takes the native `pdftotext` route in a fresh shell; a process started before that
+  `PATH` change falls back to `/usr/bin/pdftotext` through WSL, which costs a round trip
+  per upload and needs `wsl` on `PATH`. Tesseract is **not** on the Windows `PATH` but is
+  installed at `/usr/bin/tesseract` (5.3.4) in WSL, so image uploads (`.png`, `.jpg`,
+  `.gif`, `.bmp`, `.tif`, `.webp`) and image-only PDFs are read through
+  `wsl -e tesseract`; a scanned PDF also advises uploading page images. The capability
+  probe is cached per process, so installing a tool mid-run needs a restart.
 - **Legacy binary Word (`.doc`) is refused**, with "save as `.docx` first". Modern
   `.docx`, `.odt`, `.rtf` and HTML all parse locally with no dependency.
-- **Unenforced plan flags.** `fullAtsReport`, `packHistory` and `dailyDigest` are
-  returned by the plans API but **nothing gates on them**; `plans.js` calls
-  `fullAtsReport` a presentation hint. Only four quotas are enforced (`cvs`, `packs`,
-  `alerts`, `jobResultsPerDay`); "API access" has no key authentication behind it.
-  (The covering-letter flag *is* enforced, in `/api/tailor` and in the refine rebuild.)
+- **Three capability flags are enforced, one was removed, three are still declared
+  only.** `fullAtsReport` gates `POST /api/analyse`: Free gets the score, the five
+  subscores and the three highest-priority findings; the rest of the findings list and the
+  advice array are Pro, and the response says why in `fullAtsReport.locked`.
+  `packHistory` gates `GET /api/applications/:id`: Free can read the covering letter of
+  its most recent pack only — older packs return the lock message on the letter while
+  their CV and screening answers stay readable. `coverLetter` was already enforced in
+  `/api/tailor` and in the refine rebuild; the letter is now withheld from every copy of a
+  pack a plan cannot read (`coverLetterMd`, the stored `tailored.coverLetter` source, and
+  the letter entries in a refinement's change trail), not just from the rendered field.
+  `dailyDigest` is **removed** from `plans.js` and from the pricing copy: nothing in the
+  tree delivered a digest, so the flag could only ever be a promise. `apiAccess`,
+  `priorityRefresh` and `bulkExport` remain returned by the plans API and sold on the
+  pricing page with nothing gating them — "API access" has no key authentication,
+  priority refresh has no queue, and `/api/export` stays open to every plan because
+  exporting your own data is not a paid feature (so the account export does return a
+  user's own packs in full; that is data portability, not pack history). The in-app
+  billing screen still has a "Daily digest" label in `FLAG_LABELS`
+  (`public/app/app.js`); the API no longer returns the flag, so the label is unreachable
+  rather than misleading. `docs/SPEC.md` §2 still lists a daily digest in its plan table;
+  that is a SPEC contract change, not a copy fix.
+  `tests/flags-webhook.test.js` holds the line: every declared
+  flag is either enforced or named as declared-only, and a pricing page that sells an
+  undeclared flag fails the suite.
 - **VAT is not modelled.** Prices are stated and charged "excluding VAT"; there is no
   VAT line, rate or calculation anywhere.
 - **Password recovery has no email transport.** A recovery flow exists — an offline
@@ -410,8 +437,13 @@ Current, verified against the code. Each is a real limitation, not a typo.
 - **Stripe is unconfigured and untested live.** With `STRIPE_SECRET_KEY` and
   `STRIPE_WEBHOOK_SECRET` both set, checkout, the portal and signature verification are
   wired and refuse cleanly when unset — but no live keys were used in this tree. The
-  webhook is also **not idempotent**: events are applied as they arrive with no
-  event-id dedupe, so a redelivered event re-applies the same plan change.
+  webhook **is idempotent**: every `event.id` is recorded in `stripe_events` before the
+  event is applied, so a redelivery answers `{received: true, duplicate: true}` and
+  changes nothing, and an event carrying an older `current_period_end` than the account
+  already records is ignored rather than allowed to downgrade the plan. A signature that
+  fails to verify — or falls outside the 300-second tolerance — is a 400 that writes
+  nothing, not even an event row. Delivery order is still not guaranteed by Stripe; the
+  period check is what makes an out-of-order delivery harmless.
 - **Mobile nav needs JavaScript.** The `.nav__toggle` button is driven by `site.js`
   (`aria-expanded`, removing `.no-js`); with JS off the mobile menu is not operable.
 - **Bookmarklet metadata not consumed by the SPA.** The bookmarklet emits `title`,
@@ -419,11 +451,15 @@ Current, verified against the code. Each is a real limitation, not a typo.
   handoff reads only `sourceUrl` and `text`, so those fields are dropped.
 - **`DATABASE_PATH` does not move the database** — documented in `.env.example` and not
   read by `server/config.js`, which resolves `<repo>/data/applywright.db`.
-- **The marketing hero is still a chatbot mock** (`.mock__*`, `.hero__grad`) — the
-  recomposition to an A4 proof sheet is queued; see `IMPLEMENTATION-PLAN.md`.
-- **No accessibility tooling wired.** `scripts/check.js` has no contrast assertions and
-  `package.json` has no `axe-core`; the ratios in `DESIGN-INPUTS.md` were computed by
-  hand. A11y work is in progress.
+- **The Pressproof folio component is not built.** The marketing hero is now the proof
+  sheet (P3.6 done, commit `342d621`), but the product's CV and pack artefacts still
+  render without the `.aw-folio` component; see `IMPLEMENTATION-PLAN.md` P3.3.
+- **Accessibility is audited, not gated.** [`design/ACCESSIBILITY-AUDIT.md`](design/ACCESSIBILITY-AUDIT.md)
+  records the 28 Oct axe matrix over the marketing pages: **44 → 16 violation nodes, all
+  16 the best-practice `heading-order` rule** (since fixed by the footer `<h3>` change),
+  and **0 WCAG-tagged failures**. The audit does not cover `/app` or `/editor`, and
+  nothing re-runs it: `scripts/check.js` has no contrast assertions and `package.json`
+  has no `axe-core` dev dependency.
 - **One process only.** Rate limits, feed cache and the alert scanner are in process;
   two instances behind a proxy would enforce their own limits and double-scan alerts.
 - **Rate limits apply to mutations.** Every response carries the limit headers, but the

@@ -99,8 +99,7 @@ Two things to know before you clone twice:
   `/mnt/c` works, but every file read crosses the Windows/Linux boundary and the test
   suites slow down noticeably.
 
-The default branch is `main`. Some of the repository's own documents still say `master`
-because they were written before the first push; `main` is what exists.
+The default branch is `main`.
 
 ---
 
@@ -341,22 +340,6 @@ your shell history and in process listings. Put it in `.env.local` (local) or th
 Behind a TLS proxy the four that matter are `HOST=127.0.0.1`, `TRUST_PROXY=1`,
 `SECURE_COOKIES=1` and a `PUBLIC_URL` matching the proxy's origin.
 
-### Where the existing docs are behind the code
-
-Four drifts a reader will hit, verified on 28 October 2026:
-
-- `docs/PIPELINE.md` and `docs/PROJECT-STATUS.md` describe a repository with no remote and
-  branch `master`. The public repository is `main`, `origin` is set, and it is public.
-- `docs/SHARE.md` §6 states there is no switch to close registration. There is:
-  `REGISTRATION_OPEN` (`server/config.js`, enforced at `POST /api/auth/register` in
-  `server/app.js`). Do not patch the app to add one.
-- `docs/PROJECT-STATUS.md` §9 says Tesseract is not installed anywhere on Johan's machine
-  and image uploads are refused. Tesseract is now present at `/usr/bin/tesseract` in WSL, so
-  the `wsl -e tesseract` route is live; the newest commit is the one that wired it up.
-- `README.md` §Plans says a covering letter is produced on every plan. The code enforces the
-  flag: a Free pack carries an empty `coverLetterMd` and a `coverLetterLocked` note
-  (`server/app.js`, `can(plan, "coverLetter")`). `docs/PROJECT-STATUS.md` §9 has this right.
-
 ---
 
 ## 6. Working on it with an AI agent locally
@@ -580,14 +563,17 @@ is exposed.
   scanner all live in the process, and SQLite has one writer. Cluster mode would double
   every fetch and every scan.
 - **Know what is enforced.** Four quotas are enforced (`cvs`, `packs`, `alerts`,
-  `jobResultsPerDay`) and the covering-letter flag is enforced; the other flags in
-  `plans.js` — full ATS report, pack history, daily digest, and the "API access" line in the
-  README — are declared and returned, not gated. "API access" has no key authentication
-  behind it. `docs/PROJECT-STATUS.md` §9 is the honest list; keep it honest if you change
-  one.
-- **The licence is not settled.** There is no `LICENSE` file in the repository, so default
-  copyright applies: GitHub's terms let you view and fork it, and nothing more is granted
-  yet. Treat redistribution and public deployment as questions for Johan.
+  `jobResultsPerDay`) and three capability flags are gated: `fullAtsReport` (Free sees the
+  score and the top three findings), `coverLetter` and `packHistory` (Free reads only its
+  most recent covering letter). `dailyDigest` was removed rather than sold. `apiAccess`,
+  `priorityRefresh` and `bulkExport` remain declared and returned, not gated: "API access"
+  has no key authentication, and `GET /api/export` is open to every plan on purpose for
+  data portability. `docs/PROJECT-STATUS.md` §9 is the honest list; keep it honest if you
+  change one.
+- **The licence is MIT.** `LICENSE` (MIT, © 2026 Johan Cilliers / Intelligent Artificial)
+  and `package.json` `"license": "MIT"` are the terms: you may fork, modify and
+  redistribute under them. Collaboration is fork-only — no collaborator invites and no
+  push access to Johan's repository — so send changes back as a pull request or a patch.
 
 For the two-minute path from "I have the link" to a running copy, see
 [`docs/HANDOFF-FOR-A-FRIEND.md`](docs/HANDOFF-FOR-A-FRIEND.md). For how to contribute a

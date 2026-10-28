@@ -49,7 +49,9 @@ CV does not contain).
 ## Where the code and canon live
 
 - Code: `C:\Users\johan\Desktop\Coding\OpenClaw\agent-system\projects\applywright`
-  — its **own git repo** (`master`, initial commit `bc6731d`, no remote, nothing pushed).
+  — its **own git repo** (`main`; public `origin` at
+  <https://github.com/johancilliers22/applywright>, pushed and in sync; 12 commits,
+  `bc6731d` first).
 - It is **not a hub package**: the agent-system hub gitignores `projects/*/`, so the hub
   cannot see it and a hub worktree does not provision it.
 - Canon, in reading order:
@@ -76,8 +78,8 @@ node server/index.js                 # or: npm start
 - `127.0.0.1:3160` by default. Node 22.5+ is required (`node:sqlite`).
 - Empty environment is a supported state: tailoring falls back to deterministic rules,
   plans and quotas are visible, checkout answers 501.
-- `REGISTRATION_OPEN=0` closes public sign-up while keeping sign-in working — set it
-  before exposing the app to the internet.
+- `REGISTRATION_OPEN=0` closes public sign-up while keeping sign-in working; the demo is
+  currently public with registration open (Johan, 28 Oct).
 - Share: `pwsh -NoProfile -File scripts/share.ps1 -Mode tailscale -WhatIf` (dry run), then
   `-Mode tailscale` (private, auto-picks https 8447 because 443 is taken on this host) or
   `-Mode cloudflare` (public, ephemeral quick tunnel). `scripts/share-stop.ps1` undoes only
@@ -98,10 +100,10 @@ interactive green `--accent` is deliberately a different value from semantic `--
 the 48% ink rule is the only line allowed to identify a control (3:1 floor). The system is
 specified in **`docs/design/SPEC-V2.md`** (shipped 28 October 2026; it supersedes
 `docs/design/DESIGN-INPUTS.md` where they disagree, and `docs/SPEC.md` still wins on
-product truth). The component work is not built yet: the *Pressproof* folios from
-`docs/design/DIRECTION-gemini.md` (paper artefacts, margin-gutter redlines with `[CV §n]`
-citations, a vernier score gauge) and the hero recomposition away from the current
-chatbot mock are queued, not shipped.
+product truth). Part of the component work is shipped: the hero is now the advert→CV proof
+sheet (commit `342d621`) with the vernier gauge, and the old motion is retired. The
+*Pressproof* folios from `docs/design/DIRECTION-gemini.md` (paper artefacts, margin-gutter
+redlines with `[CV §n]` citations) are still queued, not shipped.
 
 ## Decisions taken
 
@@ -117,8 +119,10 @@ chatbot mock are queued, not shipped.
   limits, one writer; a function host would lose the database and the sessions.
 - **Honest refusal over half-wired.** Stripe unconfigured means plans visible, checkout 501.
 - **Enforce what you display.** Four quotas are enforced (`cvs`, `packs`, `alerts`, job
-  results per day); the rest of the plan table's flags are declared only, and the covering
-  letter is gated in both the tailor and the refine paths.
+  results per day) and three capability flags are gated in the handlers (`fullAtsReport`,
+  `coverLetter`, `packHistory`). `dailyDigest` was removed from `plans.js` and the pricing
+  page; `apiAccess`, `priorityRefresh` and `bulkExport` remain declared but unenforced, with
+  `GET /api/export` deliberately open to every plan for data portability.
 - **One bookmarklet artifact, two entry points.** Settings inside `/app` is the primary
   install; `/bookmarklet` is the same artifact made shareable to a signed-out person.
 - **No data without an exit.** CV text is stored as text, export is one route, delete is
@@ -129,19 +133,15 @@ chatbot mock are queued, not shipped.
 - **VAT.** Prices are labelled "excluding VAT" and no VAT is modelled. Sell to UK consumers
   and this becomes a legal question: rate, inclusive-or-exclusive display, and one function
   that produces the line.
-- **The three unenforced flags.** `fullAtsReport`, `packHistory`, `dailyDigest` are sold on
-  the pricing page and gate nothing. Enforce them, or remove them from the table and the
-  copy — the current middle state is the one to avoid.
-- **PDF and OCR.** PDF now reads through a local `pdftotext`, native `PATH` first and a
-  `wsl -e` fallback second — on this PC the fallback is the working route, because
-  `pdftotext` is in WSL and not on the Windows PATH. Is that acceptable, or do we install
-  Poppler for Windows and take the direct path? OCR is wired to Tesseract but Tesseract is
-  installed nowhere on this machine, so image uploads are refused with the install
-  command — make Tesseract a requirement, or keep it optional?
+- **PDF and OCR tooling.** PDF reads through a local `pdftotext`: Poppler 26.09 is on the
+  Windows user `PATH`, with the `wsl -e` fallback for a shell that lacks it. OCR is wired to
+  Tesseract, which is not on the Windows `PATH` but is installed in WSL
+  (`/usr/bin/tesseract`), so image uploads are read through the fallback; the capability
+  probe is cached per process. Make Tesseract a Windows requirement, or keep it optional?
 - **Bookmarklet vs extension.** The bookmarklet is shipped and compliant. An extension is
   only a different install path for the same user-initiated read — is it worth the review
   surface, and does it risk becoming a second capture implementation?
-- **Hosting.** Private beta on this PC behind Tailscale, a named tunnel behind Cloudflare
+- **Hosting.** Keep the public quick-tunnel demo, move to a named tunnel behind Cloudflare
   Access, or a small VPS with Caddy — and who terminates TLS. Nothing is deployed; the
   registrar, Cloudflare account and certificate decisions are Johan's.
 - **Password recovery delivery.** Recovery works without a mail server: an offline
@@ -161,7 +161,7 @@ Add this row to the table under the heading *Projects MOC*, keeping the existing
 order untouched. It is a pure addition: one line in, nothing changed.
 
 ```markdown
-| Applywright | applywright | active (MVP complete on the rules path; pre-launch, nothing pushed) | 2026-10-28 | [[projects/applywright/_index]] |
+| Applywright | applywright | active (MVP complete on the rules path; public repo, `main` pushed) | 2026-10-28 | [[projects/applywright/_index]] |
 ```
 
 Place it after the *Brunel MSc AI (Online)* row so the table stays roughly in

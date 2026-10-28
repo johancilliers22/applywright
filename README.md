@@ -1,6 +1,6 @@
 # Applywright
 
-*Your CV, tailored for every job.*
+*Your numbers stay. The wording moves.*
 
 Applywright turns one CV into a tailored application for each job worth applying to,
 and keeps the paperwork straight while you do it. It scores a CV against a specific job
@@ -255,10 +255,10 @@ The numbers below are `server/lib/billing/plans.js`, which is the table the serv
 enforces and `GET /api/billing/plans` returns. Prices exclude VAT, are charged in GBP, and
 are reported in pence by the API.
 
-| Plan | Price | CVs | Tailored packs / month | Alerts | Job feed | Declared features |
+| Plan | Price | CVs | Tailored packs / month | Alerts | Job feed | Features |
 |---|---|---|---|---|---|---|
 | Free | £0 | 1 | 3 | 1 | 40 results/day | — |
-| Pro | £19 / month, £190 / year | 5 | 60 | 10 | unlimited | full ATS report, covering letters, pack history, daily digest |
+| Pro | £19 / month, £190 / year | 5 | 60 | 10 | unlimited | full ATS report, covering letters, pack history |
 | Scale | £49 / month, £490 / year | unlimited | unlimited | 50 | unlimited | all of Pro, plus API access, priority refresh, bulk export |
 
 Annual is ten months for twelve. Cancel anytime; downgrading keeps existing packs
@@ -266,11 +266,15 @@ readable.
 
 Four quotas are enforced — `cvs`, `packs`, `alerts` and `jobResultsPerDay` — and
 exceeding one returns 402 `quota_exceeded` with the next plan in the body
-(`error.upgrade`) and in an `upgrade` response header. The "declared features" column is
-exactly that: declared. Those flags are returned by the API but nothing gates on them
-today, so a covering letter is produced on every plan, `GET /api/export` is open to every
-plan, and there is no separate API-key authentication behind "API access". See
-[Limitations](#limitations).
+(`error.upgrade`) and in an `upgrade` response header. Three capability flags are gated
+in the handlers: `fullAtsReport` (Free gets the score, the five subscores and the top
+three findings; Pro gets the rest), `coverLetter` (a Free pack carries an empty letter and
+a lock note) and `packHistory` (Free can read the covering letter of its most recent pack
+only). `dailyDigest` was removed from the model and the pricing copy because nothing
+delivered a digest. `apiAccess`, `priorityRefresh` and `bulkExport` are still declared
+only: "API access" has no key authentication, priority refresh has no queue, and
+`GET /api/export` is deliberately open to every plan because exporting your own data is
+not a paid feature. See [Limitations](#limitations).
 
 ## API summary
 
@@ -517,8 +521,8 @@ anything.
   (default 30); `manual`-cadence alerts never run on their own. Consequences worth
   knowing: the timer stops when the process stops, a restart re-arms it, and two
   instances would scan twice. `POST /api/alerts/run` runs every active alert immediately,
-  whatever its cadence, which is what you want after a restart or a feed outage. The Pro
-  "daily digest" flag is still declared only: there is no digest message.
+  whatever its cadence, which is what you want after a restart or a feed outage. There is
+  no digest: the Pro "daily digest" flag was removed rather than sold with no delivery path.
 - **No auto-submit and no scraping.** Deliberate, as described at the top. Statuses
   change only when you change them.
 - **Single process.** Rate-limit buckets, the job-feed cache and the alert scanner all
@@ -527,9 +531,11 @@ anything.
 - **`DATABASE_PATH` does not move the database.** The variable is documented in
   `.env.example` and ignored by `server/config.js`, which resolves `<repo>/data/applywright.db`.
   To relocate the data, move the whole checkout or use a bind mount at `data/`.
-- **Plan features beyond the four quotas are declared, not enforced.** Covering letters,
-  exports and the ATS report are produced on every plan; "API access" has no key
-  authentication behind it.
+- **Some plan features are declared, not enforced.** `apiAccess`, `priorityRefresh` and
+  `bulkExport` are returned by the plans API with nothing gating them: "API access" has no
+  key authentication and priority refresh has no queue. `GET /api/export` is open to every
+  plan on purpose — data portability is not a paid feature. `fullAtsReport`, `coverLetter`
+  and `packHistory` are gated in the handlers, and `dailyDigest` is no longer sold.
 - **PDF upload needs `pdftotext`.** Without Poppler on `PATH`, a PDF is refused with a
   warning rather than parsed.
 - **Rate limits apply to mutations.** Every API response carries the limit headers, but

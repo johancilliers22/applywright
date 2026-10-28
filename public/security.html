@@ -290,12 +290,18 @@
 
     /* Page-specific rhythm check: the gap from the page head's last line to the
        first line of the first section is the site's 84–85px, measured at 1440. */
-    /* Artwork: the registration corner marks the "at a glance" proof. It is
-       decorative — the three destinations below carry the meaning, and the
-       section reads completely without it. */
-    #glance .wrap { position: relative; }
-    #glance [data-art-corner] { position: absolute; top: 0; right: 0; color: var(--text-muted); }
-    @media (max-width: 599px) { #glance [data-art-corner] { display: none; } }
+    /* Artwork: the registration corner is the flow figure's proof corner, in
+       the normal flow above the three nodes — no absolute positioning that could
+       overlap the cards. Decorative; the nodes carry the meaning. */
+    [data-flow] [data-art-corner] {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: var(--sp-3);
+      color: var(--text-muted);
+    }
+    @media (max-width: 599px) {
+      [data-flow] [data-art-corner] { display: none; }
+    }
 
     /* Paper grain: the 240px tile in assets/art/grain.svg at 3%, fixed and
        pointer-transparent. Decorative; off in print. */
@@ -344,16 +350,6 @@
   <!-- ==================================================== at a glance -->
   <section class="section" id="glance">
     <div class="wrap">
-      <!-- Artwork (docs/ARTWORK.md): the set's registration corner frames the
-           proof sheet. Decorative; the list below is the content. -->
-      <div data-art-corner aria-hidden="true">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-          <path d="M1.5 47V1.5H47" />
-          <path d="M18 1.5v5M30 1.5v5M1.5 18h5M1.5 30h5" stroke-width="1" />
-          <circle cx="14" cy="14" r="4.5" />
-          <path d="M14 6v16M6 14h16" stroke-width="1" />
-        </svg>
-      </div>
       <div class="section-head">
         <p class="eyebrow">At a glance</p>
         <h2 class="h2">What stays, what leaves, and what is never stored</h2>
@@ -361,10 +357,18 @@
       </div>
 
 
-      <!-- Ornament slot: design-lead's public/assets/art/ set has landed; the
-           security ornament goes here when it is chosen. The structure is
-           complete without it. See docs/PAGE-COMPOSITION.md. -->
+      <!-- Artwork (design-lead's set, docs/ARTWORK.md): the registration corner
+           sits inside the flow figure as its proof corner. Decorative — the
+           three destinations below carry the meaning. -->
       <figure data-flow>
+        <div data-art-corner aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path d="M1.5 47V1.5H47" />
+            <path d="M18 1.5v5M30 1.5v5M1.5 18h5M1.5 30h5" stroke-width="1" />
+            <circle cx="14" cy="14" r="4.5" />
+            <path d="M14 6v16M6 14h16" stroke-width="1" />
+          </svg>
+        </div>
         <ol>
           <li>
             <h3>Your browser</h3>

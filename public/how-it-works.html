@@ -47,7 +47,7 @@
           <div class="step">
             <h3 class="h3">Ingest</h3>
             <p class="small">
-              Paste the CV as text, or upload <code>.txt</code>, <code>.md</code> or <code>.docx</code>. The
+              Paste the CV as text, or upload <code>.txt</code>, <code>.md</code>, <code>.docx</code>, <code>.pdf</code>, <code>.odt</code>, <code>.rtf</code> or <code>.html</code>, or an image read with OCR. The
               document is converted to plain text and segmented into a contact block, summary, experience,
               education and skills. A CV with no headings at all still works: the lines that match nothing else
               land in an <em>other</em> section rather than being dropped.
@@ -75,7 +75,7 @@
           <div class="step">
             <h3 class="h3">Tailor</h3>
             <p class="small">
-              The summary, the bullets and the skills line are rewritten for that job using only the facts in the
+              The summary and the bullets are rewritten for that job using only the facts in the
               CV and the structured profile. Rephrasing and re-ordering are allowed. A new employer, title,
               qualification, date or number is not.
             </p>
@@ -352,9 +352,9 @@
             </p>
           </div>
           <div>
-            <h3 class="h3">PDF needs pdftotext</h3>
+            <h3 class="h3">PDFs, scans and images</h3>
             <p class="muted">
-              PDF text is extracted with the local <code>pdftotext</code> binary. Without it a PDF upload is
+              PDF text is extracted with a local <code>pdftotext</code> binary (native, or through WSL). Scanned PDFs are not OCRed — export the pages as images first. Without a binary a PDF upload is
               refused with the reason shown. <code>.txt</code>, <code>.md</code> and <code>.docx</code> are read
               in-process with no external tool.
             </p>
@@ -378,7 +378,7 @@
             <h3 class="h3">Alerts are triggered</h3>
             <p class="muted">
               Saving an alert records a cadence, a rule and a last-run time. Checks run when they are triggered
-              from the app; there is no background worker polling boards while you are signed out.
+              from the app. A scheduled scan on our server re-runs your saved searches while you are away; nothing is polled from your browser, and you can delete an alert at any time.
             </p>
           </div>
           <div>

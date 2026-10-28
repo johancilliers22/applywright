@@ -1524,6 +1524,83 @@ async function renderCvScreen(mount, { signal }) {
   const analysisResult = el("div", { class: "aw-stack" });
   const analysisStatus = statusLine();
   const tailorStatus = el("div", { class: "aw-stack" });
+  // Status line for the empty state's "write one in the editor" action. It lives
+  // outside the empty state so a re-render can re-parent it with its message.
+  const blankCvStatus = el("div", { class: "aw-stack" });
+
+  /** The editor is its own page, so these are real links, not routed pushes. */
+  const editorHref = (cvId) => `/editor?cv=${encodeURIComponent(cvId)}`;
+
+  /*
+   * The starter document for "Write one in the editor". Every heading is one the
+   * server's segmentSections() recognises (summary, experience, education,
+   * skills — see HEADING_ALIASES in server/lib/cv/extract.js), so the editor
+   * opens with all four sections mapped instead of an undifferentiated block of
+   * text. Each heading carries a one-line prompt; the total clears the server's
+   * 80-character minimum.
+   */
+  const BLANK_CV_TEXT = [
+    "Your Name",
+    "your.email@example.com · 07700 900000 · City, UK",
+    "",
+    "Summary",
+    "One line on what you do, how long you have done it, and the result you are proudest of.",
+    "",
+    "Experience",
+    "Role — Company · 2020 - present",
+    "What you changed, for whom, and the number that proves it.",
+    "",
+    "Education",
+    "Qualification, Institution · year",
+    "",
+    "Skills",
+    "The tools and methods you would want to be asked about.",
+  ].join("\n");
+
+  /** Create the starter CV, then hand over to the editor page. */
+  async function createBlankCv(event) {
+    const target = event.currentTarget;
+    const original = target.textContent;
+    target.disabled = true;
+    target.textContent = "Opening the editor…";
+    blankCvStatus.replaceChildren();
+    try {
+      const created = await api("/api/cvs", {
+        method: "POST",
+        body: { name: "Untitled CV", text: BLANK_CV_TEXT },
+      });
+      await loadMe(null, { force: true });
+      refreshScreen();
+      updateRail();
+      location.assign(editorHref(created.cv.id));
+    } catch (error) {
+      target.disabled = false;
+      target.textContent = original;
+      if (error?.status === 402) blankCvStatus.replaceChildren(quotaPrompt(error));
+      else {
+        blankCvStatus.replaceChildren(
+          el("p", { class: "aw-status", dataset: { tone: "err" }, text: error?.message ?? "The CV could not be created." })
+        );
+      }
+    }
+  }
+
+  /**
+   * After any successful create, point at the new CV's editor. This is the moment
+   * the user wants it: the CV exists but its wording is still to be tightened.
+   */
+  function announceCreatedCv(cv) {
+    if (!cv?.id) return;
+    setBanner(
+      el(
+        "div",
+        { class: "aw-banner", dataset: { tone: "ok" } },
+        el("strong", { text: `${cv.name} is ready.` }),
+        el("span", { text: "Open the editor to tighten the wording, then score it against a job." }),
+        linkButton("Edit this CV", editorHref(cv.id), { variant: "primary", size: "sm" })
+      )
+    );
+  }
 
   function cvMeta(cv) {
     const bits = [String(cv.format ?? "").toUpperCase() || "TEXT", `added ${formatDate(cv.createdAt) ?? "earlier"}`];
@@ -1550,7 +1627,19 @@ async function renderCvScreen(mount, { signal }) {
           title: "No CVs yet",
           body: "Import a profile, paste the text or upload a file. The text is what gets scored and tailored — the original file is never kept.",
           art: "cvs",
-          action: el("div", { class: "aw-actions" }, el("a", { class: "btn btn--ghost", href: "#cv-add", text: "Add one below" })),
+          action: el(
+            "div",
+            { class: "aw-stack" },
+            el(
+              "div",
+              { class: "aw-actions" },
+              el("a", { class: "btn btn--ghost", href: "#cv-add", text: "Add one below" }),
+              // A blank CV, written from the first character, is the second way
+              // forward an empty library should offer.
+              button("Write one in the editor", { variant: "primary", onClick: createBlankCv })
+            ),
+            blankCvStatus
+          ),
         })
       );
       return;
@@ -1577,6 +1666,9 @@ async function renderCvScreen(mount, { signal }) {
           el(
             "div",
             { class: "aw-actions aw-mt-2" },
+            // The editor is a separate page: a real link, so it navigates rather
+            // than routing inside the workspace.
+            linkButton("Open editor", editorHref(cv.id), { variant: "ghost", size: "sm" }),
             button("Analyse this", {
               variant: "ghost",
               size: "sm",
@@ -1696,6 +1788,7 @@ async function renderCvScreen(mount, { signal }) {
       refreshScreen();
       updateRail();
       toast(`${data.cv.name} added.`);
+      announceCreatedCv(data.cv);
     } catch (error) {
       reportActionError(pasteForm.querySelector(".aw-form__errors"), error);
       say(pasteStatus, error.message);
@@ -1759,6 +1852,7 @@ async function renderCvScreen(mount, { signal }) {
       refreshScreen();
       updateRail();
       toast(`${data.cv.name} added.`);
+      announceCreatedCv(data.cv);
     } catch (error) {
       reportActionError(uploadErrors, error);
       say(uploadStatus, error.message);
@@ -1921,7 +2015,12 @@ async function renderCvScreen(mount, { signal }) {
           refreshScreen();
           updateRail();
           loadLibraryStyles();
-          target.textContent = "CV created";
+          announceCreatedCv(created.cv);
+          // The create button has done its job; the next useful action on this
+          // card is the editor, so it takes the button's place.
+          target.replaceWith(
+            linkButton("Edit this CV", editorHref(created.cv.id), { variant: "primary" })
+          );
           toast(`${created.cv.name} created from the profile.`);
           const createdWarnings = Array.isArray(created.warnings) ? created.warnings : [];
           if (createdWarnings.length) {

@@ -61,33 +61,29 @@ html[data-theme="dark"] {
 
 /* --- 2.1 Frozen ink, used as ink-on-paper --------------------------------
    --ink and --ink-2/3 are the press-black bands (hero, footer, .section--dark,
-   .mock, .code). They are deliberately the same in both schemes, which is why
-   the rules that use --ink as a *foreground* have to be restated: flipped, the
+   .code). They are deliberately the same in both schemes, which is why the
+   rules that use --ink as a *foreground* have to be restated: flipped, the
    logo disappears (--ink on dark --paper is 1.08:1).
 
-   tokens.css now declares the intended seam, --mark ("ink that stays ink"), and
-   these overrides point at it. When site.css's owner migrates the seven
-   components to var(--mark) these rules become redundant and can be deleted
-   without changing a pixel. */
+   tokens.css declares the seam, --mark ("ink that stays ink"), and site.css now
+   uses it for the ink-on-paper parts — the menu bars, the aria-current rule,
+   the card icons, and the brand mark's own base colour — so those overrides are
+   gone. Two rules below are NOT --mark duplicates and must stay:
 
-html[data-theme="dark"] .brand__mark .m-ring {
-  stroke: var(--mark);
-}
+   1. .brand__mark .m-ring — the base rule in site.css is --mark, but the footer
+      and the auth aside restate the ring to --text-invert at (0,3,0); this rule
+      at (0,3,1) is what wins in the dark scheme. Delete it and the footer/aside
+      ring shifts from #e8e6e1 to #f5f2ea (measured at 1440: 179px in the
+      pricing footer, 182px in the sign-in aside).
+   2. .btn--primary's `color` — the primary CTA is an <a> inside .section--dark,
+      and site.css's `.section--dark a` rule (0,1,1) outranks `.btn`'s
+      `color: var(--btn-fg)` (0,1,0). Without this rule the dark scheme paints
+      the hero CTA --text-invert on the jade accent (#f5f2ea on #47c99a is
+      1.86:1); with it the label is 9.12:1. The `color` declaration is
+      load-bearing; `--btn-fg` alone is not enough.
 
-/* .nav__toggle is the menu button: three bars drawn with --ink. */
-html[data-theme="dark"] .nav__toggle span,
-html[data-theme="dark"] .nav__toggle span::before,
-html[data-theme="dark"] .nav__toggle span::after {
-  background: var(--mark);
-}
-
-html[data-theme="dark"] .nav__links a[aria-current="page"] {
-  border-bottom-color: var(--mark);
-}
-
-html[data-theme="dark"] .card__icon {
-  color: var(--mark);
-}
+   The featured plan's border and .btn--light are surface inversions, not mark
+   swaps. */
 
 /* The featured plan's border is a solid --ink rule on a light page and
    invisible on a dark one. --line-meaning is the measured token for a rule that
@@ -96,21 +92,22 @@ html[data-theme="dark"] .price-card--featured {
   border-color: var(--line-meaning);
 }
 
-/* site.css hardcodes white for the filled primary button's label. In this
-   scheme the accent is a light jade, so the label has to invert: white on it
-   measures 2.05:1, --on-accent measures 10.54:1. */
-html[data-theme="dark"] .btn--primary,
-html[data-theme="dark"] .mock__who {
-  --btn-fg: var(--on-accent);
-  color: var(--on-accent);
-}
-
 /* .btn--light is bone with ink text. Bone is a dark surface here, so both ends
    invert. 1.08:1 becomes 13.7:1. */
 html[data-theme="dark"] .btn--light {
   --btn-bg: var(--mark);
   --btn-bd: var(--mark);
   --btn-fg: var(--ink);
+}
+
+/* Restored after the removal changed a pixel: see (1) and (2) above. */
+html[data-theme="dark"] .brand__mark .m-ring {
+  stroke: var(--mark);
+}
+
+html[data-theme="dark"] .btn--primary {
+  --btn-fg: var(--on-accent);
+  color: var(--on-accent);
 }
 
 /* The one opaque fallback in site.css, for browsers without color-mix(). */
@@ -182,10 +179,10 @@ html[data-theme="dark"] .hero__grad {
     --focus: var(--accent);
   }
 
-  /* The one foreground site.css hardcodes. Everything else follows --mark and
-     the palette above, so the component overrides above need no print twins. */
-  html[data-theme="dark"] .btn--primary,
-  html[data-theme="dark"] .mock__who {
+  /* The primary CTA's `color` is load-bearing for the same reason as on screen
+     (`.section--dark a` outranks `.btn`); --btn-fg is #ffffff through the print
+     palette's --on-accent. The retired .mock__who selector is gone. */
+  html[data-theme="dark"] .btn--primary {
     --btn-fg: #ffffff;
     color: #ffffff;
   }

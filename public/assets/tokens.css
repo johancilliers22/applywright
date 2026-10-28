@@ -120,7 +120,6 @@
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 18px;
-  --r-xl: 26px;
   --r-pill: 999px;
   /* Folios — a sheet laid on a desk. 2px is a corner, not a card: the smallest
      radius that still reads as deliberate. The offset shadow is a second sheet
@@ -529,24 +528,6 @@ textarea {
       transparent 0
     );
   background-size: 22px 22px;
-}
-
-/* Scroll reveal.
-   Content is visible by default; the hidden state only applies once site.js has
-   actually installed the observer and set `reveal-on` on <html>. That keeps the
-   page readable for no-JS clients, crawlers and full-page captures. */
-.reveal {
-  transition: opacity 620ms var(--ease), transform 620ms var(--ease);
-}
-
-html.reveal-on .reveal:not(.is-visible) {
-  opacity: 0;
-  transform: translateY(14px);
-}
-
-html.reveal-on .reveal.is-visible {
-  opacity: 1;
-  transform: none;
 }
 
 /* ==========================================================================

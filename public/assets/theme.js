@@ -1,7 +1,9 @@
 /* ==========================================================================
    Applywright — theme resolution
    Loaded as a classic, render-blocking <script src="/assets/theme.js"> in the
-   <head> of the five marketing pages, AFTER the stylesheets.
+   <head> of all ten pages — the five marketing pages, the three auth pages
+   (sign-in, sign-up, reset), the editor and the /app shell — AFTER the
+   stylesheets.
 
    Why blocking and after the CSS:
      - It sets data-theme on <html> synchronously, before the first paint, so

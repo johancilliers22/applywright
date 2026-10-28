@@ -1,0 +1,1574 @@
+/* ==========================================================================
+   Meridian — components (nav, buttons, cards, tables, forms, footer)
+   Depends on tokens.css. Keep page composition in the HTML, not new colours.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Skip link + nav
+   -------------------------------------------------------------------------- */
+
+/* Fixed, not absolute: an absolutely positioned skip link stays pinned to the
+   top of the document, so anyone who tabs to it after scrolling gets nothing
+   visible. Fixed puts it in the viewport, above the sticky nav. */
+.skip {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--text-invert);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: 0 0 var(--r-sm) 0;
+}
+
+.skip:focus,
+.skip:focus-visible {
+  left: 0;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+  .nav {
+    background: rgba(255, 253, 248, 0.94);
+  }
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  min-height: 68px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  color: var(--text);
+  flex: none;
+}
+
+.brand__mark {
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+
+.brand__mark .m-ring {
+  stroke: var(--ink);
+}
+
+.brand__mark .m-core {
+  fill: var(--accent);
+}
+
+.nav__links {
+  display: none;
+  align-items: center;
+  gap: var(--sp-5);
+  margin-inline-start: var(--sp-4);
+}
+
+.nav__links a {
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  text-decoration: none;
+  letter-spacing: -0.005em;
+  padding-block: 0.35rem;
+  border-bottom: 1px solid transparent;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.nav__links a:hover {
+  color: var(--text);
+  border-bottom-color: var(--line-strong);
+}
+
+.nav__links a[aria-current="page"] {
+  color: var(--text);
+  border-bottom-color: var(--ink);
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-inline-start: auto;
+}
+
+.nav__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  cursor: pointer;
+}
+
+.nav__toggle span {
+  position: relative;
+  width: 16px;
+  height: 1.5px;
+  background: var(--ink);
+  display: block;
+}
+
+.nav__toggle span::before,
+.nav__toggle span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 16px;
+  height: 1.5px;
+  background: var(--ink);
+}
+
+.nav__toggle span::before {
+  top: -5px;
+}
+
+.nav__toggle span::after {
+  top: 5px;
+}
+
+/* Sighted users get the same open/closed state AT gets from aria-expanded. */
+.nav__toggle[aria-expanded="true"] {
+  background: var(--bone);
+  border-color: var(--line-strong);
+}
+
+.nav__mobile {
+  display: none;
+  border-top: 1px solid var(--line);
+  padding-block: var(--sp-3) var(--sp-4);
+}
+
+.nav__mobile.is-open {
+  display: block;
+}
+
+.nav__mobile a {
+  display: block;
+  padding-block: var(--sp-3);
+  text-decoration: none;
+  color: var(--text);
+  font-size: var(--fs-md);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav__mobile a:last-child {
+  border-bottom: 0;
+}
+
+@media (min-width: 940px) {
+  .nav__links {
+    display: flex;
+  }
+  .nav__toggle {
+    display: none;
+  }
+  .nav__mobile {
+    display: none !important;
+  }
+}
+
+/* Narrow screens: the secondary "Sign in" CTA lives in the drawer, so the bar
+   holds the brand, the primary CTA and the menu button without overflowing. */
+@media (max-width: 660px) {
+  .nav__inner {
+    gap: var(--sp-3);
+    min-height: 62px;
+  }
+  .nav__actions .btn--ghost {
+    display: none;
+  }
+  .nav__actions .btn {
+    padding: 0.6rem 0.9rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand {
+    font-size: 1rem;
+  }
+  .brand__mark {
+    width: 23px;
+    height: 23px;
+  }
+  .nav__actions .btn--primary {
+    padding: 0.58rem 0.8rem;
+    font-size: var(--fs-xs);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--text-invert);
+  --btn-bd: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.72rem 1.15rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--btn-bd);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease),
+    color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--primary {
+  --btn-bg: var(--accent);
+  --btn-bd: var(--accent);
+  --btn-fg: #fff;
+}
+
+.btn--primary:hover {
+  --btn-bg: var(--accent-ink);
+  --btn-bd: var(--accent-ink);
+}
+
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--text);
+  --btn-bd: var(--line-strong);
+}
+
+.btn--ghost:hover {
+  --btn-bd: var(--text);
+}
+
+.btn--light {
+  --btn-bg: var(--bone);
+  --btn-fg: var(--ink);
+  --btn-bd: var(--bone);
+}
+
+.btn--on-dark {
+  --btn-bg: transparent;
+  --btn-fg: var(--text-invert);
+  --btn-bd: var(--line-invert-strong);
+}
+
+.btn--on-dark:hover {
+  --btn-bd: var(--text-invert);
+}
+
+.btn--lg {
+  padding: 0.9rem 1.5rem;
+  font-size: var(--fs-base);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 2px;
+}
+
+.link-arrow::after {
+  content: "→";
+  transition: transform var(--dur) var(--ease);
+}
+
+.link-arrow:hover::after {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   Chips, pills, badges
+   -------------------------------------------------------------------------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.02em;
+  color: var(--text-soft);
+  background: var(--paper);
+}
+
+.section--dark .chip,
+.section--bone .chip--invert {
+  border-color: var(--line-invert);
+  background: transparent;
+  color: var(--text-invert-soft);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.7rem 0.28rem 0.35rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-size: var(--fs-xs);
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+.pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  margin-inline-start: 0.3rem;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 18%, transparent);
+}
+
+.pill--live .pill__dot {
+  animation: pulse 2.4s var(--ease) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.dot-sep {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.card--flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.card--ink {
+  background: var(--ink-2);
+  border-color: var(--line-invert);
+  color: var(--text-invert);
+}
+
+.card--ink .h4,
+.card--ink .h3 {
+  color: var(--text-invert);
+}
+
+.card--ink .muted {
+  color: var(--text-invert-soft);
+}
+
+.card--accent {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.card__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--bone);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  flex: none;
+}
+
+.card--ink .card__icon {
+  background: var(--ink-3);
+  border-color: var(--line-invert);
+  color: var(--lime);
+}
+
+.card__icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.card__kicker {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.card__foot {
+  margin-top: auto;
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+}
+
+.card--ink .card__foot {
+  border-color: var(--line-invert);
+  color: var(--text-invert-soft);
+}
+
+.card__media {
+  aspect-ratio: 16 / 10;
+  background: var(--bone);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.card__body {
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.card__body > .card__foot {
+  margin-top: var(--sp-3);
+}
+
+/* Feature card with a hairline number */
+.numbox {
+  position: relative;
+}
+
+.numbox__n {
+  position: absolute;
+  top: 0.9rem;
+  right: 1.05rem;
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------------------
+   Bento / feature grid on dark
+   -------------------------------------------------------------------------- */
+
+.bento {
+  display: grid;
+  gap: 1px;
+  background: var(--line-invert);
+  border: 1px solid var(--line-invert);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.bento > * {
+  background: var(--ink);
+  padding: clamp(1.25rem, 2.6vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.bento--light {
+  background: var(--line);
+  border-color: var(--line);
+}
+
+.bento--light > * {
+  background: var(--paper);
+}
+
+@media (min-width: 820px) {
+  .bento--2-1 {
+    grid-template-columns: 1.6fr 1fr;
+  }
+  .bento--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Product mockup (hero + product page)
+   -------------------------------------------------------------------------- */
+
+.mock {
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line-invert);
+  background: var(--ink-2);
+  color: var(--text-invert);
+  overflow: hidden;
+  box-shadow: 0 40px 80px -50px rgba(0, 0, 0, 0.7);
+}
+
+.mock__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--line-invert);
+  background: var(--ink-3);
+}
+
+.mock__bar .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-invert-strong);
+}
+
+.mock__bar .url {
+  margin-inline-start: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-invert-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mock__body {
+  padding: clamp(1rem, 2.4vw, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+.mock__msg {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+
+.mock__who {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: #fff;
+}
+
+.mock__who--user {
+  background: var(--ink-3);
+  color: var(--text-invert-soft);
+  border: 1px solid var(--line-invert);
+}
+
+.mock__bubble {
+  background: var(--ink-3);
+  border: 1px solid var(--line-invert);
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  color: var(--text-invert);
+}
+
+.mock__bubble--user {
+  background: transparent;
+  border-style: dashed;
+  color: var(--text-invert-soft);
+}
+
+.mock__tool {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--lime);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mock__tool::before {
+  content: "▸";
+}
+
+/* --------------------------------------------------------------------------
+   Stats band
+   -------------------------------------------------------------------------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-5) var(--sp-4);
+}
+
+@media (min-width: 820px) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat__value {
+  font-family: var(--display);
+  font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.stat__label {
+  margin-top: 0.5rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.section--dark .stat__label {
+  color: var(--text-invert-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Logo row
+   -------------------------------------------------------------------------- */
+
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 3rem);
+  opacity: 0.7;
+}
+
+.logos span {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Steps
+   -------------------------------------------------------------------------- */
+
+.steps {
+  counter-reset: step;
+  display: grid;
+  gap: var(--sp-6);
+}
+
+.step {
+  position: relative;
+  padding-inline-start: 3.25rem;
+  counter-increment: step;
+}
+
+.step::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  inset-inline-start: 0;
+  top: -0.15rem;
+  font-family: var(--mono);
+  font-size: var(--fs-sm);
+  color: var(--accent);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+}
+
+.section--dark .step::before {
+  background: var(--ink-2);
+  border-color: var(--line-invert);
+  color: var(--lime);
+}
+
+/* --------------------------------------------------------------------------
+   Quote
+   -------------------------------------------------------------------------- */
+
+.quote {
+  font-family: var(--display);
+  font-size: var(--fs-xl);
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+.quote__cite {
+  margin-top: var(--sp-4);
+  font-family: var(--sans);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--bone-2);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text-soft);
+  flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   Pricing
+   -------------------------------------------------------------------------- */
+
+.price-grid {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .price-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.price-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: clamp(1.35rem, 2.4vw, 1.9rem);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.price-card--featured {
+  border-color: var(--ink);
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.price-card--featured::before {
+  content: "Most chosen";
+  position: absolute;
+  top: -0.7rem;
+  left: 1.5rem;
+  background: var(--ink);
+  color: var(--text-invert);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.22rem 0.6rem;
+  border-radius: var(--r-pill);
+}
+
+.price {
+  font-family: var(--display);
+  font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.price small {
+  font-family: var(--sans);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  letter-spacing: 0;
+}
+
+.price-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+}
+
+.price-list li {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+
+.price-list li::before {
+  content: "✓";
+  color: var(--ok);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  flex: none;
+}
+
+.price-list li.is-muted {
+  color: var(--text-muted);
+}
+
+.price-list li.is-muted::before {
+  content: "—";
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  min-width: 620px;
+}
+
+table.compare th,
+table.compare td {
+  text-align: start;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+table.compare thead th {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 500;
+  background: var(--bone);
+  position: sticky;
+  top: 0;
+}
+
+table.compare tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+table.compare td.yes {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+table.compare td.no {
+  color: var(--text-muted);
+}
+
+table.compare caption {
+  caption-side: bottom;
+  padding: 0.75rem 1rem;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  text-align: start;
+}
+
+/* --------------------------------------------------------------------------
+   FAQ
+   -------------------------------------------------------------------------- */
+
+.faq {
+  border-top: 1px solid var(--line);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--line);
+  padding-block: var(--sp-4);
+}
+
+.faq summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  font-weight: 600;
+  font-size: var(--fs-md);
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: "+";
+  font-family: var(--mono);
+  color: var(--text-muted);
+  flex: none;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.faq details[open] summary::after {
+  content: "−";
+}
+
+.faq details p {
+  margin-top: var(--sp-3);
+  color: var(--text-soft);
+  max-width: 72ch;
+  font-size: var(--fs-sm);
+  line-height: 1.65;
+}
+
+/* --------------------------------------------------------------------------
+   Code
+   -------------------------------------------------------------------------- */
+
+.code {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  background: var(--ink-2);
+  color: #e6e7ea;
+  border: 1px solid var(--line-invert);
+  border-radius: var(--r-md);
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  tab-size: 2;
+}
+
+.code .c {
+  color: #7f8794;
+}
+
+.code .k {
+  color: #9fb4ff;
+}
+
+.code .s {
+  color: #b9e79a;
+}
+
+.code .n {
+  color: #ffb59a;
+}
+
+code:not(.code) {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bone);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.08em 0.34em;
+}
+
+.section--dark code:not(.code) {
+  background: var(--ink-3);
+  border-color: var(--line-invert);
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+
+.form {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field > label,
+.legend {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.field .hint {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  /* --line-meaning, not --line-strong: an input's border is the only thing that
+     identifies the control, and --line-strong measures 1.65:1 on --paper while
+     --line-meaning measures 3.43:1 there and 3.35:1 on --bone (WCAG 1.4.11). */
+  border: 1px solid var(--line-meaning);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  font-size: var(--fs-sm);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 16%, transparent);
+}
+
+.textarea {
+  min-height: 9rem;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.form__row {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+@media (min-width: 700px) {
+  .form__row--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.note {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--bone);
+  border-radius: var(--r-sm);
+  padding: 0.85rem 1rem;
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+}
+
+.note--dark {
+  background: var(--ink-2);
+  border-color: var(--line-invert);
+  border-left-color: var(--lime);
+  color: var(--text-invert-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.footer {
+  background: var(--ink);
+  color: var(--text-invert);
+  padding-block: clamp(2.5rem, 5vw, 4rem) var(--sp-6);
+  margin-top: auto;
+}
+
+.footer__grid {
+  display: grid;
+  gap: var(--sp-6);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 760px) {
+  .footer__grid {
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+  }
+}
+
+.footer .brand {
+  color: var(--text-invert);
+}
+
+.footer .brand__mark .m-ring {
+  stroke: var(--text-invert);
+}
+
+.footer__tag {
+  color: var(--text-invert-soft);
+  font-size: var(--fs-sm);
+  max-width: 34ch;
+  margin-top: var(--sp-3);
+}
+
+.footer h4 {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-invert-soft);
+  font-weight: 500;
+  margin-bottom: var(--sp-3);
+}
+
+.footer ul {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.footer a {
+  color: var(--text-invert);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  opacity: 0.82;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.footer a:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer__base {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line-invert);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-5);
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: var(--text-invert-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Page header (inner pages)
+   -------------------------------------------------------------------------- */
+
+.page-head {
+  padding-block: clamp(2.75rem, 6vw, 4.5rem) clamp(1.75rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+  background: var(--bone);
+}
+
+.page-head .display,
+.page-head .h1 {
+  max-width: 22ch;
+}
+
+.page-head .lede {
+  margin-top: var(--sp-4);
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  overflow: clip;
+  background: var(--ink);
+  color: var(--text-invert);
+  padding-block: clamp(3rem, 7vw, 6rem) clamp(3rem, 7vw, 6rem);
+}
+
+.hero__grad {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60% 50% at 78% 8%,
+      color-mix(in srgb, var(--accent) 34%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 40% at 12% 95%,
+      color-mix(in srgb, var(--ember) 16%, transparent),
+      transparent 70%
+    );
+  opacity: 0.55;
+}
+
+.hero__inner {
+  position: relative;
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: center;
+}
+
+@media (min-width: 980px) {
+  .hero__inner {
+    grid-template-columns: 1.02fr 0.98fr;
+  }
+}
+
+.hero .display {
+  color: var(--text-invert);
+  max-width: 15ch;
+}
+
+.hero__sub {
+  margin-top: var(--sp-5);
+  font-size: var(--fs-lg);
+  color: var(--text-invert-soft);
+  max-width: 46ch;
+  line-height: 1.55;
+}
+
+.hero__cta {
+  margin-top: var(--sp-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+.hero__meta {
+  margin-top: var(--sp-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-xs);
+  color: var(--text-invert-soft);
+  font-family: var(--mono);
+  letter-spacing: 0.02em;
+}
+
+.hero__eyebrow {
+  color: var(--text-invert-soft);
+}
+
+.hairline-top {
+  border-top: 1px solid var(--line);
+}
+
+.hairline-top--invert {
+  border-top: 1px solid var(--line-invert);
+}
+
+/* --------------------------------------------------------------------------
+   CTA band
+   -------------------------------------------------------------------------- */
+
+.cta-band {
+  background: var(--bone);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.cta-band__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+}
+
+/* --------------------------------------------------------------------------
+   Misc
+   -------------------------------------------------------------------------- */
+
+.kv {
+  display: grid;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+}
+
+.kv div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-block: 0.35rem;
+  border-bottom: 1px dashed var(--line);
+}
+
+.kv dt,
+.kv div > span:first-child {
+  color: var(--text-muted);
+}
+
+.kv dd,
+.kv div > span:last-child {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  text-align: end;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.prose > * + * {
+  margin-top: var(--sp-4);
+}
+
+.prose h2 {
+  margin-top: var(--sp-6);
+}
+
+.prose h3 {
+  margin-top: var(--sp-5);
+}
+
+.prose p {
+  color: var(--text-soft);
+  max-width: 68ch;
+}
+
+.prose ul {
+  padding-inline-start: 1.15rem;
+  color: var(--text-soft);
+  display: grid;
+  gap: 0.45rem;
+  list-style: disc;
+}
+
+.prose a {
+  color: var(--accent-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Focus visibility
+   tokens.css draws one global :focus-visible ring. These rules cover the two
+   cases where that ring is not enough: dark surfaces, and the form controls
+   that replaced the ring with a faint tint.
+   -------------------------------------------------------------------------- */
+
+/* --focus is --accent, and on the frozen ink bands that is 3.02:1 in the light
+   scheme — only just clearing the 3:1 floor for a UI indicator. --lime on ink
+   is 15.64:1 and is already this system's accent for dark surfaces, so the ring
+   stays legible with no new colour. (The dark scheme's --focus is the jade
+   #56d7a6, which is 11.07:1 on its ink, so lime is simply the safer constant
+   for a band that never flips.) */
+.section--dark :focus-visible,
+.card--ink :focus-visible,
+.footer :focus-visible {
+  outline-color: var(--lime);
+}
+
+/* .input:focus swaps the global ring for a 16% focus tint (~1.3:1 against the
+   paper). Keyboard focus gets the real ring back — --focus, 6.38:1 on --paper
+   in the light scheme and 9.48:1 on the dark one — while pointer focus keeps
+   the existing tint. */
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* The skip link jumps to a landmark, not a control. site.js makes #main
+   focusable so the jump moves focus as well as scroll; the landmark itself
+   must not paint a ring. */
+#main:focus,
+#main:focus-visible {
+  outline: none;
+}
+
+/* Contrast of the 12px muted labels, measured against the surfaces they sit on.
+   .eyebrow, .card__kicker, .hint and table.compare thead th all use
+   --text-muted, so their ratios follow the scheme's tokens:
+
+     light  #59606e  on --bone #f5f2ea   5.65:1
+                     on --paper #fffdf8  6.22:1
+                     on --bone-2 #eae5d9 5.03:1
+     dark   #a6acb6  on --bone #121419   8.07:1
+                     on --paper #191c22  7.47:1
+                     on --bone-2 #0d0f13 8.40:1
+
+   All clear 4.5:1, so no component rule has to lighten --text-muted. .eyebrow
+   inside a dark band uses --text-invert-soft instead: 8.77:1 on light-scheme
+   --ink and 8.93:1 on dark-scheme --ink. */
+
+/* --------------------------------------------------------------------------
+   Nav material on a dark opening section
+   Index opens on the ink hero. A cream bar pinned across it reads as grafted
+   on, so where the first section inside <main> is the dark hero the header
+   borrows that band's material: ink at the same translucency as the paper bar,
+   bone links, and hairlines that belong to the band. :has() is the only
+   dependency; an engine without it keeps today's paper bar, and no page markup
+   changes. The theme toggle is injected by assets/theme.js and styled in
+   theme.css — here it only borrows the band's foreground so it stays visible.
+   -------------------------------------------------------------------------- */
+
+@supports selector(:has(*)) {
+  body:has(> main > .hero.section--dark) .nav {
+    background: color-mix(in srgb, var(--ink) 86%, transparent);
+    border-bottom-color: var(--line-invert);
+  }
+
+  body:has(> main > .hero.section--dark) .nav .brand {
+    color: var(--text-invert);
+  }
+
+  body:has(> main > .hero.section--dark) .brand__mark .m-ring {
+    stroke: var(--text-invert);
+  }
+
+  body:has(> main > .hero.section--dark) .nav__links a {
+    color: var(--text-invert-soft);
+  }
+
+  body:has(> main > .hero.section--dark) .nav__links a:hover {
+    color: var(--text-invert);
+    border-bottom-color: var(--line-invert-strong);
+  }
+
+  body:has(> main > .hero.section--dark) .nav__links a[aria-current="page"] {
+    color: var(--text-invert);
+    border-bottom-color: var(--text-invert);
+  }
+
+  /* The ghost button has to borrow the band's foreground as well. */
+  body:has(> main > .hero.section--dark) .nav__actions .btn--ghost {
+    --btn-fg: var(--text-invert);
+    --btn-bd: var(--line-invert-strong);
+  }
+
+  body:has(> main > .hero.section--dark) .nav__actions .btn--ghost:hover {
+    --btn-bd: var(--text-invert);
+  }
+
+  body:has(> main > .hero.section--dark) .nav__toggle {
+    border-color: var(--line-invert-strong);
+  }
+
+  body:has(> main > .hero.section--dark) .nav__toggle span,
+  body:has(> main > .hero.section--dark) .nav__toggle span::before,
+  body:has(> main > .hero.section--dark) .nav__toggle span::after {
+    background: var(--text-invert);
+  }
+
+  body:has(> main > .hero.section--dark) .nav__toggle[aria-expanded="true"] {
+    background: var(--ink-3);
+    border-color: var(--line-invert-strong);
+  }
+
+  body:has(> main > .hero.section--dark) .theme-toggle {
+    color: var(--text-invert-soft);
+    border-color: var(--line-invert-strong);
+  }
+
+  body:has(> main > .hero.section--dark) .theme-toggle:hover {
+    color: var(--text-invert);
+    background: var(--ink-3);
+    border-color: var(--text-invert-soft);
+  }
+
+  /* The mobile drawer is part of the same bar. */
+  body:has(> main > .hero.section--dark) .nav__mobile {
+    border-top-color: var(--line-invert);
+  }
+
+  body:has(> main > .hero.section--dark) .nav__mobile a {
+    color: var(--text-invert);
+    border-bottom-color: var(--line-invert);
+  }
+
+  /* Rings inside the bar follow the same rule as every other dark band: --focus
+     is only 3.02:1 on ink, --lime is 15.64:1. The skip link is a sibling of the
+     header and lands on the same band. */
+  body:has(> main > .hero.section--dark) .nav :focus-visible,
+  body:has(> main > .hero.section--dark) .skip:focus-visible {
+    outline-color: var(--lime);
+  }
+}
+
+/* Chromium 105-110 has :has() before it has color-mix(); an opaque band is the
+   honest fallback there. */
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+  body:has(> main > .hero.section--dark) .nav {
+    background: var(--ink);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Display serif: a real Roman, not a synthesised bold
+   --display is tokens.css' property, but Palatino Linotype — the stack's
+   Windows member — ships 400 and 700 and has no Medium, so the 500 the system
+   asked for was rendered as synthetic bold. Ask for the Regular cut every face
+   in the stack actually has.
+   -------------------------------------------------------------------------- */
+
+.display,
+.h1,
+.h2 {
+  font-weight: 400;
+}
+
+/* 88px was too large for a section-scale headline, and the tracking that suits
+   a 88px optical size is too tight at 68px. One capped step, one tracking
+   value. */
+.display {
+  font-size: clamp(2.75rem, 1.6rem + 5vw, 4.25rem);
+  letter-spacing: -0.028em;
+}
+
+/* --------------------------------------------------------------------------
+   Reading size
+   The scale went 88px display, then 17px body, then 12-14px utility text with
+   nothing between. 15px / 1.6 is the missing step: prose, bullets and the
+   card/finding copy all read at it, and `.reading` exposes it for anything
+   added later.
+   -------------------------------------------------------------------------- */
+
+.reading,
+.prose,
+.card .small,
+.step .small,
+.price-list,
+.faq details p {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}

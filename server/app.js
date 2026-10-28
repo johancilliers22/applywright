@@ -1,0 +1,1286 @@
+/**
+ * Applywright HTTP server: pages, JSON API, session auth, quotas and billing.
+ *
+ * Everything stateful lives in SQLite (server/db.js). Every score, quota and
+ * price the UI shows comes from the module that enforces it — nothing here is
+ * decorative.
+ */
+import express from "express";
+import { createServer } from "node:http";
+import { appendFile, readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+
+import { loadConfig } from "./config.js";
+import { openDatabase } from "./db.js";
+import { createStore, dayStartIso, monthStartIso } from "./store.js";
+import { createModelClient } from "./model.js";
+import { createPageRenderer } from "./pages.js";
+import {
+  COOKIE_NAME,
+  assertSameOrigin,
+  clearCookie,
+  hashPassword,
+  newSessionId,
+  parseCookies,
+  publicUser,
+  sessionCookie,
+  sessionExpiry,
+  unauthorized,
+  validatePassword,
+  verifyPassword,
+} from "./auth.js";
+import {
+  ApiError,
+  assertBoolean,
+  assertNumber,
+  assertString,
+  badRequest,
+  errorBody,
+  forbidden,
+  id,
+  isPlainObject,
+  isValidEmail,
+  notFound,
+  notImplemented,
+  nowIso,
+  stopwatch,
+  tooLarge,
+  tooMany,
+  truncate,
+} from "./util.js";
+
+import { extractText, segmentSections } from "./lib/cv/extract.js";
+import { scoreCv } from "./lib/cv/score.js";
+import { tailorCv } from "./lib/cv/tailor.js";
+import { fetchJobs } from "./lib/jobs/sources.js";
+import { isSupportedHost, parseCapturedPosting } from "./lib/jobs/capture.js";
+import { matchRule } from "./lib/jobs/match.js";
+import { runAlerts, startAlertScheduler } from "./alerts-runner.js";
+import { buildPack } from "./lib/packs/build.js";
+import { PLANS, can, entitlements, priceFor, stripeConfigured } from "./lib/billing/plans.js";
+
+const PAGES = new Map([
+  ["/", "index.html"],
+  ["/how-it-works", "how-it-works.html"],
+  ["/pricing", "pricing.html"],
+  ["/about", "about.html"],
+  ["/security", "security.html"],
+  ["/sign-in", "sign-in.html"],
+  ["/sign-up", "sign-up.html"],
+]);
+
+const APP_ROUTE = /^\/app(\/.*)?$/;
+
+const STATUSES = ["pack_ready", "approved", "submitted", "interview", "rejected", "offer", "withdrawn"];
+
+/**
+ * Attribution. Remotive, Remote OK and Arbeitnow all make crediting the source a
+ * condition of using their feed, so the label travels with every job we return.
+ */
+const SOURCE_ATTRIBUTION = {
+  arbeitnow: "Arbeitnow (arbeitnow.com)",
+  remotive: "Remotive (remotive.com)",
+  remoteok: "Remote OK (remoteok.com)",
+  capture: "captured by you from the original posting",
+  jsonld: "captured by you from the original posting",
+};
+
+/**
+ * Boards whose terms forbid automated access or whose pages may not be
+ * re-published. Capture refuses them with a plain explanation instead of
+ * silently trying — the user is on that page in their own browser anyway.
+ */
+const BLOCKED_CAPTURE_HOSTS = [
+  { match: /(^|\.)linkedin\.com$/i, reason: "LinkedIn's terms do not permit automated access or re-publishing its postings." },
+  { match: /(^|\.)indeed\.com$/i, reason: "Indeed's terms do not permit automated access or re-publishing its postings." },
+  { match: /(^|\.)glassdoor\.[a-z.]+$/i, reason: "Glassdoor's terms do not permit automated access or re-publishing its postings." },
+];
+
+const ADVISORY =
+  "This score is advisory. It measures your CV against this posting using our published rubric (keywords 35, structure 20, achievements 20, readability 15, formatting 10). It is not an employer's score, no score is sent to any employer, and the decision to apply is yours.";
+
+const SECURITY_HEADERS = {
+  "content-security-policy": [
+    "default-src 'self'",
+    "connect-src 'self'",
+    "img-src 'self' data:",
+    "style-src 'self' 'unsafe-inline'",
+    "script-src 'self'",
+    "frame-ancestors 'none'",
+    "base-uri 'none'",
+    "form-action 'self'",
+    "object-src 'none'",
+  ].join("; "),
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "DENY",
+  "referrer-policy": "no-referrer",
+  "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
+  "cross-origin-opener-policy": "same-origin",
+};
+
+const xml = (value) =>
+  String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
+function createLimiter({ limit, windowMs = 60_000 }) {
+  const buckets = new Map();
+  return {
+    hit(key) {
+      const now = Date.now();
+      let bucket = buckets.get(key);
+      if (!bucket || now >= bucket.reset) {
+        bucket = { count: 0, reset: now + windowMs };
+        buckets.set(key, bucket);
+        if (buckets.size > 5_000) {
+          for (const [candidate, value] of buckets) if (now >= value.reset) buckets.delete(candidate);
+        }
+      }
+      bucket.count += 1;
+      return {
+        allowed: bucket.count <= limit,
+        remaining: Math.max(0, limit - bucket.count),
+        retryAfter: Math.max(1, Math.ceil((bucket.reset - now) / 1000)),
+      };
+    },
+  };
+}
+
+/** Verify a Stripe webhook signature without the SDK. */
+export function verifyStripeSignature({ payload, header, secret, toleranceSeconds = 300 }) {
+  if (!header || !secret) return false;
+  const parts = String(header).split(",").map((part) => part.trim());
+  const timestamp = parts.find((part) => part.startsWith("t="))?.slice(2);
+  const signatures = parts.filter((part) => part.startsWith("v1=")).map((part) => part.slice(3));
+  if (!timestamp || !signatures.length) return false;
+  const age = Math.abs(Date.now() / 1000 - Number(timestamp));
+  if (!Number.isFinite(age) || age > toleranceSeconds) return false;
+  const expected = createHmac("sha256", secret).update(`${timestamp}.${payload}`).digest("hex");
+  return signatures.some((signature) => {
+    try {
+      return timingSafeEqual(Buffer.from(signature, "hex"), Buffer.from(expected, "hex"));
+    } catch {
+      return false;
+    }
+  });
+}
+
+const planOrFree = (plan) => (PLANS[plan] ? plan : "free");
+
+/**
+ * Parse a posting the user pasted as plain text, with no HTML to inspect.
+ * Deliberately conservative: it takes the first line as the title, the second as
+ * the company when it looks like one, and leaves everything it cannot see as a
+ * null plus a warning.
+ */
+function parsePastedPosting({ url, text }) {
+  const lines = String(text)
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const warnings = [];
+  const clean = (value) => (value ? value.replace(/\s+/g, " ").slice(0, 200) : null);
+
+  // A real posting has a title, something else, and some body. Anything shorter
+  // is a stray paste, and saving it would pollute the feed.
+  if (lines.length < 2 || String(text).trim().length < 60) {
+    return { source: "paste", url, title: null, warnings: ["That does not look like a job posting — paste the whole advert, including its description."] };
+  }
+
+  const title = clean(lines[0] && lines[0].length <= 140 ? lines[0] : null);
+  if (!title) warnings.push("No job title was found in the pasted text; add it before saving.");
+
+  let company = clean(lines[1] && lines[1].length <= 90 && !/@|https?:/i.test(lines[1]) ? lines[1] : null);
+  if (!company) warnings.push("No company name was found; add it before saving.");
+
+  const locationLine = lines.slice(0, 4).find((line) => /remote|hybrid|on-?site|,|\bUK\b|\bUnited Kingdom\b/i.test(line) && line.length <= 120);
+  const location = clean(locationLine ?? null);
+  if (!location) warnings.push("No location was stated.");
+
+  // Salaries appear as "£95,000 to £115,000", "GBP 65000 to 80000" or "$120k".
+  const salaryMatch = text.match(
+    /(?:£|\$|€|GBP|USD|EUR)\s?(\d[\d,]{2,}(?:k)?)(?:\s?(?:to|-|–|—)\s?(?:£|\$|€|GBP|USD|EUR)?\s?(\d[\d,]{2,}(?:k)?))?/i
+  );
+  const salaryValue = (raw) => {
+    if (!raw) return null;
+    const cleaned = raw.replace(/,/g, "");
+    return cleaned.toLowerCase().endsWith("k") ? Number(cleaned.slice(0, -1)) * 1000 : Number(cleaned);
+  };
+  const currencyToken = salaryMatch ? salaryMatch[0].toUpperCase() : "";
+  const currency = salaryMatch
+    ? /GBP|£/.test(currencyToken)
+      ? "GBP"
+      : /USD|\$/.test(currencyToken)
+        ? "USD"
+        : "EUR"
+    : null;
+  const salaryMin = salaryMatch ? salaryValue(salaryMatch[1]) : null;
+  const salaryMax = salaryMatch && salaryMatch[2] ? salaryValue(salaryMatch[2]) : null;
+  if (!salaryMatch) warnings.push("No salary was stated.");
+
+  const postedMatch = text.match(/\b(\d{4}-\d{2}-\d{2})\b/);
+  const description = String(text).slice(0, 8_000);
+
+  return {
+    source: "paste",
+    external_id: null,
+    title,
+    company,
+    location,
+    remote: /remote/i.test(text) ? 1 : 0,
+    salary_min: salaryMin,
+    salary_max: salaryMax,
+    currency,
+    url,
+    description,
+    posted_at: postedMatch ? postedMatch[1] : null,
+    tags: [],
+    confidence: title ? 0.55 : 0.15,
+    warnings,
+  };
+}
+/** One outbound job shape for every endpoint — no snake_case leaking to clients. */
+const jobShape = (job) => ({
+  id: job.id,
+  source: job.source,
+  attribution: SOURCE_ATTRIBUTION[job.source] ?? job.source,
+  title: job.title,
+  company: job.company,
+  location: job.location,
+  remote: Boolean(job.remote),
+  salaryMin: job.salary_min,
+  salaryMax: job.salary_max,
+  currency: job.currency,
+  url: job.url,
+  postedAt: job.posted_at,
+  description: job.description ?? null,
+  tags: job.tags ?? [],
+});
+
+function requireQuota(store, user, feature, used, message) {
+  const result = can(user.plan, feature, used);
+  if (!result.allowed) {
+    throw new ApiError(402, "quota_exceeded", message, { upgrade: user.plan === "free" ? "pro" : "scale" });
+  }
+  return result;
+}
+
+export async function createApp(config) {
+  const db = openDatabase(config.databasePath);
+  const store = createStore(db);
+  const model = createModelClient(config);
+  const pages = createPageRenderer({ publicDir: config.publicDir, site: config.site });
+  store.purgeExpiredSessions();
+
+  const apiLimiter = createLimiter({ limit: config.limits.apiPerMinute });
+  const authLimiter = createLimiter({ limit: config.limits.authPerMinute });
+  const feedCache = new Map();
+
+  const app = express();
+  app.disable("x-powered-by");
+  app.set("trust proxy", config.trustProxy ? 1 : false);
+
+  // --- identity, headers, session ------------------------------------------
+  app.use((req, res, next) => {
+    req.requestId = id("r", 6);
+    res.setHeader("x-request-id", req.requestId);
+    for (const [name, value] of Object.entries(SECURITY_HEADERS)) res.setHeader(name, value);
+    const cookies = parseCookies(req.headers.cookie);
+    req.sessionId = cookies[COOKIE_NAME] || null;
+    req.user = req.sessionId ? store.sessionUser(req.sessionId) : null;
+    next();
+  });
+
+  const requireUser = (req, res, next) => (req.user ? next() : next(unauthorized()));
+
+  // --- rate limits ---------------------------------------------------------
+  app.use("/api", (req, res, next) => {
+    const key = req.ip || req.socket?.remoteAddress || "unknown";
+    const isAuth = /^\/auth\/(register|login)$/.test(req.path);
+    const state = (isAuth ? authLimiter : apiLimiter).hit(key);
+    res.setHeader("x-ratelimit-limit", String(isAuth ? config.limits.authPerMinute : config.limits.apiPerMinute));
+    res.setHeader("x-ratelimit-remaining", String(state.remaining));
+    if (!state.allowed) {
+      res.setHeader("retry-after", String(state.retryAfter));
+      return res.status(429).json(errorBody("rate_limited", `Too many requests. Retry in ${state.retryAfter}s.`));
+    }
+    next();
+  });
+
+  const jsonBody = express.json({ limit: config.limits.maxBodyBytes, type: "application/json" });
+  app.use("/api", (req, res, next) => (req.path === "/billing/webhook" ? next() : jsonBody(req, res, next)));
+  app.use("/api", (req, res, next) => {
+    assertSameOrigin(req);
+    next();
+  });
+
+  // ------------------------------------------------------------------- auth
+  app.post("/api/auth/register", (req, res) => {
+    if (!config.registrationOpen) {
+      throw new ApiError(403, "registration_closed", "Sign-up is closed on this server. Ask the operator for an account.");
+    }
+    const body = req.body ?? {};
+    const email = assertString(body.email, "email", { max: 254 });
+    if (!isValidEmail(email)) throw badRequest("email must be a valid address");
+    const password = validatePassword(body.password);
+    const name = assertString(body.name, "name", { min: 0, max: 120, required: false });
+    if (store.userByEmail(email)) throw new ApiError(409, "email_taken", "an account with that email already exists");
+
+    const { hash, salt } = hashPassword(password);
+    const user = store.createUser({ email, passwordHash: hash, passwordSalt: salt, name });
+    const session = store.createSession({
+      userId: user.id,
+      userAgent: req.get("user-agent"),
+      ip: req.ip,
+      days: config.limits.sessionDays,
+    });
+    res.setHeader("set-cookie", sessionCookie(session.id, { secure: config.secureCookies, maxAgeDays: config.limits.sessionDays }));
+    res.status(201).json({ user: publicUser(user) });
+  });
+
+  app.post("/api/auth/login", (req, res) => {
+    const body = req.body ?? {};
+    const email = assertString(body.email, "email", { max: 254 });
+    const password = assertString(body.password, "password", { max: 200 });
+    const row = store.userByEmail(email);
+    if (!row || !verifyPassword(password, row.pass_hash, row.pass_salt)) {
+      throw new ApiError(401, "invalid_credentials", "email or password is incorrect");
+    }
+    const session = store.createSession({
+      userId: row.id,
+      userAgent: req.get("user-agent"),
+      ip: req.ip,
+      days: config.limits.sessionDays,
+    });
+    res.setHeader("set-cookie", sessionCookie(session.id, { secure: config.secureCookies, maxAgeDays: config.limits.sessionDays }));
+    res.json({ user: publicUser(row) });
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    if (req.sessionId) store.deleteSession(req.sessionId);
+    res.setHeader("set-cookie", clearCookie());
+    res.json({ ok: true });
+  });
+
+  app.get("/api/auth/me", requireUser, (req, res) => {
+    const plan = planOrFree(req.user.plan);
+    res.json({
+      user: publicUser(req.user),
+      plan,
+      usage: {
+        packsThisMonth: store.countUsage(req.user.id, "pack", monthStartIso()),
+        cvs: store.countCvs(req.user.id),
+        alerts: store.listAlerts(req.user.id).length,
+        unreadNotifications: store.countUnread(req.user.id),
+      },
+      entitlements: entitlements(plan),
+      model: model ? "live" : "rules",
+    });
+  });
+
+  // -------------------------------------------------------------------- cvs
+  app.get("/api/cvs", requireUser, (req, res) => {
+    res.json({
+      cvs: store.listCvs(req.user.id).map((cv) => ({
+        id: cv.id,
+        name: cv.name,
+        format: cv.format,
+        primary: Boolean(cv.primary_flag),
+        createdAt: cv.created_at,
+        preview: truncate(cv.text.replace(/\s+/g, " "), 220),
+      })),
+    });
+  });
+
+  app.post("/api/cvs", requireUser, async (req, res) => {
+    const body = req.body ?? {};
+    const existing = store.countCvs(req.user.id);
+    requireQuota(store, req.user, "cvs", existing, "Your plan is full — upgrade to add another CV.");
+
+    let text = "";
+    let format = "txt";
+    let warnings = [];
+    let name = assertString(body.name, "name", { max: 120, required: false });
+
+    if (typeof body.text === "string" && body.text.trim()) {
+      text = body.text.trim();
+      format = "txt";
+    } else if (typeof body.contentBase64 === "string" && body.contentBase64.trim()) {
+      const filename = assertString(body.filename, "filename", { max: 200 });
+      const buffer = Buffer.from(body.contentBase64, "base64");
+      if (!buffer.length) throw badRequest("the uploaded file is empty");
+      if (buffer.length > config.limits.maxCvBytes) throw tooLarge("that file is larger than the 5 MB limit");
+      const extracted = await extractText({ buffer, filename });
+      text = String(extracted.text ?? "").trim();
+      format = extracted.format ?? "unknown";
+      warnings = extracted.warnings ?? [];
+      if (!name) name = filename.replace(/\.[^.]+$/, "");
+      if (!text) {
+        throw new ApiError(422, "unreadable_cv", `no text could be read from that ${format} file${warnings.length ? `: ${warnings[0]}` : ""}`);
+      }
+    } else {
+      throw badRequest("provide text or contentBase64");
+    }
+
+    if (text.length < 80) throw badRequest("that CV is too short to analyse — paste the full text");
+    if (text.length > 60_000) throw badRequest("that CV is longer than 60,000 characters");
+
+    const profile = segmentSections(text);
+    const isFirst = existing === 0;
+    const cv = store.createCv({
+      userId: req.user.id,
+      name: name || "My CV",
+      format,
+      text,
+      profile,
+      primary: isFirst || body.primary === true,
+    });
+    res.status(201).json({
+      cv: {
+        id: cv.id,
+        name: cv.name,
+        format: cv.format,
+        primary: Boolean(cv.primary_flag),
+        createdAt: cv.created_at,
+        profile,
+      },
+      warnings,
+    });
+  });
+
+  app.get("/api/cvs/:id", requireUser, (req, res) => {
+    const cv = store.cvById(req.params.id, req.user.id);
+    if (!cv) throw notFound("CV not found");
+    res.json({ cv: { id: cv.id, name: cv.name, format: cv.format, primary: Boolean(cv.primary_flag), createdAt: cv.created_at, text: cv.text, profile: cv.profile } });
+  });
+
+  app.patch("/api/cvs/:id", requireUser, (req, res) => {
+    const body = req.body ?? {};
+    const patch = {};
+    if (body.name !== undefined) patch.name = assertString(body.name, "name", { max: 120 });
+    if (body.primary !== undefined) patch.primary = assertBoolean(body.primary);
+    // Editing the extracted text is the correction path when a parser gets a
+    // heading or a date wrong: re-segment so profile, scores and packs follow it.
+    if (body.text !== undefined) {
+      patch.text = assertString(body.text, "text", { min: 80, max: 60_000 });
+      patch.profile = segmentSections(patch.text);
+    }
+    const cv = store.updateCv(req.params.id, req.user.id, patch);
+    if (!cv) throw notFound("CV not found");
+    res.json({
+      cv: {
+        id: cv.id,
+        name: cv.name,
+        format: cv.format,
+        primary: Boolean(cv.primary_flag),
+        text: cv.text,
+        profile: cv.profile,
+      },
+    });
+  });
+
+  app.delete("/api/cvs/:id", requireUser, (req, res) => {
+    if (!store.deleteCv(req.params.id, req.user.id)) throw notFound("CV not found");
+    res.json({ deleted: true });
+  });
+
+  // --------------------------------------------------------------- analyse
+  const resolveCv = (user, cvId) => {
+    if (cvId) {
+      const cv = store.cvById(String(cvId), user.id);
+      if (!cv) throw notFound("CV not found");
+      return cv;
+    }
+    const primary = store.listCvs(user.id)[0];
+    if (!primary) throw badRequest("add a CV first");
+    return primary;
+  };
+
+  const resolveJobText = (body) => {
+    if (typeof body.jobText === "string" && body.jobText.trim()) {
+      return {
+        description: assertString(body.jobText, "jobText", { max: config.limits.maxJobDescription }),
+        title: typeof body.title === "string" ? body.title.slice(0, 200) : null,
+        company: typeof body.company === "string" ? body.company.slice(0, 200) : null,
+        url: typeof body.url === "string" ? body.url.slice(0, 2_000) : null,
+        id: null,
+      };
+    }
+    if (body.jobId) {
+      const job = store.jobById(String(body.jobId));
+      if (!job) throw notFound("job not found");
+      return job;
+    }
+    throw badRequest("provide jobText or jobId");
+  };
+
+  app.post("/api/analyse", requireUser, (req, res) => {
+    const body = req.body ?? {};
+    const cv = resolveCv(req.user, body.cvId);
+    const job = resolveJobText(body);
+    const report = scoreCv({ cvText: cv.text, jobText: job.description, profile: cv.profile });
+    const stored = store.createReport({
+      userId: req.user.id,
+      cvId: cv.id,
+      jobId: job.id ?? null,
+      jobTitle: job.title ?? null,
+      score: report.score,
+      report,
+    });
+    res.json({ report: stored, job: { id: job.id ?? null, title: job.title ?? null, company: job.company ?? null }, advisory: ADVISORY });
+  });
+
+  app.get("/api/reports", requireUser, (req, res) => {
+    res.json({ reports: store.listReports(req.user.id) });
+  });
+
+  // ---------------------------------------------------------------- tailor
+  app.post("/api/tailor", requireUser, async (req, res) => {
+    const body = req.body ?? {};
+    const cv = resolveCv(req.user, body.cvId);
+    const job = resolveJobText(body);
+
+    const used = store.countUsage(req.user.id, "pack", monthStartIso());
+    requireQuota(store, req.user, "packs", used, "You have used this month's tailored packs — upgrade for more.");
+
+    const tailored = await tailorCv({ cvText: cv.text, profile: cv.profile, job, model });
+    const built = buildPack({ profile: cv.profile, cvText: cv.text, job, tailored });
+    // The pricing table sells covering letters on Pro and above; enforce it here
+    // rather than letting a Free pack carry one.
+    const coverLetterAllowed = can(req.user.plan, "coverLetter").allowed;
+    const pack = coverLetterAllowed
+      ? built
+      : {
+          ...built,
+          coverLetterMd: "",
+          coverLetterLocked: "A covering letter is part of Pro. The CV and screening answers in this pack are yours to use.",
+        };
+    const score = scoreCv({ cvText: cv.text, jobText: job.description, profile: cv.profile });
+
+    const application = store.createApplication({
+      userId: req.user.id,
+      jobId: job.id ?? null,
+      cvId: cv.id,
+      title: job.title || "Untitled role",
+      company: job.company ?? null,
+      url: job.url ?? null,
+      status: "pack_ready",
+      score: score.score,
+      pack: { ...pack, tailored, score },
+    });
+    store.recordUsage(req.user.id, "pack", 1);
+
+    res.status(201).json({
+      application: {
+        id: application.id,
+        title: application.title,
+        company: application.company,
+        status: application.status,
+        score: application.score,
+        createdAt: application.created_at,
+      },
+      pack: { summary: tailored.summary, mode: tailored.mode, warnings: tailored.warnings, coverLetter: tailored.coverLetter },
+      score: { score: score.score, subscores: score.subscores },
+    });
+  });
+
+  // ---------------------------------------------------------- applications
+  app.get("/api/applications", requireUser, (req, res) => {
+    const applications = store.listApplications(req.user.id).map((application) => ({
+      id: application.id,
+      title: application.title,
+      company: application.company,
+      url: application.url,
+      status: application.status,
+      score: application.score,
+      createdAt: application.created_at,
+      updatedAt: application.updated_at,
+      appliedAt: application.applied_at,
+      notes: application.notes,
+      hasPack: Boolean(application.pack?.cvHtml),
+    }));
+    res.json({ applications, statuses: STATUSES });
+  });
+
+  app.get("/api/applications/:id", requireUser, (req, res) => {
+    const application = store.applicationById(req.params.id, req.user.id);
+    if (!application) throw notFound("application not found");
+    res.json({ application });
+  });
+
+  app.patch("/api/applications/:id", requireUser, (req, res) => {
+    const body = req.body ?? {};
+    if (body.status !== undefined && !STATUSES.includes(body.status)) {
+      throw badRequest(`status must be one of ${STATUSES.join(", ")}`);
+    }
+    const application = store.updateApplication(req.params.id, req.user.id, {
+      status: body.status,
+      notes: body.notes === undefined ? undefined : assertString(body.notes, "notes", { min: 0, max: 4_000, required: false }),
+    });
+    if (!application) throw notFound("application not found");
+    res.json({ application: { id: application.id, status: application.status, notes: application.notes, updatedAt: application.updated_at } });
+  });
+
+  app.delete("/api/applications/:id", requireUser, (req, res) => {
+    if (!store.deleteApplication(req.params.id, req.user.id)) throw notFound("application not found");
+    res.json({ deleted: true });
+  });
+
+  app.get("/api/applications/:id/cv", requireUser, (req, res) => {
+    const application = store.applicationById(req.params.id, req.user.id);
+    if (!application) throw notFound("application not found");
+    const html = application.pack?.cvHtml;
+    if (!html) throw notFound("this application has no generated CV");
+    res.setHeader("cache-control", "no-store");
+    res.type("html").send(html);
+  });
+
+  // ------------------------------------------------------------------ jobs
+  app.get("/api/jobs", requireUser, async (req, res) => {
+    const started = stopwatch();
+    const plan = planOrFree(req.user.plan);
+    const quota = entitlements(plan);
+    const usedToday = store.countUsage(req.user.id, "job_results", dayStartIso());
+    const dailyRemaining = quota.jobResultsPerDay == null ? Infinity : Math.max(0, quota.jobResultsPerDay - usedToday);
+    if (dailyRemaining <= 0) {
+      throw new ApiError(402, "quota_exceeded", "You have reached today's job-feed limit on this plan.", { upgrade: "pro" });
+    }
+
+    const query = assertString(req.query.query, "query", { min: 0, max: 200, required: false });
+    const location = assertString(req.query.location, "location", { min: 0, max: 120, required: false });
+    const remoteOnly = assertBoolean(req.query.remote);
+    const requested = Math.min(
+      Number(req.query.limit) > 0 ? Number(req.query.limit) : 40,
+      config.limits.jobFeedLimit,
+      dailyRemaining === Infinity ? config.limits.jobFeedLimit : dailyRemaining
+    );
+
+    const cacheKey = JSON.stringify({ query, location, remoteOnly, requested });
+    const cached = feedCache.get(cacheKey);
+    const fresh = cached && Date.now() - cached.at < config.limits.feedCacheMinutes * 60_000;
+
+    let sourceErrors = cached?.errors ?? [];
+    if (!fresh) {
+      const result = await fetchJobs({ query, location, remoteOnly, limit: requested });
+      sourceErrors = result.errors ?? [];
+      for (const job of result.jobs ?? []) store.upsertJob({ ...job, dedupe_hash: job.dedupe_hash ?? createHash("sha256").update(`${job.company}|${job.title}|${job.location}`.toLowerCase()).digest("hex") });
+      feedCache.set(cacheKey, { at: Date.now(), errors: sourceErrors });
+      store.pruneJobs();
+    }
+
+    const jobs = store.searchJobs({ query, location, remoteOnly, limit: requested });
+    store.recordUsage(req.user.id, "job_results", jobs.length);
+
+    res.json({
+      jobs: jobs.map(jobShape),
+      sources: sourceErrors,
+      cached: Boolean(fresh),
+      remaining: dailyRemaining === Infinity ? null : Math.max(0, dailyRemaining - jobs.length),
+      ms: started(),
+    });
+  });
+
+  app.post("/api/jobs/capture", requireUser, (req, res) => {
+    const body = req.body ?? {};
+    const url = assertString(body.url, "url", { max: 2_000 });
+    if (!/^https?:\/\//i.test(url)) throw badRequest("url must start with http or https");
+
+    let host = "";
+    try {
+      host = new URL(url).hostname;
+    } catch {
+      throw badRequest("url is not a valid address");
+    }
+    const blocked = BLOCKED_CAPTURE_HOSTS.find((rule) => rule.match.test(host));
+    if (blocked) {
+      throw new ApiError(
+        400,
+        "source_not_permitted",
+        `We cannot read postings from ${host}. ${blocked.reason} Paste the posting text instead, or apply on their own site.`
+      );
+    }
+    const html = typeof body.html === "string" ? body.html.slice(0, 500_000) : "";
+    const text = typeof body.text === "string" ? body.text.slice(0, 50_000) : "";
+    if (!html && !text) throw badRequest("paste the posting text or the page HTML");
+
+    const parsed = html.trim()
+      ? parseCapturedPosting({ url, html, text })
+      : parsePastedPosting({ url, text });
+    if (!parsed?.title) throw new ApiError(422, "unreadable_posting", "could not find a job title in that page");
+    const dedupe_hash = createHash("sha256").update(`${parsed.company ?? ""}|${parsed.title}|${parsed.location ?? ""}`.toLowerCase()).digest("hex");
+    const jobId = store.upsertJob({ ...parsed, source: parsed.source ?? "capture", dedupe_hash });
+    res.status(201).json({
+      job: jobShape(store.jobById(jobId)),
+      supported: isSupportedHost(url),
+      confidence: parsed.confidence ?? null,
+      warnings: parsed.warnings ?? [],
+    });
+  });
+
+  app.get("/api/jobs/:id", requireUser, (req, res) => {
+    const job = store.jobById(req.params.id);
+    if (!job) throw notFound("job not found");
+    res.json({ job: jobShape(job) });
+  });
+
+  // ---------------------------------------------------------------- alerts
+  app.get("/api/alerts", requireUser, (req, res) => {
+    res.json({ alerts: store.listAlerts(req.user.id) });
+  });
+
+  app.post("/api/alerts", requireUser, (req, res) => {
+    const body = req.body ?? {};
+    const existing = store.listAlerts(req.user.id).length;
+    requireQuota(store, req.user, "alerts", existing, "Your plan's alert limit is reached.");
+    const alert = store.createAlert({
+      userId: req.user.id,
+      name: assertString(body.name, "name", { max: 120 }),
+      keywords: assertString(body.keywords, "keywords", { max: 300 }),
+      locations: assertString(body.locations, "locations", { min: 0, max: 200, required: false }),
+      remoteOnly: assertBoolean(body.remoteOnly),
+      minSalary: assertNumber(body.minSalary, "minSalary", { min: 0, max: 10_000_000, required: false }),
+      cadence: ["daily", "weekly", "manual"].includes(body.cadence) ? body.cadence : "daily",
+    });
+    res.status(201).json({ alert });
+  });
+
+  app.patch("/api/alerts/:id", requireUser, (req, res) => {
+    const body = req.body ?? {};
+    const alert = store.updateAlert(req.params.id, req.user.id, {
+      name: body.name === undefined ? undefined : assertString(body.name, "name", { max: 120 }),
+      keywords: body.keywords === undefined ? undefined : assertString(body.keywords, "keywords", { max: 300 }),
+      locations: body.locations === undefined ? undefined : assertString(body.locations, "locations", { min: 0, max: 200, required: false }),
+      remoteOnly: body.remoteOnly === undefined ? undefined : assertBoolean(body.remoteOnly),
+      minSalary: body.minSalary === undefined ? undefined : assertNumber(body.minSalary, "minSalary", { min: 0, max: 10_000_000, required: false }),
+      cadence: body.cadence,
+      active: body.active === undefined ? undefined : assertBoolean(body.active),
+    });
+    if (!alert) throw notFound("alert not found");
+    res.json({ alert });
+  });
+
+  app.delete("/api/alerts/:id", requireUser, (req, res) => {
+    if (!store.deleteAlert(req.params.id, req.user.id)) throw notFound("alert not found");
+    res.json({ deleted: true });
+  });
+
+  app.post("/api/alerts/run", requireUser, async (req, res) => {
+    const alerts = store.listAlerts(req.user.id).filter((alert) => alert.active);
+    const result = await runAlerts({ alerts, store, db });
+    res.json({ alerts: alerts.length, ...result });
+  });
+
+  // --------------------------------------------------------- notifications
+  const ensureFeedToken = (userId) => {
+    const settings = store.getSettings(userId);
+    if (!settings.feedToken) {
+      const token = createHash("sha256").update(`${userId}:${nowIso()}:${Math.random()}`).digest("hex").slice(0, 32);
+      store.putSettings(userId, { ...settings, feedToken: token });
+      return token;
+    }
+    return settings.feedToken;
+  };
+
+  app.get("/api/notifications", requireUser, (req, res) => {
+    const unreadOnly = assertBoolean(req.query.unread);
+    res.json({
+      notifications: store.listNotifications(req.user.id, { unreadOnly, limit: 100 }),
+      unread: store.countUnread(req.user.id),
+      feedToken: ensureFeedToken(req.user.id),
+    });
+  });
+
+  app.post("/api/notifications/:id/read", requireUser, (req, res) => {
+    if (!store.markNotificationRead(req.params.id, req.user.id)) throw notFound("notification not found");
+    res.json({ ok: true, unread: store.countUnread(req.user.id) });
+  });
+
+  app.get("/feed/:token.rss", (req, res) => {
+    const token = String(req.params.token ?? "");
+    const rows = db.prepare("SELECT user_id, json FROM settings").all();
+    const match = rows.find((row) => {
+      try {
+        return JSON.parse(row.json)?.feedToken === token;
+      } catch {
+        return false;
+      }
+    });
+    if (!match) throw notFound("feed not found");
+    const notifications = store.listNotifications(match.user_id, { limit: 50 });
+    const items = notifications
+      .map(
+        (notification) => `    <item>
+      <title>${xml(notification.title)}</title>
+      <description>${xml(notification.body ?? "")}</description>
+      <pubDate>${new Date(notification.created_at).toUTCString()}</pubDate>
+      <guid isPermaLink="false">${xml(notification.id)}</guid>
+    </item>`
+      )
+      .join("\n");
+    res.type("application/rss+xml").send(`<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Applywright job alerts</title>
+    <link>${xml(`${config.site.publicUrl}/app/alerts`)}</link>
+    <description>New job matches from your saved alerts</description>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+${items}
+  </channel>
+</rss>`);
+  });
+
+  // --------------------------------------------------------------- billing
+  app.get("/api/billing/plans", requireUser, (req, res) => {
+    res.json({
+      plans: Object.entries(PLANS).map(([key, plan]) => ({
+        key,
+        ...plan,
+        prices: { month: priceFor(key, "month"), year: priceFor(key, "year") },
+      })),
+      current: planOrFree(req.user.plan),
+      stripeConfigured: config.stripe.configured,
+    });
+  });
+
+  app.post("/api/billing/checkout", requireUser, async (req, res) => {
+    if (!config.stripe.configured) {
+      throw notImplemented("Billing is not configured on this server: set STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET.");
+    }
+    const body = req.body ?? {};
+    const plan = assertString(body.plan, "plan", { max: 20 });
+    const interval = body.interval === "year" ? "year" : "month";
+    if (!PLANS[plan] || plan === "free") throw badRequest("choose pro or scale");
+    const priceId = config.stripe.priceIds[`${plan}${interval === "year" ? "Yearly" : "Monthly"}`];
+    if (!priceId) throw notImplemented(`No Stripe price id configured for ${plan}/${interval}.`);
+
+    const origin = config.site.publicUrl;
+    const params = new URLSearchParams();
+    params.set("mode", "subscription");
+    params.set("success_url", `${origin}/app/billing?status=success`);
+    params.set("cancel_url", `${origin}/app/billing?status=cancelled`);
+    params.set("customer_email", req.user.email);
+    params.set("client_reference_id", req.user.id);
+    params.set("line_items[0][price]", priceId);
+    params.set("line_items[0][quantity]", "1");
+    params.set("metadata[userId]", req.user.id);
+    params.set("metadata[plan]", plan);
+
+    const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${config.stripe.secret}`,
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      body: params,
+      signal: AbortSignal.timeout(15_000),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new ApiError(502, "provider_error", `Stripe refused the request: ${payload?.error?.message ?? response.status}`);
+    res.json({ url: payload.url });
+  });
+
+  app.post("/api/billing/portal", requireUser, async (req, res) => {
+    if (!config.stripe.configured) {
+      throw notImplemented("Billing is not configured on this server: set STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET.");
+    }
+    if (!req.user.stripe_customer_id) {
+      throw badRequest("this account has no Stripe customer yet — subscribe first");
+    }
+    const origin = config.site.publicUrl;
+    const params = new URLSearchParams();
+    params.set("customer", req.user.stripe_customer_id);
+    params.set("return_url", `${origin}/app/billing`);
+    const response = await fetch("https://api.stripe.com/v1/billing_portal/sessions", {
+      method: "POST",
+      headers: { authorization: `Bearer ${config.stripe.secret}`, "content-type": "application/x-www-form-urlencoded" },
+      body: params,
+      signal: AbortSignal.timeout(15_000),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new ApiError(502, "provider_error", `Stripe refused the request: ${payload?.error?.message ?? response.status}`);
+    res.json({ url: payload.url });
+  });
+
+  app.post("/api/billing/webhook", express.raw({ type: "application/json", limit: config.limits.maxBodyBytes }), (req, res) => {
+    if (!config.stripe.configured) throw notImplemented("Billing is not configured on this server.");
+    const raw = Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body ?? {}));
+    const valid = verifyStripeSignature({
+      payload: raw.toString("utf8"),
+      header: req.get("stripe-signature"),
+      secret: config.stripe.webhookSecret,
+    });
+    if (!valid) throw new ApiError(400, "invalid_signature", "webhook signature did not verify");
+
+    let event;
+    try {
+      event = JSON.parse(raw.toString("utf8"));
+    } catch {
+      throw badRequest("webhook body is not JSON");
+    }
+
+    if (event.type === "checkout.session.completed" || event.type === "customer.subscription.updated") {
+      const session = event.data?.object ?? {};
+      const userId = session.metadata?.userId ?? session.client_reference_id;
+      const plan = session.metadata?.plan;
+      if (userId && plan && PLANS[plan]) {
+        store.updateUserPlan(userId, plan, session.current_period_end ? new Date(session.current_period_end * 1000).toISOString() : null, session.customer ?? null);
+      }
+    }
+    if (event.type === "customer.subscription.deleted") {
+      const session = event.data?.object ?? {};
+      const userId = session.metadata?.userId;
+      if (userId) store.updateUserPlan(userId, "free", null, null);
+    }
+    res.json({ received: true });
+  });
+
+  // ------------------------------------------------------- account + health
+  app.get("/api/export", requireUser, (req, res) => {
+    const data = store.exportUser(req.user.id);
+    res.setHeader("content-disposition", `attachment; filename="applywright-export-${nowIso().slice(0, 10)}.json"`);
+    res.json(data);
+  });
+
+  app.delete("/api/account", requireUser, (req, res) => {
+    const body = req.body ?? {};
+    const password = assertString(body.password, "password", { max: 200 });
+    if (!verifyPassword(password, req.user.pass_hash, req.user.pass_salt)) {
+      throw new ApiError(401, "invalid_credentials", "password is incorrect");
+    }
+    store.deleteUser(req.user.id);
+    res.setHeader("set-cookie", clearCookie());
+    res.json({ deleted: true });
+  });
+
+  app.get("/api/health", (req, res) => {
+    res.json({
+      status: "ok",
+      version: config.version,
+      provider: model ? "live" : "rules",
+      sources: ["arbeitnow", "remotive", "remoteok"],
+      stripe: config.stripe.configured,
+      db: { jobs: store.countJobs() },
+      uptimeSeconds: Number(process.uptime().toFixed(2)),
+    });
+  });
+
+  // ------------------------------------------------- connectors, style, refine
+  // These three modules are optional at boot: they are loaded on first use, so a
+  // server can start while a module is still being written, and a missing module
+  // degrades to an honest 501 rather than a crash.
+  const lazy = (specifier) => {
+    let loaded = null;
+    return async () => {
+      if (!loaded) {
+        try {
+          loaded = await import(specifier);
+        } catch (error) {
+          throw notImplemented(`${specifier.split("/").pop()} is not available in this build (${error.code ?? error.message}).`);
+        }
+      }
+      return loaded;
+    };
+  };
+  const loadConnectors = lazy("./lib/connectors/index.js");
+  const loadLinkedIn = lazy("./lib/connectors/linkedin.js");
+  const loadStyle = lazy("./lib/cv/style.js");
+  const loadRefine = lazy("./lib/cv/refine.js");
+
+  app.get("/api/connectors", requireUser, async (req, res) => {
+    const connectors = await loadConnectors();
+    res.json({ connectors: connectors.CONNECTORS ?? [] });
+  });
+
+  app.post("/api/connectors/linkedin", requireUser, async (req, res) => {
+    const body = req.body ?? {};
+    const text = assertString(body.text, "text", { min: 80, max: 80_000 });
+    const linkedin = await loadLinkedIn();
+    const parsed = linkedin.parseLinkedInProfile(text);
+    if (!parsed?.name && !parsed?.experience?.length) {
+      throw new ApiError(422, "unreadable_profile", "no name or roles could be read from that text — paste the profile as it appears on the page, or use the PDF export.");
+    }
+    res.json({
+      profile: parsed,
+      confidence: parsed.confidence ?? null,
+      looksLikeLinkedIn: linkedin.isLinkedInProfileText(text),
+      warnings: parsed.warnings ?? [],
+    });
+  });
+
+  app.post("/api/cvs/from-profile", requireUser, async (req, res) => {
+    const body = req.body ?? {};
+    const profile = body.profile;
+    if (!profile || typeof profile !== "object") throw badRequest("profile is required");
+    const connectors = await loadConnectors();
+    const text = connectors.profileToCvText(profile);
+    if (!text || text.trim().length < 80) throw new ApiError(422, "empty_profile", "that profile did not contain enough to build a CV");
+
+    const existing = store.countCvs(req.user.id);
+    requireQuota(store, req.user, "cvs", existing, "Your plan is full — upgrade to add another CV.");
+
+    const cv = store.createCv({
+      userId: req.user.id,
+      name: assertString(body.name, "name", { max: 120, required: false }) || `${profile.name ?? "Imported"} — CV`,
+      format: "profile",
+      text,
+      profile: segmentSections(text),
+      primary: existing === 0,
+    });
+    res.status(201).json({ cv: { id: cv.id, name: cv.name, format: cv.format, primary: Boolean(cv.primary_flag), createdAt: cv.created_at }, warnings: profile.warnings ?? [] });
+  });
+
+  app.get("/api/style", requireUser, async (req, res) => {
+    const cv = resolveCv(req.user, req.query.cvId);
+    const styleLib = await loadStyle();
+    const style = styleLib.analyseStyle(cv.text);
+    // The badge compares the latest tailored summary with the CV's own voice,
+    // falling back to the CV against itself when nothing has been tailored.
+    const latest = store.listApplications(req.user.id)[0];
+    const tailoredSummary = latest?.pack?.tailored?.summary ?? cv.text;
+    const match = styleLib.styleMatch(tailoredSummary, cv.text);
+    res.json({ cvId: cv.id, style, badge: match.score, reasons: match.reasons });
+  });
+
+  app.post("/api/applications/:id/refine", requireUser, async (req, res) => {
+    const body = req.body ?? {};
+    const instruction = assertString(body.instruction, "instruction", { min: 3, max: 500 });
+    const application = store.applicationById(req.params.id, req.user.id);
+    if (!application) throw notFound("application not found");
+    if (!application.pack?.tailored) throw new ApiError(422, "no_pack", "this application has no tailored pack to refine");
+
+    const cv = store.cvById(application.cv_id, req.user.id);
+    if (!cv) throw notFound("the CV behind this application no longer exists");
+
+    const refineLib = await loadRefine();
+    const styleLib = await loadStyle().catch(() => null);
+    const style = styleLib ? styleLib.analyseStyle(cv.text) : null;
+
+    const refined = await refineLib.refine({ pack: application.pack, instruction, style, model });
+
+    // The refine module returns refined TEXT, not a rebuilt pack: `bullets` is a
+    // string[] indexed against the stored objects (which carry section/evidence),
+    // and screening answers live under `tailored.screening`, not a pack-level
+    // array. Merge deliberately so the pack cannot be corrupted by a spread.
+    const bits = refined.refined ?? {};
+    const baseTailored = application.pack?.tailored ?? {};
+    const baseBullets = Array.isArray(baseTailored.bullets) ? baseTailored.bullets : [];
+    const refinedBullets = Array.isArray(bits.bullets) ? bits.bullets : null;
+    const mergedBullets = refinedBullets
+      ? baseBullets.map((bullet, index) =>
+          typeof refinedBullets[index] === "string" ? { ...bullet, rewritten: refinedBullets[index] } : bullet
+        )
+      : baseBullets;
+
+    const screeningKeys = ["motivation", "noticePeriod", "rightToWork", "salaryExpectation"];
+    const screening = { ...(baseTailored.screening ?? {}) };
+    if (Array.isArray(bits.answers)) {
+      bits.answers.forEach((entry, index) => {
+        const answer = typeof entry === "string" ? entry : entry?.answer;
+        const question = typeof entry === "object" ? entry?.question : null;
+        const key = screeningKeys.find((name) => question && String(question).toLowerCase() === name.toLowerCase()) ?? screeningKeys[index];
+        // Never write a placeholder back over a real answer.
+        if (key && typeof answer === "string" && answer.trim() && !/^not provided/i.test(answer)) {
+          screening[key] = answer;
+        }
+      });
+    }
+
+    const tailoredNext = {
+      ...baseTailored,
+      ...(typeof bits.summary === "string" && bits.summary.trim() ? { summary: bits.summary } : {}),
+      bullets: mergedBullets,
+      ...(typeof bits.coverLetter === "string" && bits.coverLetter.trim() ? { coverLetter: bits.coverLetter } : {}),
+      screening,
+    };
+
+    const rebuilt = buildPack({
+      profile: cv.profile,
+      cvText: cv.text,
+      job: application.pack.job ?? { title: application.title, company: application.company, url: application.url, description: "" },
+      tailored: tailoredNext,
+    });
+    const gatedRebuilt = can(req.user.plan, "coverLetter").allowed
+      ? rebuilt
+      : {
+          ...rebuilt,
+          coverLetterMd: "",
+          coverLetterLocked: "A covering letter is part of Pro. The CV and screening answers in this pack are yours to use.",
+        };
+    const nextPack = { ...application.pack, ...gatedRebuilt, tailored: tailoredNext, refinements: [...(application.pack.refinements ?? []), { instruction, at: nowIso(), changes: refined.changes ?? [] }] };
+    const updated = store.updateApplication(application.id, req.user.id, { pack: nextPack });
+    store.recordUsage(req.user.id, "refine", 1);
+
+    res.json({
+      application: { id: updated.id, title: updated.title, status: updated.status, updatedAt: updated.updated_at },
+      refined: refined.refined ?? null,
+      changes: refined.changes ?? [],
+      mode: refined.mode ?? "rules",
+      warnings: refined.warnings ?? [],
+    });
+  });
+
+  // ----------------------------------------------------------------- pages
+  app.post("/api/contact", async (req, res) => {
+    const body = req.body ?? {};
+    const name = assertString(body.name, "name", { max: 120 });
+    const email = assertString(body.email, "email", { max: 254 });
+    if (!isValidEmail(email)) throw badRequest("email must be a valid address");
+    const message = assertString(body.message, "message", { max: 4_000 });
+    // Honeypot: a filled hidden field means a bot. Accept, discard, never store.
+    if (String(body.website ?? "").trim()) return res.json({ ok: true });
+
+    const line = JSON.stringify({ at: nowIso(), name, email, message, requestId: req.requestId });
+    await appendFile(join(config.dataDir, "contact.jsonl"), `${line}\n`, "utf8").catch(() => {});
+    res.json({ ok: true });
+  });
+
+  app.use("/assets", express.static(join(config.publicDir, "assets"), { index: false, dotfiles: "deny", setHeaders: (res) => res.setHeader("cache-control", "no-cache") }));
+  app.get("/favicon.ico", (req, res) => res.redirect(301, "/assets/favicon.svg"));
+
+  // The SPA's own assets live under /app, so they must be served before the
+  // catch-all page route or every request for app.js would return app.html.
+  app.use(
+    "/app",
+    express.static(join(config.publicDir, "app"), {
+      index: false,
+      // No directory redirect: /app must serve the SPA shell directly, not 301 to /app/
+      redirect: false,
+      dotfiles: "deny",
+      setHeaders: (res) => res.setHeader("cache-control", "no-cache"),
+    })
+  );
+
+  // The bookmarklet is distributed as a plain-text page: the origin is
+  // substituted server-side, so the user copies a working `javascript:` URL with
+  // no client-side script (CSP script-src 'self') and no SPA dependency.
+  app.get("/bookmarklet", async (req, res, next) => {
+    try {
+      const source = await readFile(join(config.publicDir, "assets", "bookmarklet.js"), "utf8");
+      const script = source.replace(/__ORIGIN__/g, config.site.publicUrl);
+      const escaped = script.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      res.setHeader("cache-control", "no-cache");
+      res.type("html").send(`<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Install the Applywright bookmarklet</title>
+<link rel="stylesheet" href="/assets/tokens.css"><link rel="stylesheet" href="/assets/theme.css"><link rel="stylesheet" href="/assets/site.css">
+</head><body><main class="wrap section">
+<p class="eyebrow">LinkedIn capture</p>
+<h1 class="h1" style="max-width:24ch;margin-top:1rem">Install the bookmarklet</h1>
+<p class="lede" style="margin-top:1rem">It reads the profile or advert page open in your own browser and copies the text. Nothing is fetched by our server, and no LinkedIn credentials are involved.</p>
+<ol class="prose" style="margin-top:2rem;max-width:70ch">
+<li>Show your bookmarks bar (Ctrl+Shift+B in Chrome and Edge).</li>
+<li>Select all of the text below and drag it onto the bar, or create a bookmark and paste it as the URL.</li>
+<li>Open your LinkedIn profile (or any job advert), click the bookmark, then paste into Applywright with Ctrl+V.</li>
+</ol>
+<label class="field" style="margin-top:2rem;display:block"><span class="legend">Bookmarklet</span>
+<textarea class="textarea mono" rows="8" readonly style="margin-top:.5rem;font-size:12px" onclick="this.select()">${escaped}</textarea></label>
+<p class="small muted" style="margin-top:1rem">If the page shape is unrecognised the bookmarklet stops and says so rather than half-importing. Manual Ctrl+A / Ctrl+C always works.</p>
+</main></body></html>`);
+    } catch (error) {
+      next(error);
+    }
+  });
+  app.get(APP_ROUTE, async (req, res, next) => {
+    try {
+      const html = await pages.render("app/app.html", "/app");
+      if (!html) return next();
+      res.setHeader("cache-control", "no-cache");
+      res.type("html").send(html);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  for (const [route, file] of PAGES) {
+    app.get(route, async (req, res, next) => {
+      try {
+        const html = await pages.render(file, route);
+        if (!html) return next();
+        res.setHeader("cache-control", "no-cache");
+        res.type("html").send(html);
+      } catch (error) {
+        next(error);
+      }
+    });
+  }
+
+  app.use("/api", (req, res) => {
+    res.status(404).json(errorBody("not_found", `No API route for ${req.method} ${req.originalUrl}`));
+  });
+
+  app.use((req, res) => {
+    res
+      .status(404)
+      .type("html")
+      .send("<!doctype html><html lang=\"en-GB\"><head><meta charset=\"utf-8\"><title>Not found</title></head><body style=\"font-family:system-ui;padding:3rem\"><h1>Not found</h1><p><a href=\"/\">Back to Applywright</a></p></body></html>");
+  });
+
+  // eslint-disable-next-line no-unused-vars
+  app.use((error, req, res, next) => {
+    if (res.headersSent) {
+      try {
+        res.end();
+      } catch {
+        /* ignore */
+      }
+      return;
+    }
+    if (error instanceof ApiError) {
+      if (error.extra?.["retry-after"]) res.setHeader("retry-after", error.extra["retry-after"]);
+      const body = errorBody(error.code, error.message);
+      // A quota refusal is actionable only if the client knows which plan clears it.
+      if (error.code === "quota_exceeded" && error.extra?.upgrade) body.error.upgrade = error.extra.upgrade;
+      return res.status(error.status).json(body);
+    }
+    if (error?.type === "entity.too.large") return res.status(413).json(errorBody("payload_too_large", "request body is too large"));
+    if (error?.type === "entity.parse.failed") return res.status(400).json(errorBody("invalid_request", "body is not valid JSON"));
+    console.error(JSON.stringify({ level: "error", requestId: req.requestId, path: req.originalUrl, message: error?.message, stack: error?.stack?.split("\n").slice(0, 5) }));
+    res.status(500).json(errorBody("internal_error", "unexpected server error"));
+  });
+
+  return { app, store, db, config, model };
+}
+
+export async function startServer(overrides = {}) {
+  const config = loadConfig(overrides);
+  const { app, store, db, model } = await createApp(config);
+  const server = createServer(app);
+
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(config.port, config.host, () => {
+      server.removeListener("error", reject);
+      resolve();
+    });
+  });
+
+  const scheduler = startAlertScheduler({ store, db, config });
+  const address = server.address();
+  const port = typeof address === "object" && address ? address.port : config.port;
+  return {
+    app,
+    server,
+    store,
+    db,
+    model,
+    config,
+    port,
+    url: `http://${config.host === "0.0.0.0" || config.host === "::" ? "127.0.0.1" : config.host}:${port}`,
+    scheduler,
+    async close() {
+      scheduler.stop();
+      await new Promise((resolve) => server.close(resolve));
+      try {
+        db.close();
+      } catch {
+        /* already closed */
+      }
+    },
+  };
+}
+
+// Re-exported for tests that want to exercise signature verification directly.
+export { sessionExpiry, newSessionId };

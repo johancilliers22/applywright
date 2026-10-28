@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en-GB" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Applywright · Your CV, tailored for every job</title>
+  <meta name="description" content="Score your CV against a real job description, see every point explained by a named finding, and get a tailored pack built only from facts you already have. You send the application." />
+  <meta name="theme-color" content="#0b0c0e" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/tokens.css" />
+  <link rel="stylesheet" href="/assets/theme.css" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <style>
+    /* Index only: the score ring inside the hero mock. Everything else is site.css. */
+    [data-ring] svg {
+      width: 112px;
+      height: 112px;
+      display: block;
+    }
+    [data-ring] circle {
+      fill: none;
+      stroke-width: 9;
+      stroke-linecap: round;
+    }
+    [data-ring] circle:first-of-type {
+      stroke: var(--line-invert);
+    }
+    [data-ring] circle:last-of-type {
+      stroke: var(--lime);
+    }
+    [data-ring] text {
+      fill: var(--text-invert);
+      font-family: var(--mono);
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+  </style>
+  <!-- Blocking and after the stylesheets on purpose: it applies the saved or
+       system theme before the first paint (no flash) and reads the palette back
+       from the CSS. Same-origin, so script-src 'self' covers it; no inline boot
+       code, which the CSP and scripts/check.js both forbid. -->
+  <script src="/assets/theme.js"></script>
+</head>
+<body>
+  <!--#include nav.html-->
+
+  <main id="main">
+    <section class="hero section--dark">
+      <div class="hero__grad" aria-hidden="true"></div>
+      <div class="wrap hero__inner">
+        <div>
+          <p class="eyebrow hero__eyebrow">CV scoring, grounded tailoring, job tracking</p>
+          <h1 class="display">Your numbers stay. The wording moves.</h1>
+          <p class="hero__sub">
+            Score your CV against a real advert, rewrite only what you have already done, and send the pack
+            yourself. Every change is traceable to a line in your CV.
+          </p>
+          <div class="hero__cta">
+            <a class="btn btn--primary btn--lg" href="/sign-up">Get started free</a>
+            <a class="btn btn--on-dark btn--lg" href="/how-it-works">See how it works</a>
+          </div>
+          <p class="hero__meta">
+            <span>Free plan: one CV, three packs a month, no card</span>
+            <span class="dot-sep" aria-hidden="true">·</span>
+            <span>Prices exclude VAT</span>
+          </p>
+        </div>
+
+        <div class="mock">
+          <div class="mock__bar" aria-hidden="true">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="url">applywright.example/app/cv</span>
+          </div>
+          <div class="mock__body">
+            <div class="stack" style="--flow: 0.5rem">
+              <div class="hero-gauge" role="img" aria-label="Rubric score: 75 out of 100. Strong fit starts at 70.">
+                <span class="hero-gauge__scale" aria-hidden="true">
+                  <span class="hero-gauge__fill" style="--value: 75%"></span>
+                  <span class="hero-gauge__threshold" style="--at: 70%"></span>
+                </span>
+                <span class="hero-gauge__legend" aria-hidden="true">
+                  <span class="mono hero-gauge__value">75 / 100</span>
+                  <span class="mono hero-gauge__note">strong fit from 70</span>
+                </span>
+              </div>
+              <p class="small muted">
+                Keywords 35 · structure 20 · achievements 20 · readability 15 · formatting 10.
+                Scored against one pasted advert; every point below 100 is a named finding. The number
+                is our rubric, not an employer's verdict.
+              </p>
+            </div>
+
+            <div class="mock__msg">
+              <span class="chip">Before</span>
+              <p class="mock__bubble mock__bubble--user">
+                Responsible for checkout improvements with 2 engineers, which cut drop-off 18% over 2 releases.
+              </p>
+            </div>
+            <div class="mock__msg">
+              <span class="chip">After</span>
+              <p class="mock__bubble">
+                Cut checkout drop-off 18% over 2 releases, working with 2 engineers on the checkout flow.
+              </p>
+            </div>
+            <p class="mock__tool">Grounding check passed: 18%, 2 and 2 all appear in your CV</p>
+            <p class="mock__tool">Nothing invented.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--bone" aria-labelledby="flow-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">The flow</p>
+          <h2 class="h2" id="flow-title">Ingest, score, tailor. Then send it yourself.</h2>
+          <p class="lede">Three steps do the work. The fourth is yours, and the product keeps it that way.</p>
+        </div>
+
+        <div class="grid grid-3">
+          <article class="card">
+            <p class="card__kicker">Step 01</p>
+            <h3 class="h3">Ingest</h3>
+            <p class="small">
+              Paste your CV or upload <code>.txt</code>, <code>.md</code> or <code>.docx</code>. Applywright
+              segments it into contact details, summary, experience, education and skills, and stores the text
+              rather than the original file.
+            </p>
+            <p class="card__foot">PDF is read when <code>pdftotext</code> is installed on the machine; otherwise the upload is refused with a warning that says why.</p>
+          </article>
+
+          <article class="card">
+            <p class="card__kicker">Step 02</p>
+            <h3 class="h3">Score</h3>
+            <p class="small">
+              Paste the job description. Five weighted components produce a score out of 100, and every lost
+              point arrives as a named finding with the detail and a fix, such as which job keywords are
+              missing from your experience section.
+            </p>
+            <p class="card__foot">No model is involved. The same CV and the same job text always produce the same report.</p>
+          </article>
+
+          <article class="card">
+            <p class="card__kicker">Step 03</p>
+            <h3 class="h3">Tailor</h3>
+            <p class="small">
+              The summary, the bullets and the skills line are rewritten for that job using only the facts in
+              your CV and the profile you fill in. A rewritten bullet that introduces a number, employer, title
+              or date fails the grounding check and falls back to your own wording.
+            </p>
+            <p class="card__foot">Output: a print-ready, single-column CV, a covering letter and answers to the common screening questions.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="proof-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">No borrowed credibility</p>
+          <h2 class="h2" id="proof-title">The proof is what the software does.</h2>
+          <p class="lede">
+            There are no customer logos on this page and no user counts, because a number is only worth showing
+            when it is real. These four are checkable in the product itself.
+          </p>
+        </div>
+
+        <div class="stats">
+          <div>
+            <p class="stat__value">5</p>
+            <p class="stat__label">weighted score components, every point traceable to a named finding</p>
+          </div>
+          <div>
+            <p class="stat__value">3</p>
+            <p class="stat__label">public job boards polled for the feed and for alerts</p>
+          </div>
+          <div>
+            <p class="stat__value">0</p>
+            <p class="stat__label">applications submitted on your behalf, by design</p>
+          </div>
+          <div>
+            <p class="stat__value">6</p>
+            <p class="stat__label">application statuses, from pack ready through to offer</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--dark" aria-labelledby="different-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">What it refuses to do</p>
+          <h2 class="h2" id="different-title">Grounded rewriting, named findings, no auto-apply.</h2>
+          <p class="lede">
+            The three things that make a tailored CV worth sending are the three things an application robot
+            cannot give you.
+          </p>
+        </div>
+
+        <div class="bento bento--3">
+          <div>
+            <p class="eyebrow">Grounded rewriting</p>
+            <h3 class="h3">Your facts, reworded</h3>
+            <p class="muted">
+              Tailoring may rephrase and re-order. It may not add an employer, a title, a qualification, a date
+              or a number. Every rewritten bullet is compared with its source line, and one that fails the check
+              is reset to the wording you already had.
+            </p>
+          </div>
+          <div>
+            <p class="eyebrow">Named findings</p>
+            <h3 class="h3">A score with reasons</h3>
+            <p class="muted">
+              Every point is explained by a finding with a severity, a detail and a fix. Nothing says improve
+              your CV; it says which keywords are missing, which dates are inconsistent and which bullets carry
+              no number.
+            </p>
+          </div>
+          <div>
+            <p class="eyebrow">No auto-apply</p>
+            <h3 class="h3">You send it</h3>
+            <p class="muted">
+              The queue ends at approved and ready. You click apply on the employer's own page, then record what
+              happened. Nothing is submitted to a third-party site on your behalf, and nothing is captured from
+              a site you did not paste in yourself.
+            </p>
+          </div>
+        </div>
+
+        <p class="note note--dark" style="margin-top: var(--sp-5)">
+          The same reason rules out scraping LinkedIn. It breaches the site's terms, it gets the account you
+          apply with restricted, and it produces applications you would have to defend in an interview.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section--bone" aria-labelledby="price-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Plans</p>
+          <h2 class="h2" id="price-title">Start free. Pay when the search gets busy.</h2>
+          <p class="lede">
+            Every plan scores CVs and builds packs. The difference is how many, and how much of the report you
+            get back.
+          </p>
+        </div>
+
+        <div class="price-grid">
+          <article class="price-card">
+            <p class="card__kicker">Free</p>
+            <p class="price">£0 <small>a month</small></p>
+            <ul class="price-list">
+              <li>1 CV stored</li>
+              <li>3 tailored packs a month</li>
+              <li>1 saved alert</li>
+              <li>Job feed with 40 results a day</li>
+            </ul>
+            <a class="btn btn--ghost" href="/sign-up">Create a free account</a>
+          </article>
+
+          <article class="price-card">
+            <p class="card__kicker">Pro</p>
+            <p class="price">£19 <small>a month</small></p>
+            <p class="small muted">or £190 a year, ten months for twelve</p>
+            <ul class="price-list">
+              <li>5 CVs stored</li>
+              <li>60 tailored packs a month</li>
+              <li>10 saved alerts</li>
+              <li>Full ATS reports and covering letters</li>
+              <li>Pack history and a daily digest</li>
+            </ul>
+            <a class="btn btn--primary" href="/pricing">Choose Pro</a>
+          </article>
+
+          <article class="price-card">
+            <p class="card__kicker">Scale</p>
+            <p class="price">£49 <small>a month</small></p>
+            <p class="small muted">or £490 a year, ten months for twelve</p>
+            <ul class="price-list">
+              <li>Unlimited CVs and tailored packs</li>
+              <li>50 saved alerts</li>
+              <li>API access and priority refresh</li>
+              <li>Export everything, including pack history</li>
+            </ul>
+            <a class="btn btn--ghost" href="/pricing">Compare the plans</a>
+          </article>
+        </div>
+
+        <p class="small" style="margin-top: var(--sp-5)">
+          Prices exclude VAT. Annual billing is ten months for twelve. Cancel at any time; a downgrade keeps
+          every pack you already built readable.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="faq-title">
+      <div class="wrap wrap--narrow">
+        <div class="section-head">
+          <p class="eyebrow">Questions</p>
+          <h2 class="h2" id="faq-title">Straight answers</h2>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>Do you apply for me?</summary>
+            <p>
+              No. Applywright prepares the pack and stops at approved and ready; you click apply on the
+              employer's own page and record what happened. Automated submission to third-party sites breaches
+              their terms, puts the account your search depends on at risk, and produces applications you would
+              have to answer for in an interview. The queue is deliberately a queue.
+            </p>
+          </details>
+          <details>
+            <summary>Do you scrape LinkedIn?</summary>
+            <p>
+              No. The job feed uses three public boards, Arbeitnow, Remotive and Remote OK, through their own
+              APIs. Capturing a posting is something you start: you paste the URL, or the page text when the page
+              renders in JavaScript. Nothing is crawled in the background.
+            </p>
+          </details>
+          <details>
+            <summary>Can it invent experience to make me fit?</summary>
+            <p>
+              No. Rewriting is limited to the facts in your CV and the profile you fill in. A grounding check
+              rejects any number, employer, title, qualification or date that is not already in the source, and
+              a bullet that fails is reset to your own wording. If the model path is unavailable, a rule-based
+              rewriter runs instead and says so in its warnings.
+            </p>
+          </details>
+          <details>
+            <summary>What does the score actually measure?</summary>
+            <p>
+              Five weighted parts: keyword coverage 35, structure 20, quantified achievements 20, readability
+              15 and formatting risks 10. The scorer is deterministic rules, not a model, so the same CV against
+              the same job description always produces the same number and the same findings.
+            </p>
+          </details>
+          <details>
+            <summary>What happens to my CV?</summary>
+            <p>
+              The text is stored, never the original file. You can export everything you own as JSON, or delete
+              the account from Settings, which removes your CVs, reports, packs, alerts and application records
+              from the database.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight cta-band" aria-labelledby="cta-title">
+      <div class="wrap cta-band__inner">
+        <div>
+          <h2 class="h2" id="cta-title">Start with the CV you already have.</h2>
+          <p class="lede">The free plan keeps one CV, three tailored packs a month and one alert. No card.</p>
+        </div>
+        <div class="cluster">
+          <a class="btn btn--primary btn--lg" href="/sign-up">Create a free account</a>
+          <a class="btn btn--ghost btn--lg" href="/pricing">See the plans</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!--#include footer.html-->
+
+  <script src="/assets/site.js" type="module"></script>
+</body>
+</html>

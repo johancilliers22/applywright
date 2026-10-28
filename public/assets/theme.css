@@ -1,0 +1,477 @@
+/* ==========================================================================
+   Applywright — theme layer
+   Loaded after tokens.css and site.css, on every page.
+
+   Four jobs, nothing else:
+
+     1. The product re-key. Meridian's signal blue becomes Applywright's green,
+        and the action green is split from the status green.
+     2. The dark scheme's component rules: the handful of places where a token
+        change is not enough, because a colour is doing two jobs (--ink is both
+        a band and ink-on-paper) or because site.css hardcodes a literal.
+     3. The score as a measurement (the vernier gauge that replaced the ring).
+     4. The theme control, and the only two pieces of motion this layer adds.
+
+   The palette itself — both schemes — lives in tokens.css. This file never
+   invents a colour value that is not already a token, except where it is
+   quoting a literal that site.css hardcodes and fixing it (the nav's opaque
+   fallback, .code's syntax colours).
+
+   Rules for whoever edits next:
+     - Never rename or delete a token. Every page depends on the existing names.
+     - Put a new colour in tokens.css, in both blocks, and measure it.
+     - Prefer a token change over a rule here. A rule here is a debt.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Product re-key (light)
+   The shared Meridian system, re-keyed for this product. Unchanged in spirit
+   from the first pass; every value below is measured on every surface it is
+   used on, in both schemes (docs/design/SPEC-V2.md §4).
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Interactive green. Darkened from #0f6b4f so that the action colour and the
+     status colour are no longer the same hex: at the old value a link and a
+     "verified" tick were indistinguishable. 7.98:1 on --paper, 8.07:1 for white
+     on a filled button. */
+  --accent: #0f5c43;
+  --accent-ink: #093d2c;
+  --accent-soft: #e2efe9;
+  --ember: #b4551a;
+  --lime: #d7efa6;
+  /* Semantic status, deliberately a different value from --accent. */
+  --ok: #1d7d46; /* 5.10:1 on --paper */
+  --warn: #945306; /* 6.00:1 on --paper */
+  --err: #b42318; /* 6.51:1 on --paper */
+}
+
+/* The dark half of the re-key lives in tokens.css with the rest of the dark
+   palette, so there is one place to look for "what is a colour in the dark". */
+
+/* --------------------------------------------------------------------------
+   2. Dark scheme
+   -------------------------------------------------------------------------- */
+
+/* Overscroll and the area behind the document: without this, the rubber-band on
+   iOS and the gutter on short pages paint white under a dark page. */
+html[data-theme="dark"] {
+  background-color: var(--paper);
+}
+
+/* --- 2.1 Frozen ink, used as ink-on-paper --------------------------------
+   --ink and --ink-2/3 are the press-black bands (hero, footer, .section--dark,
+   .mock, .code). They are deliberately the same in both schemes, which is why
+   the rules that use --ink as a *foreground* have to be restated: flipped, the
+   logo disappears (--ink on dark --paper is 1.08:1).
+
+   tokens.css now declares the intended seam, --mark ("ink that stays ink"), and
+   these overrides point at it. When site.css's owner migrates the seven
+   components to var(--mark) these rules become redundant and can be deleted
+   without changing a pixel. */
+
+html[data-theme="dark"] .brand__mark .m-ring {
+  stroke: var(--mark);
+}
+
+/* .nav__toggle is the menu button: three bars drawn with --ink. */
+html[data-theme="dark"] .nav__toggle span,
+html[data-theme="dark"] .nav__toggle span::before,
+html[data-theme="dark"] .nav__toggle span::after {
+  background: var(--mark);
+}
+
+html[data-theme="dark"] .nav__links a[aria-current="page"] {
+  border-bottom-color: var(--mark);
+}
+
+html[data-theme="dark"] .card__icon {
+  color: var(--mark);
+}
+
+/* The featured plan's border is a solid --ink rule on a light page and
+   invisible on a dark one. --line-meaning is the measured token for a rule that
+   carries meaning: 4.64:1 here. */
+html[data-theme="dark"] .price-card--featured {
+  border-color: var(--line-meaning);
+}
+
+/* site.css hardcodes white for the filled primary button's label. In this
+   scheme the accent is a light jade, so the label has to invert: white on it
+   measures 2.05:1, --on-accent measures 10.54:1. */
+html[data-theme="dark"] .btn--primary,
+html[data-theme="dark"] .mock__who {
+  --btn-fg: var(--on-accent);
+  color: var(--on-accent);
+}
+
+/* .btn--light is bone with ink text. Bone is a dark surface here, so both ends
+   invert. 1.08:1 becomes 13.7:1. */
+html[data-theme="dark"] .btn--light {
+  --btn-bg: var(--mark);
+  --btn-bd: var(--mark);
+  --btn-fg: var(--ink);
+}
+
+/* The one opaque fallback in site.css, for browsers without color-mix(). */
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+  html[data-theme="dark"] .nav {
+    background: rgba(25, 28, 34, 0.94); /* --paper at 94% */
+  }
+}
+
+/* --- 2.2 Section inversion rules -----------------------------------------
+   Depth order in the light scheme is paper (page) > bone (band) > bone-2 >
+   ink (band). The dark palette keeps that order, so every surface rule in
+   site.css keeps its meaning without being restated: cards stay raised on a
+   band, .section--dark stays the recessed band, the footer stays the deepest
+   surface. Only two things need help. */
+
+/* A dark band needs an edge where it meets the page, because the two closest
+   surfaces are 8 levels apart in this scheme. One hairline, no shadow. */
+html[data-theme="dark"] .section--dark {
+  border-block: 1px solid var(--line-invert);
+}
+
+/* .bento cells are --ink on a --ink section: the grid would read as one black
+   rectangle with hairlines. One step up restores the cells without inventing a
+   colour. */
+html[data-theme="dark"] .bento > * {
+  background: var(--ink-2);
+}
+
+/* The hero wash is tuned for a near-black band behind a dark green. A light
+   jade at the same alpha blooms; damp it rather than remove it. */
+html[data-theme="dark"] .hero__grad {
+  opacity: 0.4;
+}
+
+/* --- 2.3 Print -----------------------------------------------------------
+   Printing a dark page wastes toner and prints grey text. Force the light
+   palette back for the print medium, including the overrides above, and let
+   site.css's print rules and motion.css's reveal fix do the rest. */
+@media print {
+  html[data-theme="dark"] {
+    color-scheme: light;
+    --ink: #0b0c0e;
+    --ink-2: #14161a;
+    --ink-3: #1d2026;
+    --bone: #f5f2ea;
+    --bone-2: #eae5d9;
+    --paper: #fffdf8;
+    --mark: #0b0c0e;
+    --text: #14161a;
+    --text-soft: #4a4f57;
+    --text-muted: #59606e;
+    --text-invert: #f5f2ea;
+    --text-invert-soft: #a9aeb6;
+    --accent: #0f5c43;
+    --accent-ink: #093d2c;
+    --accent-soft: #e2efe9;
+    --ember: #b4551a;
+    --lime: #d7efa6;
+    --ok: #1d7d46;
+    --warn: #945306;
+    --err: #b42318;
+    --on-accent: #ffffff;
+    --line: rgba(11, 12, 14, 0.12);
+    --line-strong: rgba(11, 12, 14, 0.22);
+    --line-invert: rgba(245, 242, 234, 0.14);
+    --line-invert-strong: rgba(245, 242, 234, 0.26);
+    --line-meaning: rgba(11, 12, 14, 0.48);
+    --focus: var(--accent);
+  }
+
+  /* The one foreground site.css hardcodes. Everything else follows --mark and
+     the palette above, so the component overrides above need no print twins. */
+  html[data-theme="dark"] .btn--primary,
+  html[data-theme="dark"] .mock__who {
+    --btn-fg: #ffffff;
+    color: #ffffff;
+  }
+
+  /* No bloom on paper. */
+  html[data-theme="dark"] .hero__grad {
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Score presentation — the vernier gauge
+   The score is a measurement, not a verdict: a flat scale with a threshold rule,
+   not a donut that implies an employer's rating. This replaces the hero's 78
+   ring (a decorative number showing a verdict the product does not issue) with
+   a labelled rubric readout and a scale.
+
+   The number is always present as text ("75 / 100", tabular), so the bar is not
+   the sole carrier of the value and a subtle track is legitimate; the fill is
+   --lime because the stage is ink in both schemes (lime on --ink-2 is 14.5:1).
+
+   No animation on load. A fill that grows from zero on first paint implies a
+   computation that did not happen — the value was already known when the HTML
+   was written. `--dur-data` / `--ease-settle` exist for the one place where the
+   fill should settle: when a real analysis response replaces a previous score,
+   which is app-ui's surface, not this one.
+   -------------------------------------------------------------------------- */
+
+/* Pre-existing bug this layer fixes: .muted resolves to --text-muted, a dark
+   ink, inside the always-dark mock. #59606e on #14161a is 2.5:1. The mock needs
+   the inverted role. */
+.mock .muted {
+  color: var(--text-invert-soft);
+}
+
+.hero-gauge {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.hero-gauge__scale {
+  position: relative;
+  display: block;
+  height: 22px;
+  border: 1px solid var(--line-invert-strong);
+  border-radius: var(--r-folio);
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--line-invert-strong) 0 1px,
+    transparent 1px 10%
+  );
+  overflow: hidden;
+}
+
+.hero-gauge__fill {
+  position: absolute;
+  inset: 2px auto 2px 2px;
+  width: var(--value, 0%);
+  background: var(--lime);
+  border-radius: 1px;
+}
+
+.hero-gauge__threshold {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: var(--at, 70%);
+  width: 1px;
+  background: var(--text-invert);
+}
+
+.hero-gauge__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+
+.hero-gauge__value {
+  color: var(--text-invert);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-gauge__note {
+  color: var(--text-invert-soft);
+}
+
+/* --------------------------------------------------------------------------
+   4. The theme control
+   Injected into .nav__actions by assets/theme.js — nav.html has another owner
+   and is not edited. Geometry deliberately matches .nav__toggle (40px, 8px
+   radius) so the two controls read as one pair.
+
+   The border is --line-meaning, not --line-strong: at 1.65:1 a ghost button's
+   boundary fails 1.4.11 whatever colour the icon is, and this control has to be
+   findable. It measures 3.62:1 on paper in the light scheme.
+   -------------------------------------------------------------------------- */
+
+/* The control is injected into .nav__actions after that node is parsed, which
+   is normally before the first frame — but on a warm reload a frame can slip
+   between the nav rendering and the injection, and the 40px button would then
+   push the CTAs sideways (a layout shift nobody needs). theme.js sets
+   data-theme-pending on <html> from the <head>, this rule reserves exactly the
+   button's footprint while that attribute is present, and build() removes it in
+   the same task as the insertion: zero net movement either way. If the script
+   never loads, the attribute is never set, so no space is reserved and nothing
+   appears to be missing. */
+html[data-theme-pending] .nav__actions::after {
+  content: "";
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+}
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  padding: 0;
+  border: 1px solid var(--line-meaning);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: color var(--dur-xs) var(--ease), border-color var(--dur-xs) var(--ease),
+    background-color var(--dur-xs) var(--ease);
+}
+
+.theme-toggle:hover {
+  color: var(--text);
+  border-color: var(--text-soft);
+  background: var(--bone);
+}
+
+/* The three states share one cell; only the active one is visible. */
+.theme-toggle svg {
+  grid-area: 1 / 1;
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  transform: scale(0.72) rotate(-14deg);
+  transition: opacity var(--dur-xs) var(--ease), transform var(--dur-xs) var(--ease);
+  pointer-events: none;
+}
+
+.theme-toggle[data-mode="light"] [data-icon="light"],
+.theme-toggle[data-mode="dark"] [data-icon="dark"],
+.theme-toggle[data-mode="system"] [data-icon="system"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* A pressed control moves 1px, nothing else. */
+.theme-toggle:active {
+  translate: 0 1px;
+}
+
+/* The control is injected after the document starts parsing, so it fades in
+   instead of popping into a bar that has already painted. It is a state
+   change on a control, not a page entrance: 180ms, once. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes aw-toggle-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+
+  .theme-toggle {
+    animation: aw-toggle-in var(--dur-sm) var(--ease-enter) both;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Motion added by this layer
+   Two state changes, both CSS-only, both transform/opacity, both settled under
+   prefers-reduced-motion. Nothing here runs on scroll, repeats, or moves a
+   large area of the page.
+
+   Deliberately not here: an animated theme switch. A full-page colour
+   transition means a paint over every surface for a quarter of a second, it
+   needs a transition list that will silently miss the next component someone
+   adds, and it is the one thing that makes a toggle feel slower than it is.
+   The theme change is instant; the icon change explains it.
+   -------------------------------------------------------------------------- */
+
+/* A disclosure settles into place instead of snapping. 4px is the whole move;
+   the text is never blurred, faded below ~0.85 or delayed behind a stagger. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes aw-disclosure-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  .faq details[open] > :not(summary) {
+    animation: aw-disclosure-in var(--dur-sm) var(--ease-enter) both;
+  }
+}
+
+/* Reduced motion: the toggles keep their state colour change (colour is not
+   motion) and lose the icon spin and the fade. tokens.css already collapses
+   every transition and animation duration globally; this states the intent for
+   this layer so the next editor does not have to infer it. */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle svg {
+    transform: none;
+  }
+  .theme-toggle,
+  .theme-toggle:active {
+    animation: none;
+    translate: none;
+  }
+  .faq details[open] > :not(summary) {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Forced colours
+   When the OS forces a palette, backgrounds and shadows are discarded, so the
+   control boundary has to come from a real border and the state from text, not
+   from a tint. Both schemes already do; this keeps the theme button from
+   becoming a borderless icon that disappears.
+   -------------------------------------------------------------------------- */
+
+@media (forced-colors: active) {
+  .theme-toggle {
+    border: 1px solid ButtonBorder;
+    color: ButtonText;
+  }
+  .theme-toggle svg {
+    forced-color-adjust: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Receipts
+   Measured with the WCAG relative-luminance formula against the palette in
+   tokens.css, on 28 October 2026. Full table and the method in
+   docs/design/SPEC-V2.md §4. Text pairs are 4.5:1 minimum; the rule and ring
+   rows are indicators and are held to 3:1 (WCAG 1.4.11).
+
+   LIGHT — unchanged values wherever they already passed, so the live site cannot
+   regress; only the action/status split and --mark are new here.
+     --text        #14161a  on --paper 17.82   --bone 16.19   --bone-2 14.41
+     --text-soft   #4a4f57  on --paper  8.11   --bone  7.37
+     --text-muted  #59606e  on --paper  6.22   --bone  5.65   --bone-2 5.03
+     --text-invert #f5f2ea  on --ink   17.49   --ink-2 16.19  --ink-3 14.59
+     --invert-soft #a9aeb6  on --ink    8.77   --ink-2  8.12  --ink-3  7.32
+     --accent      #0f5c43  on --paper  7.85   --bone   7.13   (action)
+     --on-accent   #ffffff  on --accent 7.98   --accent-ink 12.24
+     --accent-ink  #093d2c  on --paper 12.04
+     --ok          #1d7d46  on --paper  5.07   --bone   4.61   (status)
+     --warn        #945306  on --paper  5.90   --bone   5.36
+     --err         #b42318  on --paper  6.47   --bone   5.88
+     --mark        #0b0c0e  on --paper 19.25
+     --line-meaning 48% ink  #8a8988 on --paper 3.43, #858480 on --bone 3.35
+     --lime        #d7efa6  on --ink-2 14.48 (gauge fill, focus on dark)
+
+   DARK
+     --text        #f4f1e8  on --paper 15.11   --bone 16.31   --bone-2 16.98
+     --text-soft   #c6cad2  on --paper 10.39   --bone 11.21
+     --text-muted  #a6acb6  on --paper  7.47   --bone  8.07   --bone-2  8.40
+     --text-invert #f5f2ea  on --ink   17.81   --ink-2 16.89  --ink-3 15.58
+     --invert-soft #a9aeb6  on --ink    8.93   --ink-2  8.47  --ink-3  7.81
+     --accent      #47c99a  on --paper  8.20   --bone   8.85
+     --on-accent   #06130d  on --accent 9.12   --accent-ink 12.84
+     --accent-ink  #86e7c0  on --paper 11.54
+     --ok          #4cc38a  on --paper  7.70   --bone   8.32
+     --warn        #f0ad4e  on --paper  8.77   --bone   9.47
+     --err         #f27268  on --paper  6.00   --bone   6.48
+     --mark        #e8e6e1  on --paper 13.68
+     --line-meaning 45% cream #7c7c7c on --paper 4.09, on --bone 4.41
+
+   Left alone on purpose: --line-strong is 22% ink in the light scheme, 1.65:1 on
+   --paper. It used to identify an empty .input; site.css now uses
+   --line-meaning there (3.43:1), so no control depends on it. --line-invert-strong
+   is 26% cream on --ink (2.21:1) and is only ever a decorative hairline or the
+   boundary of a ghost button that also carries a text label; the dark scheme
+   raises it to 34% (2.9:1). Both are listed in SPEC-V2 §7 as cosmetic leftovers,
+   not failures.
+   -------------------------------------------------------------------------- */
+

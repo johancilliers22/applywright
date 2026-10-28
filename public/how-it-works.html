@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en-GB" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How it works · Applywright</title>
+  <meta name="description" content="The Applywright pipeline: ingest a CV, score it against a job with fixed weights, tailor it with grounded rewriting, build an ATS-safe pack, track the application and poll public job boards for alerts." />
+  <meta name="theme-color" content="#0b0c0e" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/tokens.css" />
+  <link rel="stylesheet" href="/assets/theme.css" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <!-- Blocking and after the stylesheets on purpose: it applies the saved or
+       system theme before the first paint (no flash) and reads the palette back
+       from the CSS. Same-origin, so script-src 'self' covers it; no inline boot
+       code, which the CSP and scripts/check.js both forbid. -->
+  <script src="/assets/theme.js"></script>
+</head>
+<body>
+  <!--#include nav.html-->
+
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="eyebrow">How it works</p>
+        <h1 class="h1">From a CV in your files to a pack in the queue.</h1>
+        <p class="lede">
+          Six stages, each one doing one job. The scoring is rules, the rewriting is grounded, and the last
+          decision stays with you.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="pipeline-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">The pipeline</p>
+          <h2 class="h2" id="pipeline-title">What happens, in order</h2>
+          <p class="lede">
+            The server and the database sit under your control. The outbound calls are the ones the feature
+            needs: the public job boards, a model provider only when one is configured, and the payment provider
+            at checkout.
+          </p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <h3 class="h3">Ingest</h3>
+            <p class="small">
+              Paste the CV as text, or upload <code>.txt</code>, <code>.md</code> or <code>.docx</code>. The
+              document is converted to plain text and segmented into a contact block, summary, experience,
+              education and skills. A CV with no headings at all still works: the lines that match nothing else
+              land in an <em>other</em> section rather than being dropped.
+            </p>
+            <p class="small muted">
+              The database holds the text, never the uploaded file. A document that yields no text is refused with the
+              reason; anything only partly readable comes back with warnings. A CV shorter than 80 characters is
+              refused as too thin to analyse.
+            </p>
+          </div>
+
+          <div class="step">
+            <h3 class="h3">Score</h3>
+            <p class="small">
+              Paste the job description, or attach one from the feed. Five components are scored out of 100 and
+              then weighted into a single number, and every point you did not get arrives as a finding with a
+              severity, a detail and a suggested fix.
+            </p>
+            <p class="small muted">
+              The scorer is deterministic: no network, no model, no clock. The same CV and the same job text
+              always produce the same report, which is why two runs can be compared.
+            </p>
+          </div>
+
+          <div class="step">
+            <h3 class="h3">Tailor</h3>
+            <p class="small">
+              The summary, the bullets and the skills line are rewritten for that job using only the facts in the
+              CV and the structured profile. Rephrasing and re-ordering are allowed. A new employer, title,
+              qualification, date or number is not.
+            </p>
+            <p class="small muted">
+              There are two paths: one model call that returns structured JSON and is validated against a
+              schema, or a deterministic rule-based rewriter when no model is configured. Both run the same
+              grounding check, and a bullet that fails it is reset to your own wording with a warning that says
+              so.
+            </p>
+          </div>
+
+          <div class="step">
+            <h3 class="h3">Package</h3>
+            <p class="small">
+              The pack is a print-ready CV, a covering letter and answers to the common screening questions:
+              motivation, notice period, right to work and salary expectation. Where the profile does not state
+              an answer, the pack says it is a placeholder instead of inventing one.
+            </p>
+            <p class="small muted">
+              The CV document is A4 with 18mm margins, a single column, system fonts, real text headings, no
+              images, no icon fonts and no tables used for layout. It survives an ATS parse and a paste into
+              Word.
+            </p>
+          </div>
+
+          <div class="step">
+            <h3 class="h3">Track</h3>
+            <p class="small">
+              Each application carries a status, the score it was built against, the pack and a timeline. The
+              statuses run pack ready, approved, submitted, interview, rejected and offer, with withdrawn
+              available when a role stops being worth pursuing.
+            </p>
+            <p class="small muted">
+              Approved and ready is where the product stops. You open the employer's own page, apply, then move
+              the record to submitted. No form is filled in for you.
+            </p>
+          </div>
+
+          <div class="step">
+            <h3 class="h3">Alert</h3>
+            <p class="small">
+              A saved search holds keywords, locations, a remote-only flag and a minimum salary. When it runs, it
+              queries the public boards, matches each posting against the rule, and drops new matches into the
+              notifications inbox and the account's RSS feed.
+            </p>
+            <p class="small muted">
+              The cadence, daily, weekly or manual, and the last run time are stored with the alert, so you can
+              see how stale a search is before you rely on it.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--bone" aria-labelledby="weights-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">The scorer</p>
+          <h2 class="h2" id="weights-title">What the score is made of</h2>
+          <p class="lede">
+            Five components, fixed weights, no hidden adjustment. The report and any screen that shows a score
+            read the same numbers.
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="compare">
+            <caption>
+              Each component is scored out of 100 and then weighted, so the five weights add up to the total
+              score out of 100.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Component</th>
+                <th scope="col">Weight</th>
+                <th scope="col">What it counts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Keywords</strong></td>
+                <td>35</td>
+                <td>
+                  The share of the job's key terms that appear in your CV, weighted by how often each term occurs
+                  and how rare it is across the two documents.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Structure</strong></td>
+                <td>20</td>
+                <td>
+                  A readable contact block, an experience section, dates on the roles, a summary, and education
+                  or skills.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Achievements</strong></td>
+                <td>20</td>
+                <td>
+                  Bullets that carry a number, bullets that open with a strong verb, and evidence that the work
+                  produced an outcome.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Readability</strong></td>
+                <td>15</td>
+                <td>
+                  Total length, how many sentences and bullets run past 30 words, and how many run past 45.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Formatting</strong></td>
+                <td>10</td>
+                <td>
+                  Deductions for missing headings or contact details, overlong paragraphs and bullets, blocks of
+                  capitals, inconsistent dates, and layout tables.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="small" style="margin-top: var(--sp-4)">
+          Findings are specific: which two of fourteen job keywords appear in the experience section, which
+          dates disagree, which bullet has no figure in it. Generic advice is not produced.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="grounding-title">
+      <div class="wrap">
+        <div class="split">
+          <div class="stack">
+            <p class="eyebrow">Grounding</p>
+            <h2 class="h2" id="grounding-title">What grounding means</h2>
+            <p class="lede">
+              A tailored bullet is a rewrite of a line you already wrote, not a new claim about your career.
+            </p>
+            <div class="prose">
+              <p>
+                Grounding is a check that runs on every rewritten bullet, on both the model path and the
+                rule-based path. Every number in the rewrite must already appear in the source line. No new
+                employer, job title, qualification or date may be introduced. A rewrite that breaks either rule
+                is rejected and the original wording is restored.
+              </p>
+              <p>
+                The rewrite may still do useful work: it can move the number to the front, cut the filler, use
+                the employer's own vocabulary for the same fact, and put the bullet in the position the job
+                description cares about. It cannot upgrade <em>supported</em> to <em>led</em> unless the source
+                says so.
+              </p>
+              <p>
+                Model output is also checked for schema shape and for naming the company and role in the covering
+                letter. Anything that fails is replaced with the rule-based version, and the pack lists the
+                replacement under warnings rather than hiding it.
+              </p>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="card">
+              <p class="card__kicker">Source CV line</p>
+              <p>Responsible for checkout improvements with 2 engineers, which cut drop-off 18% over 2 releases.</p>
+            </div>
+            <div class="card">
+              <p class="card__kicker">Tailored line</p>
+              <p>Cut checkout drop-off 18% over 2 releases, working with 2 engineers on the checkout flow.</p>
+            </div>
+            <p class="note">
+              Grounding check passed: 18%, 2 and 2 all appear in the source line. No employer, title,
+              qualification or date was added. The rewrite is shorter and puts the result first, and every
+              number in it is still your own.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--bone" aria-labelledby="alerts-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Alerts</p>
+          <h2 class="h2" id="alerts-title">How alerts poll public job boards</h2>
+          <p class="lede">
+            Three public APIs, read through their own endpoints. No scraping, no login walls, and no LinkedIn.
+          </p>
+        </div>
+
+        <div class="grid grid-3">
+          <article class="card">
+            <p class="card__kicker">Arbeitnow</p>
+            <h3 class="h3">Board API</h3>
+            <p class="small">
+              Public job-board feed, queried with the alert's keywords and filtered again in the matcher so that
+              a posting is only kept when the rule agrees.
+            </p>
+          </article>
+          <article class="card">
+            <p class="card__kicker">Remotive</p>
+            <h3 class="h3">Remote roles</h3>
+            <p class="small">
+              Remote-first listings with stated locations where the source provides them. A location the posting
+              does not state is left empty rather than guessed.
+            </p>
+          </article>
+          <article class="card">
+            <p class="card__kicker">Remote OK</p>
+            <h3 class="h3">Remote roles</h3>
+            <p class="small">
+              Remote-only postings, including the tags and salary range when the source states them. Hourly and
+              daily rates are recorded as stated, not annualised.
+            </p>
+          </article>
+        </div>
+
+        <div class="card" style="margin-top: var(--sp-6)">
+          <div class="kv">
+          <div>
+            <span>Request budget per board</span>
+            <span>6 seconds, then the board is dropped</span>
+          </div>
+          <div>
+            <span>Deduplication key</span>
+            <span>company, title and location, hashed</span>
+          </div>
+          <div>
+            <span>Results per check</span>
+            <span>up to 40 postings, filtered by the rule</span>
+          </div>
+          <div>
+            <span>Alert rule</span>
+            <span>keywords, locations, remote only, minimum salary</span>
+          </div>
+          <div>
+            <span>Where matches land</span>
+            <span>notifications inbox and an RSS feed</span>
+          </div>
+          <div>
+            <span>Minimum salary</span>
+            <span>matches only when the posting states an annual figure at or above it</span>
+          </div>
+          </div>
+        </div>
+
+        <p class="note" style="margin-top: var(--sp-5)">
+          If a board is unavailable, the result names the board that failed and the other two still return
+          postings. A silent empty list is never presented as a quiet market.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section--dark" aria-labelledby="limits-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Limits</p>
+          <h2 class="h2" id="limits-title">Where the edges are</h2>
+          <p class="lede">
+            A tool that hides its limits makes you find them at the worst moment. These are the ones worth
+            knowing before you start.
+          </p>
+        </div>
+
+        <div class="bento bento--3">
+          <div>
+            <h3 class="h3">No scraping, no submission</h3>
+            <p class="muted">
+              LinkedIn is not read and no third-party form is filled in. Capture is user-initiated: paste the URL
+              or the page text, and the parser names what it could not find instead of guessing.
+            </p>
+          </div>
+          <div>
+            <h3 class="h3">PDF needs pdftotext</h3>
+            <p class="muted">
+              PDF text is extracted with the local <code>pdftotext</code> binary. Without it a PDF upload is
+              refused with the reason shown. <code>.txt</code>, <code>.md</code> and <code>.docx</code> are read
+              in-process with no external tool.
+            </p>
+          </div>
+          <div>
+            <h3 class="h3">Rules, not judgement</h3>
+            <p class="muted">
+              The scorer counts headings, numbers and keywords. It cannot know whether a bullet is true, only
+              whether it is quantified, structured and covered by the job's terms.
+            </p>
+          </div>
+          <div>
+            <h3 class="h3">Salary comparisons are literal</h3>
+            <p class="muted">
+              A minimum-salary rule matches only when the posting states an annual figure. Hourly, daily and
+              weekly rates are recorded but not annualised, because doing that would need assumptions about the
+              working year.
+            </p>
+          </div>
+          <div>
+            <h3 class="h3">Alerts are triggered</h3>
+            <p class="muted">
+              Saving an alert records a cadence, a rule and a last-run time. Checks run when they are triggered
+              from the app; there is no background worker polling boards while you are signed out.
+            </p>
+          </div>
+          <div>
+            <h3 class="h3">The pack is deliberately plain</h3>
+            <p class="muted">
+              A4, 18mm margins, one column, system fonts, no images and no layout tables. The format is chosen to
+              survive an ATS parse and a paste into Word, not to win a design award.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight cta-band" aria-labelledby="cta-title">
+      <div class="wrap cta-band__inner">
+        <div>
+          <h2 class="h2" id="cta-title">Score one CV against one job first.</h2>
+          <p class="lede">The free plan allows one CV, three tailored packs a month and one alert.</p>
+        </div>
+        <div class="cluster">
+          <a class="btn btn--primary btn--lg" href="/sign-up">Create a free account</a>
+          <a class="btn btn--ghost btn--lg" href="/pricing">See the plans</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!--#include footer.html-->
+
+  <script src="/assets/site.js" type="module"></script>
+</body>
+</html>

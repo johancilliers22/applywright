@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en-GB" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard · Applywright</title>
+  <meta name="description" content="Your CV, the score it last earned, your applications and your saved job searches." />
+  <meta name="theme-color" content="#0b0c0e" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/tokens.css" />
+  <link rel="stylesheet" href="/assets/theme.css" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="/app/app.css" />
+</head>
+<body>
+  <a class="skip" href="#app-main">Skip to content</a>
+
+  <div id="app" data-open="false">
+    <aside id="app-rail">
+      <div id="app-rail-head">
+        <a class="brand" href="/">
+          <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+            <circle class="m-ring" cx="16" cy="16" r="13.25" stroke-width="1.5" />
+            <circle class="m-core" cx="16" cy="16" r="5" />
+            <path class="m-ring" d="M16 2.75v4.1M16 25.15v4.1M2.75 16h4.1M25.15 16h4.1" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          <span>Applywright</span>
+        </a>
+        <button id="app-menu" type="button" aria-controls="app-nav" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+      </div>
+
+      <nav id="app-nav" aria-label="Product">
+        <ul>
+          <li>
+            <a href="/app" data-nav="/app">
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.2" /><rect x="11" y="3" width="6" height="6" rx="1.2" /><rect x="3" y="11" width="6" height="6" rx="1.2" /><rect x="11" y="11" width="6" height="6" rx="1.2" /></svg>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/cv" data-nav="/app/cv">
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.75h6.25L15.25 6.75v10.5H5z" /><path d="M11.25 2.75v4h4" /><path d="M7.5 11h5M7.5 13.75h3.5" /></svg>
+              <span>CV library</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/jobs" data-nav="/app/jobs">
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="6.5" width="14.5" height="10" rx="1.5" /><path d="M7.25 6.5V4.9a1.15 1.15 0 0 1 1.15-1.15h3.2A1.15 1.15 0 0 1 12.75 4.9v1.6" /><path d="M2.75 10.5h14.5" /></svg>
+              <span>Jobs</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/applications" data-nav="/app/applications">
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="14" height="13" rx="1.5" /><path d="M3 7.5h14" /><path d="M7.75 7.5v9" /></svg>
+              <span>Applications</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/alerts" data-nav="/app/alerts">
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.6a4 4 0 1 1 8 0c0 2.9 1 4.4 1 4.4H5s1-1.5 1-4.4Z" /><path d="M8.4 15.4a1.65 1.65 0 0 0 3.2 0" /></svg>
+              <span>Alerts</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/billing" data-nav="/app/billing">
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="5" width="14.5" height="10" rx="1.5" /><path d="M2.75 8.75h14.5" /><path d="M5.5 12.25h3" /></svg>
+              <span>Billing</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/settings" data-nav="/app/settings">
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.25 4v12M10 4v12M14.75 4v12" /><circle cx="5.25" cy="8" r="1.5" /><circle cx="10" cy="12.5" r="1.5" /><circle cx="14.75" cy="7.25" r="1.5" /></svg>
+              <span>Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div id="app-rail-foot">
+        <p id="app-plan">Loading your plan…</p>
+        <a id="app-upgrade" href="/app/billing">Compare plans</a>
+        <button id="app-signout" type="button" class="btn btn--ghost btn--block">Sign out</button>
+      </div>
+    </aside>
+
+    <div id="app-body">
+      <main id="app-main" tabindex="-1">
+        <div id="app-head">
+          <h1 id="app-title">Dashboard</h1>
+          <p id="app-lede">Your CV, the score it last earned, and what is worth doing next.</p>
+        </div>
+        <div id="app-banner" role="status" aria-live="polite" hidden></div>
+        <div id="app-view"></div>
+        <p id="app-foot">
+          Applywright · your CV, tailored for every job. We prepare the application; you submit it.
+          <span aria-hidden="true">·</span> {{YEAR}}
+        </p>
+      </main>
+    </div>
+  </div>
+
+  <div id="app-toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <p class="wrap">The application workspace needs JavaScript. Every page here reads and writes through the
+      Applywright API with your session cookie, so the screens cannot render without it.</p>
+  </noscript>
+
+  <!--
+    LinkedIn capture helper. Inert on purpose: a <template> renders nothing, needs no CSS
+    and has no ids in the live document, so it cannot disturb the SPA. Clone it once (into
+    Settings, or wherever the bookmarklet should be offered) and wire the three buttons.
+    The CV screen already has its own paste box and consumes the handoff record itself
+    (takeCapture in app.js), so if you clone this fragment there, drop the textarea rather
+    than shipping two of them.
+
+    app.js's side of the contract: replace __ORIGIN__ in the bookmarklet text with
+    location.origin, put the result in [data-bookmarklet-source], and let
+    [data-bookmarklet-copy] copy it. Pick the text up from
+    localStorage["applywright.capture.v1"] (version 1, kind, text, sourceUrl) and remove it.
+    Rationale, limits and the full contract: docs/LINKEDIN-CAPTURE.md. Nothing is sent
+    anywhere until the user submits it.
+  -->
+  <template id="tpl-linkedin-capture">
+    <section class="card" aria-labelledby="linkedin-capture-title" data-linkedin-capture>
+      <div class="card__body">
+        <h2 id="linkedin-capture-title">Add your LinkedIn profile</h2>
+        <p id="linkedin-capture-help">
+          LinkedIn does not let other applications read your profile, so there is no sign-in
+          button to offer. Instead, the bookmarklet below copies the profile text from your own
+          browser, and you paste it here. We never fetch your profile and never store a LinkedIn
+          password or token.
+        </p>
+        <ol class="prose">
+          <li>Copy the bookmarklet text into the address of a new bookmark — one time.</li>
+          <li>Open your profile on linkedin.com and click that bookmark.</li>
+          <li>Paste into the box below, then choose “Read my profile”.</li>
+        </ol>
+
+        <div class="field">
+          <label for="linkedin-bookmarklet">Bookmarklet (the bookmark’s address)</label>
+          <input class="input" id="linkedin-bookmarklet" name="bookmarklet" type="text" readonly value=""
+                 data-bookmarklet-source aria-describedby="linkedin-capture-help" />
+          <p class="hint">
+            It starts with <code class="code">javascript:</code>. Some browsers strip that prefix
+            when you paste into the address bar, so paste it into the bookmark editor instead.
+          </p>
+        </div>
+        <p class="form__row">
+          <button type="button" class="btn btn--ghost" data-bookmarklet-copy>Copy bookmarklet</button>
+        </p>
+
+        <div class="field">
+          <label for="linkedin-capture-text">Your profile text</label>
+          <textarea class="input" id="linkedin-capture-text" name="profile" rows="12"
+                    data-linkedin-capture-text aria-describedby="linkedin-capture-help"></textarea>
+        </div>
+        <p class="form__row">
+          <button type="button" class="btn btn--ghost" data-linkedin-capture-clipboard>Paste from clipboard</button>
+          <button type="button" class="btn btn--primary" data-linkedin-capture-parse>Read my profile</button>
+        </p>
+        <p class="note">
+          Nothing is sent until you choose “Read my profile”. The text then goes to
+          <code class="code">POST /api/connectors/linkedin</code> with your own session, and nowhere
+          else. You can edit or clear it afterwards like any other CV.
+        </p>
+      </div>
+    </section>
+  </template>
+
+  <script src="/app/app.js" type="module"></script>
+</body>
+</html>

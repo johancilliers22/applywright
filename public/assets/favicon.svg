@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Applywright">
+  <rect width="32" height="32" rx="7" fill="#0b0c0e" />
+  <!-- A folio sheet with a turned corner: the pack you actually send. -->
+  <path d="M9 5.5h9.4L24 11v15.5H9z" fill="#fffdf9" />
+  <path d="M18.4 5.5V11H24" fill="#d8d1c2" />
+  <path d="M18.4 5.5V11H24" stroke="#b8ae9c" stroke-width="0.75" fill="none" />
+  <!-- Ruled lines in the product's press green. -->
+  <path d="M12.2 16h8.6M12.2 19.4h6.4M12.2 22.8h7.6" stroke="#0f5c43" stroke-width="1.5" stroke-linecap="round" />
+</svg>

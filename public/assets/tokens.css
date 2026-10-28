@@ -1,0 +1,649 @@
+/* ==========================================================================
+   Meridian — design tokens, reset, type scale, layout primitives
+   Loaded by every page. Do not put page-specific rules here.
+   ========================================================================== */
+
+:root {
+  /* Declaring the supported scheme opts this site out of Chrome's Auto Dark
+     Theme, which would otherwise algorithmically repaint the light palette. The
+     dark palette below is ours and is applied by the `data-theme` attribute. */
+  color-scheme: light;
+
+  /* --- colour: ink + bone + signal -------------------------------- */
+  --ink: #0b0c0e;
+  --ink-2: #14161a;
+  --ink-3: #1d2026;
+  --bone: #f5f2ea;
+  --bone-2: #eae5d9;
+  --paper: #fffdf8;
+
+  --text: #14161a;
+  --text-soft: #4a4f57;
+  --text-muted: #59606e;
+  --text-invert: #f5f2ea;
+  --text-invert-soft: #a9aeb6;
+
+  /* Ink that must stay ink in both schemes: the parts drawn *on* paper rather
+     than *as* paper — the logo strokes, the menu glyph, a card icon, the light
+     button's fill. --ink cannot do this job, because in the dark scheme it is
+     also the cover band, and flipping it would make the logo vanish (1.08:1).
+     Declared here so site.css can migrate to it without a second palette edit;
+     theme.css carries the interim overrides for the same seven components. */
+  --mark: #0b0c0e;
+
+  --accent: #2f4bff;
+  --accent-ink: #1b2fbf;
+  --accent-soft: #e6e9ff;
+  --ember: #ff5a36;
+  --lime: #c9f75c;
+
+  --line: rgba(11, 12, 14, 0.12);
+  --line-strong: rgba(11, 12, 14, 0.22);
+  --line-invert: rgba(245, 242, 234, 0.14);
+  --line-invert-strong: rgba(245, 242, 234, 0.26);
+
+  /* A rule that carries meaning rather than rhythm: 48% ink measures 3.70:1 on
+     --paper and 3.28:1 on --bone, so it clears the 3:1 floor for a control
+     boundary or a state marker (WCAG 1.4.11). --line and --line-strong are
+     decorative (1.30:1 and 1.65:1) and must never be the only thing that
+     identifies a control — see docs/design/SPEC-V2.md §6. 45% was the first
+     candidate; it measures 2.99:1 on --bone and misses the floor by 0.01. */
+  --line-meaning: rgba(11, 12, 14, 0.48);
+
+  --ok: #157f4a;
+  --warn: #a4610a;
+  --err: #b3261e;
+
+  /* Text that sits on a filled --accent surface. site.css still hardcodes #fff
+     for .btn--primary; in the dark palette the accent is light, so theme.css
+     points that button at this token instead. */
+  --on-accent: #ffffff;
+
+  /* The focus ring is one token so a future scheme can move it without touching
+     every component. It resolves through --accent today, which measures 6.38:1
+     on --paper and 5.80:1 on --bone. */
+  --focus: var(--accent);
+
+  /* The value of <meta name="theme-color">, read by theme.js so the browser
+     chrome matches the nav instead of guessing. */
+  --theme-color-meta: #fffdf8;
+
+  /* --- type ------------------------------------------------------- */
+  --sans: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", Arial, sans-serif;
+  /* Sitka ships with Windows and is a real Roman cut, unlike Palatino Linotype,
+     which has no 500 weight and was being rendered as synthetic bold. Order the
+     stack so every platform lands on an honestly drawn serif. */
+  --display: "Iowan Old Style", "Sitka Heading", "Palatino Linotype", "Book Antiqua",
+    Palatino, Georgia, "Times New Roman", serif;
+  --mono: "Cascadia Code", "SF Mono", ui-monospace, "JetBrains Mono", Consolas,
+    "Liberation Mono", monospace;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: 1.0625rem;
+  /* A missing middle: everything between the 12–14px metadata and the 32px+
+     headings used to be one of those two. This is the size bullets, findings
+     and letters are read at. */
+  --fs-reading: 0.9375rem;
+  --fs-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --fs-xl: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
+  --fs-2xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --fs-3xl: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  /* Capped at 68px: above that the hero stops being a sentence and starts being
+     a poster, and the serif's counters crowd at the sizes in between. */
+  --fs-4xl: clamp(2.75rem, 1.6rem + 4.4vw, 4.25rem);
+
+  --lh-tight: 1.04;
+  --lh-snug: 1.22;
+  --lh-body: 1.62;
+  --lh-reading: 1.6;
+
+  /* --- space ------------------------------------------------------ */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  --wrap: 1160px;
+  --wrap-narrow: 760px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+
+  /* --- shape ------------------------------------------------------ */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 26px;
+  --r-pill: 999px;
+  /* Folios — a sheet laid on a desk. 2px is a corner, not a card: the smallest
+     radius that still reads as deliberate. The offset shadow is a second sheet
+     underneath, not a drop shadow: two hard steps, no blur. */
+  --r-folio: 2px;
+  --shadow-sheet: 4px 4px 0 var(--bone-2), 4px 4px 0 1px var(--line);
+
+  --shadow-sm: 0 1px 2px rgba(11, 12, 14, 0.06);
+  --shadow-md: 0 12px 30px -18px rgba(11, 12, 14, 0.4);
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur: 220ms;
+
+  /* --- motion (additive: the existing --ease / --dur stay authoritative) ---
+     Four durations, two curves, one stagger. Anything that does not fit one of
+     these is not motion, it is decoration. See docs/design/SPEC-V2.md §5. */
+  --dur-xs: 120ms; /* state: colour, border, icon swap */
+  --dur-sm: 180ms; /* hover and press */
+  --dur-md: 260ms; /* panels, drawers */
+  --dur-lg: 560ms; /* page entrance, one per page load */
+  --dur-data: 420ms; /* a measurement settling: the gauge fill. Never a count-up */
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --stagger: 55ms;
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+ul,
+ol,
+dl,
+dd {
+  margin: 0;
+}
+
+ul[class],
+ol[class] {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Layout primitives
+   ========================================================================== */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.wrap--narrow {
+  max-width: var(--wrap-narrow);
+}
+
+.section {
+  padding-block: clamp(3.5rem, 7vw, var(--sp-9));
+}
+
+.section--tight {
+  padding-block: clamp(2.5rem, 4vw, var(--sp-7));
+}
+
+.section--paper {
+  background: var(--paper);
+}
+
+.section--bone {
+  background: var(--bone);
+}
+
+.section--dark {
+  background: var(--ink);
+  color: var(--text-invert);
+}
+
+.section--dark a {
+  color: var(--text-invert);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.stack > * + * {
+  margin-top: var(--flow, var(--sp-4));
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap, var(--sp-3));
+}
+
+.split {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .split {
+    grid-template-columns: 1.05fr 0.95fr;
+  }
+  .split--reverse > *:first-child {
+    order: 2;
+  }
+}
+
+.grid {
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+.display,
+.h1,
+.h2,
+.h3 {
+  font-family: var(--display);
+  /* 400, not 500. Palatino Linotype has no 500 cut, so the browser was
+     synthesising the bold — visible as smeared stems at display sizes. */
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: var(--lh-snug);
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.section--dark .display,
+.section--dark .h1,
+.section--dark .h2,
+.section--dark .h3 {
+  color: var(--text-invert);
+}
+
+.display {
+  font-size: var(--fs-4xl);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.028em;
+}
+
+.h1 {
+  font-size: var(--fs-3xl);
+}
+
+.h2 {
+  font-size: var(--fs-2xl);
+  line-height: 1.12;
+}
+
+.h3 {
+  font-size: var(--fs-xl);
+  font-family: var(--sans);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.h4 {
+  font-family: var(--sans);
+  font-size: var(--fs-base);
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  line-height: 1.35;
+}
+
+.lede {
+  font-size: var(--fs-lg);
+  color: var(--text-soft);
+  line-height: 1.55;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+.section--dark .lede {
+  color: var(--text-invert-soft);
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+  flex: none;
+}
+
+.section--dark .eyebrow {
+  color: var(--text-invert-soft);
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: var(--fs-sm);
+  letter-spacing: -0.01em;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.section--dark .muted {
+  color: var(--text-invert-soft);
+}
+
+.small {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+.balance {
+  text-wrap: balance;
+}
+
+.pretty {
+  text-wrap: pretty;
+}
+
+.serif-em {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+  margin: 0;
+}
+
+.section--dark .divider {
+  background: var(--line-invert);
+}
+
+.measure {
+  max-width: 62ch;
+}
+
+.measure-tight {
+  max-width: 46ch;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mx-auto {
+  margin-inline: auto;
+}
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+  max-width: 68ch;
+}
+
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(245, 242, 234, 0.16) 1px,
+      transparent 0
+    );
+  background-size: 22px 22px;
+}
+
+/* Scroll reveal.
+   Content is visible by default; the hidden state only applies once site.js has
+   actually installed the observer and set `reveal-on` on <html>. That keeps the
+   page readable for no-JS clients, crawlers and full-page captures. */
+.reveal {
+  transition: opacity 620ms var(--ease), transform 620ms var(--ease);
+}
+
+html.reveal-on .reveal:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+html.reveal-on .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Palette: dark ("lamplight")
+   ==========================================================================
+
+   Two layers, deliberately:
+
+     1. This file owns the *palette*. Both schemes are declared here, so the
+        complete colour set is in one place.
+     2. theme.css owns the *product re-key* (the Meridian blues swapped for the
+        Applywright green) and every component rule that cannot be expressed as
+        a token change — a logo stroke that must not flip, a button whose
+        foreground is hardcoded in site.css.
+
+   The switch is one attribute on <html>, set by assets/theme.js before first
+   paint: <html data-theme="dark">. There is no
+   `@media (prefers-color-scheme: dark)` block on purpose. Pages that do not load
+   theme.js (sign-in, sign-up, /app) have no attribute, so they stay on the light
+   palette with their component rules intact instead of flipping tokens they
+   have no dark overrides for. "System" is resolved by the script, not by CSS,
+   so that a saved `light` choice beats a dark operating system and the two can
+   never disagree.
+
+   --ink and --ink-2 / --ink-3 are frozen as *palette* values: they are the
+   press-black bands (hero, footer, .section--dark, .mock, .code). They never
+   become light, which is why the rules that use --ink as ink-on-paper need
+   their own dark overrides in theme.css. Do not "fix" that here by flipping
+   --ink: --text on --ink measures 1.08:1 and the logo would disappear.
+
+   Every value below is measured against the surfaces in this file; the table is
+   in docs/design/SPEC-V2.md §4 and is checked by scripts/check.js' contrast
+   assertions. Do not change a value without re-measuring.
+   ========================================================================== */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* --- surfaces, darkest to lightest -------------------------------------
+     ink (bands) < bone-2 (well) < bone (recessed band) < paper (page, cards).
+     The light scheme's depth order is paper > bone > bone-2 > ink; this keeps
+     the same order so "raised" and "recessed" mean the same thing in both. */
+  --ink: #08090b;
+  --ink-2: #0f1115;
+  --ink-3: #171a20;
+  --bone: #121419;
+  --bone-2: #0d0f13;
+  --paper: #191c22;
+
+  /* --- text --------------------------------------------------------------
+     --text* are the roles that flip. --text-invert* are the roles that stay
+     light because they sit on the frozen ink bands. */
+  --text: #f4f1e8; /* 14.8:1 on --paper, 13.4:1 on --bone */
+  --text-soft: #c6cad2; /* 10.1:1 on --paper,  9.1:1 on --bone */
+  --text-muted: #a6acb6; /*  7.3:1 on --paper,  8.0:1 on --bone, 8.5:1 on --bone-2 */
+  --text-invert: #f5f2ea; /* unchanged: 17.5:1 on --ink */
+  --text-invert-soft: #a9aeb6; /* unchanged: 8.8:1 on --ink, 7.1:1 on --ink-3 */
+
+  /* Ink-on-paper parts invert here, because "paper" is now dark. 13.7:1 against
+     the dark --paper. */
+  --mark: #e8e6e1;
+
+  /* --- signal ------------------------------------------------------------
+     The brand green is a dark green: 2.15:1 on ink and unusable as dark-mode
+     text. The dark scheme lifts the same hue to a jade that is readable *as
+     text* (9.1:1 on paper) and flips --on-accent so a filled primary button
+     carries near-black labels instead of white ones. */
+  --accent: #47c99a;
+  --accent-ink: #86e7c0; /* prose links; 13.0:1 on --paper */
+  --accent-soft: #16302a; /* .card--accent surface; --text on it is 12.6:1 */
+  --ember: #ff7f57;
+  --lime: #d7efa6; /* unchanged; it is already the dark-surface accent */
+
+  /* Status is not the action colour. --ok used to be the same hex as --accent,
+     so a tick and a button were indistinguishable; the split starts in the light
+     scheme (theme.css) and is carried here. */
+  --ok: #4cc38a; /* 7.7:1 on --paper */
+  --warn: #f0ad4e; /* 8.4:1 on --paper */
+  --err: #f27268; /* 4.7:1 on --paper, 5.0:1 on --bone */
+
+  --on-accent: #06130d;
+
+  /* --- rules -------------------------------------------------------------
+     Border alphas are raised in this scheme: at 14% a cream hairline is
+     invisible on #191c22, and --line-strong has to clear 3:1 to identify an
+     input boundary (it measures 3.6:1 here; in the light scheme it is still
+     1.65:1, which is a site.css fix, not a token fix). */
+  --line: rgba(245, 242, 234, 0.14);
+  --line-strong: rgba(245, 242, 234, 0.42);
+  --line-invert: rgba(245, 242, 234, 0.12);
+  --line-invert-strong: rgba(245, 242, 234, 0.34);
+  --line-meaning: rgba(245, 242, 234, 0.45); /* 3.9:1 on --paper */
+
+  /* --- depth and chrome -------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 14px 34px -20px rgba(0, 0, 0, 0.9);
+  --focus: var(--accent); /* 9.3:1 on --paper */
+  --theme-color-meta: #191c22;
+}
+

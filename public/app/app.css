@@ -1,0 +1,1805 @@
+/* ==========================================================================
+   Applywright — the /app product workspace.
+   Depends on tokens.css, theme.css and site.css: it reuses .btn, .card, .chip,
+   .pill, .field, .input, .kv, .note, .eyebrow and the type scale from those, and
+   only adds the app shell, the workspace components and the responsive rules.
+   No new colours: everything resolves against the theme's deep-green accent.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Shell — rail on the left, workspace on the right
+   -------------------------------------------------------------------------- */
+
+#app {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--paper);
+}
+
+@media (min-width: 900px) {
+  #app {
+    grid-template-columns: 252px minmax(0, 1fr);
+  }
+}
+
+#app-rail {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-2) var(--gutter);
+  background: var(--bone);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Closed on a narrow screen the rail is only its head: a ~56px bar with the
+   brand and the menu button. The plan footer lives in the open drawer, because
+   it costs a third of a phone screen and says nothing you cannot see inside.
+   The selectors carry #app so they outrank the footer's own base rule below. */
+@media (max-width: 899px) {
+  #app[data-open="false"] #app-rail-foot {
+    display: none;
+  }
+
+  #app[data-open="true"] #app-rail {
+    padding-bottom: var(--sp-4);
+  }
+
+  #app[data-open="true"] #app-rail-foot {
+    display: grid;
+  }
+}
+
+@media (min-width: 900px) {
+  #app-rail {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    padding: var(--sp-5) var(--sp-4);
+    border-bottom: 0;
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+  }
+}
+
+#app-rail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  min-height: 40px;
+}
+
+#app-rail .brand {
+  font-size: 1rem;
+}
+
+#app-menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  cursor: pointer;
+}
+
+#app-menu > span[aria-hidden="true"] {
+  position: relative;
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--ink);
+}
+
+#app-menu > span[aria-hidden="true"]::before,
+#app-menu > span[aria-hidden="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 16px;
+  height: 1.5px;
+  background: var(--ink);
+}
+
+#app-menu > span[aria-hidden="true"]::before {
+  top: -5px;
+}
+
+#app-menu > span[aria-hidden="true"]::after {
+  top: 5px;
+}
+
+@media (min-width: 900px) {
+  #app-menu {
+    display: none;
+  }
+}
+
+/* Collapsed rail: the nav is hidden until the menu button opens it. */
+#app-nav {
+  display: none;
+}
+
+#app[data-open="true"] #app-nav {
+  display: block;
+}
+
+@media (min-width: 900px) {
+  #app-nav,
+  #app[data-open="false"] #app-nav {
+    display: block;
+  }
+}
+
+#app-nav ul {
+  display: grid;
+  gap: 2px;
+}
+
+#app-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  font-weight: 550;
+  color: var(--text-soft);
+  text-decoration: none;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+/* The rail icons are inline <svg> in app.html: no sprite, no external asset,
+   and the CSP's script-src 'self' has nothing to do with them. */
+#app-nav a svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  stroke: currentColor;
+  transition: stroke var(--dur) var(--ease);
+}
+
+#app-nav a:hover {
+  background: color-mix(in srgb, var(--paper) 70%, transparent);
+  color: var(--text);
+}
+
+#app-nav a[aria-current="page"] {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+#app-nav a[aria-current="page"] svg {
+  stroke: var(--accent);
+}
+
+#app-rail-foot {
+  display: grid;
+  gap: var(--sp-2);
+  margin-top: auto;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+}
+
+#app-plan {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+#app-upgrade {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+#app-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+#app-main {
+  width: 100%;
+  max-width: 1240px;
+  padding: clamp(1.25rem, 3vw, 2.5rem) var(--gutter) var(--sp-7);
+  outline: none;
+}
+
+@media (min-width: 900px) {
+  #app-main {
+    padding-inline: clamp(1.5rem, 2.6vw, 2.75rem);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Page head + banners
+   -------------------------------------------------------------------------- */
+
+#app-head {
+  display: grid;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-5);
+}
+
+#app-title {
+  font-family: var(--display);
+  font-size: var(--fs-2xl);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+}
+
+#app-lede {
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  max-width: 74ch;
+  line-height: 1.55;
+}
+
+#app-banner:not([hidden]) {
+  display: grid;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+
+#app-foot {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  max-width: 74ch;
+}
+
+/* A banner is the workspace's inline notice: quota, offline, stale data. */
+.aw-banner {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--bone);
+  padding: 0.8rem 1rem;
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.aw-banner[data-tone="warn"] {
+  border-left-color: var(--warn);
+}
+
+.aw-banner[data-tone="err"] {
+  border-left-color: var(--err);
+}
+
+.aw-banner strong {
+  color: var(--text);
+}
+
+.aw-banner a {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   3. Layout primitives
+   -------------------------------------------------------------------------- */
+
+.aw-section {
+  margin-top: var(--sp-6);
+}
+
+.aw-section:first-child {
+  margin-top: 0;
+}
+
+/* Top-level blocks that are not sections of their own still need the rhythm. */
+#app-view > .aw-ingest:not(:first-child),
+#app-view > #cv-analyse {
+  margin-top: var(--sp-6);
+}
+
+.aw-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+
+.aw-section__title {
+  font-size: var(--fs-md);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.aw-section__meta {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.aw-grid {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 720px) {
+  .aw-grid--2,
+  .aw-grid--metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .aw-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1240px) {
+  .aw-grid--metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.aw-stack {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.aw-stack--tight {
+  gap: var(--sp-2);
+}
+
+.aw-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.aw-row--end {
+  justify-content: flex-end;
+}
+
+.aw-grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.aw-nowrap {
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   4. Cards
+   -------------------------------------------------------------------------- */
+
+.aw-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: clamp(1rem, 2vw, 1.4rem);
+  display: grid;
+  gap: var(--sp-3);
+  align-content: start;
+  min-width: 0;
+}
+
+.aw-card--flat {
+  background: var(--bone);
+}
+
+.aw-card--accent {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+}
+
+.aw-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.aw-card__title {
+  font-size: var(--fs-sm);
+  font-weight: 650;
+  letter-spacing: -0.005em;
+}
+
+.aw-kicker {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.aw-value {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.aw-value--lg {
+  font-size: clamp(2.4rem, 1.8rem + 2.4vw, 3.2rem);
+}
+
+/* A CV title is a document name, not a metric: readable, two lines at most. */
+.aw-value--doc {
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.375rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.aw-value small {
+  font-family: var(--sans);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  margin-left: 0.15rem;
+}
+
+.aw-note {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.aw-body-text {
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  line-height: 1.6;
+  max-width: 74ch;
+}
+
+.aw-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.aw-actions--end {
+  justify-content: flex-end;
+}
+
+/* Compact list with hairlines, used for alerts, hits and next actions. */
+.aw-list {
+  display: grid;
+  gap: 0;
+}
+
+.aw-list__item {
+  display: grid;
+  gap: var(--sp-1);
+  padding-block: 0.7rem;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+
+.aw-list__item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.aw-list__item:first-child {
+  padding-top: 0;
+}
+
+.aw-list__title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.aw-list__meta {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   4b. Buttons inside the app
+   The marketing pages keep their stadium pills; a product workspace reads
+   better with crisp corners, and row actions need a smaller size so a table
+   action cannot look like the page's primary commit.
+   -------------------------------------------------------------------------- */
+
+#app .btn {
+  border-radius: 7px;
+}
+
+#app .btn--sm {
+  padding: 0.3rem 0.65rem;
+  min-height: 30px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  border-radius: 4px;
+  gap: 0.35rem;
+}
+
+/* Primary outline: a deliverable action that still reads as primary. */
+#app .btn--outline {
+  --btn-bg: transparent;
+  --btn-fg: var(--accent-ink);
+  --btn-bd: var(--accent);
+  font-weight: 650;
+}
+
+#app .btn--outline:hover {
+  --btn-bg: var(--accent-soft);
+  --btn-bd: var(--accent-ink);
+}
+
+/* --------------------------------------------------------------------------
+   5. Score ring + quota meter
+   -------------------------------------------------------------------------- */
+
+.aw-score {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.aw-ring {
+  position: relative;
+  flex: none;
+  width: 108px;
+  height: 108px;
+}
+
+.aw-ring svg {
+  width: 108px;
+  height: 108px;
+  display: block;
+}
+
+.aw-ring__track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 8;
+}
+
+.aw-ring__value {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 600ms var(--ease);
+}
+
+.aw-ring__label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.aw-ring__number {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.aw-ring__of {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.aw-subscore {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.aw-subscore__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+}
+
+.aw-subscore__value {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.aw-meter {
+  position: relative;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--bone-2);
+  overflow: hidden;
+}
+
+.aw-meter__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 400ms var(--ease);
+}
+
+.aw-meter__fill[data-tone="warn"] {
+  background: var(--warn);
+}
+
+.aw-meter__fill[data-tone="err"] {
+  background: var(--err);
+}
+
+/* --------------------------------------------------------------------------
+   6. Status, severity and source marks (never colour alone: each carries text)
+   -------------------------------------------------------------------------- */
+
+.aw-pip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.55rem 0.15rem 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.aw-pip::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--text-muted);
+}
+
+.aw-pip[data-status="pack_ready"]::before {
+  background: var(--text-soft);
+}
+
+.aw-pip[data-status="approved"]::before {
+  background: var(--accent);
+}
+
+.aw-pip[data-status="submitted"]::before {
+  background: var(--accent-ink);
+}
+
+.aw-pip[data-status="interview"]::before {
+  background: var(--warn);
+}
+
+.aw-pip[data-status="offer"]::before {
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 20%, transparent);
+}
+
+.aw-pip[data-status="rejected"]::before {
+  background: var(--err);
+}
+
+.aw-pip[data-status="withdrawn"]::before {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+}
+
+.aw-pip[data-status="active"]::before {
+  background: var(--ok);
+}
+
+.aw-pip[data-status="paused"]::before {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+}
+
+.aw-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.aw-badge[data-severity="high"] {
+  border-color: color-mix(in srgb, var(--err) 45%, transparent);
+  background: color-mix(in srgb, var(--err) 8%, transparent);
+  color: var(--err);
+}
+
+.aw-badge[data-severity="medium"] {
+  border-color: color-mix(in srgb, var(--warn) 45%, transparent);
+  background: color-mix(in srgb, var(--warn) 8%, transparent);
+  color: var(--warn);
+}
+
+.aw-badge[data-severity="low"] {
+  color: var(--text-muted);
+}
+
+.aw-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.1rem 0.4rem;
+  white-space: nowrap;
+}
+
+.aw-chipset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+/* A filter with nothing behind it is dimmed and inert rather than a dead end. */
+.aw-row button.chip:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.aw-row button.chip.aw-chip--empty {
+  border-style: dashed;
+}
+
+.aw-row button.chip[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+/* A status control carries a dot as well as its text, so the colour is never
+   the only signal. */
+.aw-status-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.aw-status-field .select {
+  flex: 1 1 auto;
+  min-width: 9.5rem;
+}
+
+.aw-status-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.aw-status-field[data-status="approved"] .aw-status-dot {
+  background: var(--accent);
+}
+
+.aw-status-field[data-status="submitted"] .aw-status-dot {
+  background: var(--accent-ink);
+}
+
+.aw-status-field[data-status="interview"] .aw-status-dot {
+  background: var(--warn);
+}
+
+.aw-status-field[data-status="offer"] .aw-status-dot {
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 20%, transparent);
+}
+
+.aw-status-field[data-status="rejected"] .aw-status-dot {
+  background: var(--err);
+}
+
+.aw-status-field[data-status="withdrawn"] .aw-status-dot {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+}
+
+.aw-chip--match {
+  border-color: color-mix(in srgb, var(--ok) 40%, transparent);
+  background: color-mix(in srgb, var(--ok) 8%, transparent);
+  color: var(--ok);
+}
+
+.aw-chip--miss {
+  border-style: dashed;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   7. Tables — real tables that become cards under 640px
+   -------------------------------------------------------------------------- */
+
+.aw-table-wrap {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  overflow-x: auto;
+}
+
+.aw-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+
+.aw-table caption {
+  caption-side: top;
+  text-align: start;
+  padding: 0.7rem 0.9rem 0;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.aw-table th,
+.aw-table td {
+  text-align: start;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.aw-table thead th {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bone);
+  white-space: nowrap;
+}
+
+.aw-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.aw-table td.aw-cell-num {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+.aw-table td.aw-cell-actions {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.aw-cell-title {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+a.aw-cell-title:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.aw-row-notes td {
+  background: var(--bone);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 640px) {
+  .aw-table-wrap {
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .aw-table,
+  .aw-table tbody,
+  .aw-table tr,
+  .aw-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .aw-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .aw-table tr {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--paper);
+    padding: 0.35rem 0.75rem;
+    margin-bottom: var(--sp-3);
+  }
+
+  .aw-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .aw-table td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed var(--line);
+    text-align: start;
+  }
+
+  .aw-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .aw-table td::before {
+    content: attr(data-label);
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    flex: none;
+  }
+
+  .aw-table td.aw-cell-actions {
+    text-align: start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+
+  .aw-row-notes td {
+    display: block;
+  }
+
+  .aw-row-notes td::before {
+    content: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Forms
+   -------------------------------------------------------------------------- */
+
+.aw-form {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.aw-form__row {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+@media (min-width: 640px) {
+  .aw-form__row--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .aw-form__row--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.aw-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.aw-status {
+  min-height: 1.2rem;
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+}
+
+.aw-status[data-tone="ok"] {
+  color: var(--ok);
+}
+
+.aw-status[data-tone="err"] {
+  color: var(--err);
+}
+
+.aw-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--fs-sm);
+  font-weight: 550;
+  padding-block: 0.3rem;
+}
+
+.aw-check input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+}
+
+/* The file picker is a real input with a label wrapper, styled to match .btn. */
+.aw-file {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.aw-file input[type="file"] {
+  font-size: var(--fs-xs);
+  color: var(--text-soft);
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .aw-file input[type="file"] {
+    max-width: 100%;
+    flex: 1 1 16rem;
+  }
+}
+
+.aw-copy-row {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+/* One drawer for every route into a CV, so that once an account has a CV the
+   library and the score panel lead the page instead of a 500px import form. */
+.aw-ingest {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.aw-ingest > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--fs-sm);
+  font-weight: 650;
+  letter-spacing: -0.005em;
+}
+
+.aw-ingest > summary::-webkit-details-marker {
+  display: none;
+}
+
+.aw-ingest > summary::after {
+  content: "+";
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.aw-ingest[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.aw-ingest[open] > summary::after {
+  content: "−";
+}
+
+.aw-ingest__body {
+  padding: clamp(1rem, 2vw, 1.35rem);
+  display: grid;
+  gap: var(--sp-4);
+}
+
+/* One line that states what a tailoring run costs, instead of a nag per card. */
+.aw-creditline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-3);
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--bone);
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+}
+
+.aw-creditline strong {
+  color: var(--text);
+}
+
+.aw-creditline[data-tone="warn"] {
+  border-left-color: var(--warn);
+}
+
+.aw-creditline a {
+  color: var(--accent-ink);
+  font-weight: 650;
+}
+
+.aw-copy-row .input {
+  flex: 1 1 16rem;
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+
+/* --------------------------------------------------------------------------
+   9. Findings (the analysis report)
+   -------------------------------------------------------------------------- */
+
+.aw-findings {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.aw-finding {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  padding: 0.85rem 1rem;
+  display: grid;
+  gap: 0.4rem;
+  background: var(--paper);
+}
+
+.aw-finding[data-severity="high"] {
+  border-left-color: var(--err);
+}
+
+.aw-finding[data-severity="medium"] {
+  border-left-color: var(--warn);
+}
+
+.aw-finding[data-severity="low"] {
+  border-left-color: color-mix(in srgb, var(--ok) 60%, transparent);
+}
+
+.aw-finding__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.aw-finding__title {
+  font-size: var(--fs-sm);
+  font-weight: 650;
+  color: var(--text);
+}
+
+.aw-finding__detail {
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+.aw-finding__fix {
+  font-size: var(--fs-sm);
+  color: var(--text);
+  line-height: 1.55;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.5rem;
+}
+
+.aw-finding__fix span {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-right: 0.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   9b. Profile import, "Sounds like you" badge, refinement diff
+   -------------------------------------------------------------------------- */
+
+.aw-connectors {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.aw-connector {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+}
+
+.aw-connector__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.aw-connector__name {
+  font-size: var(--fs-sm);
+  font-weight: 650;
+}
+
+.aw-connector__desc {
+  font-size: var(--fs-xs);
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+
+.aw-connector__meta {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Advisory writing-style signal: a badge, not a score to optimise. */
+.aw-style {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: var(--fs-xs);
+  font-weight: 650;
+  cursor: help;
+}
+
+.aw-style__value {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  padding-inline-start: 0.4rem;
+  border-inline-start: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.aw-profile-summary {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.aw-diff {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.aw-diff__item {
+  display: grid;
+  gap: 0.4rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+  padding: 0.75rem 0.9rem;
+  background: var(--paper);
+}
+
+.aw-diff__field {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.aw-diff__pair {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+@media (min-width: 720px) {
+  .aw-diff__pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.aw-diff__tag {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.aw-diff__after .aw-prose {
+  color: var(--text);
+}
+
+.aw-diff__reason {
+  font-size: var(--fs-xs);
+  color: var(--text-soft);
+  line-height: 1.5;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.4rem;
+}
+
+/* A single-input form (refinement instructions) sits on one line. */
+.aw-inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.aw-inline-form .input {
+  flex: 1 1 16rem;
+}
+
+.aw-advice {
+  list-style: decimal;
+  padding-inline-start: 1.3rem;
+}
+
+.aw-advice li {
+  list-style: decimal;
+}
+
+/* --------------------------------------------------------------------------
+   10. Job, CV, alert and plan cards
+   -------------------------------------------------------------------------- */
+
+.aw-job {
+  display: grid;
+  gap: var(--sp-2);
+  padding: clamp(1rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  min-width: 0;
+}
+
+.aw-job__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+
+.aw-job__title {
+  font-size: var(--fs-md);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.aw-job__title:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.aw-job__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.aw-job__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  justify-content: space-between;
+  margin-top: var(--sp-1);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+}
+
+.aw-cv {
+  display: grid;
+  gap: var(--sp-2);
+  padding: clamp(1rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  align-content: start;
+}
+
+.aw-cv[data-primary="true"] {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.aw-cv__preview {
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.aw-plan {
+  display: grid;
+  gap: var(--sp-3);
+  align-content: start;
+  padding: clamp(1.1rem, 2.2vw, 1.6rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  position: relative;
+}
+
+.aw-plan[data-current="true"] {
+  border-color: var(--ink);
+  box-shadow: var(--shadow-md);
+}
+
+.aw-plan__flag {
+  position: absolute;
+  top: -0.65rem;
+  left: 1.1rem;
+  background: var(--ink);
+  color: var(--text-invert);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--r-pill);
+}
+
+.aw-plan__name {
+  font-family: var(--display);
+  font-size: var(--fs-xl);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.aw-plan__price {
+  font-family: var(--display);
+  font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.aw-plan__price small {
+  font-family: var(--sans);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0;
+  margin-left: 0.2rem;
+}
+
+.aw-plan__list {
+  display: grid;
+  gap: 0.4rem;
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+}
+
+.aw-plan__list li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.aw-plan__list li::before {
+  content: "—";
+  color: var(--text-muted);
+  flex: none;
+}
+
+/* Segmented monthly/annual control: radios, so the keyboard works for free. */
+.aw-segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--bone);
+}
+
+.aw-segmented label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.9rem;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-soft);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.aw-segmented input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.aw-segmented label:has(input:checked) {
+  background: var(--paper);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.aw-segmented label:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.aw-save-note {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+/* --------------------------------------------------------------------------
+   11. Inline quota prompt (402) — names the plan, links to billing
+   -------------------------------------------------------------------------- */
+
+.aw-quota {
+  display: grid;
+  gap: var(--sp-2);
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+}
+
+.aw-quota__title {
+  font-size: var(--fs-sm);
+  font-weight: 650;
+  color: var(--accent-ink);
+}
+
+.aw-quota p {
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------------------
+   12. Empty, loading and error states
+   -------------------------------------------------------------------------- */
+
+.aw-empty,
+.aw-error,
+.aw-loading {
+  display: grid;
+  gap: var(--sp-3);
+  justify-items: start;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--bone);
+}
+
+.aw-error {
+  border-left: 3px solid var(--err);
+  background: var(--paper);
+}
+
+.aw-empty__title,
+.aw-error__title {
+  font-size: var(--fs-md);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.aw-empty__body,
+.aw-error__body {
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  line-height: 1.6;
+  max-width: 66ch;
+}
+
+.aw-loading {
+  grid-auto-flow: column;
+  align-items: center;
+  justify-items: start;
+  justify-content: start;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  background: var(--paper);
+}
+
+.aw-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  border-top-color: var(--accent);
+  animation: aw-spin 700ms linear infinite;
+  flex: none;
+}
+
+@keyframes aw-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   13. Toast
+   -------------------------------------------------------------------------- */
+
+#app-toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  transform: translate(-50%, 1rem);
+  z-index: 90;
+  max-width: min(92vw, 32rem);
+  padding: 0.7rem 1rem;
+  border-radius: var(--r-md);
+  background: var(--ink);
+  color: var(--text-invert);
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+#app-toast[data-show="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+#app-toast[data-tone="ok"] {
+  background: var(--accent-ink);
+}
+
+#app-toast[data-tone="err"] {
+  background: var(--err);
+}
+
+/* --------------------------------------------------------------------------
+   14. Utilities
+   -------------------------------------------------------------------------- */
+
+.aw-mt-0 {
+  margin-top: 0;
+}
+
+.aw-mt-2 {
+  margin-top: var(--sp-2);
+}
+
+.aw-mt-3 {
+  margin-top: var(--sp-3);
+}
+
+.aw-mt-4 {
+  margin-top: var(--sp-4);
+}
+
+.aw-mb-0 {
+  margin-bottom: 0;
+}
+
+.aw-flex-1 {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.aw-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aw-divider {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+  margin-block: var(--sp-3);
+}
+
+/* Long user text (notes, pasted text) wraps instead of scrolling sideways. */
+.aw-prose {
+  font-size: var(--fs-sm);
+  line-height: 1.65;
+  color: var(--text-soft);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 420px) {
+  #app-main {
+    padding-inline: 1rem;
+  }
+
+  .aw-card,
+  .aw-job,
+  .aw-cv,
+  .aw-plan {
+    border-radius: var(--r-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aw-ring__value,
+  .aw-meter__fill,
+  #app-toast {
+    transition: none;
+  }
+
+  .aw-spinner {
+    animation-duration: 2.4s;
+  }
+}

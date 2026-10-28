@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en-GB" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About · Applywright</title>
+  <meta name="description" content="Why Applywright exists: an application workspace for a serious job search, deliberately not an auto-apply bot. Grounded rewriting, named findings, no scraping and no submission." />
+  <meta name="theme-color" content="#0b0c0e" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/tokens.css" />
+  <link rel="stylesheet" href="/assets/theme.css" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <!-- Blocking and after the stylesheets on purpose: it applies the saved or
+       system theme before the first paint (no flash) and reads the palette back
+       from the CSS. Same-origin, so script-src 'self' covers it; no inline boot
+       code, which the CSP and scripts/check.js both forbid. -->
+  <script src="/assets/theme.js"></script>
+</head>
+<body>
+  <!--#include nav.html-->
+
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="eyebrow">About</p>
+        <h1 class="h1">An application workspace, not an application robot.</h1>
+        <p class="lede">
+          Applywright exists because a job search stalls on paperwork rather than on ability, and because the
+          tools that promise to fix that usually make the paperwork worse.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="why-title">
+      <div class="wrap wrap--narrow">
+        <div class="section-head">
+          <p class="eyebrow">Why it exists</p>
+          <h2 class="h2" id="why-title">One CV, many job descriptions</h2>
+        </div>
+        <div class="prose">
+          <p>
+            A single CV has to answer many job descriptions at once. The part that makes an application worth
+            reading, tailoring the summary and the bullets to the role in front of you, is also the part that
+            gets skipped when a search is running at volume. That is not laziness. It is the cost of doing a
+            careful job by hand, application after application, while also chasing replies and keeping a
+            spreadsheet of what went where.
+          </p>
+          <p>
+            Applywright is built to take the repetitive half of that work and leave the judgement half alone. It
+            scores a CV against a job, explains the score in findings you can act on, and produces a tailored
+            pack from facts that are already in the CV. It then keeps the record: which pack went to which
+            employer, what happened next, and which saved search found it.
+          </p>
+          <p>
+            It is an application workspace for someone who is serious about a search, not a spraying machine. The
+            difference matters, and it decides most of the design.
+          </p>
+          <p>
+            Applywright by Intelligent Artificial is published at intelligentartificial.net.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--dark" aria-labelledby="position-title">
+      <div class="wrap">
+        <div class="split">
+          <div class="stack">
+            <p class="eyebrow">Position</p>
+            <h2 class="h2" id="position-title">Why not an auto-apply bot</h2>
+            <p class="lede">
+              An auto-apply service optimises for the number of applications sent. The number is the wrong
+              measure.
+            </p>
+            <p class="muted">
+              Submitting to a third-party site without a person present breaches that site's terms, and the
+              account it risks is the one the search depends on. It also produces applications the candidate
+              cannot discuss in an interview, for roles they may not have read, with claims nobody can defend.
+              Volume of that kind is not a shortcut; it is a debt collected later.
+            </p>
+            <p class="muted">
+              We do not think a CV worth sending can be produced that way, so we do not build it. The product
+              prepares, checks and records. The person sends.
+            </p>
+          </div>
+
+          <div class="stack">
+            <div class="card card--ink">
+              <p class="eyebrow">What that rules out</p>
+              <p class="small">
+                Scraping LinkedIn or any site that forbids it. Filling in an employer's application form for
+                you. Inventing an employer, a title, a date or a number to fit a job. Sending anything before
+                you have read it.
+              </p>
+            </div>
+            <div class="card card--ink">
+              <p class="eyebrow">What that leaves</p>
+              <p class="small">
+                A grounded rewrite you can stand behind, a score you can argue with, a queue of applications
+                that are approved and ready, and a record that tells you what happened to each one.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="principles-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Principles</p>
+          <h2 class="h2" id="principles-title">Four rules the product is built on</h2>
+          <p class="lede">Each one costs the product a feature it could have sold. That is the point.</p>
+        </div>
+
+        <div class="grid grid-2">
+          <article class="card">
+            <p class="card__kicker">Principle 01</p>
+            <h3 class="h3">Grounded or nothing</h3>
+            <p class="small">
+              Every rewrite is traceable to a line in the source CV. A grounding check compares each rewritten
+              bullet with its original and rejects any new number, employer, title, qualification or date. A
+              bullet that fails is reset to your own wording, and the pack lists the reset under warnings.
+            </p>
+          </article>
+          <article class="card">
+            <p class="card__kicker">Principle 02</p>
+            <h3 class="h3">Named findings, not a verdict</h3>
+            <p class="small">
+              A score is only useful if it tells you what to change. Every lost point carries a finding with a
+              severity, a detail and a fix, naming the missing keywords, the inconsistent dates or the bullet
+              with no figure in it.
+            </p>
+          </article>
+          <article class="card">
+            <p class="card__kicker">Principle 03</p>
+            <h3 class="h3">The decision stays with you</h3>
+            <p class="small">
+              The queue ends at approved and ready. You open the employer's page, apply, and record what
+              happened. Capture of a posting is something you start, not something that happens in the
+              background.
+            </p>
+          </article>
+          <article class="card">
+            <p class="card__kicker">Principle 04</p>
+            <h3 class="h3">Delete means delete</h3>
+            <p class="small">
+              The database holds the text of your CV, never the uploaded file. Export returns everything you own
+              as JSON, and deleting the account removes your CVs, reports, packs, alerts and application records
+              with it.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--bone" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div class="split">
+          <div class="stack">
+            <p class="eyebrow">Contact</p>
+            <h2 class="h2" id="contact-title">Tell us what the software gets wrong</h2>
+            <p class="lede">
+              A finding you disagree with, a score that looks off, a bullet that was rewritten into something you
+              would not say: that is the useful mail.
+            </p>
+            <p class="small">
+              Or write to <a href="mailto:hello@applywright.example">hello@applywright.example</a>. We read every
+              message and reply within one business day.
+            </p>
+          </div>
+
+          <form class="form" action="/api/contact" method="post" data-contact-form>
+            <div class="form__row form__row--2">
+              <div class="field">
+                <label for="contact-name">Name</label>
+                <input class="input" id="contact-name" name="name" type="text" autocomplete="name" maxlength="120" required />
+              </div>
+              <div class="field">
+                <label for="contact-email">Email</label>
+                <input class="input" id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="contact-message">Message</label>
+              <textarea class="textarea" id="contact-message" name="message" rows="6" maxlength="4000" required></textarea>
+              <span class="small">Specific is better: the job, the finding and what you expected instead.</span>
+            </div>
+            <div class="field" style="display: none" aria-hidden="true">
+              <label for="contact-website">Website</label>
+              <input class="input" id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <p class="small muted" data-form-status role="status" aria-live="polite"></p>
+            <button class="btn btn--primary" type="submit">Send message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!--#include footer.html-->
+
+  <script src="/assets/site.js" type="module"></script>
+</body>
+</html>

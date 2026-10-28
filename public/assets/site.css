@@ -35,9 +35,12 @@
   border-bottom: 1px solid var(--line);
 }
 
+/* No color-mix(): an opaque --paper bar. A token, not the literal
+   rgba(255, 253, 248, 0.94) that used to live here; theme.css's dark fallback
+   for this rule becomes redundant once it ships. */
 @supports not (background: color-mix(in srgb, red 50%, blue)) {
   .nav {
-    background: rgba(255, 253, 248, 0.94);
+    background: var(--paper);
   }
 }
 
@@ -66,8 +69,11 @@
   flex: none;
 }
 
+/* --mark, not --ink: ink is the frozen band colour, so on a dark page it would
+   paint the logo black on black (1.08:1). --mark is the same value in the light
+   scheme and flips to bone in the dark one. */
 .brand__mark .m-ring {
-  stroke: var(--ink);
+  stroke: var(--mark);
 }
 
 .brand__mark .m-core {
@@ -98,7 +104,7 @@
 
 .nav__links a[aria-current="page"] {
   color: var(--text);
-  border-bottom-color: var(--ink);
+  border-bottom-color: var(--mark);
 }
 
 .nav__actions {
@@ -124,7 +130,7 @@
   position: relative;
   width: 16px;
   height: 1.5px;
-  background: var(--ink);
+  background: var(--mark);
   display: block;
 }
 
@@ -135,7 +141,7 @@
   left: 0;
   width: 16px;
   height: 1.5px;
-  background: var(--ink);
+  background: var(--mark);
 }
 
 .nav__toggle span::before {
@@ -254,7 +260,9 @@
 .btn--primary {
   --btn-bg: var(--accent);
   --btn-bd: var(--accent);
-  --btn-fg: #fff;
+  /* --on-accent flips with the scheme: white on the light green, near-black on
+     the light jade. A hardcoded #fff is 2.05:1 on the dark accent. */
+  --btn-fg: var(--on-accent);
 }
 
 .btn--primary:hover {
@@ -274,7 +282,9 @@
 
 .btn--light {
   --btn-bg: var(--bone);
-  --btn-fg: var(--ink);
+  /* The pair follows the scheme: bone carries mark in both, so no dark override
+     is needed for the foreground. */
+  --btn-fg: var(--mark);
   --btn-bd: var(--bone);
 }
 
@@ -325,7 +335,10 @@
 }
 
 /* --------------------------------------------------------------------------
-   Chips, pills, badges
+   Chips and badges
+   (The .pill / .pill--live block was retired with the pulse: it started by
+   itself, ran for five seconds and had no pause control — WCAG 2.2.2 — and
+   nothing on any page used it.)
    -------------------------------------------------------------------------- */
 
 .chip {
@@ -347,44 +360,6 @@
   border-color: var(--line-invert);
   background: transparent;
   color: var(--text-invert-soft);
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.28rem 0.7rem 0.28rem 0.35rem;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--line);
-  background: var(--paper);
-  font-size: var(--fs-xs);
-  font-family: var(--mono);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-}
-
-.pill__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--ok);
-  margin-inline-start: 0.3rem;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 18%, transparent);
-}
-
-.pill--live .pill__dot {
-  animation: pulse 2.4s var(--ease) infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
 }
 
 .dot-sep {
@@ -439,7 +414,7 @@
   place-items: center;
   background: var(--bone);
   border: 1px solid var(--line);
-  color: var(--ink);
+  color: var(--mark);
   flex: none;
 }
 
@@ -550,107 +525,188 @@
 }
 
 /* --------------------------------------------------------------------------
-   Product mockup (hero + product page)
+   Hero proof sheet (index)
+   The hero used to be a fake browser window with chat bubbles: chrome for a
+   product with no chat, and the wrong metaphor for one that produces documents.
+   This is SPEC-V2 §8.1 — the advert's requirement lines, the CV line that
+   answers each with the preserved fact cited, and the rubric underneath — on a
+   paper sheet with a folio corner. No chrome, no shadow, no invented score.
+
+   A definition list is the honest structure: each advert line names a
+   requirement that a CV line has to answer.
    -------------------------------------------------------------------------- */
 
-.mock {
-  border-radius: var(--r-lg);
-  border: 1px solid var(--line-invert);
-  background: var(--ink-2);
-  color: var(--text-invert);
-  overflow: hidden;
-  box-shadow: 0 40px 80px -50px rgba(0, 0, 0, 0.7);
-}
-
-.mock__bar {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 0.9rem;
-  border-bottom: 1px solid var(--line-invert);
-  background: var(--ink-3);
-}
-
-.mock__bar .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--line-invert-strong);
-}
-
-.mock__bar .url {
-  margin-inline-start: 0.6rem;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--text-invert-soft);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mock__body {
-  padding: clamp(1rem, 2.4vw, 1.5rem);
+.hero-proof {
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  font-size: var(--fs-sm);
-  line-height: 1.5;
+  gap: clamp(0.85rem, 1.8vw, 1.15rem);
+  min-width: 0;
+  padding: clamp(1rem, 2.2vw, 1.5rem);
+  background: var(--paper);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--r-folio);
+  /* The pair layout keys off the sheet's own width, not the viewport's: the
+     sheet is 502px at 1440 but only 437px at 1024, and viewport media queries
+     cannot tell those apart. Without container-query support the rows simply
+     stay stacked with their labels, which is the readable fallback. */
+  container-type: inline-size;
 }
 
-.mock__msg {
+.hero-proof__stamp {
   display: flex;
-  gap: 0.7rem;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
-.mock__who {
-  width: 24px;
-  height: 24px;
-  border-radius: 7px;
-  flex: none;
+.hero-proof__count {
+  color: var(--text-soft);
+  letter-spacing: 0.06em;
+}
+
+.hero-proof__rows {
   display: grid;
-  place-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.6rem 1rem;
+  margin: 0;
+}
+
+.hero-proof__req,
+.hero-proof__ans {
+  min-width: 0;
+  margin: 0;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  overflow-wrap: break-word;
+}
+
+.hero-proof__req:first-of-type,
+.hero-proof__ans:first-of-type {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Two columns once the sheet itself is wide enough (≥440px of sheet, i.e. the
+   full-width hero at 768 and the split hero at 1440); below that the rows stack
+   and each cell carries its own label, so a requirement is never left floating
+   away from its answer. */
+@container (min-width: 440px) {
+  .hero-proof__rows {
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  }
+}
+
+.hero-proof__req {
+  color: var(--text);
+}
+
+.hero-proof__ans {
+  color: var(--text-soft);
+}
+
+.hero-proof__kind {
+  display: block;
+  margin-bottom: 0.2rem;
   font-family: var(--mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  background: var(--accent);
-  color: #fff;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
-.mock__who--user {
-  background: var(--ink-3);
-  color: var(--text-invert-soft);
-  border: 1px solid var(--line-invert);
+@container (min-width: 440px) {
+  .hero-proof__kind {
+    display: none;
+  }
 }
 
-.mock__bubble {
-  background: var(--ink-3);
-  border: 1px solid var(--line-invert);
-  border-radius: 10px;
-  padding: 0.6rem 0.8rem;
-  color: var(--text-invert);
+/* The advert's line is a quotation from another document, so it keeps the
+   serif italic; the CV line stays in the product's sans voice. 400 is the cut
+   the stack actually has (tokens.css asks for 500). */
+.hero-proof .serif-em {
+  font-weight: 400;
 }
 
-.mock__bubble--user {
-  background: transparent;
-  border-style: dashed;
-  color: var(--text-invert-soft);
-}
-
-.mock__tool {
+/* Status and provenance are words first, boxes second. */
+.hero-proof__tag,
+.hero-proof__cite {
+  display: inline-block;
+  margin-inline-start: 0.35rem;
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--line-meaning);
+  border-radius: var(--r-folio);
   font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--lime);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  white-space: nowrap;
+  vertical-align: 0.1em;
+}
+
+.hero-proof__tag--finding {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* The preserved fact, marked: --lime carries --ink at 15.64:1, and the weight
+   change is a second cue for anyone who cannot see the wash. */
+.hero-proof__num {
+  background: var(--lime);
+  color: var(--ink);
+  padding: 0 0.18em;
+  border-radius: 1px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hero-proof__req--finding {
+  color: var(--text-soft);
+}
+
+.hero-proof__ans--finding {
+  font-size: 0.875rem;
+}
+
+/* The score ledger. The gauge is styled in theme.css for an ink surface, so the
+   strip it sits on is ink in both schemes while the sheet stays paper. */
+.hero-proof__score {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: clamp(0.85rem, 1.8vw, 1.15rem);
+  background: var(--ink);
+  color: var(--text-invert);
+  border-radius: var(--r-folio);
 }
 
-/* Painted, not spoken: the row marker is decoration, and without the empty
-   alternative text it lands in the paragraph's accessible name ("black
-   right-pointing small triangle Grounding check passed…"). */
-.mock__tool::before {
-  content: "▸" / "";
+.hero-proof__rubric {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--text-invert-soft);
+}
+
+.hero-proof__foot {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-invert-soft);
 }
 
 /* --------------------------------------------------------------------------
@@ -810,7 +866,7 @@
 }
 
 .price-card--featured {
-  border-color: var(--ink);
+  border-color: var(--mark);
   box-shadow: var(--shadow-md);
   position: relative;
 }
@@ -820,8 +876,10 @@
   position: absolute;
   top: -0.7rem;
   left: 1.5rem;
-  background: var(--ink);
-  color: var(--text-invert);
+  /* Mark surface, paper word: both ends flip with the scheme, so the pill needs
+     no dark override and its label is never mark-on-mark. */
+  background: var(--mark);
+  color: var(--paper);
   font-family: var(--mono);
   font-size: 0.66rem;
   text-transform: uppercase;
@@ -995,33 +1053,22 @@ table.compare caption {
    Code
    -------------------------------------------------------------------------- */
 
+/* The block is a frozen ink surface in both schemes, so its foreground is the
+   frozen --text-invert token; #e6e7ea was a literal near-copy of it. The
+   .c/.k/.s/.n spans were never used on any page (app.html uses the bare .code
+   class for inline endpoint names), so their four hexes are retired rather than
+   re-tokened. */
 .code {
   font-family: var(--mono);
   font-size: 0.8125rem;
   line-height: 1.7;
   background: var(--ink-2);
-  color: #e6e7ea;
+  color: var(--text-invert);
   border: 1px solid var(--line-invert);
   border-radius: var(--r-md);
   padding: 1rem 1.15rem;
   overflow-x: auto;
   tab-size: 2;
-}
-
-.code .c {
-  color: #7f8794;
-}
-
-.code .k {
-  color: #9fb4ff;
-}
-
-.code .s {
-  color: #b9e79a;
-}
-
-.code .n {
-  color: #ffb59a;
 }
 
 code:not(.code) {
@@ -1251,24 +1298,6 @@ code:not(.code) {
   background: var(--ink);
   color: var(--text-invert);
   padding-block: clamp(3rem, 7vw, 6rem) clamp(3rem, 7vw, 6rem);
-}
-
-.hero__grad {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      60% 50% at 78% 8%,
-      color-mix(in srgb, var(--accent) 34%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      45% 40% at 12% 95%,
-      color-mix(in srgb, var(--ember) 16%, transparent),
-      transparent 70%
-    );
-  opacity: 0.55;
 }
 
 .hero__inner {

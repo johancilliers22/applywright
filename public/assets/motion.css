@@ -7,21 +7,21 @@
    Every rule here is an enhancement. Delete this file, or block it, and every
    page still renders and reads exactly as it does now.
 
-   Rules kept deliberately tight:
-     - only transform / translate / opacity animate; no layout property, no
-       scroll listener, no parallax, nothing that fights the sticky nav;
-     - the scroll-reveal hidden state stays in tokens.css, so content is
-       visible by default and JS only ever opts in;
-     - every effect is either inside a prefers-reduced-motion: no-preference
-       query, or explicitly returned to its settled state under reduce.
+   The set is deliberately the six rows of DESIGN-INPUTS §3 and nothing else:
+   page entrance, the hero's evidence trace, a disclosure, and state changes
+   that already live in site.css. Retired with no replacement (they were the
+   decorations the design pass measured and cut): the 620ms scroll reveal, the
+   900ms ring draw, the card hover lift and the infinite .pill--live pulse.
+
+   Only transform / translate / opacity animate; no layout property, no scroll
+   listener, no parallax, nothing that fights the sticky nav, no loops.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    1. Page entrance — the hero (index) and the page-head band (inner pages)
-   Uses the motion scale's page-entrance pair from tokens.css (--dur-lg /
-   --ease-enter), up 10px, fading in, staggered in reading order. Runs once on
-   load; `both` fill means the delay holds the start frame rather than showing
-   finished content first.
+   One --dur-lg (560ms) rise per element, --ease-enter, one --stagger step
+   apart. Runs once per load; `both` fill means the delay holds the start frame
+   instead of showing finished content first.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
@@ -37,7 +37,6 @@
   .hero__sub,
   .hero__cta,
   .hero__meta,
-  .hero .mock,
   .page-head .eyebrow,
   .page-head .h1,
   .page-head .display,
@@ -49,136 +48,93 @@
   .hero .display,
   .page-head .h1,
   .page-head .display {
-    animation-delay: 70ms;
+    animation-delay: var(--stagger);
   }
 
   .hero__sub,
   .page-head .lede {
-    animation-delay: 140ms;
+    animation-delay: calc(var(--stagger) * 2);
   }
 
   .hero__cta,
   .page-head .small {
-    animation-delay: 210ms;
+    animation-delay: calc(var(--stagger) * 3);
   }
 
   .hero__meta {
-    animation-delay: 280ms;
-  }
-
-  .hero .mock {
-    animation-delay: 160ms;
+    animation-delay: calc(var(--stagger) * 4);
   }
 }
 
 /* --------------------------------------------------------------------------
-   2. Scroll reveal — stagger
-   The hidden/settled states (`html.reveal-on`, the 14px offset, opacity) live in
-   tokens.css, and site.js only adds `.reveal` to blocks that start below the
-   fold, so nothing on screen is ever blanked. This layer supplies the duration
-   from the motion scale and multiplies the token stagger by the per-sibling
-   --reveal-step that site.js sets.
-   -------------------------------------------------------------------------- */
-
-.reveal {
-  transition: opacity var(--dur-lg) var(--ease-enter),
-    transform var(--dur-lg) var(--ease-enter);
-  transition-delay: calc(var(--stagger) * var(--reveal-step, 0));
-}
-
-/* Printing from a scrolled page must not reproduce blocks that were never
-   scrolled into view. */
-@media print {
-  html.reveal-on .reveal:not(.is-visible) {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Focus outranks the reveal.
-   site.js marks blocks that start below the fold and keeps them at opacity 0
-   until the observer sees them. A keyboard user who tabs straight into one
-   arrives on a control that is still invisible — measured on /pricing at 390:
-   the block holding the focused link sat at opacity 0 and took ~620ms to reach
-   0.997, so the focus ring (WCAG 2.4.7) was not visible when focus landed.
-   :focus-within settles the block on the frame focus arrives; the observer still
-   owns the scroll case, so nothing below the fold pops in early. No transition
-   here on purpose — a fade would leave the same invisible interval. */
-html.reveal-on .reveal:not(.is-visible):focus-within {
-  opacity: 1;
-  transform: none;
-  transition: none;
-}
-
-/* Belt and braces for a preference changed after load, when site.js may have
-   already installed the observer. */
-@media (prefers-reduced-motion: reduce) {
-  html.reveal-on .reveal,
-  html.reveal-on .reveal:not(.is-visible) {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   3. Score-ring draw — a dormant hook
-   The marketing pages no longer carry a score ring: the hero mock's SVG was
-   replaced with a text read-out during the redesign, and pricing/how-it-works
-   never had one. The rule stays because it is nine lines, page-agnostic and
-   already correct: point it at a ring whatever the score markup says, and the
-   stroke draws from empty to the value in the markup (stroke-dasharray 326.7 is
-   the r=52 circumference; only stroke-dashoffset is animated).
+   2. The hero's one move — the score opening into named findings
+   On the proof sheet, the stamp, then each advert/CV pair, then the rubric
+   ledger settle in reading order, one --stagger step apart at --dur-lg /
+   --ease-enter. Transform and opacity only: no loop, no scroll trigger, no
+   typewriter, and under reduced motion every element is simply present.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  @keyframes aw-ring-draw {
+  @keyframes aw-evidence {
     from {
-      stroke-dashoffset: 326.7;
+      opacity: 0;
+      translate: 0 6px;
     }
   }
 
-  [data-ring] svg circle:last-of-type {
-    animation: aw-ring-draw var(--dur-lg) var(--ease-enter) 240ms both;
+  .hero-proof__stamp,
+  .hero-proof__req,
+  .hero-proof__ans,
+  .hero-proof__score {
+    animation: aw-evidence var(--dur-lg) var(--ease-enter) both;
+  }
+
+  .hero-proof__req:nth-of-type(1),
+  .hero-proof__ans:nth-of-type(1) {
+    animation-delay: var(--stagger);
+  }
+
+  .hero-proof__req:nth-of-type(2),
+  .hero-proof__ans:nth-of-type(2) {
+    animation-delay: calc(var(--stagger) * 2);
+  }
+
+  .hero-proof__req:nth-of-type(3),
+  .hero-proof__ans:nth-of-type(3) {
+    animation-delay: calc(var(--stagger) * 3);
+  }
+
+  .hero-proof__score {
+    animation-delay: calc(var(--stagger) * 4);
   }
 }
 
 /* --------------------------------------------------------------------------
-   4. Card hover and keyboard focus
-   Movement uses the `translate` property, not `transform`: it composes with the
-   reveal's transform instead of overwriting it, and it stays on the compositor.
-   Pointer devices only, motion allowed only. Shadow and border reuse existing
-   tokens — no new colour, radius or shadow is introduced.
+   3. Disclosure — the mobile drawer
+   The drawer opens in place: 4px and a fade at --dur-sm, never a slide across
+   the page. Closing removes it from layout at once, so there is no exit to
+   animate. Under reduced motion it is simply present.
    -------------------------------------------------------------------------- */
 
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  /* Longhands, not the `transition` shorthand: a shorthand here would replace
-     the opacity/transform transition that .reveal gets from tokens.css, and a
-     revealed card would pop in instead of fading. Durations come from the
-     motion scale (entrance --dur-lg, hover --dur-sm) and the stagger keeps the
-     one --stagger step the token file declares. */
-  .card,
-  .price-card {
-    --reveal-lag: calc(var(--stagger) * var(--reveal-step, 0));
-    transition-property: opacity, transform, translate, box-shadow, border-color;
-    transition-duration: var(--dur-lg), var(--dur-lg), var(--dur-sm), var(--dur-sm), var(--dur-sm);
-    transition-timing-function: var(--ease-enter), var(--ease-enter), var(--ease), var(--ease),
-      var(--ease);
-    transition-delay: var(--reveal-lag), var(--reveal-lag), 0ms, 0ms, 0ms;
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes aw-disclosure {
+    from {
+      opacity: 0;
+      translate: 0 -4px;
+    }
   }
 
-  .card:hover,
-  .price-card:hover,
-  .card:focus-within,
-  .price-card:focus-within {
-    translate: 0 -2px;
-    box-shadow: var(--shadow-md);
+  .nav__mobile.is-open {
+    animation: aw-disclosure var(--dur-sm) var(--ease-enter) both;
   }
 }
 
 /* --------------------------------------------------------------------------
-   5. prefers-reduced-motion — the remaining movement, switched off
-   Button and arrow lifts come from site.css; under reduce they settle instead
-   of moving. Colour transitions stay, because a colour change is not motion.
+   4. prefers-reduced-motion — settle instead of moving
+   The entrance, the evidence trace and the disclosure above are not rendered at
+   all under reduce (they live inside no-preference blocks), so the page paints
+   complete. What is left is the button and link-arrow lift from site.css:
+   colour changes stay, movement does not.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -189,9 +145,5 @@ html.reveal-on .reveal:not(.is-visible):focus-within {
 
   .link-arrow:hover::after {
     transform: none;
-  }
-
-  .pill--live .pill__dot {
-    animation: none;
   }
 }

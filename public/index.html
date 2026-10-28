@@ -24,7 +24,6 @@
 
   <main id="main">
     <section class="hero section--dark">
-      <div class="hero__grad" aria-hidden="true"></div>
       <div class="wrap hero__inner">
         <div>
           <p class="eyebrow hero__eyebrow">CV scoring, grounded tailoring, job tracking</p>
@@ -44,48 +43,70 @@
           </p>
         </div>
 
-        <div class="mock">
-          <div class="mock__bar" aria-hidden="true">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="url">applywright.example/app/cv</span>
-          </div>
-          <div class="mock__body">
-            <div class="stack" style="--flow: 0.5rem">
-              <div class="hero-gauge" role="img" aria-label="Rubric score: 75 out of 100. Strong fit starts at 70.">
-                <span class="hero-gauge__scale" aria-hidden="true">
-                  <span class="hero-gauge__fill" style="--value: 75%"></span>
-                  <span class="hero-gauge__threshold" style="--at: 70%"></span>
-                </span>
-                <span class="hero-gauge__legend" aria-hidden="true">
-                  <span class="mono hero-gauge__value">75 / 100</span>
-                  <span class="mono hero-gauge__note">strong fit from 70</span>
-                </span>
-              </div>
-              <p class="small muted">
-                Keywords 35 · structure 20 · achievements 20 · readability 15 · formatting 10.
-                Scored against one pasted advert; every point below 100 is a named finding. The number
-                is our rubric, not an employer's verdict.
-              </p>
-            </div>
+        <!-- The proof sheet: the advert's requirement lines on the left, the CV
+             line that answers each on the right with the preserved fact cited,
+             and the rubric underneath. Examples, labelled as such; no chat. -->
+        <figure class="hero-proof">
+          <figcaption class="hero-proof__stamp">
+            <span>Example · advert → CV §2</span>
+            <span class="hero-proof__count">2 matched · 1 finding</span>
+          </figcaption>
 
-            <div class="mock__msg">
-              <span class="chip">Before</span>
-              <p class="mock__bubble mock__bubble--user">
-                Responsible for checkout improvements with 2 engineers, which cut drop-off 18% over 2 releases.
-              </p>
+          <dl class="hero-proof__rows">
+            <dt class="hero-proof__req">
+              <span class="hero-proof__kind">Advert</span>
+              <span class="serif-em">Own a checkout flow with measurable conversion gains</span>
+              <span class="hero-proof__tag">matched</span>
+            </dt>
+            <dd class="hero-proof__ans">
+              <span class="hero-proof__kind">Your CV · §2</span>
+              Cut checkout drop-off <mark class="hero-proof__num">18%</mark> over 2 releases, working with 2
+              engineers on the checkout flow.
+              <span class="hero-proof__cite">CV §2 · 18%</span>
+            </dd>
+
+            <dt class="hero-proof__req">
+              <span class="hero-proof__kind">Advert</span>
+              <span class="serif-em">Work closely with a small engineering team</span>
+              <span class="hero-proof__tag">matched</span>
+            </dt>
+            <dd class="hero-proof__ans">
+              <span class="hero-proof__kind">Your CV · §2</span>
+              …working with <mark class="hero-proof__num">2 engineers</mark> on the checkout flow.
+              <span class="hero-proof__cite">CV §2 · 2 engineers</span>
+            </dd>
+
+            <dt class="hero-proof__req hero-proof__req--finding">
+              <span class="hero-proof__kind">Advert</span>
+              <span class="serif-em">Comfortable with 2-week release cycles</span>
+              <span class="hero-proof__tag hero-proof__tag--finding">finding</span>
+            </dt>
+            <dd class="hero-proof__ans hero-proof__ans--finding">
+              <span class="hero-proof__kind">Your CV · §2</span>
+              Your line says “2 releases”, not a 2-week cycle. The cadence is not added to the rewrite.
+              <span class="hero-proof__cite">finding · cadence</span>
+            </dd>
+          </dl>
+
+          <div class="hero-proof__score">
+            <div class="hero-gauge" role="img" aria-label="Rubric score: 75 out of 100. Strong fit starts at 70.">
+              <span class="hero-gauge__scale" aria-hidden="true">
+                <span class="hero-gauge__fill" style="--value: 75%"></span>
+                <span class="hero-gauge__threshold" style="--at: 70%"></span>
+              </span>
+              <span class="hero-gauge__legend" aria-hidden="true">
+                <span class="mono hero-gauge__value">75 / 100</span>
+                <span class="mono hero-gauge__note">strong fit from 70</span>
+              </span>
             </div>
-            <div class="mock__msg">
-              <span class="chip">After</span>
-              <p class="mock__bubble">
-                Cut checkout drop-off 18% over 2 releases, working with 2 engineers on the checkout flow.
-              </p>
-            </div>
-            <p class="mock__tool">Grounding check passed: 18%, 2 and 2 all appear in your CV</p>
-            <p class="mock__tool">Nothing invented.</p>
+            <p class="hero-proof__rubric">
+              keywords 35 · structure 20 · achievements 20 · readability 15 · formatting 10
+            </p>
+            <p class="hero-proof__foot">
+              A rubric, not an employer's verdict. 18%, 2 and 2 all appear in §2. · Nothing invented.
+            </p>
           </div>
-        </div>
+        </figure>
       </div>
     </section>
 

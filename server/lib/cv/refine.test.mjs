@@ -473,6 +473,66 @@ test("one sentence opener does not revert a prose reply, but still rejects a bul
   assert.match(result.refined.bullets[3], /^Led the standing engineering forum/);
 });
 
+test("a dropped phone number is a warning, not a rejection", () => {
+  // The live defect: a contact block sits inside the summary, so every reword drops
+  // the phone and the whole model reply was refused for "figure 07700 was dropped".
+  const source =
+    "Product engineer with 8 years building web platforms in UK fintech. " +
+    "Led a four-person platform team and cut p95 API latency from 840ms to 220ms.\n\n" +
+    "Senior Product Engineer\nalex.morgan@example.com · 07700 900123 · London, UK · alexmorgan.dev";
+  const rewrite =
+    "Product engineer with 8 years of experience building web platforms in UK fintech. " +
+    "Led a four-person platform team and cut p95 API latency from 840ms to 220ms.\n\n" +
+    "Senior Product Engineer";
+
+  const check = groundChanges(source, rewrite);
+  assert.equal(check.ok, true, `a phone number is contact data: ${JSON.stringify(check.reasons)}`);
+  assert.equal(check.warnings.length, 1);
+  assert.match(check.warnings[0], /dropped "07700 900123", which looks like contact data/);
+
+  // The same rewrite that also drops a metric is still refused, and names the metric.
+  const droppedMetric = groundChanges(source, rewrite.replace(" 840ms to 220ms", ""));
+  assert.equal(droppedMetric.ok, false);
+  assert.ok(droppedMetric.reasons.some((reason) => /figure (840|220) was dropped/.test(reason)));
+});
+
+test("contact data is recognised by shape: postcode, email and URL, but not a date", () => {
+  const postcode = groundChanges("Based in London SW1A 1AA.", "Based in London.");
+  assert.equal(postcode.ok, true);
+  assert.ok(postcode.warnings.some((warning) => /SW1A 1AA/.test(warning)));
+
+  const email = groundChanges("Reach me at alex123@example.com.", "Reach me by email.");
+  assert.equal(email.ok, true);
+  assert.ok(email.warnings.some((warning) => /alex123@example\.com/.test(warning)));
+
+  const url = groundChanges("Portfolio at https://example.com/jobs/42 .", "Portfolio on request.");
+  assert.equal(url.ok, true);
+  assert.ok(url.warnings.some((warning) => /example\.com\/jobs\/42/.test(warning)));
+
+  // A date range is a fact about the work, not contact data: still a rejection.
+  const dates = groundChanges("Worked there from 2019-2021.", "Worked there.");
+  assert.equal(dates.ok, false);
+  assert.deepEqual(dates.warnings, []);
+});
+
+test("a model summary that drops the contact block is kept, with a warning", async () => {
+  const summary = "Product engineer in fintech with 8 years of experience. 07700 900123";
+  const rewrittenSummary = "Product engineer in fintech with 8 years of experience.";
+  const model = {
+    async complete() {
+      return { summary: rewrittenSummary, bullets: [], coverLetter: LETTER };
+    },
+  };
+  const result = await refine({ pack: summaryPack(summary), instruction: "make the summary shorter", model });
+
+  assert.equal(result.mode, "model", JSON.stringify(result.warnings));
+  assert.equal(result.refined.summary, rewrittenSummary);
+  assert.ok(
+    result.warnings.some((warning) => /dropped "07700 900123".*contact data/.test(warning)),
+    JSON.stringify(result.warnings)
+  );
+});
+
 test("length intents work on the cover letter without losing the sign-off", async () => {
   const result = await refine({ pack: makePack(), instruction: "make the cover letter shorter" });
   const change = result.changes.find((entry) => entry.field === "coverLetter");

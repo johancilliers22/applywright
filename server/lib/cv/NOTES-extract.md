@@ -83,6 +83,22 @@ box is the quickest way in. When extraction — OCR especially — gets a headin
 wrong, the fix is `PATCH /api/cvs/:id { text }` (`server/app.js`), which re-segments the
 profile from the corrected text: editing, not re-uploading.
 
+Contact data is not body text. A line that is predominantly contact information — the
+name, an email, a profile link, or a phone number with nothing around it but an optional
+place name — stays in `contact` and is removed from the sections wherever it sits, before
+the first heading or under one. Leaving it in the body is what made a bare `07700 900123`
+land inside the summary: `contact.phone` stayed null, every summary rewrite dropped the
+number, the grounding check reverted the dropped figure, and the edit fell back to rules.
+The test is deliberately narrow. `+44 7700 900123`, `07700 900123`, `07700.900123`,
+`07700 900123 · London`, `Phone: …` and `Email: …` all qualify; "…contactable on 07700
+900123 for contract work" is prose and keeps its number; a date range (`2019 - 2024`) is
+never a phone; and a line with no contact token at all is never removed, so a stray
+place-name line on its own (`London`) stays in the body rather than being guessed at. A
+bare national number only becomes `contact.phone` from such a line, while labelled and
+`+`-prefixed numbers are trusted near the top of the page. Stored rows are not migrated:
+a CV imported under the old rule re-segments on its next import or text edit, and the
+editor still removes one stale duplicate from a legacy profile.
+
 Known imperfections, deliberately not hidden. DOCX shapes still unhandled or only
 partly handled: text box content is counted but also *duplicated* when Word emits both
 `mc:Choice` and `mc:Fallback` copies of the shape; `altChunk` (HTML/RTF embedded by

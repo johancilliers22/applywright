@@ -1118,3 +1118,90 @@ test("segmentSections has an honest empty shape", () => {
   assert.deepEqual(result.sections, { summary: "", experience: "", education: "", skills: "", other: "" });
   assert.equal(result.raw, "");
 });
+
+// ---------------------------------------------------------------------------
+// Contact lines are contact data wherever they sit, not only in a leading block
+// ---------------------------------------------------------------------------
+
+test("a bare phone line before the first heading becomes contact, not summary", () => {
+  // The reported shape: name, email and a bare national number on consecutive
+  // lines before `Summary`. The number used to stay in the body text while
+  // `contact.phone` stayed null, so every summary rewrite dropped it.
+  const cv = `ALEX MORGAN
+alex.morgan@example.com
+07700 900123
+London
+
+Summary
+Product engineer with 8 years building customer-facing web platforms and design systems.
+
+Skills
+TypeScript, React, PostgreSQL`;
+  const result = segmentSections(cv);
+
+  assert.equal(result.contact.name, "ALEX MORGAN");
+  assert.equal(result.contact.email, "alex.morgan@example.com");
+  assert.equal(result.contact.phone, "07700 900123", "a bare national number is still a phone number");
+  assert.ok(result.sections.summary.includes("Product engineer"));
+  assert.ok(!result.sections.summary.includes("07700"), `summary kept the number: ${JSON.stringify(result.sections.summary)}`);
+  assert.ok(!Object.values(result.sections).join("\n").includes("07700"), "the number leaked into a section");
+});
+
+test("a contact line after a heading is still removed from the section", () => {
+  // PDF/DOCX extraction can land the contact block under `Summary`; it is still
+  // contact data, not prose, so it must not survive into the section text.
+  const cv = `ALEX MORGAN
+alex.morgan@example.com
+
+Summary
+Product engineer with 8 years building customer-facing web platforms.
+07700 900123`;
+  const result = segmentSections(cv);
+
+  assert.equal(result.contact.phone, "07700 900123");
+  assert.ok(!result.sections.summary.includes("07700"), `summary kept the number: ${JSON.stringify(result.sections.summary)}`);
+});
+
+test("a phone plus a location on one line is still contact data", () => {
+  const cv = "Ada Lovelace\n07700 900123 · London\n\nSkills\nJavaScript, SQL, AWS";
+  const result = segmentSections(cv);
+  assert.equal(result.contact.phone, "07700 900123");
+  const body = Object.values(result.sections).join("\n");
+  assert.ok(!body.includes("07700"), `the number leaked into a section: ${JSON.stringify(body)}`);
+});
+
+test("international and dotted phone shapes are recognised as contact lines", () => {
+  const dotted = segmentSections("Ada Lovelace\nada@example.com\n07700.900123\n\nSkills\nJavaScript, SQL, AWS");
+  assert.equal(dotted.contact.phone, "07700.900123");
+  assert.ok(!Object.values(dotted.sections).join("\n").includes("07700"), "a dotted number leaked into the body");
+
+  const international = segmentSections("Ada Lovelace\n+44 7700 900123\n\nSkills\nJavaScript, SQL, AWS");
+  assert.equal(international.contact.phone, "+44 7700 900123");
+  assert.ok(!Object.values(international.sections).join("\n").includes("7700"), "an international number leaked into the body");
+});
+
+test("a phone inside a summary sentence stays in the summary", () => {
+  // Removing text from a summary is worse than leaving a number in it: this
+  // sentence is prose, so the number is neither promoted to contact nor removed.
+  const cv = `ALEX MORGAN
+alex.morgan@example.com
+
+Summary
+Product engineer with 8 years building customer-facing web platforms. Contactable on 07700 900123 for contract work.`;
+  const result = segmentSections(cv);
+
+  assert.ok(result.sections.summary.includes("07700 900123"), "prose must keep its own number");
+  assert.equal(result.contact.phone, null, "a number inside a sentence is not a contact line");
+});
+
+test("a date range is not mistaken for a phone or a contact line", () => {
+  const cv = `Ada Lovelace
+ada@example.com
+
+Experience
+2019 - 2024 Senior Engineer, Acme Payments
+Built a settlement service.`;
+  const result = segmentSections(cv);
+  assert.equal(result.contact.phone, null, `a year range became a phone: ${result.contact.phone}`);
+  assert.ok(result.sections.experience.includes("2019 - 2024"), "the date range was removed from experience");
+});

@@ -136,11 +136,21 @@ describe("the document model", () => {
   });
 
   test("a phone number that leaked into a section is not printed twice", () => {
-    // `segmentSections` keeps a bare phone line in `contact` *and* in whichever
-    // section the preamble heuristic picked. The editor removes the duplicate
-    // once, so the saved text has one copy of the number.
-    const profile = segmentSections(["Ada Lovelace", "+44 7700 900456", "", "Skills", "Notation, mathematics"].join("\n"));
-    assert.ok(profile.sections.other.includes("+44 7700 900456"), "fixture expects the duplicate in the stored profile");
+    // Rows stored before segmentation stopped duplicating contact lines still
+    // carry the number in a section body, and stored rows are deliberately not
+    // migrated, so the editor must keep removing that one stale copy. New imports
+    // put the number in `contact` only, which is why this profile is a legacy-row
+    // fixture rather than the output of segmentSections.
+    const profile = {
+      contact: { name: "Ada Lovelace", email: "ada@example.com", phone: "+44 7700 900456", links: [] },
+      sections: {
+        summary: "",
+        experience: "",
+        education: "",
+        skills: "Notation, mathematics",
+        other: "+44 7700 900456",
+      },
+    };
 
     const document = documentFromProfile(profile);
     assert.equal(document.contact.phone, "+44 7700 900456");

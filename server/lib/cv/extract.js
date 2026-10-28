@@ -1488,24 +1488,47 @@ function isDateSpan(value) {
   return DATE_RANGE_PATTERN.test(value);
 }
 
-/** First plausible phone number, preferring labelled and international forms. */
+/**
+ * Plausible phone numbers on one line: 8–15 digits, not a date range, not money.
+ * Both `+44 7700 900123` and a bare national `07700 900123` qualify; spaces, dots
+ * and hyphens are accepted as group separators.
+ */
+function phoneCandidates(line) {
+  const found = String(line ?? "").match(new RegExp(PHONE_SOURCE, "g")) ?? [];
+  const candidates = [];
+  for (const raw of found) {
+    const candidate = raw.trim();
+    const digits = candidate.replace(/\D/g, "");
+    if (digits.length < 8 || digits.length > 15) continue;
+    if (isDateSpan(candidate)) continue;
+    if (/[\u00a3$\u20ac]/.test(candidate)) continue;
+    candidates.push(candidate);
+  }
+  return candidates;
+}
+
+/**
+ * First plausible phone number.
+ * Labelled ("Phone: …") and international (`+44 …`) numbers are trusted near the
+ * top of the page; a bare national number is only trusted on a line that is
+ * otherwise contact data, so a year range or a sentence containing a figure is
+ * never mistaken for a phone.
+ */
 function findPhone(lines) {
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
     if (!line) continue;
     const labelled = PHONE_LABEL.test(line);
-    if (!labelled && index > 12) continue;
-
-    const candidates = line.match(new RegExp(PHONE_SOURCE, "g")) ?? [];
-    for (const raw of candidates) {
-      const candidate = raw.trim();
-      const digits = candidate.replace(/\D/g, "");
-      if (digits.length < 8 || digits.length > 15) continue;
-      if (isDateSpan(candidate)) continue;
-      if (/[\u00a3$\u20ac]/.test(candidate)) continue;
-      if (!labelled && !candidate.startsWith("+")) continue;
-      return candidate;
-    }
+    const international = /\+\d/.test(line);
+    if (!labelled && !international) continue;
+    if (!labelled && index > 12 && !isContactShapedLine(line)) continue;
+    const [candidate] = phoneCandidates(line);
+    if (candidate) return candidate;
+  }
+  for (const line of lines) {
+    if (!line || !isContactShapedLine(line)) continue;
+    const [candidate] = phoneCandidates(line);
+    if (candidate) return candidate;
   }
   return null;
 }
@@ -1554,7 +1577,8 @@ function extractLinks(text) {
     for (const match of line.matchAll(new RegExp(URL_PATTERN.source, "gi"))) {
       add(match[0], match.index ?? 0, lineIndex);
     }
-    if (lineIndex >= 12) return;
+    // A bare profile link counts wherever it is: segmentSections removes such a
+    // line from the body, so capping the scan would drop the link entirely.
     for (const match of line.matchAll(new RegExp(BARE_DOMAIN_PATTERN.source, "gi"))) {
       const host = match[0].split("/")[0];
       if (!KNOWN_LINK_HOST.test(host)) continue;
@@ -1582,32 +1606,73 @@ function knownBareLinks(line) {
   return matches.filter((match) => KNOWN_LINK_HOST.test(match.split("/")[0]));
 }
 
-/** True when a line carries nothing but contact details or contact labels. */
-function isContactOnlyLine(line, contact) {
-  const trimmed = line.trim();
-  if (!trimmed) return false;
-  if (contact.name) {
-    const bare = trimmed.replace(/^#{1,6}\s*/, "").replace(/[*_`]+/g, "").trim();
-    if (bare === contact.name) return true;
+/**
+ * What is left of a line once every contact token is removed.
+ * Empty means the line was pure contact data; a sentence around the number leaves
+ * the sentence, which is how prose keeps its figures. Phone candidates are removed
+ * individually rather than by pattern so a date range is never eaten as a phone.
+ */
+function contactResidue(line) {
+  let remainder = String(line ?? "")
+    .replace(EMAIL_PATTERN_GLOBAL, " ")
+    .replace(URL_PATTERN, " ");
+  remainder = remainder.replace(new RegExp(BARE_DOMAIN_PATTERN.source, "gi"), (match) =>
+    KNOWN_LINK_HOST.test(match.split("/")[0]) ? " " : match
+  );
+  for (const candidate of phoneCandidates(remainder)) {
+    remainder = remainder.replace(candidate, " ");
   }
+  return remainder
+    .replace(/\b(?:e-?mail|phone|tel|telephone|mobile|mob|cell|linkedin|github|gitlab|portfolio|website|web|blog|contact|whatsapp|call)\b/gi, " ")
+    .replace(/[|.,\\/:;()+*~\u00b7\u2022\u2013\u2014-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
+/**
+ * A location may sit on the same line as the number: "London", "London, UK",
+ * "London SW1A 1AA". One to three capitalised (or postcode-shaped) tokens, and
+ * nothing else, is still contact data rather than prose.
+ */
+const CONTACT_PLACE_RESIDUE = /^(?:[A-Z0-9][\w'.#-]*)(?:[\s,/]+[A-Z0-9][\w'.#-]*){0,2}$/;
+
+/**
+ * True when a line carries nothing but contact details, contact labels or the
+ * place they sit next to. Such a line is already represented in `contact`, so it
+ * is not also body text: the number must not end up in the summary, where a later
+ * rewrite would drop it and the grounding check would revert the change.
+ *
+ * Only token-shaped contact data qualifies. A sentence containing a number is
+ * prose and keeps it; wrongly removing text is worse than leaving a number in.
+ */
+function isContactShapedLine(line) {
+  const trimmed = String(line ?? "").trim();
+  if (!trimmed) return false;
   const hasEmail = EMAIL_PATTERN.test(trimmed);
   const hasUrl = URL_TEST.test(trimmed);
   const hasPhoneLabel = PHONE_LABEL.test(trimmed);
   const hasBareLink = knownBareLinks(trimmed).length > 0;
-  if (!hasEmail && !hasUrl && !hasPhoneLabel && !hasBareLink) return false;
+  const hasPhone = phoneCandidates(trimmed).length > 0;
+  if (!hasEmail && !hasUrl && !hasPhoneLabel && !hasBareLink && !hasPhone) return false;
 
-  let remainder = trimmed
-    .replace(EMAIL_PATTERN_GLOBAL, " ")
-    .replace(URL_PATTERN, " ")
-    .replace(PHONE_PATTERN, " ");
-  remainder = remainder.replace(new RegExp(BARE_DOMAIN_PATTERN.source, "gi"), (match) =>
-    KNOWN_LINK_HOST.test(match.split("/")[0]) ? " " : match
-  );
-  remainder = remainder
-    .replace(/\b(?:e-?mail|phone|tel|telephone|mobile|mob|cell|linkedin|github|gitlab|portfolio|website|web|blog|contact|whatsapp)\b/gi, " ");
-  remainder = remainder.replace(/[|.,\\/:;()+*~\u2013\u2014-]/g, " ").replace(/\s+/g, " ").trim();
-  return remainder.length === 0;
+  const residue = contactResidue(trimmed);
+  return !residue || CONTACT_PLACE_RESIDUE.test(residue);
+}
+
+/**
+ * True when the line is the name detected above the first heading.
+ * Kept separate from the contact-token test above: `guessName` can pick a wrong
+ * line in a CV with no name ("BSc Mathematics"), and that guess must only ever
+ * remove a line from the header block, never from a section body.
+ */
+function isDetectedNameLine(line, contact) {
+  if (!contact.name) return false;
+  const bare = String(line ?? "")
+    .trim()
+    .replace(/^#{1,6}\s*/, "")
+    .replace(/[*_`]+/g, "")
+    .trim();
+  return bare === contact.name;
 }
 
 function isExplicitSkillsLine(line) {
@@ -1640,15 +1705,13 @@ function looksLikeSummary(lines) {
 
 /**
  * Place lines that appeared before the first heading.
- * Contact lines are dropped (they are already in `contact`). Otherwise the
- * heuristics are: explicit "Skills:" lines, education lines, the first date
- * range starts experience, leading prose becomes the summary, everything else
- * is `other`.
+ * Contact lines never arrive here: segmentSections removes them from the body, so
+ * they live in `contact` only. The heuristics are: explicit "Skills:" lines,
+ * education lines, the first date range starts experience, leading prose becomes
+ * the summary, everything else is `other`.
  */
 function assignPreamble(lines, contact, buffers) {
-  const meaningful = lines
-    .map((line) => line.trim())
-    .filter((line) => line && !isContactOnlyLine(line, contact));
+  const meaningful = lines.map((line) => line.trim()).filter(Boolean);
   if (!meaningful.length) return;
 
   const assigned = new Array(meaningful.length).fill(null);
@@ -1736,6 +1799,13 @@ export function segmentSections(text) {
       current = key;
       continue;
     }
+    // Contact data is not body text. It belongs in `contact` alone, wherever it
+    // sits: a bare number left in the summary is dropped by every rewrite, the
+    // grounding check reverts the dropped figure, and the edit falls back to
+    // rules. Only predominantly-contact lines are removed; a sentence containing
+    // a number keeps it.
+    if (isContactShapedLine(line)) continue;
+    if (!current && isDetectedNameLine(line, contact)) continue;
     if (current) buffers[current].push(line);
     else preamble.push(line);
   }

@@ -178,7 +178,8 @@ const FIGURE_RE =
 /**
  * Every numeric claim in a piece of text, canonicalised so "£240k" and "£240,000"
  * compare equal. Spelled-out numbers count too: "led three teams" is a claim.
- * @returns {{ key: string, raw: string }[]}
+ * `index`/`end` locate the mention so it can be classified as contact data.
+ * @returns {{ key: string, raw: string, index: number, end: number }[]}
  */
 function figureEntries(text) {
   const source = toText(text);
@@ -193,17 +194,64 @@ function figureEntries(text) {
     else if (unit === "bn" || unit === "billion") value *= 1e9;
     const percent = unit === "%" || unit === "percent" || unit === "per cent";
     const raw = percent ? `${match[1]}%` : match[1];
-    entries.push({ key: `${Number(value.toPrecision(12))}${percent ? "%" : ""}`, raw });
+    entries.push({
+      key: `${Number(value.toPrecision(12))}${percent ? "%" : ""}`,
+      raw,
+      index: match.index,
+      end: match.index + match[0].length,
+    });
   }
   for (const match of source.matchAll(/\b([A-Za-z]+)\b/g)) {
     const key = SPELLED_NUMBERS.get(match[1].toLowerCase());
-    if (key) entries.push({ key, raw: match[1] });
+    if (key) entries.push({ key, raw: match[1], index: match.index, end: match.index + match[0].length });
   }
   return entries;
 }
 
 function figureKeySet(text) {
   return new Set(figureEntries(text).map((entry) => entry.key));
+}
+
+/* ------------------------------------------------------------------------- *
+ * Contact data — a phone number is not an achievement
+ * ------------------------------------------------------------------------- */
+
+/** Shapes that are contact data whatever surrounds them. */
+const STRONG_CONTACT_PATTERNS = [
+  /\bhttps?:\/\/[^\s)]+/gi,
+  /\bwww\.[^\s)]+/gi,
+  /\b[\w.+-]+@[\w-]+(?:\.[\w-]+)+\b/gi,
+  /\b[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}\b/g,
+];
+
+/** A run of digits and separators; validated by digit count before it counts. */
+const PHONE_PATTERN = /(?:\+|00|0)?\(?\d[\d\s().-]{6,}\d/g;
+
+/**
+ * Spans of `text` that are contact details: a URL, an email address, a postcode or
+ * a phone number. Recognised by shape, never by a list of the demo's numbers, so
+ * any candidate's contact block is treated the same way.
+ */
+function contactSpans(text) {
+  const source = toText(text);
+  const spans = [];
+  const push = (index, length) => {
+    const raw = collapse(source.slice(index, index + length));
+    if (raw) spans.push({ start: index, end: index + length, text: raw });
+  };
+  for (const pattern of STRONG_CONTACT_PATTERNS) {
+    for (const match of source.matchAll(pattern)) push(match.index, match[0].length);
+  }
+  for (const match of source.matchAll(PHONE_PATTERN)) {
+    const digits = match[0].replace(/\D/g, "");
+    // A phone number has 9–15 digits; this keeps dates, decimals and version
+    // numbers out ("2019-2021", "2.4", "v2.1.3").
+    if (digits.length < 9 || digits.length > 15) continue;
+    // A year range is a date even when it is written with dashes.
+    if (/^(?:19|20)\d{2}\s*[-–—]\s*(?:19|20)\d{2}$/.test(match[0].trim())) continue;
+    push(match.index, match[0].length);
+  }
+  return spans;
 }
 
 /* ------------------------------------------------------------------------- *
@@ -271,12 +319,30 @@ export function groundChanges(before, after, options = {}) {
     reasons.push(reason);
   }
 
+  // Contact details are not claims about the work. A summary that carries the
+  // candidate's phone number will drop it on any honest reword, so a dropped
+  // contact figure is a warning that names it; a dropped metric stays a rejection.
+  const contacts = contactSpans(source);
+  const contactFor = (entry) => contacts.find((span) => entry.index >= span.start && entry.index < span.end) ?? null;
+  const droppedContacts = new Set();
   for (const entry of figureEntries(source)) {
     if (afterKeys.has(entry.key)) continue;
+    const contact = contactFor(entry);
+    if (contact) {
+      droppedContacts.add(contact.text);
+      continue;
+    }
     const reason = `figure ${entry.raw} was dropped`;
     if (reported.has(reason)) continue;
     reported.add(reason);
     reasons.push(reason);
+  }
+  const warned = new Set(warnings);
+  for (const contact of droppedContacts) {
+    const warning = `the rewrite dropped "${contact}", which looks like contact data — check it is still in the contact block`;
+    if (warned.has(warning)) continue;
+    warned.add(warning);
+    warnings.push(warning);
   }
 
   const unique = dedupe(reasons);

@@ -441,3 +441,186 @@ disposable QA account exists in the dev database: `motion-qa@applywright.example
 recorded here), with one CV ("Jordan Ellis — Product Engineer") and one stored report (score 77).
 It only affects the local SQLite file, not the shipped pages, and can be deleted with the CV and the
 user row when the dev DB is next reset.
+
+---
+
+## 12. Round two — tactile feedback (28 October 2026, second pass)
+
+Round one removed motion that delayed reading. This pass adds the state feedback that makes the
+marketing pages feel like paper and ink: a scroll hairline that says where you are, hover/press cues
+that are not colour-only, a quieter entrance, one settle for the proof sheet, and a ruled loading
+sheet in the editor. No palette change, no new colour, no loop, nothing above `--dur-lg`.
+
+**Scope note (worth flagging).** This pass touched `site.js` in addition to the four files named in
+the brief: deliverable 4 is specified as an IntersectionObserver, and there is no CSS-only way to run
+something *once per session on first entry*. The addition is one self-contained block (~40 lines) and
+is the only script change.
+
+### 12.1 Files and line counts
+
+| File | Lines | What changed |
+|---|---|---|
+| `public/assets/motion.css` | 263 → **349** | entrance rewritten (hero trio, 180ms, 40ms stagger), scroll hairline, sheet-settle keyframes, duration contract updated |
+| `public/assets/site.css` | 1692 → **1809** | interaction inventory (nav/prose/footer/drawer links, theme toggle), editor loading skeleton |
+| `public/assets/tokens.css` | 630 → **642** | `--stagger-tight: 40ms` (duration token only) |
+| `public/assets/site.js` | 108 → **151** | proof-sheet settle: IntersectionObserver + sessionStorage guard |
+| `docs/MOTION.md` | 443 → this | this section |
+
+### 12.2 Deliverable 1 — scroll-progress hairline
+
+2px `--mark` rule, fixed under the nav (`top: 69px`, 63px under 660px), `transform: scaleX()` driven by
+`animation-timeline: scroll(root block)`. No listener, no rAF, no layout. Scoped with
+`html:has(.table-wrap)` to exactly the three long pages (`/how-it-works`, `/pricing`, `/security`); the
+index, about, auth and editor pages have no table and get no rule. Verified: `content` absent on `/` and
+`/about`; on the three pages the computed `transform` reads `scaleX(0)` at 0%, `0.500` at 50% and
+`1.000` at 100% (instant scroll).
+
+Two corrections found while building it, recorded because the first readings were wrong:
+
+- **The "body::after is free" reading was a harness bug.** The test injected
+  `body:has(.table-wrap) body::after`, a selector that cannot match, so it measured 0 recalcs for a
+  rule that never applied. With a correct selector, *any* scroll-driven CSS animation in this Chrome
+  costs ~150 style recalcs (one per frame) and ~30ms main-thread task time over a 2.5s scroll at 6×
+  CPU; `will-change`, `contain` and moving the animation out of the nav change nothing. It is the
+  price of the feature, not a placement bug: no layout, no long task, frame pacing unchanged.
+- **The root pseudo-element is not `body::after` for a different reason:** `index.html`'s inline grain
+  overlay already owns `body::after`, and a shared pseudo-element would be a collision waiting for the
+  grain to be rolled out site-wide. The hairline therefore lives on `html::after`.
+
+### 12.3 Deliverable 2 — interaction inventory
+
+Each state is not colour-only, and every `:hover` rule is paired with `:focus-visible`. Verified by
+**keyboard tabbing** (199 focus stops across nine pages, every one with a ring of ≥2px) and by hovering
+each surface and diffing the computed non-colour properties.
+
+| Surface | Rest | Hover | Press | Focus-visible |
+|---|---|---|---|---|
+| Nav link | no underline, 1px transparent border | underline 1px / offset 4px | underline 2px / offset 2px | same as hover + ring |
+| Inline/prose link | 1px underline / offset 2px | 2px / offset 3px | 3px / offset 1px | same as hover + ring |
+| Footer link | no underline, opacity .82 | underline 2px / offset 3px | — | same as hover + ring |
+| Drawer link | no underline | underline 1px / offset 3px | 2px / offset 1px | same as hover + ring |
+| Primary / ghost / on-dark button | — | 1px lift (`translateY(-1px)`) | 1.5% scale, 60–90ms leg | ring (inherited) |
+| Arrow link | arrow at 0 | arrow +3px | arrow +1px | ring |
+| Theme toggle | — | 1px shadow lift (`--shadow-sm`) | 1px translate (theme.css) | ring |
+| Cards that are links | **none on these pages** — every `.card` is an `<article>`; app's `.aw-card` belongs to app-ui | | | |
+| Table rows that open something | **none on these pages** — `table.compare` rows are static; the SPA's interactive table is app-ui's | | | |
+
+No dead rules were added for the two "none" rows. The only non-hero load animation that remains on any
+page is the theme control's 180ms arrival (`aw-toggle-in`), which belongs to `theme.css` and is
+documented in SPEC-V2 §5.
+
+### 12.4 Deliverable 3 — section entrance, once
+
+The hero's three elements now arrive: eyebrow and standfirst with `aw-enter`, heading with `aw-rise`
+(translate only, never opacity — the H1 stays the LCP candidate), each `--dur-sm` (180ms),
+`--stagger-tight` (40ms) apart, group finished 260ms after first paint. The page-head band, the CTA
+row and the hero meta are static; nothing below the hero animates on load on any page. The hero's
+evidence trace is unchanged and remains the one 560ms move.
+
+### 12.5 Deliverable 4 — the sheet settle
+
+220ms (`--dur`, `--ease-settle`), transform + opacity, on the proof sheet only, once per session. The
+IntersectionObserver adds `.is-settling` when the sheet first comes properly into view (threshold 0.5)
+and writes `sessionStorage['aw-sheet-settled']`, so a return visit in the same session gets a still
+sheet. It deliberately does **not** fire when the sheet is already half-visible at load: on `/` desktop
+the evidence trace owns that moment, and two animated moves on one surface is exactly what the round-one
+contract forbids. On a phone (390×700) the sheet starts at ratio 0.09, settles on first arrival, and
+does not replay.
+
+Measured cost: **0 long tasks** at 6× CPU while it runs; the animation is transform/opacity only, so it
+was kept rather than dropped.
+
+A first version of this trigger used "top below 90% of the viewport" and never fired at phone geometry
+(the sheet top sat at 627px in a 700px viewport). Replaced with the visible-ratio guard above.
+
+### 12.6 Deliverable 5 — editor loading skeleton
+
+No ornament set has landed yet (no `.aw-proof`, `.sheet` or skeleton classes in any stylesheet), so the
+fallback is a plain ruled block: `#ed-loading` becomes a paper sheet with `--r-folio`, hairline,
+`--shadow-sheet` and the document's 28px ruled rhythm, the status text kept as a mono label. It is
+CSS-only and drawn from `site.css` with an id selector because `editor.css` is another owner's file
+this pass; the comment says to absorb it into `editor.css` when that file is free. No shimmer, no loop.
+Verified against the real loading state (`/editor?cv=…` with a delayed API response): visible, 352px
+paper, ruled gradient, solid hairline, status text "Loading the CV…". The same panel is reused by
+`editor.js` for failure states ("No CV chosen", "Sign in to edit"), which therefore also read as a
+ruled sheet — acceptable, and reported rather than papered over.
+
+### 12.7 Measurements — 6× CPU, 1440×900, 2.5s rAF-paced scroll
+
+Protocol: `Emulation.setCPUThrottlingRate 6`, one rAF loop for frame deltas, `longtask` observer, CDP
+`Performance` counters for task/layout/style. Same pages, same protocol, before and after.
+
+| Page | Frames | >32ms | p95 / max | Long tasks | Layout | Style recalcs | Task time |
+|---|---|---|---|---|---|---|---|
+| `/how-it-works` before | 175 | 0 | 16.7 / 16.8 | 0 | 0 | 0 | 146ms |
+| `/how-it-works` after | 174 | 0 | 16.8 / 16.8 | 0 | 0 | 151 | 215ms |
+| `/security` before | 175 | 0 | 16.7 / 16.8 | 0 | 0 | 0 | 161ms |
+| `/security` after | 174 | 0 | 16.7 / 16.8 | 0 | 0 | 151 | 282ms |
+| `/pricing` before | 175 | 0 | 16.8 / 16.8 | 0 | 0 | 0 | 130ms |
+| `/pricing` after | 174 | 0 | 16.7 / 16.8 | 0 | 0 | 151 | 159ms |
+
+**Attribution (3 runs each, hairline on vs off, `/security`):** on = 150.7 recalcs / 288ms mean task;
+off = 0 recalcs / 257ms mean task. So the hairline accounts for ~150 recalcs and ~31ms of task time
+across the whole scroll (~1.2% of the window); run-to-run noise is larger than that delta. **No frame
+over 32ms and no long task in either state** — frame pacing is unchanged, which is the metric the
+round-one contract cares about.
+
+**Sensitivity control** (instrument proof): injecting a 60ms busy-wait scroll handler on the same page
+and protocol produces **41 long tasks (60–74ms)**, 41/63 frames over 32ms, p95 66.7ms, task 2,566ms.
+The zeros above are real, not a dead instrument.
+
+**LCP** (three runs each, 1440×900):
+
+| Page | Element | 1× | 6× |
+|---|---|---|---|
+| `/` | `H1.display`, 88,407 px² | 144 / 136 / 144 ms (before 140) | 956 / 936 / 956 ms (before 960) |
+| `/how-it-works` | `H1.h1`, 83,083 px² | 124 / 140 / 136 ms (before 116) | 912 / 924 / 920 ms (before 880) |
+
+Same element and size in every run; the differences are run-to-run noise on a shared machine, not a
+change in what the metric measures. Both headings keep the transform-only rise, so no fade can move
+LCP onto the logo.
+
+**Duration ceiling.** Enumerating `document.getAnimations()` on all nine pages: the maximum wall-clock
+duration is **560ms, `aw-evidence`, on `/`** — the hero trace, as allowed. Everything else is ≤220ms
+(sheet settle), 180ms (entrance, drawer, toggle) or scroll-driven (`aw-progress`, duration `auto`, no
+wall clock). Nothing exceeds `--dur-lg`.
+
+### 12.8 Reduced-motion matrix (CDP `Emulation.setEmulatedMedia`, reduce)
+
+| Check | Result |
+|---|---|
+| Hero trio `animation-name` / opacity | `none` / `1` — page paints complete |
+| Evidence trace | `none` |
+| Sheet settle class (desktop and first phone arrival) | absent |
+| Scroll hairline on `/pricing` | `content: none`, `animation-name: none` |
+| Primary CTA hover / press transform | `none` / `none` |
+| Theme toggle press `translate` | `none` |
+| Menu-toggle press transform | `none` |
+| Drawer open | `animation-name: none` (opens in place) |
+| View transitions | none (round one's `@supports` + reduce guard untouched) |
+
+### 12.9 What was tried and changed rather than shipped
+
+- **Hairline on `.nav::after`** → moved to `html::after`. Not for cost (measured the same) but because
+  `body::after` is already the index grain overlay and a nav-owned pseudo-element would have meant
+  duplicating the scroll-tracking rule per page later.
+- **Settle trigger "top below 90% of the viewport"** → never fired at phone geometry; replaced with the
+  visible-ratio guard (fires at <0.5 visible at load, threshold 0.5).
+- **No shimmer on the editor skeleton.** A pulse is a loop and a loop is a spinner; the ruled sheet is
+  the honest placeholder.
+- **No card-lift or extra hover on cards.** The marketing cards are not links; a lift would advertise an
+  interaction that does not exist.
+
+### 12.10 Re-running these measurements
+
+```bash
+# server (already up in normal use): node server/index.js   # :3160
+node scripts/check.js                                        # 0 errors / 0 warnings
+# 6x-CPU scroll, LCP, animations, reduced-motion matrix: the harnesses used here are
+# throwaway Playwright scripts under the OS temp dir; the protocol is in §12.7 and §12.8.
+```
+
+**Ledger for this pass:** `node scripts/check.js` → 10 pages, 24 server modules, **248 css classes,
+0 errors, 0 warnings**; all ten routes **200**; keyboard audit **199/199** focus stops ringed; pixel
+and duration checks as above; no console errors observed on the pages measured.
+

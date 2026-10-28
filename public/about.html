@@ -6,10 +6,131 @@
   <title>About · Applywright</title>
   <meta name="description" content="Why Applywright exists: an application workspace for a serious job search, deliberately not an auto-apply bot. Grounded rewriting, named findings, no scraping and no submission." />
   <meta name="theme-color" content="#0b0c0e" />
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/art/apple-touch-icon.png" />
   <link rel="stylesheet" href="/assets/tokens.css" />
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
+  <style>
+    /* Composition for /about only. site.css and motion.css are owned by
+       polish-aw during this pass, so the rules that have no home there are
+       scoped to this page. Tokens only: no palette values, no new colours.
+
+       Reading measure: 58ch. That is 69 characters at the 15px reading size and
+       67 at the 21px lede size — both inside the 65–72 target — because ch
+       scales with the font. `--measure-reading` is the token design-lead is
+       introducing site-wide; where it exists, this page follows it with no edit
+       here, so the measure stays one value across the site. */
+    .lede,
+    .prose p,
+    .prose ul,
+    [data-measure] {
+      max-width: var(--measure-reading, 58ch);
+    }
+
+    /* --- the page index: navigation, not the lede's last line ------------- */
+    [data-page-index] {
+      margin-top: var(--sp-6);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--line);
+      font-size: var(--fs-xs);
+      gap: var(--sp-2) var(--sp-4);
+    }
+    [data-page-index] .mono {
+      font-size: var(--fs-xs);
+    }
+    [data-page-index] a {
+      color: var(--text-soft);
+      text-decoration: none;
+    }
+    [data-page-index] a:hover {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* --- split blocks start at the top edge, not centred ------------------
+       A prose column beside a taller figure reads wrong when both are centred;
+       the two columns share a top edge instead. */
+    .split {
+      align-items: start;
+    }
+    /* The section head's own 68ch cap is narrower than the reading measure at
+       lede size, so it would clamp the lede below 65 characters. The measure
+       below is the single cap on this page. */
+    .section-head {
+      max-width: none;
+    }
+
+    /* --- block rhythm ------------------------------------------------------
+       Every composed block inside a section is one 32px step apart, which is
+       the same step /pricing and /security use. */
+    [data-block] > * + * {
+      margin-top: var(--sp-6);
+    }
+
+    /* --- the three-constraint figure --------------------------------------
+       The list is a real ordered list; each constraint carries its own label,
+       one line of evidence and a link to the page that shows it. */
+    [data-constraints] {
+      margin: 0;
+    }
+    [data-constraints] > ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: var(--sp-3);
+      counter-reset: constraint;
+    }
+    [data-constraints] > ol > li {
+      gap: var(--sp-2);
+    }
+    [data-constraints] > ol > li::before {
+      counter-increment: constraint;
+      content: "0" counter(constraint);
+      font-family: var(--mono);
+      font-size: var(--fs-xs);
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+    [data-constraints] > ol > li p {
+      margin: 0;
+    }
+    [data-constraints] > ol > li .link-arrow {
+      align-self: flex-start;
+      margin-top: var(--sp-1);
+    }
+    [data-constraints] figcaption {
+      margin-top: var(--sp-3);
+      font-size: var(--fs-xs);
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+    [data-built-title] {
+      margin-bottom: var(--sp-3);
+    }
+
+    /* Prose inside the dark band needs the inverted soft ink; site.css sets
+       .prose p to the light-scheme soft colour. */
+    .section--dark .prose p {
+      color: var(--text-invert-soft);
+    }
+    /* Paper grain: the 240px tile in assets/art/grain.svg at 3%, fixed and
+       pointer-transparent. Decorative; off in print. */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22240%22 height%3D%22240%22 viewBox%3D%220 0 240 240%22%3E%3Cfilter id%3D%22grain%22 x%3D%220%22 y%3D%220%22 width%3D%22240%22 height%3D%22240%22 filterUnits%3D%22userSpaceOnUse%22%3E%3CfeTurbulence type%3D%22fractalNoise%22 baseFrequency%3D%220.9%22 numOctaves%3D%223%22 stitchTiles%3D%22stitch%22 seed%3D%2211%22 %2F%3E%3CfeColorMatrix type%3D%22saturate%22 values%3D%220%22 %2F%3E%3C%2Ffilter%3E%3Crect width%3D%22240%22 height%3D%22240%22 filter%3D%22url(%23grain)%22 %2F%3E%3C%2Fsvg%3E");
+      background-size: 240px 240px;
+    }
+    @media print { body::after { display: none; } }
+
+  </style>
   <!-- Blocking and after the stylesheets on purpose: it applies the saved or
        system theme before the first paint (no flash) and reads the palette back
        from the CSS. Same-origin, so script-src 'self' covers it; no inline boot
@@ -28,57 +149,97 @@
           Applywright exists because a job search stalls on paperwork rather than on ability, and because the
           tools that promise to fix that usually make the paperwork worse.
         </p>
+        <nav class="cluster" data-page-index aria-label="On this page">
+          <span class="mono">On this page</span>
+          <a href="#why">Why it exists</a>
+          <a href="#position">Position</a>
+          <a href="#principles">Principles</a>
+          <a href="#contact">Contact</a>
+        </nav>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="why-title">
-      <div class="wrap wrap--narrow">
+    <section class="section" id="why" aria-labelledby="why-title">
+      <div class="wrap">
         <div class="section-head">
           <p class="eyebrow">Why it exists</p>
           <h2 class="h2" id="why-title">One CV, many job descriptions</h2>
-        </div>
-        <div class="prose">
-          <p>
+          <p class="lede">
             A single CV has to answer many job descriptions at once. The part that makes an application worth
             reading, tailoring the summary and the bullets to the role in front of you, is also the part that
-            gets skipped when a search is running at volume. That is not laziness. It is the cost of doing a
-            careful job by hand, application after application, while also chasing replies and keeping a
-            spreadsheet of what went where.
+            gets skipped when a search is running at volume.
           </p>
-          <p>
-            Applywright is built to take the repetitive half of that work and leave the judgement half alone. It
-            scores a CV against a job, explains the score in findings you can act on, and produces a tailored
-            pack from facts that are already in the CV. It then keeps the record: which pack went to which
-            employer, what happened next, and which saved search found it.
-          </p>
-          <p>
-            It is an application workspace for someone who is serious about a search, not a spraying machine. The
-            difference matters, and it decides most of the design.
-          </p>
-          <p>
-            Applywright by Intelligent Artificial is published at intelligentartificial.net.
-          </p>
+        </div>
+
+        <div class="split">
+          <div class="prose">
+            <p>
+              That is not laziness. It is the cost of doing a careful job by hand, application after application,
+              while also chasing replies and keeping a spreadsheet of what went where.
+            </p>
+            <p>
+              Applywright is built to take the repetitive half of that work and leave the judgement half alone. It
+              scores a CV against a job, explains the score in findings you can act on, and produces a tailored
+              pack from facts that are already in the CV. It then keeps the record: which pack went to which
+              employer, what happened next, and which saved search found it.
+            </p>
+            <p>
+              It is an application workspace for someone who is serious about a search, not a spraying machine.
+              The difference matters, and it decides most of the design.
+            </p>
+            <p>
+              Applywright by Intelligent Artificial is published at intelligentartificial.net.
+            </p>
+          </div>
+
+          <div class="stack" data-measure>
+            <h3 class="h3" id="built-title" data-built-title>How this is built</h3>
+            <figure data-constraints>
+              <ol>
+                <li class="card">
+                  <h4 class="h4">Grounded rewrites</h4>
+                  <p class="small">Every rewrite is traceable to a line in the source CV.</p>
+                  <a class="link-arrow" href="/how-it-works">The grounding check</a>
+                </li>
+                <li class="card">
+                  <h4 class="h4">No auto-submission</h4>
+                  <p class="small">The queue ends at approved and ready; the application is yours to send.</p>
+                  <a class="link-arrow" href="/security#apply">The submission boundary</a>
+                </li>
+                <li class="card">
+                  <h4 class="h4">Your data, exportable</h4>
+                  <p class="small">Export returns everything you own as JSON, and deletion removes it.</p>
+                  <a class="link-arrow" href="/security#your-cv">Export and delete</a>
+                </li>
+              </ol>
+              <figcaption>
+                Three constraints, and the page that shows each one in the running code.
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section--dark" aria-labelledby="position-title">
+    <section class="section section--dark" id="position" aria-labelledby="position-title">
       <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Position</p>
+          <h2 class="h2" id="position-title">Why not an auto-apply bot</h2>
+          <p class="lede">
+            An auto-apply service optimises for the number of applications sent. The number is the wrong measure.
+          </p>
+        </div>
+
         <div class="split">
-          <div class="stack">
-            <p class="eyebrow">Position</p>
-            <h2 class="h2" id="position-title">Why not an auto-apply bot</h2>
-            <p class="lede">
-              An auto-apply service optimises for the number of applications sent. The number is the wrong
-              measure.
+          <div class="prose">
+            <p>
+              Submitting to a third-party site without a person present breaches that site's terms, and the account
+              it risks is the one the search depends on. It also produces applications the candidate cannot
+              discuss in an interview, for roles they may not have read, with claims nobody can defend. Volume of
+              that kind is not a shortcut; it is a debt collected later.
             </p>
-            <p class="muted">
-              Submitting to a third-party site without a person present breaches that site's terms, and the
-              account it risks is the one the search depends on. It also produces applications the candidate
-              cannot discuss in an interview, for roles they may not have read, with claims nobody can defend.
-              Volume of that kind is not a shortcut; it is a debt collected later.
-            </p>
-            <p class="muted">
+            <p>
               We do not think a CV worth sending can be produced that way, so we do not build it. The product
               prepares, checks and records. The person sends.
             </p>
@@ -88,16 +249,16 @@
             <div class="card card--ink">
               <p class="eyebrow">What that rules out</p>
               <p class="small">
-                Scraping LinkedIn or any site that forbids it. Filling in an employer's application form for
-                you. Inventing an employer, a title, a date or a number to fit a job. Sending anything before
-                you have read it.
+                Scraping LinkedIn or any site that forbids it. Filling in an employer's application form for you.
+                Inventing an employer, a title, a date or a number to fit a job. Sending anything before you have
+                read it.
               </p>
             </div>
             <div class="card card--ink">
               <p class="eyebrow">What that leaves</p>
               <p class="small">
-                A grounded rewrite you can stand behind, a score you can argue with, a queue of applications
-                that are approved and ready, and a record that tells you what happened to each one.
+                A grounded rewrite you can stand behind, a score you can argue with, a queue of applications that
+                are approved and ready, and a record that tells you what happened to each one.
               </p>
             </div>
           </div>
@@ -105,7 +266,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="principles-title">
+    <section class="section" id="principles" aria-labelledby="principles-title">
       <div class="wrap">
         <div class="section-head">
           <p class="eyebrow">Principles</p>
@@ -154,19 +315,26 @@
       </div>
     </section>
 
-    <section class="section section--bone" aria-labelledby="contact-title">
+    <section class="section section--bone" id="contact" aria-labelledby="contact-title">
       <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Contact</p>
+          <h2 class="h2" id="contact-title">Tell us what the software gets wrong</h2>
+          <p class="lede">
+            A finding you disagree with, a score that looks off, a bullet that was rewritten into something you
+            would not say: that is the useful mail.
+          </p>
+        </div>
+
         <div class="split">
-          <div class="stack">
-            <p class="eyebrow">Contact</p>
-            <h2 class="h2" id="contact-title">Tell us what the software gets wrong</h2>
-            <p class="lede">
-              A finding you disagree with, a score that looks off, a bullet that was rewritten into something you
-              would not say: that is the useful mail.
+          <div class="prose">
+            <p>
+              Or write to <a href="mailto:hello@intelligentartificial.net">hello@intelligentartificial.net</a>. We
+              read every message and reply within one business day.
             </p>
-            <p class="small">
-              Or write to <a href="mailto:hello@intelligentartificial.net">hello@intelligentartificial.net</a>. We read every
-              message and reply within one business day.
+            <p>
+              Applywright by Intelligent Artificial, published at
+              <a href="https://intelligentartificial.net">intelligentartificial.net</a>.
             </p>
           </div>
 

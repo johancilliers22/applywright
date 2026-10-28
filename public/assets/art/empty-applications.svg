@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 168" fill="none" stroke="currentColor"
+     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Empty state: no applications. A ruled ledger with one open row: the rule
+       stops short, and the status box at the end is still empty. -->
+  <rect x="52" y="40" width="136" height="96" rx="2" />
+  <path d="M52 64h136" stroke-width="1" />
+  <path d="M52 88h136M52 112h136" stroke-width="1" />
+  <path d="M96 64v72" stroke-width="1" />
+  <path d="M104 88h44" stroke-width="1" stroke-opacity="0.55" />
+  <path d="M148 88h26" stroke-width="1" stroke-dasharray="3 4" />
+  <rect x="164" y="82" width="12" height="12" rx="1.5" />
+  <path d="M70 76h16M70 100h16M70 124h16" stroke-width="1" />
+</svg>

@@ -6,7 +6,8 @@
   <title>Applywright · Your numbers stay. The wording moves</title>
   <meta name="description" content="Score your CV against a real job description, see every point explained by a named finding, and get a tailored pack built only from facts you already have. You send the application." />
   <meta name="theme-color" content="#0b0c0e" />
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/art/apple-touch-icon.png" />
   <link rel="stylesheet" href="/assets/tokens.css" />
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
@@ -18,6 +19,23 @@
        from the CSS. Same-origin, so script-src 'self' covers it; no inline boot
        code, which the CSP and scripts/check.js both forbid. -->
   <script src="/assets/theme.js"></script>
+  <style>
+    /* Paper grain: the 240px tile in assets/art/grain.svg at 3%, as a fixed,
+       pointer-transparent overlay. Decorative, and off in print. The reading
+       measure is --measure-reading in tokens.css. */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22240%22 height%3D%22240%22 viewBox%3D%220 0 240 240%22%3E%3Cfilter id%3D%22grain%22 x%3D%220%22 y%3D%220%22 width%3D%22240%22 height%3D%22240%22 filterUnits%3D%22userSpaceOnUse%22%3E%3CfeTurbulence type%3D%22fractalNoise%22 baseFrequency%3D%220.9%22 numOctaves%3D%223%22 stitchTiles%3D%22stitch%22 seed%3D%2211%22 %2F%3E%3CfeColorMatrix type%3D%22saturate%22 values%3D%220%22 %2F%3E%3C%2Ffilter%3E%3Crect width%3D%22240%22 height%3D%22240%22 filter%3D%22url(%23grain)%22 %2F%3E%3C%2Fsvg%3E");
+      background-size: 240px 240px;
+    }
+
+    @media print { body::after { display: none; } }
+  </style>
 </head>
 <body>
   <!--#include nav.html-->
@@ -109,6 +127,20 @@
         </figure>
       </div>
     </section>
+
+    <!-- Artwork: a registration rule ends the cover band and starts the flow.
+         Two hairline rules either side of the set's base mark (reg-mark.svg),
+         inline so it inherits the current text colour in both schemes. -->
+    <div class="wrap" aria-hidden="true">
+      <div style="display: flex; align-items: center; gap: var(--sp-4); padding-top: var(--sp-5); color: var(--text-muted)">
+        <span style="flex: 1; height: 1px; background: var(--line)"></span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <circle cx="12" cy="12" r="5.25" />
+          <path d="M12 1.5v5.25M12 17.25v5.25M1.5 12h5.25M17.25 12h5.25" />
+        </svg>
+        <span style="flex: 1; height: 1px; background: var(--line)"></span>
+      </div>
+    </div>
 
     <section class="section section--bone" aria-labelledby="flow-title">
       <div class="wrap">

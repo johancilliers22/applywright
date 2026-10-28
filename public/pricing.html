@@ -4,12 +4,244 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pricing · Applywright</title>
-  <meta name="description" content="Applywright plans: Free at £0, Pro at £19 a month or £190 a year, Scale at £49 a month or £490 a year. Prices are in GBP and include any applicable tax, cancel at any time, and a downgrade keeps every pack readable." />
+  <meta name="description" content="Applywright plans: Free at £0, Pro at £19 a month or £190 a year, Scale at £49 a month or £490 a year. Prices are in GBP and exclude VAT, cancel at any time, and a downgrade keeps every pack readable." />
   <meta name="theme-color" content="#0b0c0e" />
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/art/apple-touch-icon.png" />
   <link rel="stylesheet" href="/assets/tokens.css" />
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
+  <style>
+    /* Composition for /pricing only. site.css and motion.css are owned by
+       polish-aw during this pass, so the layout rules that have no home there
+       are scoped to this page. Tokens only: no palette values, no new colours.
+       Longest rule below is the no-JS billing switch; the rest is grid alignment. */
+
+    /* --- one reading measure ---------------------------------------------
+       Reading measure: 58ch. That is 69 characters at the 15px reading size and
+       67 at the 21px lede size — both inside the 65–72 target — because ch
+       scales with the font. `--measure-reading` is the token design-lead is
+       introducing site-wide; where it exists, this page follows it with no edit
+       here, so the measure stays one value across the site. */
+    .lede,
+    .prose p,
+    [data-measure] {
+      max-width: var(--measure-reading, 58ch);
+    }
+    .faq details p {
+      max-width: var(--measure-reading, 58ch);
+    }
+
+/* The section head's own 68ch cap is narrower than the reading measure at
+       lede size, so it would clamp the lede below 65 characters. The measure
+       below is the single cap on this page. */
+    .section-head {
+      max-width: none;
+    }
+
+    /* --- the page index: navigation, not the lede's last line ------------- */
+    [data-page-index] {
+      margin-top: var(--sp-6);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--line);
+      font-size: var(--fs-xs);
+      gap: var(--sp-2) var(--sp-4);
+    }
+    [data-page-index] .mono {
+      font-size: var(--fs-xs);
+    }
+    [data-page-index] a {
+      color: var(--text-soft);
+      text-decoration: none;
+    }
+    [data-page-index] a:hover {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    /* --- billing switch: a real control, no JavaScript --------------------
+       Radios + labels, styled as a segmented control. Everything it does is
+       done with :has(), so it is enabled only where :has() is supported; where
+       it is not, the switch is not rendered at all and both intervals appear in
+       one cell as a tabular pair. The control is never a dead affordance. */
+    [data-billing-bar] {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3) var(--sp-5);
+      margin-bottom: var(--sp-5);
+    }
+    [data-billing-switch] {
+      display: none;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+    [data-billing-switch] label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.5rem 0.9rem;
+      border: 1px solid var(--line-meaning);
+      border-radius: var(--r-pill);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: border-color var(--dur-xs) var(--ease), background var(--dur-xs) var(--ease),
+        color var(--dur-xs) var(--ease);
+    }
+    [data-billing-switch] label:hover {
+      border-color: var(--text-soft);
+      color: var(--text);
+    }
+    [data-billing-switch] input {
+      appearance: none;
+      inline-size: 14px;
+      block-size: 14px;
+      margin: 0;
+      border: 1px solid var(--line-meaning);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+    [data-billing-switch] input::after {
+      content: "";
+      inline-size: 7px;
+      block-size: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: scale(0);
+      transition: transform var(--dur-xs) var(--ease);
+    }
+    [data-billing-switch] input:checked {
+      border-color: var(--accent);
+    }
+    [data-billing-switch] input:checked::after {
+      transform: scale(1);
+    }
+    [data-billing-switch] label:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+    [data-billing-switch] label:has(input:focus-visible) {
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    /* Both intervals, one cell, tabulary stacked: the no-:has() fallback and the
+       switch's off state look the same shape. */
+    [data-plans] [data-amount] {
+      display: block;
+    }
+    [data-plans] [data-amount="year"] {
+      font-size: 0.62em;
+      letter-spacing: -0.01em;
+    }
+
+    @supports selector(:has(*)) {
+      [data-billing-switch] {
+        display: flex;
+      }
+      [data-plans] [data-amount="year"] {
+        font-size: 1em;
+        letter-spacing: inherit;
+      }
+      html:has(#billing-monthly:checked) [data-amount="year"] {
+        display: none;
+      }
+      html:has(#billing-annual:checked) [data-amount="month"] {
+        display: none;
+      }
+    }
+
+    /* --- plan cards on one set of baselines ------------------------------
+       Subgrid lines the three cards up row by row: kicker, price, note, list,
+       call to action. Without subgrid the cards keep their own heights. */
+    @supports (grid-template-rows: subgrid) {
+      @media (min-width: 900px) {
+        .price-grid[data-plans] {
+          align-items: stretch;
+          grid-template-rows: auto auto auto 1fr auto;
+          gap: var(--sp-4);
+        }
+        .price-grid[data-plans] > .price-card {
+          display: grid;
+          grid-row: span 5;
+          grid-template-rows: subgrid;
+          row-gap: var(--sp-4);
+        }
+      }
+    }
+
+    /* --- recommended plan marking --------------------------------------- */
+    [data-recommended] {
+      display: inline-block;
+      margin-inline-start: 0.4rem;
+      padding: 0.15rem 0.45rem;
+      border: 1px solid var(--accent);
+      border-radius: var(--r-pill);
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      vertical-align: 0.15em;
+    }
+    [data-plans] > [data-plan="pro"] {
+      border-color: var(--accent);
+    }
+
+    /* --- comparison table: Pro column marked, numbers tabular ------------ */
+    [data-compare] td,
+    [data-compare] th {
+      font-variant-numeric: tabular-nums;
+    }
+    [data-compare] thead th:nth-child(3),
+    [data-compare] tbody td:nth-child(3) {
+      background: var(--accent-soft);
+    }
+    [data-compare] thead th:nth-child(3) {
+      color: var(--accent-ink);
+    }
+
+    /* --- billing section: two reference columns under three cards -------- */
+    [data-billing-cols] {
+      display: grid;
+      gap: var(--sp-5) var(--sp-6);
+      grid-template-columns: 1fr;
+      margin-top: var(--sp-6);
+    }
+    @media (min-width: 900px) {
+      [data-billing-cols] {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+    [data-billing-cols] .kv {
+      margin-top: var(--sp-3);
+    }
+    [data-billing-cols] .faq {
+      margin-top: var(--sp-3);
+    }
+    /* Paper grain: the 240px tile in assets/art/grain.svg at 3%, fixed and
+       pointer-transparent. Decorative; off in print. */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22240%22 height%3D%22240%22 viewBox%3D%220 0 240 240%22%3E%3Cfilter id%3D%22grain%22 x%3D%220%22 y%3D%220%22 width%3D%22240%22 height%3D%22240%22 filterUnits%3D%22userSpaceOnUse%22%3E%3CfeTurbulence type%3D%22fractalNoise%22 baseFrequency%3D%220.9%22 numOctaves%3D%223%22 stitchTiles%3D%22stitch%22 seed%3D%2211%22 %2F%3E%3CfeColorMatrix type%3D%22saturate%22 values%3D%220%22 %2F%3E%3C%2Ffilter%3E%3Crect width%3D%22240%22 height%3D%22240%22 filter%3D%22url(%23grain)%22 %2F%3E%3C%2Fsvg%3E");
+      background-size: 240px 240px;
+    }
+    @media print { body::after { display: none; } }
+
+  </style>
   <!-- Blocking and after the stylesheets on purpose: it applies the saved or
        system theme before the first paint (no flash) and reads the palette back
        from the CSS. Same-origin, so script-src 'self' covers it; no inline boot
@@ -28,10 +260,16 @@
           Annual billing is ten months for twelve: Pro is £190 a year and Scale is £490 a year. Prices exclude
           VAT.
         </p>
+        <nav class="cluster" data-page-index aria-label="On this page">
+          <span class="mono">On this page</span>
+          <a href="#plans">Plans</a>
+          <a href="#compare">Compare</a>
+          <a href="#billing">Billing</a>
+        </nav>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="plans-title">
+    <section class="section" id="plans" aria-labelledby="plans-title">
       <div class="wrap">
         <div class="section-head">
           <p class="eyebrow">Plans</p>
@@ -43,10 +281,28 @@
           </p>
         </div>
 
-        <div class="price-grid">
-          <article class="price-card">
+        <div data-billing-bar>
+          <p class="eyebrow">Billing interval</p>
+          <fieldset data-billing-switch>
+            <legend class="sr-only">Billing interval</legend>
+            <label>
+              <input type="radio" name="billing" id="billing-monthly" value="month" checked />
+              Monthly
+            </label>
+            <label>
+              <input type="radio" name="billing" id="billing-annual" value="year" />
+              Annual, ten months for twelve
+            </label>
+          </fieldset>
+        </div>
+
+        <div class="price-grid" data-plans>
+          <article class="price-card" data-plan="free">
             <p class="card__kicker">Free</p>
-            <p class="price">£0 <small>a month</small></p>
+            <p class="price">
+              <span data-amount="month">£0 <small>a month</small></span>
+              <span data-amount="year">£0 <small>a year</small></span>
+            </p>
             <p class="small muted">No card, no time limit</p>
             <ul class="price-list">
               <li>1 CV stored</li>
@@ -59,10 +315,13 @@
             <a class="btn btn--ghost" href="/sign-up">Create a free account</a>
           </article>
 
-          <article class="price-card">
-            <p class="card__kicker">Pro</p>
-            <p class="price">£19 <small>a month</small></p>
-            <p class="small muted">or £190 a year, ten months for twelve</p>
+          <article class="price-card" data-plan="pro">
+            <p class="card__kicker">Pro <span data-recommended>Recommended</span></p>
+            <p class="price">
+              <span data-amount="month">£19 <small>a month</small></span>
+              <span data-amount="year">£190 <small>a year</small></span>
+            </p>
+            <p class="small muted">Annual is ten months for twelve</p>
             <ul class="price-list">
               <li>Everything in Free</li>
               <li>5 CVs stored</li>
@@ -74,29 +333,26 @@
             <a class="btn btn--primary" href="/sign-up">Create an account</a>
           </article>
 
-          <article class="price-card">
+          <article class="price-card" data-plan="scale">
             <p class="card__kicker">Scale</p>
-            <p class="price">£49 <small>a month</small></p>
-            <p class="small muted">or £490 a year, ten months for twelve</p>
+            <p class="price">
+              <span data-amount="month">£49 <small>a month</small></span>
+              <span data-amount="year">£490 <small>a year</small></span>
+            </p>
+            <p class="small muted">Annual is ten months for twelve</p>
             <ul class="price-list">
               <li>Everything in Pro</li>
               <li>Unlimited CVs and tailored packs</li>
               <li>50 saved alerts</li>
-              
               <li>Export everything, including pack history</li>
             </ul>
             <a class="btn btn--ghost" href="/sign-up">Create an account</a>
           </article>
         </div>
-
-        <p class="note" style="margin-top: var(--sp-5)">
-          Plan changes happen on the billing screen inside the app, once you are signed in. Creating an account
-          starts on the free plan and charges nothing.
-        </p>
       </div>
     </section>
 
-    <section class="section section--bone" aria-labelledby="compare-title">
+    <section class="section section--bone" id="compare" aria-labelledby="compare-title">
       <div class="wrap">
         <div class="section-head">
           <p class="eyebrow">Compare</p>
@@ -108,7 +364,7 @@
         </div>
 
         <div class="table-wrap" tabindex="0" role="region" aria-label="Plan quotas, side by side">
-          <table class="compare">
+          <table class="compare" data-compare>
             <caption>
               Packs, CVs and alerts are counted per calendar month; job-feed results are counted per day. A plan
               change applies as soon as it is recorded on the account, and existing packs stay readable.
@@ -117,7 +373,7 @@
               <tr>
                 <th scope="col">Feature</th>
                 <th scope="col">Free</th>
-                <th scope="col">Pro</th>
+                <th scope="col">Pro <span data-recommended>Recommended</span></th>
                 <th scope="col">Scale</th>
               </tr>
             </thead>
@@ -172,9 +428,18 @@
               </tr>
               <tr>
                 <td><strong>Price</strong></td>
-                <td>£0</td>
-                <td>£19 a month<br />£190 a year</td>
-                <td>£49 a month<br />£490 a year</td>
+                <td>
+                  <span data-amount="month">£0 a month</span>
+                  <span data-amount="year">£0 a year</span>
+                </td>
+                <td>
+                  <span data-amount="month">£19 a month</span>
+                  <span data-amount="year">£190 a year</span>
+                </td>
+                <td>
+                  <span data-amount="month">£49 a month</span>
+                  <span data-amount="year">£490 a year</span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -182,11 +447,15 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="billing-title">
+    <section class="section" id="billing" aria-labelledby="billing-title">
       <div class="wrap">
         <div class="section-head">
           <p class="eyebrow">Billing</p>
           <h2 class="h2" id="billing-title">The small print, in plain English</h2>
+          <p class="lede">
+            Plan changes happen on the billing screen inside the app, once you are signed in. Creating an account
+            starts on the free plan and charges nothing.
+          </p>
         </div>
 
         <div class="grid grid-3">
@@ -216,57 +485,64 @@
           </article>
         </div>
 
-        <div class="kv" style="margin-top: var(--sp-6)">
+        <div data-billing-cols>
           <div>
-            <span>Free</span>
-            <span>£0 a month, £0 a year</span>
+            <h3 class="h3">Every price, both intervals</h3>
+            <div class="kv">
+              <div>
+                <span>Free</span>
+                <span>£0 a month, £0 a year</span>
+              </div>
+              <div>
+                <span>Pro monthly</span>
+                <span>£19 a month</span>
+              </div>
+              <div>
+                <span>Pro annual</span>
+                <span>£190 a year, saving £38 against twelve months</span>
+              </div>
+              <div>
+                <span>Scale monthly</span>
+                <span>£49 a month</span>
+              </div>
+              <div>
+                <span>Scale annual</span>
+                <span>£490 a year, saving £98 against twelve months</span>
+              </div>
+              <div>
+                <span>VAT</span>
+                <span>excluded from every price above</span>
+              </div>
+            </div>
           </div>
           <div>
-            <span>Pro monthly</span>
-            <span>£19 a month</span>
+            <h3 class="h3">Billing questions</h3>
+            <div class="faq">
+              <details>
+                <summary>Does the free plan need a card?</summary>
+                <p>
+                  No. Creating an account starts the free plan and charges nothing, so no payment details are
+                  needed to score a CV, build three packs a month or save one alert.
+                </p>
+              </details>
+              <details>
+                <summary>What counts against the monthly pack quota?</summary>
+                <p>
+                  One tailored pack, built once, whatever it contains: the print-ready CV, the covering letter and
+                  the screening answers. Reopening a pack you already built does not use another one. Scoring a CV
+                  without building a pack does not either.
+                </p>
+              </details>
+              <details>
+                <summary>Why is the annual price ten months for twelve?</summary>
+                <p>
+                  Paying for a year up front is simpler for us to bill, so the discount is passed on: £190 against
+                  twelve monthly payments of £19, and £490 against twelve monthly payments of £49. Both annual
+                  prices are exactly ten monthly payments.
+                </p>
+              </details>
+            </div>
           </div>
-          <div>
-            <span>Pro annual</span>
-            <span>£190 a year, saving £38 against twelve months</span>
-          </div>
-          <div>
-            <span>Scale monthly</span>
-            <span>£49 a month</span>
-          </div>
-          <div>
-            <span>Scale annual</span>
-            <span>£490 a year, saving £98 against twelve months</span>
-          </div>
-          <div>
-            <span>VAT</span>
-            <span>excluded from every price above</span>
-          </div>
-        </div>
-
-        <div class="faq" style="margin-top: var(--sp-6)">
-          <details>
-            <summary>Does the free plan need a card?</summary>
-            <p>
-              No. Creating an account starts the free plan and charges nothing, so no payment details are needed
-              to score a CV, build three packs a month or save one alert.
-            </p>
-          </details>
-          <details>
-            <summary>What counts against the monthly pack quota?</summary>
-            <p>
-              One tailored pack, built once, whatever it contains: the print-ready CV, the covering letter and
-              the screening answers. Reopening a pack you already built does not use another one. Scoring a CV
-              without building a pack does not either.
-            </p>
-          </details>
-          <details>
-            <summary>Why is the annual price ten months for twelve?</summary>
-            <p>
-              Paying for a year up front is simpler for us to bill, so the discount is passed on: £190 against
-              twelve monthly payments of £19, and £490 against twelve monthly payments of £49. Both annual prices
-              are exactly ten monthly payments.
-            </p>
-          </details>
         </div>
       </div>
     </section>

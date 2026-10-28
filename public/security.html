@@ -6,10 +6,287 @@
   <title>Security and data · Applywright</title>
   <meta name="description" content="What Applywright stores, where it is kept, what leaves the server when tailoring runs, and why we refuse to scrape job boards or submit applications for you." />
   <meta name="theme-color" content="#0b0c0e" />
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/art/apple-touch-icon.png" />
   <link rel="stylesheet" href="/assets/tokens.css" />
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
+  <style>
+    /* Composition for /security only. site.css and motion.css are owned by
+       polish-aw during this pass, so the rules that have no home there are
+       scoped to this page. Tokens only: no palette values, no new colours.
+
+       Reading measure: 58ch. That is 69 characters at the 15px reading size and
+       67 at the 21px lede size — both inside the 65–72 target — because ch
+       scales with the font. `--measure-reading` is the token design-lead is
+       introducing site-wide; where it exists, the page follows it with no edit
+       here, so the measure stays one value across the site. */
+    .lede,
+    .prose p,
+    .prose ul,
+    [data-measure] {
+      max-width: var(--measure-reading, 58ch);
+    }
+
+    /* --- the page index: navigation, not the lede's last line ------------- */
+    [data-page-index] {
+      margin-top: var(--sp-6);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--line);
+      font-size: var(--fs-xs);
+      gap: var(--sp-2) var(--sp-4);
+    }
+    [data-page-index] .mono {
+      font-size: var(--fs-xs);
+    }
+    [data-page-index] a {
+      color: var(--text-soft);
+      text-decoration: none;
+    }
+    [data-page-index] a:hover {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* --- the data-flow figure ---------------------------------------------
+       Three nodes left to right at 1000px and up, stacked below that; the
+       connector is a rule, not an arrow character, so it survives text-only
+       modes. Every list inside is real list markup. */
+    [data-flow] {
+      margin: 0;
+    }
+    [data-flow] ol,
+    [data-flow] ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    [data-flow] > ol {
+      display: grid;
+      gap: var(--sp-4);
+      counter-reset: flow;
+    }
+    @media (min-width: 1000px) {
+      [data-flow] > ol {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--sp-3);
+        align-items: stretch;
+      }
+    }
+    [data-flow] > ol > li {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+      padding: var(--sp-5);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      background: var(--paper);
+    }
+    [data-flow] > ol > li::before {
+      counter-increment: flow;
+      content: "0" counter(flow);
+      font-family: var(--mono);
+      font-size: var(--fs-xs);
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+    [data-flow] > ol > li > h3 {
+      font-size: var(--fs-base);
+      font-weight: 650;
+      letter-spacing: -0.005em;
+      line-height: 1.35;
+    }
+    @media (min-width: 1000px) {
+      [data-flow] > ol > li + li::after {
+        content: "";
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(-1 * var(--sp-3));
+        inline-size: var(--sp-3);
+        border-block-start: 1px solid var(--line-meaning);
+      }
+    }
+    [data-flow] ul {
+      display: grid;
+      gap: 0.45rem;
+    }
+    [data-flow] ul li {
+      position: relative;
+      padding-inline-start: 0.9rem;
+      font-size: var(--fs-sm);
+      line-height: 1.5;
+      color: var(--text-soft);
+    }
+    [data-flow] ul li::before {
+      content: "";
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-start: 0.62em;
+      inline-size: 4px;
+      block-size: 4px;
+      border-radius: 50%;
+      background: var(--line-meaning);
+    }
+    [data-flow] ul[data-never] {
+      margin-top: var(--sp-4);
+      padding-top: var(--sp-4);
+      border-top: 1px dashed var(--line-meaning);
+      gap: var(--sp-2) var(--sp-5);
+    }
+    @media (min-width: 760px) {
+      [data-flow] ul[data-never] {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    [data-flow] ul[data-never] li {
+      color: var(--text);
+    }
+    [data-flow] ul[data-never] li strong {
+      display: block;
+      font-size: var(--fs-xs);
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+    [data-flow] figcaption {
+      margin-top: var(--sp-4);
+      font-size: var(--fs-xs);
+      line-height: 1.55;
+      color: var(--text-muted);
+      max-width: 72ch;
+    }
+
+    /* --- the four steps: a band, not a ribbon -----------------------------
+       Two across from 1000px, one below. Each cell carries its own number and
+       heading on one baseline, and its detail at the reading measure. The
+       order is content: the numbers are the product's fixed sequence. */
+    [data-steps] {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sp-5);
+    }
+    @media (min-width: 1000px) {
+      [data-steps] {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--sp-5) var(--sp-6);
+      }
+    }
+    [data-steps] > li {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--line-strong);
+      min-width: 0;
+    }
+    [data-step-head] {
+      display: flex;
+      align-items: baseline;
+      gap: var(--sp-3);
+    }
+    [data-step-num] {
+      color: var(--accent);
+      flex: none;
+    }
+    [data-steps] p {
+      font-size: var(--fs-reading);
+      line-height: var(--lh-reading);
+      color: var(--text-soft);
+    }
+
+    /* --- generic two-up block for prose beside prose or beside a card ----- */
+    [data-pair] {
+      display: grid;
+      gap: var(--sp-5) var(--sp-6);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+    }
+    [data-pair] > * {
+      min-width: 0;
+    }
+    @media (min-width: 900px) {
+      [data-pair] {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+    [data-pair] > * > h3:first-child,
+    [data-pair] > h3:first-child {
+      margin-top: 0;
+    }
+    [data-pair] .prose {
+      margin-top: 0;
+    }
+    [data-pair] .prose > * + *,
+    [data-pair] > .stack > * + * {
+      margin-top: var(--sp-4);
+    }
+    [data-pair] + [data-pair],
+    [data-pair] + .prose {
+      margin-top: var(--sp-6);
+    }
+
+    /* Block-level rhythm: every composed block in this page is 32px apart. */
+    [data-block] > * + * {
+      margin-top: var(--sp-6);
+    }
+
+    /* A long bullet list reads better in two columns than in one tall one. */
+    [data-account-list] ul {
+      display: grid;
+      gap: var(--sp-2) var(--sp-6);
+      padding-inline-start: 1.15rem;
+      list-style: disc;
+      color: var(--text-soft);
+      font-size: var(--fs-reading);
+      line-height: var(--lh-reading);
+    }
+    @media (min-width: 760px) {
+      [data-account-list] ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* The advisory panel is quoted as a sentence, so it keeps the measure. */
+    [data-advisory] {
+      display: grid;
+      gap: var(--sp-3);
+      max-width: 76ch;
+    }
+
+    .split {
+      align-items: start;
+    }
+    /* The section head's own 68ch cap is narrower than the reading measure at
+       lede size, so it would clamp the lede below 65 characters. The measure
+       below is the single cap on this page. */
+    .section-head {
+      max-width: none;
+    }
+
+    /* Page-specific rhythm check: the gap from the page head's last line to the
+       first line of the first section is the site's 84–85px, measured at 1440. */
+    /* Paper grain: the 240px tile in assets/art/grain.svg at 3%, fixed and
+       pointer-transparent. Decorative; off in print. */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22240%22 height%3D%22240%22 viewBox%3D%220 0 240 240%22%3E%3Cfilter id%3D%22grain%22 x%3D%220%22 y%3D%220%22 width%3D%22240%22 height%3D%22240%22 filterUnits%3D%22userSpaceOnUse%22%3E%3CfeTurbulence type%3D%22fractalNoise%22 baseFrequency%3D%220.9%22 numOctaves%3D%223%22 stitchTiles%3D%22stitch%22 seed%3D%2211%22 %2F%3E%3CfeColorMatrix type%3D%22saturate%22 values%3D%220%22 %2F%3E%3C%2Ffilter%3E%3Crect width%3D%22240%22 height%3D%22240%22 filter%3D%22url(%23grain)%22 %2F%3E%3C%2Fsvg%3E");
+      background-size: 240px 240px;
+    }
+    @media print { body::after { display: none; } }
+
+  </style>
   <!-- Blocking and after the stylesheets on purpose: it applies the saved or
        system theme before the first paint (no flash) and reads the palette back
        from the CSS. Same-origin, so script-src 'self' covers it; no inline boot
@@ -25,9 +302,9 @@
       <p class="eyebrow">Security, privacy and data handling</p>
       <h1 class="display">What we keep, where it goes, and what we refuse to do</h1>
       <p class="lede">Applywright prepares applications; you submit them. This page describes the data handling that the running code actually performs, including the parts that are still missing. Where something is planned rather than built, it is labelled as planned.</p>
-      <nav class="cluster small" aria-label="On this page">
+      <nav class="cluster" data-page-index aria-label="On this page">
         <span class="mono">On this page</span>
-        <span class="dot-sep" aria-hidden="true">·</span>
+        <a href="#glance">At a glance</a>
         <a href="#apply">Applying</a>
         <a href="#no-scraping">No scraping</a>
         <a href="#your-cv">Your CV</a>
@@ -39,290 +316,411 @@
     </div>
   </section>
 
+  <!-- ==================================================== at a glance -->
+  <section class="section" id="glance">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">At a glance</p>
+        <h2 class="h2">What stays, what leaves, and what is never stored</h2>
+        <p class="lede">Three destinations receive anything from this server. Everything else stays in one SQLite file on it.</p>
+      </div>
+
+
+        <ol>
+          <li>
+            <h3>Your browser</h3>
+            <ul>
+              <li>Session cookie: an opaque random id, HttpOnly, SameSite=Lax, 30 days.</li>
+              <li>Postings you paste: a URL, its text or its HTML, sent to the capture endpoint.</li>
+            </ul>
+          </li>
+          <li>
+            <h3>This server</h3>
+            <ul>
+              <li>One SQLite file, <code>data/applywright.db</code>: account, CV text, packs, reports, applications, alerts, matches, usage, settings.</li>
+              <li>Contact messages: <code>data/contact.jsonl</code>.</li>
+              <li>Job cache: public adverts, shared by every user.</li>
+            </ul>
+          </li>
+          <li>
+            <h3>Leaves the server</h3>
+            <ul>
+              <li>Model provider, only with a key set: CV and job text, for tailoring and refine.</li>
+              <li>Stripe, only when billing is configured: checkout.</li>
+              <li>Three job feeds: GET requests carrying the search words, never your CV.</li>
+            </ul>
+          </li>
+        </ol>
+
+        <ul data-never>
+          <li><strong>Never stored</strong>The uploaded file: decoded in memory, read, discarded.</li>
+          <li><strong>Never sent</strong>The score: computed in-process, never sent to an employer.</li>
+          <li><strong>Never readable</strong>Your password: kept as a scrypt hash, never plaintext.</li>
+        </ul>
+
+        <figcaption>
+          Read from the code in <code>server/</code>. The retention table under
+          <a href="#your-cv">Your CV</a> lists every row, its table and its lifetime.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
   <!-- ==================================================== 01 applying -->
-  <section class="section" id="apply">
-    <div class="wrap wrap--narrow">
+  <section class="section section--bone" id="apply">
+    <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">01 · Applying</p>
         <h2 class="h2">We prepare the pack. You submit the application.</h2>
         <p class="lede">No request this software makes goes to an employer. There is no send button, no stored job-board login and no queue that submits itself. The flow, end to end:</p>
       </div>
 
-      <div class="prose">
-        <ol class="steps">
-          <li class="step">
-            <h3 class="h4">Tailor</h3>
+      <div data-block>
+        <ol data-steps>
+          <li>
+            <div data-step-head>
+              <span class="mono" data-step-num>01</span>
+              <h3 class="h4">Tailor</h3>
+            </div>
             <p>You choose a CV and a posting. <code>POST /api/tailor</code> builds the pack: a rewritten summary and bullet list, a covering letter, answers to the common screening questions, and a single-column, print-ready CV. Every rewritten bullet is checked against your CV text; anything that introduces a figure, employer, title, qualification or date is discarded and your own wording is kept instead. The application is saved with status <code>pack_ready</code>.</p>
           </li>
-          <li class="step">
-            <h3 class="h4">Review</h3>
+          <li>
+            <div data-step-head>
+              <span class="mono" data-step-num>02</span>
+              <h3 class="h4">Review</h3>
+            </div>
             <p>You read the pack, at <code>/api/applications/:id/cv</code> or in the queue. You can move it to <code>approved</code>, add notes, ask for one more pass in plain words with <code>POST /api/applications/:id/refine</code> (the same grounding checks apply), or throw it away. Nothing has been sent anywhere yet.</p>
           </li>
-          <li class="step">
-            <h3 class="h4">Apply</h3>
+          <li>
+            <div data-step-head>
+              <span class="mono" data-step-num>03</span>
+              <h3 class="h4">Apply</h3>
+            </div>
             <p>You follow the posting's own link and submit on the employer's site, in your own browser, through their form. That is the only place an application is submitted.</p>
           </li>
-          <li class="step">
-            <h3 class="h4">Record</h3>
+          <li>
+            <div data-step-head>
+              <span class="mono" data-step-num>04</span>
+              <h3 class="h4">Record</h3>
+            </div>
             <p>You move the status to <code>submitted</code>; that transition stamps the date. Later transitions are <code>interview</code>, <code>rejected</code>, <code>offer</code> or <code>withdrawn</code>. Statuses are exactly those seven — <code>pack_ready</code>, <code>approved</code>, <code>submitted</code>, <code>interview</code>, <code>rejected</code>, <code>offer</code>, <code>withdrawn</code> — and nothing else changes hands at any of them.</p>
           </li>
         </ol>
 
-        <h3>Why the last step is yours</h3>
-        <p>The sanctioned routes need the employer's own key. Greenhouse's application endpoint requires a per-employer job-board key; Lever's requires a Super Admin key and rate-limits its POSTs. A service that submits on your behalf is therefore either in a paid partnership with each employer, or operating outside the terms it submits through.</p>
-        <p>The second reason is the application itself. A bot-submitted form is an application nobody read, carrying answers in your name. The enforcement lands on the applicant — banned accounts, withdrawn applications, and a record of claims nobody checked. Auto-applying is inexpensive to build precisely because the applicant carries that cost.</p>
-      </div>
-
-      <div class="note" style="margin-top: var(--sp-5)">
-        <p class="small">The queue ends at <strong>approved and ready</strong>. Nothing in the code sends, posts, emails or telephones an employer, and no item on the roadmap would add that. The assistant never contacts an employer and never creates an account on your behalf.</p>
+        <div data-pair>
+          <div>
+            <h3>Why the last step is yours</h3>
+            <div class="prose">
+              <p>The sanctioned routes need the employer's own key. Greenhouse's application endpoint requires a per-employer job-board key; Lever's requires a Super Admin key and rate-limits its POSTs. A service that submits on your behalf is therefore either in a paid partnership with each employer, or operating outside the terms it submits through.</p>
+              <p>The second reason is the application itself. A bot-submitted form is an application nobody read, carrying answers in your name. The enforcement lands on the applicant — banned accounts, withdrawn applications, and a record of claims nobody checked. Auto-applying is inexpensive to build precisely because the applicant carries that cost.</p>
+            </div>
+          </div>
+          <div class="note">
+            <p class="small">The queue ends at <strong>approved and ready</strong>. Nothing in the code sends, posts, emails or telephones an employer, and no item on the roadmap would add that. The assistant never contacts an employer and never creates an account on your behalf.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ================================================= 02 no scraping -->
-  <section class="section section--bone" id="no-scraping">
-    <div class="wrap wrap--narrow">
+  <section class="section" id="no-scraping">
+    <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">02 · The boundary</p>
         <h2 class="h2">No scraping, no automated submission</h2>
         <p class="lede">The boundary is enforced in code, not asserted in a policy paragraph. Where a site's terms say no, the code refuses and says why.</p>
       </div>
 
-      <div class="prose">
-        <h3>Refused by hostname</h3>
-        <p>The capture endpoint refuses LinkedIn, Indeed and Glassdoor by hostname before it parses anything. The response is a 400 with the code <code>source_not_permitted</code> and the reason, for example: LinkedIn's terms do not permit automated access or re-publishing its postings. You are already on that page in your own browser, so the honest route is to apply there rather than have us copy it.</p>
+      <div data-block>
+        <div class="grid grid-3">
+          <article class="card">
+            <p class="card__kicker">Refused</p>
+            <h3 class="h3">Refused by hostname</h3>
+            <p class="small">The capture endpoint refuses LinkedIn, Indeed and Glassdoor by hostname before it parses anything. The response is a 400 with the code <code>source_not_permitted</code> and the reason, for example: LinkedIn's terms do not permit automated access or re-publishing its postings. You are already on that page in your own browser, so the honest route is to apply there rather than have us copy it.</p>
+          </article>
+          <article class="card">
+            <p class="card__kicker">Absent</p>
+            <h3 class="h3">There is nothing here to detect</h3>
+            <p class="small">No headless browser, no proxy rotation, no CAPTCHA solving, and no account on a job board. The server's outbound requests go to three job feeds, to Stripe when billing is configured, and to a model provider when tailoring runs with a key. A site that blocks us is left alone; nothing in this build works around it.</p>
+          </article>
+          <article class="card">
+            <p class="card__kicker">Cost</p>
+            <h3 class="h3">The cost, stated plainly</h3>
+            <p class="small">An automated applier depends on employer API keys it does not have, so without a partnership it is submitting through terms it is breaching, and the enforcement lands on the applicant: bans, withdrawn applications, and answers the applicant never read. The marginal cost of the bot itself is pennies — a CAPTCHA solve and a little bandwidth — which is exactly why this market is crowded, and why enforcement rather than price is what constrains it.</p>
+          </article>
+        </div>
 
-        <h3>There is nothing here to detect</h3>
-        <p>No headless browser, no proxy rotation, no CAPTCHA solving, and no account on a job board. The server's outbound requests go to three job feeds, to Stripe when billing is configured, and to a model provider when tailoring runs with a key. A site that blocks us is left alone; nothing in this build works around it.</p>
-
-        <h3>The cost, stated plainly</h3>
-        <p>An automated applier depends on employer API keys it does not have, so without a partnership it is submitting through terms it is breaching, and the enforcement lands on the applicant: bans, withdrawn applications, and answers the applicant never read. The marginal cost of the bot itself is pennies — a CAPTCHA solve and a little bandwidth — which is exactly why this market is crowded, and why enforcement rather than price is what constrains it.</p>
-
-        <h3>What we do read</h3>
-        <p>Two kinds of source only: three public job feeds whose terms permit it, and pages you paste yourself. Capturing a posting is user-initiated — <code>POST /api/jobs/capture</code> parses the URL, the text or the HTML your browser sends, and the server never fetches that URL itself. Every listing we hold carries the name of its source and a link to the original advert.</p>
-        <p>One feature is LinkedIn-shaped and still not scraping: you can paste text from your own profile, or from a PDF you exported yourself, and <code>POST /api/connectors/linkedin</code> parses that text into a CV. Nothing is fetched from LinkedIn and no account is connected; the text comes from your own clipboard.</p>
+        <div data-pair>
+          <div>
+            <h3>What we do read</h3>
+            <div class="prose">
+              <p>Two kinds of source only: three public job feeds whose terms permit it, and pages you paste yourself. Capturing a posting is user-initiated — <code>POST /api/jobs/capture</code> parses the URL, the text or the HTML your browser sends, and the server never fetches that URL itself. Every listing we hold carries the name of its source and a link to the original advert.</p>
+            </div>
+          </div>
+          <div class="note">
+            <p class="small">One feature is LinkedIn-shaped and still not scraping: you can paste text from your own profile, or from a PDF you exported yourself, and <code>POST /api/connectors/linkedin</code> parses that text into a CV. Nothing is fetched from LinkedIn and no account is connected; the text comes from your own clipboard.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ===================================================== 03 your CV -->
-  <section class="section" id="your-cv">
-    <div class="wrap wrap--narrow">
+  <section class="section section--bone" id="your-cv">
+    <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">03 · Your CV</p>
         <h2 class="h2">The words of your CV, never the file you uploaded</h2>
         <p class="lede">Upload a document and the text inside it is what gets kept. The original bytes are decoded in memory, read, and discarded.</p>
       </div>
 
-      <div class="prose">
-        <h3>Text, not the binary</h3>
-        <p>You can paste text, or upload <code>.txt</code>, <code>.md</code>, <code>.docx</code>, <code>.pdf</code>, <code>.odt</code>, <code>.rtf</code>, <code>.html</code> or an image. PDF is read only when the server has <code>pdftotext</code> on its PATH; otherwise the upload is refused with an explanation rather than guessed at. An upload is capped at 5 MB, its extracted text at 60,000 characters (80 minimum), and a job description at 20,000. There is no uploads directory: the text and a segmented copy of it — contact block, summary, experience, education, skills — go into the database, and the buffer is dropped. A CV built from a pasted profile is stored the same way: text only.</p>
+      <div data-block>
+        <div data-pair>
+          <div class="prose">
+            <h3>Text, not the binary</h3>
+            <p>You can paste text, or upload <code>.txt</code>, <code>.md</code>, <code>.docx</code>, <code>.pdf</code>, <code>.odt</code>, <code>.rtf</code>, <code>.html</code> or an image. PDF is read only when the server has <code>pdftotext</code> on its PATH; otherwise the upload is refused with an explanation rather than guessed at. An upload is capped at 5 MB, its extracted text at 60,000 characters (80 minimum), and a job description at 20,000. There is no uploads directory: the text and a segmented copy of it — contact block, summary, experience, education, skills — go into the database, and the buffer is dropped. A CV built from a pasted profile is stored the same way: text only.</p>
 
-        <h3>Where it lives</h3>
-        <p>One SQLite file, <code>data/applywright.db</code>, on the server, next to the <code>data/contact.jsonl</code> file the contact form writes. Journal mode is WAL and foreign keys are on. The database is not encrypted by the application: anyone who can read the file can read it, so disk encryption and file permissions are the deployment's responsibility, not something this code does for you.</p>
+            <h3>Where it lives</h3>
+            <p>One SQLite file, <code>data/applywright.db</code>, on the server, next to the <code>data/contact.jsonl</code> file the contact form writes. Journal mode is WAL and foreign keys are on. The database is not encrypted by the application: anyone who can read the file can read it, so disk encryption and file permissions are the deployment's responsibility, not something this code does for you.</p>
 
-        <h3>Export and delete</h3>
-        <p>Five endpoints, all of them real:</p>
-        <pre class="code" tabindex="0" role="region" aria-label="Export and delete endpoints">GET    /api/export                      JSON attachment of everything you own
+            <h3>Export and delete</h3>
+            <p>Five endpoints, all of them real:</p>
+            <pre class="code" tabindex="0" role="region" aria-label="Export and delete endpoints">GET    /api/export                      JSON attachment of everything you own
 DELETE /api/account                     {"password": "…"} — deletes the account
 DELETE /api/cvs/:id                     one CV
 DELETE /api/applications/:id            one application and its pack
 DELETE /api/alerts/:id                  one alert</pre>
-        <p><code>GET /api/export</code> returns a JSON attachment containing your account record, your CVs with their full text, up to the most recent 1,000 score reports, 1,000 applications with their packs, your alerts, up to 1,000 notifications, your usage rows and your settings. <code>DELETE /api/account</code> takes your password, hard-deletes the user row and, through the schema's foreign keys, everything hanging off it: sessions, CVs, reports, applications, alerts, notifications, usage and settings. The session cookie is cleared in the same response.</p>
-        <p>Two limits we would rather state than let you discover. Deleting a single CV deletes the CV text; score reports and packs already made from it stay, because those rows are not tied to the CV by a foreign key — delete the application too, or delete the account. And a deleted row leaves the live database, but SQLite may keep the freed pages until they are reused; this build keeps no application-level archive or second copy.</p>
-
-        <h3>What is stored, where, and for how long</h3>
-        <div class="table-wrap" tabindex="0" role="region" aria-label="What is stored, where, and for how long">
-          <table class="compare">
-            <caption>Retention as the code implements it. Nothing is deleted automatically except what the last column says.</caption>
-            <thead>
-              <tr>
-                <th scope="col">What is stored</th>
-                <th scope="col">Where</th>
-                <th scope="col">Kept for</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Account: email, name, plan, scrypt password hash and salt, Stripe customer id</td>
-                <td>SQLite <code>users</code></td>
-                <td>Until you delete the account</td>
-              </tr>
-              <tr>
-                <td>Session: random id, browser user agent, IP address</td>
-                <td>SQLite <code>sessions</code></td>
-                <td>30 days; deleted on sign-out, expired rows purged at start-up</td>
-              </tr>
-              <tr>
-                <td>CV text and its segmented profile (contact, summary, experience, education, skills)</td>
-                <td>SQLite <code>cvs</code></td>
-                <td>Until you delete the CV or the account</td>
-              </tr>
-              <tr>
-                <td>Score reports: score, subscores, findings, advice</td>
-                <td>SQLite <code>reports</code></td>
-                <td>Until you delete the account</td>
-              </tr>
-              <tr>
-                <td>Packs: tailored CV, covering letter, screening answers, refine instructions and changes, status, notes</td>
-                <td>SQLite <code>applications</code></td>
-                <td>Until you delete the application or the account</td>
-              </tr>
-              <tr>
-                <td>Alerts: keywords, locations, remote-only flag, minimum salary, cadence</td>
-                <td>SQLite <code>alerts</code></td>
-                <td>Until you delete the alert or the account</td>
-              </tr>
-              <tr>
-                <td>Matches: notification title, body and read state</td>
-                <td>SQLite <code>notifications</code></td>
-                <td>Until you delete the account</td>
-              </tr>
-              <tr>
-                <td>Usage counters: feature, amount, timestamp</td>
-                <td>SQLite <code>usage</code></td>
-                <td>Until you delete the account</td>
-              </tr>
-              <tr>
-                <td>Feed token: the 32-character key in your RSS URL</td>
-                <td>SQLite <code>settings</code></td>
-                <td>Until you delete the account</td>
-              </tr>
-              <tr>
-                <td>Contact messages: name, email, message, request id</td>
-                <td><code>data/contact.jsonl</code></td>
-                <td>Until someone deletes the file by hand</td>
-              </tr>
-              <tr>
-                <td>Job postings: public advert data, shared by every user</td>
-                <td>SQLite <code>jobs</code></td>
-                <td>One shared cache, trimmed to the 20,000 most recently fetched rows</td>
-              </tr>
-              <tr>
-                <td>Rate-limit counters</td>
-                <td>Server process memory</td>
-                <td>Until the process restarts; never written to disk</td>
-              </tr>
-              <tr>
-                <td>Uploaded file bytes</td>
-                <td>Never stored</td>
-                <td>Discarded after the text is extracted</td>
-              </tr>
-            </tbody>
-          </table>
+            <p><code>GET /api/export</code> returns a JSON attachment containing your account record, your CVs with their full text, up to the most recent 1,000 score reports, 1,000 applications with their packs, your alerts, up to 1,000 notifications, your usage rows and your settings. <code>DELETE /api/account</code> takes your password, hard-deletes the user row and, through the schema's foreign keys, everything hanging off it: sessions, CVs, reports, applications, alerts, notifications, usage and settings. The session cookie is cleared in the same response.</p>
+            <p>Two limits we would rather state than let you discover. Deleting a single CV deletes the CV text; score reports and packs already made from it stay, because those rows are not tied to the CV by a foreign key — delete the application too, or delete the account. And a deleted row leaves the live database, but SQLite may keep the freed pages until they are reused; this build keeps no application-level archive or second copy.</p>
+          </div>
+          <div class="card">
+            <p class="card__kicker">Account</p>
+            <h3>How the account is held</h3>
+            <div data-account-list>
+              <ul>
+                <li>Passwords are hashed with scrypt (N 16384, r 8, p 1, 64-byte key) against a random 16-byte salt. The plaintext is never stored or logged, and verification is constant-time.</li>
+                <li>The session is an opaque random id in a cookie named <code>aw_session</code>: HttpOnly, SameSite=Lax, Path=/, 30 days. Nothing about you is inside the cookie; sign-out deletes the row, and expired sessions are purged when the server starts. Set <code>SECURE_COOKIES=1</code> behind HTTPS — the app does not infer it.</li>
+                <li>Cross-origin writes are refused by comparing the Origin header's host with the host being called, and the API accepts JSON bodies only, which a cross-site HTML form cannot send. Bodies are capped at 8 MB.</li>
+                <li>Pages are served with a Content-Security-Policy of <code>default-src 'self'</code>, <code>script-src 'self'</code> and <code>object-src 'none'</code>, plus nosniff, X-Frame-Options DENY, Referrer-Policy no-referrer, a Permissions-Policy that turns off camera, microphone, geolocation and payment, and no X-Powered-By header. There are no third-party scripts, no analytics, and no external fonts or images.</li>
+                <li>Rate limits are per IP across the API: 120 requests a minute generally, 10 a minute for register and login, and anything over the budget is refused with 429 and a Retry-After header.</li>
+                <li>HSTS is not sent by the application. Where the site runs over HTTPS, the proxy in front of it should send it.</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
-        <h3>How the account is held</h3>
-        <ul>
-          <li>Passwords are hashed with scrypt (N 16384, r 8, p 1, 64-byte key) against a random 16-byte salt. The plaintext is never stored or logged, and verification is constant-time.</li>
-          <li>The session is an opaque random id in a cookie named <code>aw_session</code>: HttpOnly, SameSite=Lax, Path=/, 30 days. Nothing about you is inside the cookie; sign-out deletes the row, and expired sessions are purged when the server starts. Set <code>SECURE_COOKIES=1</code> behind HTTPS — the app does not infer it.</li>
-          <li>Cross-origin writes are refused by comparing the Origin header's host with the host being called, and the API accepts JSON bodies only, which a cross-site HTML form cannot send. Bodies are capped at 8 MB.</li>
-          <li>Pages are served with a Content-Security-Policy of <code>default-src 'self'</code>, <code>script-src 'self'</code> and <code>object-src 'none'</code>, plus nosniff, X-Frame-Options DENY, Referrer-Policy no-referrer, a Permissions-Policy that turns off camera, microphone, geolocation and payment, and no X-Powered-By header. There are no third-party scripts, no analytics, and no external fonts or images.</li>
-          <li>Rate limits are per IP across the API: 120 requests a minute generally, 10 a minute for register and login, and anything over the budget is refused with 429 and a Retry-After header.</li>
-          <li>HSTS is not sent by the application. Where the site runs over HTTPS, the proxy in front of it should send it.</li>
-        </ul>
+        <div>
+          <h3>What is stored, where, and for how long</h3>
+          <div class="table-wrap" tabindex="0" role="region" aria-label="What is stored, where, and for how long">
+            <table class="compare">
+              <caption>Retention as the code implements it. Nothing is deleted automatically except what the last column says.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">What is stored</th>
+                  <th scope="col">Where</th>
+                  <th scope="col">Kept for</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Account: email, name, plan, scrypt password hash and salt, Stripe customer id</td>
+                  <td>SQLite <code>users</code></td>
+                  <td>Until you delete the account</td>
+                </tr>
+                <tr>
+                  <td>Session: random id, browser user agent, IP address</td>
+                  <td>SQLite <code>sessions</code></td>
+                  <td>30 days; deleted on sign-out, expired rows purged at start-up</td>
+                </tr>
+                <tr>
+                  <td>CV text and its segmented profile (contact, summary, experience, education, skills)</td>
+                  <td>SQLite <code>cvs</code></td>
+                  <td>Until you delete the CV or the account</td>
+                </tr>
+                <tr>
+                  <td>Score reports: score, subscores, findings, advice</td>
+                  <td>SQLite <code>reports</code></td>
+                  <td>Until you delete the account</td>
+                </tr>
+                <tr>
+                  <td>Packs: tailored CV, covering letter, screening answers, refine instructions and changes, status, notes</td>
+                  <td>SQLite <code>applications</code></td>
+                  <td>Until you delete the application or the account</td>
+                </tr>
+                <tr>
+                  <td>Alerts: keywords, locations, remote-only flag, minimum salary, cadence</td>
+                  <td>SQLite <code>alerts</code></td>
+                  <td>Until you delete the alert or the account</td>
+                </tr>
+                <tr>
+                  <td>Matches: notification title, body and read state</td>
+                  <td>SQLite <code>notifications</code></td>
+                  <td>Until you delete the account</td>
+                </tr>
+                <tr>
+                  <td>Usage counters: feature, amount, timestamp</td>
+                  <td>SQLite <code>usage</code></td>
+                  <td>Until you delete the account</td>
+                </tr>
+                <tr>
+                  <td>Feed token: the 32-character key in your RSS URL</td>
+                  <td>SQLite <code>settings</code></td>
+                  <td>Until you delete the account</td>
+                </tr>
+                <tr>
+                  <td>Contact messages: name, email, message, request id</td>
+                  <td><code>data/contact.jsonl</code></td>
+                  <td>Until someone deletes the file by hand</td>
+                </tr>
+                <tr>
+                  <td>Job postings: public advert data, shared by every user</td>
+                  <td>SQLite <code>jobs</code></td>
+                  <td>One shared cache, trimmed to the 20,000 most recently fetched rows</td>
+                </tr>
+                <tr>
+                  <td>Rate-limit counters</td>
+                  <td>Server process memory</td>
+                  <td>Until the process restarts; never written to disk</td>
+                </tr>
+                <tr>
+                  <td>Uploaded file bytes</td>
+                  <td>Never stored</td>
+                  <td>Discarded after the text is extracted</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ========================================================= 04 GDPR -->
-  <section class="section section--bone" id="gdpr">
-    <div class="wrap wrap--narrow">
+  <section class="section" id="gdpr">
+    <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">04 · UK GDPR</p>
         <h2 class="h2">What we rely on, and what you can ask for</h2>
         <p class="lede">Applywright is the data controller for the account, CV, pack and application data described above. The address in the contact section handles data requests.</p>
       </div>
 
-      <div class="prose">
-        <h3>Lawful basis</h3>
-        <ul>
-          <li><strong>Contract</strong> (Article 6(1)(b)): the account, your CV text, packs, application record, alerts and the job feed you asked for. Without processing these there is no service to provide.</li>
-          <li><strong>Legitimate interests</strong> (Article 6(1)(f)): keeping the service working and accounts safe. In practice that means the session user agent and IP, in-memory rate-limit counters, and error logs that carry a request id, the path and the message — not your CV, not your password.</li>
-          <li><strong>Consent</strong>: not used. There is no marketing email, no analytics and no advertising cookie, so there is nothing here to consent to.</li>
-        </ul>
-        <p>We do not ask for special category data. A CV can contain it anyway — health, nationality, religion, a photograph — and if you include it, it is stored and processed as part of the document you uploaded. Our position on that is one of the launch items listed at the end.</p>
+      <div data-block>
+        <div data-pair>
+          <div class="prose">
+            <h3>Lawful basis</h3>
+            <ul>
+              <li><strong>Contract</strong> (Article 6(1)(b)): the account, your CV text, packs, application record, alerts and the job feed you asked for. Without processing these there is no service to provide.</li>
+              <li><strong>Legitimate interests</strong> (Article 6(1)(f)): keeping the service working and accounts safe. In practice that means the session user agent and IP, in-memory rate-limit counters, and error logs that carry a request id, the path and the message — not your CV, not your password.</li>
+              <li><strong>Consent</strong>: not used. There is no marketing email, no analytics and no advertising cookie, so there is nothing here to consent to.</li>
+            </ul>
+            <p>We do not ask for special category data. A CV can contain it anyway — health, nationality, religion, a photograph — and if you include it, it is stored and processed as part of the document you uploaded. Our position on that is one of the launch items listed at the end.</p>
+          </div>
+          <div class="prose">
+            <h3>Your rights</h3>
+            <ul>
+              <li><strong>Access and portability:</strong> <code>GET /api/export</code> is your copy; no separate subject-access request is needed.</li>
+              <li><strong>Rectification:</strong> rename a CV or change which one is primary with <code>PATCH /api/cvs/:id</code>; replace CV text by adding the corrected version and deleting the old one. Your account name has no self-service editor yet — email us and we will change it.</li>
+              <li><strong>Erasure:</strong> <code>DELETE /api/account</code> with your password. Where the law gives us no reason to refuse, deletion is immediate.</li>
+              <li><strong>Restriction and objection:</strong> email us. We will stop the processing in question and tell you what we are still keeping, and why.</li>
+              <li><strong>Automated decisions:</strong> the score is advisory. It is not used to make a decision with legal or similarly significant effect about you; you decide what to send, and to whom.</li>
+              <li><strong>Withdrawing consent:</strong> there is no consent-based processing to withdraw. If we add any, withdrawing it will be as easy as giving it.</li>
+            </ul>
+            <p>We answer within one month, as UK GDPR requires. If a request is genuinely complex we will tell you why and when to expect an answer, rather than let the month pass in silence.</p>
+          </div>
+        </div>
 
-        <h3>Your rights</h3>
-        <ul>
-          <li><strong>Access and portability:</strong> <code>GET /api/export</code> is your copy; no separate subject-access request is needed.</li>
-          <li><strong>Rectification:</strong> rename a CV or change which one is primary with <code>PATCH /api/cvs/:id</code>; replace CV text by adding the corrected version and deleting the old one. Your account name has no self-service editor yet — email us and we will change it.</li>
-          <li><strong>Erasure:</strong> <code>DELETE /api/account</code> with your password. Where the law gives us no reason to refuse, deletion is immediate.</li>
-          <li><strong>Restriction and objection:</strong> email us. We will stop the processing in question and tell you what we are still keeping, and why.</li>
-          <li><strong>Automated decisions:</strong> the score is advisory. It is not used to make a decision with legal or similarly significant effect about you; you decide what to send, and to whom.</li>
-          <li><strong>Withdrawing consent:</strong> there is no consent-based processing to withdraw. If we add any, withdrawing it will be as easy as giving it.</li>
-        </ul>
-        <p>We answer within one month, as UK GDPR requires. If a request is genuinely complex we will tell you why and when to expect an answer, rather than let the month pass in silence.</p>
-
-        <h3>Complaining</h3>
-        <p>Tell us first and we will try to put it right. You can also complain to the Information Commissioner's Office, without asking our permission: <a href="https://ico.org.uk/make-a-complaint/">ico.org.uk/make-a-complaint</a>, or 0303 123 1113.</p>
-
-        <h3>Transfers outside the UK</h3>
-        <p>Billing, when it is switched on, runs through Stripe, which is in the United States. Tailoring may send text to a model provider outside the UK; the default endpoint is DeepSeek's API, a provider based in China. Neither transfer has a signed transfer mechanism in this build. That is a launch item, not a footnote, and it is listed at the end of this page.</p>
+        <div data-pair>
+          <div class="prose">
+            <h3>Complaining</h3>
+            <p>Tell us first and we will try to put it right. You can also complain to the Information Commissioner's Office, without asking our permission: <a href="https://ico.org.uk/make-a-complaint/">ico.org.uk/make-a-complaint</a>, or 0303 123 1113.</p>
+          </div>
+          <div class="prose">
+            <h3>Transfers outside the UK</h3>
+            <p>Billing, when it is switched on, runs through Stripe, which is in the United States. Tailoring may send text to a model provider outside the UK; the default endpoint is DeepSeek's API, a provider based in China. Neither transfer has a signed transfer mechanism in this build. That is a launch item, not a footnote, and it is listed at the end of this page.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ======================================================= 05 models -->
-  <section class="section" id="models">
-    <div class="wrap wrap--narrow">
+  <section class="section section--bone" id="models">
+    <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">05 · Models</p>
         <h2 class="h2">What leaves the server, and what does not</h2>
         <p class="lede">Scoring never leaves. Tailoring — and a later refinement pass — send text to one provider, once each, and only when a model is configured.</p>
       </div>
 
-      <div class="prose">
-        <h3>Scoring is local</h3>
-        <p><code>POST /api/analyse</code> runs the scorer in-process: keyword coverage, structure, quantified achievements, readability and formatting risks, weighted 35, 20, 20, 15 and 10. It makes no network call, and the same input produces the same findings every time.</p>
+      <div data-block>
+        <div data-pair>
+          <div class="prose">
+            <h3>Scoring is local</h3>
+            <p><code>POST /api/analyse</code> runs the scorer in-process: keyword coverage, structure, quantified achievements, readability and formatting risks, weighted 35, 20, 20, 15 and 10. It makes no network call, and the same input produces the same findings every time.</p>
 
-        <h3>Tailoring: exactly what is sent</h3>
-        <p>If <code>MODEL_API_KEY</code> is set, <code>POST /api/tailor</code> makes one JSON-mode call from the server to <code>MODEL_BASE_URL</code> — by default <code>https://api.deepseek.com/v1</code> with the model <code>deepseek-chat</code>, temperature 0.2, at most 2,000 tokens and a 60-second timeout. The request contains:</p>
-        <pre class="code" tabindex="0" role="region" aria-label="The five field groups a tailoring request sends">job title, company, and the first 6,000 characters of the description
+            <h3>Tailoring: exactly what is sent</h3>
+            <p>If <code>MODEL_API_KEY</code> is set, <code>POST /api/tailor</code> makes one JSON-mode call from the server to <code>MODEL_BASE_URL</code> — by default <code>https://api.deepseek.com/v1</code> with the model <code>deepseek-chat</code>, temperature 0.2, at most 2,000 tokens and a 60-second timeout. The request contains:</p>
+            <pre class="code" tabindex="0" role="region" aria-label="The five field groups a tailoring request sends">job title, company, and the first 6,000 characters of the description
 up to 30 keywords extracted from the posting
 your profile: name, current role, notice period, salary expectation
 your CV text — the first 12,000 characters
 up to 12 bullet lines from your CV</pre>
-        <p>That CV text normally includes your contact block, so your email address and phone number travel with it if you wrote them into the CV.</p>
+            <p>That CV text normally includes your contact block, so your email address and phone number travel with it if you wrote them into the CV.</p>
 
-        <h3>Refining a pack: the same provider, a shorter message</h3>
-        <p>Once a pack exists you can ask for one more pass in your own words — shorter, plainer, more technical, first person. <code>POST /api/applications/:id/refine</code> makes one more JSON-mode call to the same provider, containing the pack's summary, bullets and covering letter, the generated CV as plain text (the first 4,000 characters), your instruction and a small style hint. The reply is validated and put through the same grounding check before anything is saved, so a refinement cannot add a figure or an employer either; if the call fails or the reply is rejected, the rules path handles the instruction instead.</p>
-        <p>Those two endpoints are the only places where something you uploaded leaves the server, and both go to the same provider and nowhere else.</p>
+            <h3>Refining a pack: the same provider, a shorter message</h3>
+            <p>Once a pack exists you can ask for one more pass in your own words — shorter, plainer, more technical, first person. <code>POST /api/applications/:id/refine</code> makes one more JSON-mode call to the same provider, containing the pack's summary, bullets and covering letter, the generated CV as plain text (the first 4,000 characters), your instruction and a small style hint. The reply is validated and put through the same grounding check before anything is saved, so a refinement cannot add a figure or an employer either; if the call fails or the reply is rejected, the rules path handles the instruction instead.</p>
+            <p>Those two endpoints are the only places where something you uploaded leaves the server, and both go to the same provider and nowhere else.</p>
+          </div>
 
-        <h3>What is not sent</h3>
-        <ul>
-          <li>Your account email as a separate field, your password or its hash, your session cookie or IP address.</li>
-          <li>Your application notes, your other CVs, your alerts and matches, and other people's data.</li>
-        </ul>
-        <p>If no key is configured, no model call happens at all: tailoring and refinement both fall back to their deterministic rules paths, and <code>/api/health</code> reports <code>provider: "rules"</code> rather than <code>"live"</code>.</p>
+          <div class="stack">
+            <div class="card">
+              <p class="card__kicker">Not sent</p>
+              <h3>What is not sent</h3>
+              <div class="prose">
+                <ul>
+                  <li>Your account email as a separate field, your password or its hash, your session cookie or IP address.</li>
+                  <li>Your application notes, your other CVs, your alerts and matches, and other people's data.</li>
+                </ul>
+                <p>If no key is configured, no model call happens at all: tailoring and refinement both fall back to their deterministic rules paths, and <code>/api/health</code> reports <code>provider: "rules"</code> rather than <code>"live"</code>.</p>
+              </div>
+            </div>
+            <div class="card">
+              <p class="card__kicker">Returned</p>
+              <h3>What comes back</h3>
+              <div class="prose">
+                <p>JSON, validated twice. Every bullet the model returns must quote the original line verbatim from your CV, and each rewrite is then put through a grounding check that rejects a new figure, percentage, currency amount, employer, job title, qualification or date range — the rewrite falls back to your own wording and the reason is recorded as a warning. A summary over 70 words is replaced. A call that fails falls back to the rules output rather than shipping half a rewrite.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <h3>What comes back</h3>
-        <p>JSON, validated twice. Every bullet the model returns must quote the original line verbatim from your CV, and each rewrite is then put through a grounding check that rejects a new figure, percentage, currency amount, employer, job title, qualification or date range — the rewrite falls back to your own wording and the reason is recorded as a warning. A summary over 70 words is replaced. A call that fails falls back to the rules output rather than shipping half a rewrite.</p>
-
-        <h3 id="ai">The score is advisory, and here is the whole sentence</h3>
-        <div class="card card--accent">
+        <div class="card card--accent" data-advisory>
+          <h3 id="ai">The score is advisory, and here is the whole sentence</h3>
           <p class="small"><strong>Returned as <code>advisory</code> with every analysis.</strong></p>
           <p>This score is advisory. It measures your CV against this posting using our published rubric (keywords 35, structure 20, achievements 20, readability 15, formatting 10). It is not an employer's score, no score is sent to any employer, and the decision to apply is yours.</p>
+          <p>That text is returned with every <code>POST /api/analyse</code> response, so every client that renders a score receives the sentence with it.</p>
+          <p>If Applywright is placed on the EU market, or its output is used there, the EU AI Act applies to it: Annex III, point 4(a) lists systems used to analyse and filter job applications and evaluate candidates as high-risk, and scoring is in scope whatever we decide about applying. The design keeps the human decision at the end and never sends a score to an employer, which is the part a product can control. The formal duties of a high-risk provider — risk management, technical documentation, logging, human-oversight design and a conformity assessment — are not met by this build, and we are not going to imply otherwise. They are launch items, listed at the end.</p>
         </div>
-        <p>That text is returned with every <code>POST /api/analyse</code> response, so every client that renders a score receives the sentence with it.</p>
-        <p>If Applywright is placed on the EU market, or its output is used there, the EU AI Act applies to it: Annex III, point 4(a) lists systems used to analyse and filter job applications and evaluate candidates as high-risk, and scoring is in scope whatever we decide about applying. The design keeps the human decision at the end and never sends a score to an employer, which is the part a product can control. The formal duties of a high-risk provider — risk management, technical documentation, logging, human-oversight design and a conformity assessment — are not met by this build, and we are not going to imply otherwise. They are launch items, listed at the end.</p>
 
-        <h3>What the assistant never does</h3>
-        <p>It never contacts an employer, never creates an account on your behalf, and never sends anything you uploaded anywhere except the model provider above, when tailoring or refining runs with one configured. Those are properties of the code as it stands, not a promise about a future version — and this page will change when the code does.</p>
+        <div class="prose">
+            <h3>What the assistant never does</h3>
+            <p>It never contacts an employer, never creates an account on your behalf, and never sends anything you uploaded anywhere except the model provider above, when tailoring or refining runs with one configured. Those are properties of the code as it stands, not a promise about a future version — and this page will change when the code does.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ========================================================= 06 jobs -->
-  <section class="section section--bone" id="jobs">
-    <div class="wrap wrap--narrow">
+  <section class="section" id="jobs">
+    <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">06 · Job data</p>
         <h2 class="h2">Where the job data comes from, and their terms</h2>
         <p class="lede">Three public feeds and your own captures. No board is scraped, and the conditions each feed sets are carried in the code rather than trusted to memory.</p>
       </div>
 
-      <div class="prose">
+      <div data-block>
         <h3>The sources</h3>
         <div class="table-wrap" tabindex="0" role="region" aria-label="Job sources and their terms">
           <table class="compare">
@@ -358,93 +756,106 @@ up to 12 bullet lines from your CV</pre>
             </tbody>
           </table>
         </div>
-        <p>Each result from <code>GET /api/jobs</code> carries its <code>source</code>, an <code>attribution</code> label naming the feed (for example <code>Remotive (remotive.com)</code>) and the original <code>url</code>, so a listing can always be traced to where it came from. When a feed fails, the response names the source that failed instead of quietly returning fewer jobs.</p>
+        <p class="small muted">Each result from <code>GET /api/jobs</code> carries its <code>source</code>, an <code>attribution</code> label naming the feed (for example <code>Remotive (remotive.com)</code>) and the original <code>url</code>, so a listing can always be traced to where it came from. When a feed fails, the response names the source that failed instead of quietly returning fewer jobs.</p>
 
-        <h3>How the code stays inside those terms</h3>
-        <ul>
-          <li>One GET per source per refresh, with a descriptive User-Agent identifying Applywright and a 6-second budget per source. A slow board is dropped, not retried in a loop.</li>
-          <li>Results are cached per query for 15 minutes in process memory, so repeating the same search does not re-hit the boards.</li>
-          <li>Descriptions are clipped to 8,000 characters, and the shared job cache is trimmed to the 20,000 most recently fetched postings after each refresh.</li>
-          <li>Duplicates are removed by a hash of company, title and location, so one advert from two feeds is stored once, keeping the richer description.</li>
-        </ul>
+        <div data-pair>
+          <div class="prose">
+            <h3>How the code stays inside those terms</h3>
+            <ul>
+              <li>One GET per source per refresh, with a descriptive User-Agent identifying Applywright and a 6-second budget per source. A slow board is dropped, not retried in a loop.</li>
+              <li>Results are cached per query for 15 minutes in process memory, so repeating the same search does not re-hit the boards.</li>
+              <li>Descriptions are clipped to 8,000 characters, and the shared job cache is trimmed to the 20,000 most recently fetched postings after each refresh.</li>
+              <li>Duplicates are removed by a hash of company, title and location, so one advert from two feeds is stored once, keeping the richer description.</li>
+            </ul>
+          </div>
+          <div class="prose">
+            <h3>The honest limits</h3>
+            <ul>
+              <li>The cache key includes the search words, so someone varying a query can cause upstream fetches faster than a board's advisory limit. Per-source daily budgets, and a per-source fetch readout on <code>/api/health</code>, are not built. They are on the list below.</li>
+              <li>Paid feeds are not wired in. A Remotive commercial licence or Adzuna access would be an operator decision and a configured key — never a quiet fallback to scraping.</li>
+              <li>Arbeitnow states no reuse licence on its endpoint or its data. We treat that as: credit it, link back, keep the volume low. Silence is not permission; this is the cautious reading, and it is a judgement rather than a term we can point to.</li>
+            </ul>
+          </div>
+        </div>
 
-        <h3>The honest limits</h3>
-        <ul>
-          <li>The cache key includes the search words, so someone varying a query can cause upstream fetches faster than a board's advisory limit. Per-source daily budgets, and a per-source fetch readout on <code>/api/health</code>, are not built. They are on the list below.</li>
-          <li>Paid feeds are not wired in. A Remotive commercial licence or Adzuna access would be an operator decision and a configured key — never a quiet fallback to scraping.</li>
-          <li>Arbeitnow states no reuse licence on its endpoint or its data. We treat that as: credit it, link back, keep the volume low. Silence is not permission; this is the cautious reading, and it is a judgement rather than a term we can point to.</li>
-        </ul>
-
-        <h3>Alerts and the RSS feed</h3>
-        <p>An alert stores the keywords, locations, remote-only flag, minimum salary and cadence you gave it. Matches are produced when the alert is run — <code>POST /api/alerts/run</code> — not by a background scheduler: the cadence is stored, but nothing yet wakes up and runs on it. That scheduler is planned, and this page will keep saying so until it ships.</p>
-        <p>Matches are readable in the app and as an RSS feed at <code>/feed/:token.rss</code>, where the token is a 32-character key kept in your settings. Anyone who has that URL can read your match titles and bodies without signing in, so treat it as a password. It does not expire, and this build has no rotate button; both are on the list.</p>
+        <div class="prose">
+          <h3>Alerts and the RSS feed</h3>
+          <p>An alert stores the keywords, locations, remote-only flag, minimum salary and cadence you gave it. Matches are produced when the alert is run — <code>POST /api/alerts/run</code> — not by a background scheduler: the cadence is stored, but nothing yet wakes up and runs on it. That scheduler is planned, and this page will keep saying so until it ships.</p>
+          <p>Matches are readable in the app and as an RSS feed at <code>/feed/:token.rss</code>, where the token is a 32-character key kept in your settings. Anyone who has that URL can read your match titles and bodies without signing in, so treat it as a password. It does not expire, and this build has no rotate button; both are on the list.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ====================================================== 07 contact -->
-  <section class="section" id="contact">
-    <div class="wrap wrap--narrow">
+  <section class="section section--bone" id="contact">
+    <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">07 · Contact</p>
         <h2 class="h2">One address for data requests and security reports</h2>
         <p class="lede">Email <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>. We answer data requests within one month, and everything else as soon as we can.</p>
       </div>
 
-      <div class="prose">
-        <form class="form" data-contact-form>
-          <div class="form__row form__row--2">
-            <div class="field">
-              <label for="contact-name">Name</label>
-              <input class="input" id="contact-name" name="name" type="text" autocomplete="name" maxlength="120" required />
-            </div>
-            <div class="field">
-              <label for="contact-email">Email</label>
-              <input class="input" id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" required />
-            </div>
-          </div>
-          <div class="field">
-            <label for="contact-message">Message</label>
-            <textarea class="textarea" id="contact-message" name="message" maxlength="4000" required aria-describedby="contact-message-hint"></textarea>
-            <p class="hint" id="contact-message-hint">Up to 4,000 characters. Please do not paste a CV here — it belongs in your account, where you can export and delete it.</p>
-          </div>
-          <div class="field sr-only">
-            <label for="contact-website">Leave this field blank</label>
-            <input class="input" id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" />
-          </div>
-          <p class="small muted" data-form-status role="status" aria-live="polite"></p>
+      <div data-block>
+        <div data-pair>
           <div>
-            <button class="btn btn--primary" type="submit">Send message</button>
+            <form class="form" data-contact-form>
+              <div class="form__row form__row--2">
+                <div class="field">
+                  <label for="contact-name">Name</label>
+                  <input class="input" id="contact-name" name="name" type="text" autocomplete="name" maxlength="120" required />
+                </div>
+                <div class="field">
+                  <label for="contact-email">Email</label>
+                  <input class="input" id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" required />
+                </div>
+              </div>
+              <div class="field">
+                <label for="contact-message">Message</label>
+                <textarea class="textarea" id="contact-message" name="message" maxlength="4000" required aria-describedby="contact-message-hint"></textarea>
+                <p class="hint" id="contact-message-hint">Up to 4,000 characters. Please do not paste a CV here — it belongs in your account, where you can export and delete it.</p>
+              </div>
+              <div class="field sr-only">
+                <label for="contact-website">Leave this field blank</label>
+                <input class="input" id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+              <p class="small muted" data-form-status role="status" aria-live="polite"></p>
+              <div>
+                <button class="btn btn--primary" type="submit">Send message</button>
+              </div>
+            </form>
           </div>
-        </form>
 
-        <h3>What happens to that message</h3>
-        <p>The form posts to <code>POST /api/contact</code>, which appends one JSON line to <code>data/contact.jsonl</code> on the server: the time, the name and email you typed, the message, and a request id. It is not part of an account, it is not in <code>GET /api/export</code>, and nothing deletes it automatically — ask and it will be removed. A submission that fills the hidden field is treated as a bot: accepted with a 200 and discarded without being stored.</p>
+          <div class="prose">
+            <h3>What happens to that message</h3>
+            <p>The form posts to <code>POST /api/contact</code>, which appends one JSON line to <code>data/contact.jsonl</code> on the server: the time, the name and email you typed, the message, and a request id. It is not part of an account, it is not in <code>GET /api/export</code>, and nothing deletes it automatically — ask and it will be removed. A submission that fills the hidden field is treated as a bot: accepted with a 200 and discarded without being stored.</p>
 
-        <h3>Security reports</h3>
-        <p>If you think you have found a security problem, email the same address with enough detail to reproduce it. There is no bounty programme, and the only deadline we can honestly offer is that we will reply. We would rather hear about it early than read about it later.</p>
+            <h3>Security reports</h3>
+            <p>If you think you have found a security problem, email the same address with enough detail to reproduce it. There is no bounty programme, and the only deadline we can honestly offer is that we will reply. We would rather hear about it early than read about it later.</p>
 
-        <h3>Complaints</h3>
-        <p>For anything data-protection related, the route is in the <a href="#gdpr">UK GDPR section</a>: tell us first, and the Information Commissioner's Office is there if we do not fix it.</p>
-      </div>
-
-      <div class="note" style="margin-top: var(--sp-6)">
-        <h3 class="h4">Planned, not built</h3>
-        <div class="prose">
-          <ul>
-            <li>Per-source polling budgets and a per-source fetch readout, so a retry loop or a query-hopping user cannot quietly breach a feed's advisory limit.</li>
-            <li>A scheduler that runs alerts at their stored cadence; today an alert runs only when you run it.</li>
-            <li>Paid feeds behind a plan flag and a configured licence key.</li>
-            <li>A signed data-processing agreement with the model provider, and a UK international transfer mechanism for it.</li>
-            <li>EU AI Act duties for the scorer as a high-risk system: risk management, technical documentation, logging, human-oversight design, conformity assessment — plus an Article 9 position for special-category content inside a CV.</li>
-            <li>Self-service password change and reset, and an endpoint to edit your account name.</li>
-            <li>Rotating and revoking the RSS feed token.</li>
-            <li>Email verification of addresses at sign-up.</li>
-            <li>An endpoint to delete an individual score report.</li>
-            <li>Encryption at rest for the database, and HSTS at the edge.</li>
-          </ul>
+            <h3>Complaints</h3>
+            <p>For anything data-protection related, the route is in the <a href="#gdpr">UK GDPR section</a>: tell us first, and the Information Commissioner's Office is there if we do not fix it.</p>
+          </div>
         </div>
-        <p class="small">If a claim on this page is wrong, it is a bug rather than a disclaimer. Tell us and we will correct the page and the code that was supposed to make it true.</p>
+
+        <div class="note">
+          <h3 class="h4">Planned, not built</h3>
+          <div class="prose">
+            <ul>
+              <li>Per-source polling budgets and a per-source fetch readout, so a retry loop or a query-hopping user cannot quietly breach a feed's advisory limit.</li>
+              <li>A scheduler that runs alerts at their stored cadence; today an alert runs only when you run it.</li>
+              <li>Paid feeds behind a plan flag and a configured licence key.</li>
+              <li>A signed data-processing agreement with the model provider, and a UK international transfer mechanism for it.</li>
+              <li>EU AI Act duties for the scorer as a high-risk system: risk management, technical documentation, logging, human-oversight design, conformity assessment — plus an Article 9 position for special-category content inside a CV.</li>
+              <li>Self-service password change and reset, and an endpoint to edit your account name.</li>
+              <li>Rotating and revoking the RSS feed token.</li>
+              <li>Email verification of addresses at sign-up.</li>
+              <li>An endpoint to delete an individual score report.</li>
+              <li>Encryption at rest for the database, and HSTS at the edge.</li>
+            </ul>
+          </div>
+          <p class="small">If a claim on this page is wrong, it is a bug rather than a disclaimer. Tell us and we will correct the page and the code that was supposed to make it true.</p>
+        </div>
       </div>
     </div>
   </section>

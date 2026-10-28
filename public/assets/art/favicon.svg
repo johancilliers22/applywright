@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Applywright">
+  <!-- Folio mark, refined for 16px: one bold sheet, one turned corner, two
+       press-green rules. The previous mark carried three 1.5px rules and a
+       0.75px fold edge, all of which disappeared or smeared at 16px. The
+       hairline keyline keeps the ink square from vanishing on a dark tab bar. -->
+  <rect width="32" height="32" rx="6.5" fill="#0b0c0e" />
+  <rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="none" stroke="#7f8a83" stroke-width="1" />
+  <path d="M8.5 4.5h9.5l5.5 5.5v17.5h-15z" fill="#fffdf9" />
+  <path d="M18 4.5v5.5h5.5" fill="#d8d1c2" />
+  <path d="M12.5 16.5h10M12.5 21h7" stroke="#0f5c43" stroke-width="2.2" stroke-linecap="round" fill="none" />
+</svg>

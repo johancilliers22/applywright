@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <!-- Paper grain, one 240px tile. fractalNoise with stitchTiles makes the
+       tile continuous, and the filter region is pinned to the tile edges in
+       user space so the CSS repeat has nothing to join. Apply at 2–3%:
+         body::after { background-image:url("data:image/svg+xml,…");
+                        background-size:240px 240px; opacity:.03; }
+       Decorative only; never the sole carrier of anything. -->
+  <filter id="grain" x="0" y="0" width="240" height="240" filterUnits="userSpaceOnUse">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch" seed="11" />
+    <feColorMatrix type="saturate" values="0" />
+  </filter>
+  <rect width="240" height="240" filter="url(#grain)" />
+</svg>

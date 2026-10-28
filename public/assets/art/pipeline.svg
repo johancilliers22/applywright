@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1248 360" fill="none" stroke="currentColor"
+     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Press-proof pipeline: ingest → score → tailor → pack.
+       Three A4-proportion sheets (168 × 238, ratio 1:1.417) on a 24px grid,
+       ruled stations above and below. Decorative: the four stage names live in
+       the figure's HTML caption, never in this file. -->
+
+  <!-- station rule -->
+  <path d="M48 24H1200" stroke-width="1" />
+  <path d="M48 18v12M1200 18v12" stroke-width="1" />
+  <path d="M96 24v10M612 24v10M996 24v10M1126 24v10" />
+
+  <!-- sheet 1: the source CV, arriving -->
+  <rect x="144" y="72" width="168" height="238" rx="2" />
+  <path d="M160 96h96" />
+  <path d="M296 84h-10M296 84v10" />
+  <path d="M160 120h136M160 140h120M160 160h136M160 180h96M160 200h136M160 220h112M160 240h136M160 260h128M160 280h88" stroke-width="1" />
+
+  <!-- sheet 2: the score, with its findings marked at the line ends -->
+  <rect x="528" y="72" width="168" height="238" rx="2" />
+  <path d="M544 96h96" />
+  <path d="M544 120h136M544 140h120M544 160h136M544 180h96M544 200h136M544 220h112M544 240h136M544 260h128M544 280h88" stroke-width="1" />
+  <path d="M680 157v6M680 197v6M680 237v6" />
+  <path d="M696 268h20" stroke-width="1" />
+  <circle cx="722" cy="268" r="3" />
+
+  <!-- sheet 3: the tailored rewrite, redlined -->
+  <rect x="912" y="72" width="168" height="238" rx="2" />
+  <path d="M928 96h96" />
+  <path d="M928 120h136M928 140h120M928 160h136M928 180h96M928 200h136M928 220h112M928 240h136M928 260h128M928 280h88" stroke-width="1" />
+  <path d="M902 160v120" />
+  <path d="M926 243l140-6" />
+
+  <!-- station callouts: score, tailor -->
+  <path d="M612 72V44" />
+  <circle cx="612" cy="40" r="3.5" />
+  <path d="M996 72V44" />
+  <circle cx="996" cy="40" r="3.5" />
+
+  <!-- ingest: a ticked arrow in -->
+  <path d="M48 191h84" />
+  <path d="M124 185l8 6-8 6" />
+  <path d="M72 187v8M96 187v8" />
+
+  <!-- pack: the folio that leaves, folded corner -->
+  <path d="M1080 191h24" />
+  <path d="M1096 185l8 6-8 6" />
+  <path d="M1112 173h16l12 12v24h-28z" />
+  <path d="M1128 173v12h12" />
+
+  <!-- baseline with the same station rhythm -->
+  <path d="M48 336h1152" stroke-width="1" />
+  <path d="M228 330v12M612 330v12M996 330v12M1126 330v12" stroke-width="1" />
+</svg>

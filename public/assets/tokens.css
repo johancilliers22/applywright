@@ -116,6 +116,14 @@
   --wrap-narrow: 760px;
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
 
+  /* The one reading measure. 58ch is 69 characters at the 15px reading size and
+     67 at the 21px lede size — inside the 65–72 target at both sizes, because ch
+     scales with the font. Prose, step bodies and ledes cap at this; tables,
+     figures and diagrams are allowed to use the full column. The marketing pages
+     already reference var(--measure-reading, 58ch), so declaring it here changes
+     nothing they render and makes the value one. */
+  --measure-reading: 58ch;
+
   /* --- shape ------------------------------------------------------ */
   --r-sm: 8px;
   --r-md: 12px;
@@ -145,6 +153,10 @@
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
   --stagger: 55ms;
+  /* A tight stagger for short runs: three elements arriving at --dur-sm need
+     less than the 55ms step, or the last one starts after the first has
+     finished and the group stops reading as one arrival. */
+  --stagger-tight: 40ms;
 }
 
 /* ==========================================================================

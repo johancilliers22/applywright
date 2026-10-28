@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Micro registration mark for a caption or a metadata line. Drawn on the
+       24 grid and displayed at 12–14px; vector-effect keeps the stroke at
+       1.5px however small it is rendered. -->
+  <circle cx="12" cy="12" r="4.5" vector-effect="non-scaling-stroke" />
+  <path d="M12 3v4.5M12 16.5V21M3 12h4.5M16.5 12H21" vector-effect="non-scaling-stroke" />
+</svg>

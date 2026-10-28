@@ -6,7 +6,8 @@
   <title>How it works · Applywright</title>
   <meta name="description" content="The Applywright pipeline: ingest a CV, score it against a job with fixed weights, tailor it with grounded rewriting, build an ATS-safe pack, track the application and poll public job boards for alerts." />
   <meta name="theme-color" content="#0b0c0e" />
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/art/apple-touch-icon.png" />
   <link rel="stylesheet" href="/assets/tokens.css" />
   <link rel="stylesheet" href="/assets/theme.css" />
   <link rel="stylesheet" href="/assets/site.css" />
@@ -15,6 +16,87 @@
        from the CSS. Same-origin, so script-src 'self' covers it; no inline boot
        code, which the CSP and scripts/check.js both forbid. -->
   <script src="/assets/theme.js"></script>
+  <style>
+    /* Composition for /how-it-works only. Tokens only: no palette values.
+       site.css is owned by polish-aw during this pass, so the rules that have
+       no home there are scoped to this page. */
+
+    /* Paper grain: the 240px tile in assets/art/grain.svg at 3%, fixed and
+       pointer-transparent. Decorative; off in print. */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22240%22 height%3D%22240%22 viewBox%3D%220 0 240 240%22%3E%3Cfilter id%3D%22grain%22 x%3D%220%22 y%3D%220%22 width%3D%22240%22 height%3D%22240%22 filterUnits%3D%22userSpaceOnUse%22%3E%3CfeTurbulence type%3D%22fractalNoise%22 baseFrequency%3D%220.9%22 numOctaves%3D%223%22 stitchTiles%3D%22stitch%22 seed%3D%2211%22 %2F%3E%3CfeColorMatrix type%3D%22saturate%22 values%3D%220%22 %2F%3E%3C%2Ffilter%3E%3Crect width%3D%22240%22 height%3D%22240%22 filter%3D%22url(%23grain)%22 %2F%3E%3C%2Fsvg%3E");
+      background-size: 240px 240px;
+    }
+
+    /* The pipeline figure takes the full column; the set's registration corner
+       sits in its top-right. The caption is the accessible text — no stage name
+       is baked into the drawing. */
+    [data-art-figure] {
+      position: relative;
+      margin: 0 0 var(--sp-7);
+      color: var(--text-muted);
+    }
+    [data-art-figure] [data-art-pipeline] {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    [data-art-figure] figcaption {
+      margin-top: var(--sp-3);
+      max-width: var(--measure-reading);
+      font-size: var(--fs-xs);
+      line-height: 1.55;
+    }
+    [data-art-corner] {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    [data-art-divider] {
+      margin-top: var(--sp-7);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      color: var(--text-muted);
+    }
+    [data-art-divider] [data-art-rule] {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    /* Steps: a fixed number-chip column, a heading column, and the body at the
+       reading measure, so every step aligns on one grid. Below 900px the block
+       keeps its chip indent and reads as one column. */
+    @media (min-width: 900px) {
+      .step {
+        display: grid;
+        grid-template-columns: 3.25rem minmax(14rem, 18rem) minmax(0, var(--measure-reading));
+        column-gap: var(--sp-4);
+        align-items: start;
+        padding-inline-start: 0;
+      }
+      .step > .h3 { grid-column: 2; }
+      .step > p { grid-column: 3; }
+      /* The second paragraph is a genuine sub-note: one size down, set off by a
+         rule, instead of a footnote that happened to be smaller. */
+      .step > p.small.muted {
+        border-left: 2px solid var(--line-meaning);
+        padding-left: var(--sp-3);
+      }
+    }
+    @media (max-width: 899px) {
+      [data-art-corner] { display: none; }
+    }
+
+    @media print { body::after { display: none; } }
+  </style>
 </head>
 <body>
   <!--#include nav.html-->
@@ -42,6 +124,64 @@
             at checkout.
           </p>
         </div>
+
+        <!-- Artwork: the pipeline as a press-proof schematic. Three A4-proportion
+             sheets (source CV, scored proof, redlined rewrite) on a 24px grid,
+             with station marks, callout leaders and the finished pack leaving as
+             a folio. The stage names are the figcaption's job — no text is baked
+             into the drawing. -->
+        <figure data-art-figure>
+          <div data-art-corner aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M1.5 47V1.5H47" />
+              <path d="M18 1.5v5M30 1.5v5M1.5 18h5M1.5 30h5" stroke-width="1" />
+              <circle cx="14" cy="14" r="4.5" />
+              <path d="M14 6v16M6 14h16" stroke-width="1" />
+            </svg>
+          </div>
+          <svg data-art-pipeline viewBox="0 0 1248 360" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M48 24H1200" stroke-width="1" />
+            <path d="M48 18v12M1200 18v12" stroke-width="1" />
+            <path d="M96 24v10M612 24v10M996 24v10M1126 24v10" />
+            <rect x="144" y="72" width="168" height="238" rx="2" />
+            <path d="M160 96h96" />
+            <path d="M296 84h-10M296 84v10" />
+            <path d="M160 120h136M160 140h120M160 160h136M160 180h96M160 200h136M160 220h112M160 240h136M160 260h128M160 280h88" stroke-width="1" />
+            <rect x="528" y="72" width="168" height="238" rx="2" />
+            <path d="M544 96h96" />
+            <path d="M544 120h136M544 140h120M544 160h136M544 180h96M544 200h136M544 220h112M544 240h136M544 260h128M544 280h88" stroke-width="1" />
+            <path d="M680 157v6M680 197v6M680 237v6" />
+            <path d="M696 268h20" stroke-width="1" />
+            <circle cx="722" cy="268" r="3" />
+            <rect x="912" y="72" width="168" height="238" rx="2" />
+            <path d="M928 96h96" />
+            <path d="M928 120h136M928 140h120M928 160h136M928 180h96M928 200h136M928 220h112M928 240h136M928 260h128M928 280h88" stroke-width="1" />
+            <path d="M902 160v120" />
+            <path d="M926 243l140-6" />
+            <path d="M612 72V44" />
+            <circle cx="612" cy="40" r="3.5" />
+            <path d="M996 72V44" />
+            <circle cx="996" cy="40" r="3.5" />
+            <path d="M48 191h84" />
+            <path d="M124 185l8 6-8 6" />
+            <path d="M72 187v8M96 187v8" />
+            <path d="M1080 191h24" />
+            <path d="M1096 185l8 6-8 6" />
+            <path d="M1112 173h16l12 12v24h-28z" />
+            <path d="M1128 173v12h12" />
+            <path d="M48 336h1152" stroke-width="1" />
+            <path d="M228 330v12M612 330v12M996 330v12M1126 330v12" stroke-width="1" />
+          </svg>
+          <figcaption>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="vertical-align: -1px; margin-right: 6px">
+              <circle cx="12" cy="12" r="4.5" vector-effect="non-scaling-stroke" />
+              <path d="M12 3v4.5M12 16.5V21M3 12h4.5M16.5 12H21" vector-effect="non-scaling-stroke" />
+            </svg>
+            <span class="mono">01 ingest · 02 score · 03 tailor · 04 pack</span> — three sheets and a folio: the CV
+            arrives, the findings leave the scored proof, the rewrite is redlined in the margin, and the finished pack
+            leaves as a folio.
+          </figcaption>
+        </figure>
 
         <div class="steps">
           <div class="step">
@@ -126,6 +266,17 @@
               see how stale a search is before you rely on it.
             </p>
           </div>
+        </div>
+
+        <!-- Artwork: the spine closes on a registration rule, so the six steps
+             read as one proof rather than as a list that stops. -->
+        <div data-art-divider aria-hidden="true">
+          <span data-art-rule></span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <circle cx="12" cy="12" r="5.25" />
+            <path d="M12 1.5v5.25M12 17.25v5.25M1.5 12h5.25M17.25 12h5.25" />
+          </svg>
+          <span data-art-rule></span>
         </div>
       </div>
     </section>

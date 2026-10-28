@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 168" fill="none" stroke="currentColor"
+     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Empty state: no CVs yet. A blank folio, a loose sheet behind it, and the
+       corner registration marks that say "a sheet is expected here". -->
+  <rect x="82" y="18" width="96" height="120" rx="2" stroke-width="1" stroke-opacity="0.45" />
+  <path d="M72 30h58l14 14v106H72z" />
+  <path d="M130 30v14h14" />
+  <path d="M88 76h60" stroke-width="1" stroke-opacity="0.55" />
+  <path d="M64 150h-6M64 150v-6M176 150h6M176 150v-6" stroke-width="1.5" />
+</svg>

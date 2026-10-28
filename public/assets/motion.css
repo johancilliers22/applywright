@@ -9,85 +9,72 @@
 
    The contract, in one place:
 
-   1. ONE duration above 320ms: the hero's evidence trace (--dur-lg, 560ms),
-      once per load. It is the surface's one deliberate move, and it is the only
-      thing here allowed to take its time. The page entrance is --dur-md (260ms)
-      per element, fast enough to read as the page arriving rather than drifting
-      in. --dur-data (420ms) is not used on the marketing pages at all.
-   2. ONE move per surface, as SPEC-V2 §5 requires: the page entrance (page
-      surface), the evidence trace (hero-proof surface), the drawer disclosure,
-      and state changes that live in site.css. No second reveal system, no
-      parallax, no typewriter, no loop. Nothing is scroll-triggered.
+   1. Durations come from tokens.css and nothing exceeds --dur-lg (560ms):
+      the hero entrance is --dur-sm per element (180ms), the sheet settle is
+      --dur (220ms), the drawer disclosure is --dur-sm, and the hero's evidence
+      trace is --dur-lg — the one deliberate move allowed to take its time.
+   2. ONE move per surface, as SPEC-V2 §5 requires: the page entrance (hero
+      surface), the evidence trace (hero-proof surface), the sheet settle (the
+      proof sheet's first arrival, only when it arrives from below), the drawer
+      disclosure, and state changes that live in site.css. No second reveal
+      system, no parallax, no typewriter, no loop.
    3. Only transform / translate / opacity animate. No width, height, top,
       margin, padding or background-position: those are the properties that
-      force layout or a full repaint on every frame.
+      force layout or a full repaint on every frame. The one scroll-linked
+      animation (section 3) also animates only scaleX.
    4. The largest text is never faded. An element at opacity: 0 is not an LCP
       candidate, so a fade on the H1 does not delay the metric — it moves the
       metric onto the nav logo (measured: LCP became "SPAN, 2,178 px²" instead
-      of the H1's 88,830 px²). The H1 rises; it does not appear.
-   5. Cross-document view transitions are opt-in, progressive, and off under
-      reduced motion (section 6).
+      of the H1's 88,407 px²). The H1 rises; it does not appear.
+   5. Nothing except the hero animates on load. The page-head band and the
+      sections below it are static; round one retired the scroll reveal, so
+      there is nothing to trigger below the fold.
+   6. Cross-document view transitions are opt-in, progressive, and off under
+      reduced motion (section 7).
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. Page entrance — the hero (index) and the page-head band (inner pages)
-   One --dur-md rise per element, --ease-enter, one --stagger step apart. Runs
-   once per load; `both` fill means the delay holds the start frame instead of
-   showing finished content first.
+   1. Section entrance — the hero's three elements, once
+   The eyebrow, the heading and the standfirst arrive: --dur-sm each (180ms),
+   --ease-enter, one --stagger-tight (40ms) apart, so the group reads as one
+   arrival and is finished 260ms after first paint. The CTA row, the meta line
+   and every page-head band are static — they were part of the old "whole page
+   fades in" entrance and are now present at first paint.
 
-   The H1/display element runs `aw-rise`: translate only, no opacity. It is the
-   LCP candidate on every page it appears on, and hiding it from first paint is
-   the one thing an entrance must not do. Everything else fades as it rises.
+   The heading runs `aw-rise`: translate only, no opacity. It is the LCP
+   candidate on every page it appears on, and an opacity-0 largest element moves
+   the metric onto the logo rather than measuring the headline.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
   @keyframes aw-enter {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(6px);
     }
   }
 
   @keyframes aw-rise {
     from {
-      translate: 0 10px;
+      translate: 0 6px;
     }
   }
 
   .hero .eyebrow,
-  .hero__sub,
-  .hero__cta,
-  .hero__meta,
-  .page-head .eyebrow,
-  .page-head .lede,
-  .page-head .small {
-    animation: aw-enter var(--dur-md) var(--ease-enter) both;
+  .hero__sub {
+    animation: aw-enter var(--dur-sm) var(--ease-enter) both;
   }
 
-  .hero .display,
-  .page-head .h1,
-  .page-head .display {
-    animation: aw-rise var(--dur-md) var(--ease-enter) both;
+  .hero .display {
+    animation: aw-rise var(--dur-sm) var(--ease-enter) both;
   }
 
-  .hero .display,
-  .page-head .h1,
-  .page-head .display {
-    animation-delay: var(--stagger);
+  .hero .display {
+    animation-delay: var(--stagger-tight);
   }
 
-  .hero__sub,
-  .page-head .lede {
-    animation-delay: calc(var(--stagger) * 2);
-  }
-
-  .hero__cta,
-  .page-head .small {
-    animation-delay: calc(var(--stagger) * 3);
-  }
-
-  .hero__meta {
-    animation-delay: calc(var(--stagger) * 4);
+  .hero__sub {
+    animation-delay: calc(var(--stagger-tight) * 2);
   }
 }
 
@@ -95,10 +82,10 @@
    2. The hero's one move — the score opening into named findings
    On the proof sheet, the stamp, then each advert/CV pair, then the rubric
    ledger settle in reading order, one --stagger step apart at --dur-lg /
-   --ease-enter. This is the single duration in the motion layer above 320ms,
-   and it is deliberately the hero's: it is the product's own claim, shown once
-   per visit. Transform and opacity only: no loop, no scroll trigger, no
-   typewriter, and under reduced motion every element is simply present.
+   --ease-enter. This is the single duration in the motion layer at 560ms, and
+   it is deliberately the hero's: it is the product's own claim, shown once per
+   visit. Transform and opacity only: no loop, no scroll trigger, no typewriter,
+   and under reduced motion every element is simply present.
 
    It is safe to fade these because none of them is the largest element on the
    page (the H1 is), so the trace cannot become the LCP candidate.
@@ -140,7 +127,106 @@
 }
 
 /* --------------------------------------------------------------------------
-   3. Disclosure — the mobile drawer
+   3. Scroll progress — the long pages only
+   A 2px --mark rule sits under the nav and fills left to right as the reader
+   advances. It communicates position, which is the one thing the canon lets a
+   scroll-linked animation do, and it animates scaleX only — never width — so it
+   cannot trigger layout. It is driven by the scroll timeline: no listener, no
+   rAF, no main-thread work.
+
+   Drawn on <html> as a fixed pseudo-element rather than inside .nav: a
+   scroll-driven animation inside the sticky, backdrop-filtered nav measured 150
+   style recalcs and +40ms of main-thread task time over a 6x-CPU scroll, while
+   the same animation on the fixed root pseudo-element measures the same 150
+   recalcs but no layout and no long task either way (see docs/MOTION.md §12).
+   The root pseudo-element is deliberately not body::after: index.html's inline
+   grain overlay owns body::after, and a shared pseudo-element would be a
+   collision waiting for the grain to be rolled out site-wide. It is z-index 49,
+   one below the nav, so it never paints over the bar.
+
+   Scope, without a markup hook: only the three pages long enough to need it
+   contain a .table-wrap (how-it-works, pricing, security). The index, about and
+   the auth pages have none, so :has() is the selector.
+
+   Under reduced motion the pseudo-element is not generated at all (the block is
+   inside no-preference; the explicit reduce rule is belt and braces). Engines
+   without scroll-driven animations get no hairline, which is the honest
+   fallback: the scroll position is already visible in the scrollbar.
+   -------------------------------------------------------------------------- */
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:has(.table-wrap)::after {
+      content: "";
+      position: fixed;
+      inset-inline: 0;
+      /* The nav is 68px tall plus a 1px border; 62px under 660px. */
+      top: 69px;
+      height: 2px;
+      z-index: 49;
+      background: var(--mark);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      pointer-events: none;
+      animation-name: aw-progress;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+
+    @media (max-width: 660px) {
+      html:has(.table-wrap)::after {
+        top: 63px;
+      }
+    }
+
+    @keyframes aw-progress {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.table-wrap)::after {
+    content: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. The sheet settle — once, on first view
+   The proof sheet gets a 220ms settle (--dur, --ease-settle) the first time it
+   enters the viewport, once per session. site.js owns the trigger: an
+   IntersectionObserver adds `.is-settling` when the sheet arrives from below the
+   fold, and a sessionStorage flag means a return visit gets a still sheet. It
+   deliberately does not fire when the sheet is already on screen at load — the
+   evidence trace (2) is that surface's move, and the canon allows one per
+   surface.
+
+   Transform and opacity only; the keyframes are inside no-preference and the
+   script does not add the class under reduced motion.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes aw-sheet-settle {
+    from {
+      opacity: 0.86;
+      translate: 0 6px;
+    }
+  }
+
+  .hero-proof.is-settling {
+    animation: aw-sheet-settle var(--dur) var(--ease-settle) both;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Disclosure — the mobile drawer
    The drawer opens in place: 4px and a fade at --dur-sm, never a slide across
    the page. Closing removes it from layout at once, so there is no exit to
    animate. Under reduced motion it is simply present.
@@ -160,12 +246,13 @@
 }
 
 /* --------------------------------------------------------------------------
-   4. prefers-reduced-motion — settle instead of moving
-   The entrance, the evidence trace and the disclosure above are not rendered at
-   all under reduce (they live inside no-preference blocks), so the page paints
-   complete. tokens.css already collapses every transition duration globally;
-   what is left is the movement site.css adds on hover and press. Colour changes
-   stay (colour is not motion), movement does not.
+   6. prefers-reduced-motion — settle instead of moving
+   The entrance, the evidence trace, the sheet settle and the disclosure above
+   are not rendered at all under reduce (they live inside no-preference blocks),
+   so the page paints complete. tokens.css already collapses every transition
+   duration globally; what is left is the movement site.css and theme.css add on
+   hover and press. Colour changes stay (colour is not motion), movement does
+   not.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -186,10 +273,16 @@
   .nav__toggle:active {
     transform: none;
   }
+
+  /* The theme control's 1px press is declared in theme.css; settle it here too
+     so the matrix is answered from one file. */
+  .theme-toggle:active {
+    translate: none;
+  }
 }
 
 /* --------------------------------------------------------------------------
-   5. Cross-document view transitions — / → /pricing and back
+   7. Cross-document view transitions — / → /pricing and back
    A hard navigation between two pages of the same site replaces the document in
    one frame: the nav, the footer and the paper all disappear and reappear at
    once. A cross-document view transition crossfades the two snapshots instead,
@@ -247,17 +340,10 @@
   html:active-view-transition .hero .eyebrow,
   html:active-view-transition .hero .display,
   html:active-view-transition .hero__sub,
-  html:active-view-transition .hero__cta,
-  html:active-view-transition .hero__meta,
   html:active-view-transition .hero-proof__stamp,
   html:active-view-transition .hero-proof__req,
   html:active-view-transition .hero-proof__ans,
-  html:active-view-transition .hero-proof__score,
-  html:active-view-transition .page-head .eyebrow,
-  html:active-view-transition .page-head .h1,
-  html:active-view-transition .page-head .display,
-  html:active-view-transition .page-head .lede,
-  html:active-view-transition .page-head .small {
+  html:active-view-transition .hero-proof__score {
     animation: none;
   }
 }

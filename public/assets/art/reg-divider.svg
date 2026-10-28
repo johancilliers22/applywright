@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 24" fill="none" stroke="currentColor"
+     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Section divider: a hairline interrupted by a registration target.
+       Draw it as a flex row when the rule must stretch: two 1px rules either
+       side of this 240px motif; do not scale the motif itself. -->
+  <path d="M0 12h84" stroke-width="1" />
+  <path d="M156 12h84" stroke-width="1" />
+  <path d="M0 8v8M240 8v8" stroke-width="1" />
+  <path d="M24 9.5v5M216 9.5v5" stroke-width="1" />
+  <circle cx="120" cy="12" r="5.25" />
+  <path d="M120 2.25v19.5M110.25 12h19.5" />
+</svg>

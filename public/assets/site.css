@@ -1690,3 +1690,120 @@ code:not(.code) {
   font-size: 0.9375rem;
   line-height: 1.6;
 }
+
+/* --------------------------------------------------------------------------
+   Interaction inventory — a state that is not only a colour change
+   Round two of the motion pass: the tactile half. Every interactive surface the
+   marketing pages actually have gets a cue made of offset, thickness, shadow or
+   a ≤1px movement, and each rule pairs :hover with :focus-visible so a keyboard
+   user gets the same answer as a pointer. The ring in tokens.css is the floor,
+   not the ceiling.
+
+   Nothing here transitions a decoration or a layout property: text-decoration
+   thickness/offset and box-shadow change on the same frame, which is what makes
+   a link feel answered rather than eased. Movement stays on controls (a 1px
+   lift and a 1.5% press in the button rules above), where the control is an
+   object the finger presses.
+
+   Surfaces with no instances on these pages are listed in docs/MOTION.md §12
+   rather than given dead rules: cards here are <article>s, never links, and no
+   table row opens anything on the marketing pages.
+   -------------------------------------------------------------------------- */
+
+/* Nav links: the underline arrives under the label and thickens when pressed.
+   Colour alone never carries the state. */
+.nav__links a:hover,
+.nav__links a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.nav__links a:active {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+/* Inline links: a sentence link thickens to 2px under the pointer and on
+   keyboard focus; the press lifts the rule back up towards the text. */
+.prose a:hover,
+.prose a:focus-visible,
+.note a:hover,
+.note a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.prose a:active,
+.note a:active {
+  text-decoration-thickness: 3px;
+  text-underline-offset: 1px;
+}
+
+/* Footer links: the same rule in the inverted palette. */
+.footer a:hover,
+.footer a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* Drawer links are full-width rows, so the underline is the state and a press
+   thickens it; the row itself never moves (a moving target is a miss). */
+.nav__mobile a:hover,
+.nav__mobile a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.nav__mobile a:active {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 1px;
+}
+
+/* The theme control is styled in theme.css and injected by theme.js; its hover
+   changes colour and surface there. This adds the non-colour part — a hairline
+   shadow that lifts the control off the bar — while its press stays the 1px
+   translate declared in theme.css. */
+.theme-toggle:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Editor — the document area's loading state as a ruled sheet
+   editor.css is another owner's file this pass and editor.html carries one
+   status div, so the skeleton is drawn from here with an id selector (which
+   beats editor.css's class rule) and stays CSS-only: a paper sheet with the
+   document's ruled rhythm, the status line as its label. No shimmer and no
+   loop — the canon bans both, and a skeleton that pulses is a spinner in a
+   paper suit. Absorb this into editor.css when that file is free.
+   -------------------------------------------------------------------------- */
+
+#ed-loading {
+  min-height: 22rem;
+  padding: clamp(1.1rem, 3vw, 2.5rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-folio);
+  box-shadow: var(--shadow-sheet);
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 27px,
+    var(--line) 27px 28px
+  );
+  background-origin: content-box;
+  background-clip: content-box;
+  text-align: start;
+  color: var(--text-soft);
+}
+
+#ed-loading p {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Apple touch icon: full-bleed ink (no transparency; iOS composites on
+       black otherwise), the folio mark at 56% of the canvas. iOS rounds the
+       corners itself, so this file does not. -->
+  <rect width="180" height="180" fill="#0b0c0e" />
+  <g transform="translate(90 90) scale(2.55) translate(-16 -16)">
+    <path d="M8.5 4.5h9.5l5.5 5.5v17.5h-15z" fill="#fffdf9" />
+    <path d="M18 4.5v5.5h5.5" fill="#d8d1c2" />
+    <path d="M12.5 16.5h10M12.5 21h7" stroke="#0f5c43" stroke-width="2.2" stroke-linecap="round" fill="none" />
+  </g>
+</svg>

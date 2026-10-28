@@ -59,6 +59,49 @@
   // is left is CSS-only: one page entrance, the hero's evidence trace and the
   // drawer disclosure in motion.css.
 
+  // --- proof-sheet settle -------------------------------------------------
+  // One 220ms settle the first time the sheet arrives in view, once per session.
+  // If the sheet is already mostly on screen at load, the hero's evidence trace
+  // is that surface's move and a second one would break the canon's
+  // one-move-per-surface rule, so the settle waits for a sheet that genuinely
+  // arrives (the phone case, where the hero text fills the first screen).
+  // The keyframes are inside motion.css's no-preference block and this guard
+  // never adds the class under reduced motion, so the settle cannot run twice
+  // and cannot run at all under reduce.
+  const sheet = doc.querySelector(".hero-proof");
+  const motionOff = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (sheet && !motionOff && "IntersectionObserver" in window) {
+    const KEY = "aw-sheet-settled";
+    let seen = false;
+    try {
+      seen = window.sessionStorage.getItem(KEY) === "1";
+    } catch {
+      seen = false;
+    }
+    const box = sheet.getBoundingClientRect();
+    const viewport = window.innerHeight || 1;
+    const visible = box.bottom > 0 && box.top < viewport ? (Math.min(box.bottom, viewport) - Math.max(box.top, 0)) / box.height : 0;
+    if (!seen && visible < 0.5) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            sheet.classList.add("is-settling");
+            observer.disconnect();
+            try {
+              window.sessionStorage.setItem(KEY, "1");
+            } catch {
+              /* storage blocked: the settle may run once more, harmlessly */
+            }
+            break;
+          }
+        },
+        { threshold: 0.5 }
+      );
+      observer.observe(sheet);
+    }
+  }
+
   // --- live status in the footer -----------------------------------------
   const label = doc.querySelector("[data-status-label]");
   if (label) {

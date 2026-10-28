@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor"
+     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <!-- Corner registration ornament for a proof sheet: trim rules with ticks,
+       and the target near the corner. 48 = two grid cells. -->
+  <path d="M1.5 47V1.5H47" />
+  <path d="M18 1.5v5M30 1.5v5M1.5 18h5M1.5 30h5" stroke-width="1" />
+  <circle cx="14" cy="14" r="4.5" />
+  <path d="M14 6v16M6 14h16" stroke-width="1" />
+</svg>

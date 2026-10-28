@@ -1,0 +1,866 @@
+/* ==========================================================================
+   Applywright — CV editor
+   The shell is the desk; the document is paper. Everything visual comes from
+   tokens.css and theme.css: this file only lays out the three panes, makes the
+   paper read like a document, and prints it as a single-column A4 sheet.
+
+   Loaded only by /editor (public/editor.html).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Shell
+   -------------------------------------------------------------------------- */
+
+body {
+  background: var(--bone);
+}
+
+.ed-bar {
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  padding: var(--sp-3) var(--gutter) var(--sp-4);
+}
+
+.ed-bar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-5);
+  max-width: 1560px;
+  margin: 0 auto;
+}
+
+.ed-bar__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  font-size: var(--fs-sm);
+}
+
+.ed-bar__nav a {
+  color: var(--text-soft);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+}
+
+.ed-bar__nav a:hover {
+  color: var(--text);
+  border-bottom-color: var(--line-meaning);
+}
+
+.ed-bar__inner > .nav__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.ed-bar__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-3) var(--sp-5);
+  max-width: 1560px;
+  margin: var(--sp-4) auto 0;
+}
+
+.ed-bar__title {
+  font-family: var(--display);
+  font-size: var(--fs-xl);
+  line-height: var(--lh-snug);
+  margin: 0.15rem 0 0;
+}
+
+.ed-bar__meta {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.ed-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.ed-bar__hint {
+  max-width: 1560px;
+  margin: var(--sp-3) auto 0;
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+}
+
+/* Unsaved state is a word, not a colour: data-state changes the text in JS and
+   the tone here reinforces it. */
+.ed-save[data-state="dirty"] {
+  color: var(--warn);
+}
+
+.ed-save[data-state="saved"] {
+  color: var(--ok);
+}
+
+.ed-save[data-state="error"] {
+  color: var(--err);
+}
+
+.ed-errors {
+  max-width: 1560px;
+  margin: var(--sp-3) auto 0;
+  padding: 0 var(--gutter);
+}
+
+.ed-errors [role="alert"],
+.ed-errors p {
+  border: 1px solid var(--err);
+  border-left-width: 4px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--text);
+  font-size: var(--fs-sm);
+  padding: 0.75rem 1rem;
+  margin: 0 0 var(--sp-2);
+}
+
+.ed-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "nav"
+    "doc"
+    "rail";
+  gap: var(--sp-5) var(--sp-5);
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: var(--sp-5) var(--gutter) var(--sp-9);
+}
+
+.ed-pane {
+  min-width: 0;
+}
+
+.ed-pane--nav {
+  grid-area: nav;
+}
+
+.ed-pane--doc {
+  grid-area: doc;
+  min-width: 0;
+}
+
+.ed-pane--rail {
+  grid-area: rail;
+  min-width: 0;
+  display: grid;
+  gap: var(--sp-4);
+  align-content: start;
+}
+
+@media (min-width: 900px) {
+  .ed-shell {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+    grid-template-areas:
+      "nav nav"
+      "doc rail";
+  }
+
+  .ed-pane--nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-2) var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: var(--sp-2);
+  }
+
+  .ed-pane--nav .ed-pane__title {
+    margin: 0;
+  }
+
+  .ed-pane--nav .ed-pane__note {
+    display: none;
+  }
+
+  .ed-pane--rail {
+    position: sticky;
+    top: var(--sp-4);
+    max-height: calc(100vh - var(--sp-6));
+    overflow: auto;
+    padding-right: 2px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .ed-shell {
+    grid-template-columns: 200px minmax(0, 1fr) minmax(320px, 400px);
+    grid-template-areas: "nav doc rail";
+  }
+
+  .ed-pane--nav {
+    display: block;
+    position: sticky;
+    top: var(--sp-4);
+    align-self: start;
+    max-height: calc(100vh - var(--sp-6));
+    overflow: auto;
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .ed-pane--nav .ed-pane__note {
+    display: block;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Section list
+   -------------------------------------------------------------------------- */
+
+.ed-pane__title {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 var(--sp-3);
+}
+
+.ed-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-2);
+}
+
+@media (min-width: 1200px) {
+  .ed-nav {
+    display: grid;
+    gap: 0;
+  }
+}
+
+.ed-nav a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  min-height: 2rem;
+}
+
+.ed-nav a:hover {
+  color: var(--text);
+  background: var(--bone);
+  border-color: var(--line);
+}
+
+.ed-nav a[aria-current="true"] {
+  color: var(--text);
+  border-color: var(--line-meaning);
+  background: var(--paper);
+}
+
+.ed-nav__count {
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.ed-pane__note {
+  margin: var(--sp-3) 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  max-width: 30ch;
+}
+
+/* --------------------------------------------------------------------------
+   Document pane
+   -------------------------------------------------------------------------- */
+
+.ed-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 0 0 var(--sp-2);
+}
+
+.ed-toolbar__state {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.ed-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.ed-loading {
+  border: 1px dashed var(--line-meaning);
+  border-radius: var(--r-md);
+  padding: var(--sp-6);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.ed-paper {
+  display: block;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sheet);
+  padding: clamp(1.1rem, 3vw, 2.5rem);
+}
+
+.ed-block + .ed-block {
+  border-top: 1px solid var(--line);
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+}
+
+.ed-block__title {
+  font-family: var(--display);
+  font-size: var(--fs-lg);
+  margin: 0;
+  scroll-margin-top: var(--sp-5);
+}
+
+.ed-block__hint {
+  margin: 0.35rem 0 var(--sp-3);
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  max-width: 68ch;
+}
+
+.ed-contact {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+@media (min-width: 700px) {
+  .ed-contact {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ed-contact .field:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* The editors are the document: no box, no chrome, paper underneath. */
+.ed-input {
+  min-height: 0;
+  background: transparent;
+  border-color: transparent;
+  font-family: var(--sans);
+  font-size: var(--fs-reading);
+  line-height: var(--lh-reading);
+  padding: 0.5rem 0.6rem;
+  resize: vertical;
+}
+
+.ed-input:hover {
+  border-color: var(--line);
+}
+
+.ed-input:focus,
+.ed-input:focus-visible {
+  border-color: var(--focus);
+  background: var(--paper);
+}
+
+.ed-input--compact {
+  min-height: 0;
+  font-size: var(--fs-sm);
+}
+
+.ed-paper__note {
+  margin: var(--sp-5) 0 0;
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   Diff on save
+   -------------------------------------------------------------------------- */
+
+.ed-diff {
+  margin-top: var(--sp-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  padding: var(--sp-4);
+}
+
+.ed-diff__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+
+.ed-diff__title {
+  font-family: var(--display);
+  font-size: var(--fs-md);
+  margin: 0;
+}
+
+.ed-diff__summary {
+  margin: var(--sp-2) 0 var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.ed-diff__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 24rem;
+  overflow: auto;
+  border-top: 1px solid var(--line);
+}
+
+.ed-diff__row {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: var(--sp-2);
+  padding: 0.2rem 0.35rem;
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ed-diff__mark {
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.ed-diff__row[data-kind="add"] {
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+}
+
+.ed-diff__row[data-kind="add"] .ed-diff__mark {
+  color: var(--ok);
+}
+
+.ed-diff__row[data-kind="del"] {
+  background: color-mix(in srgb, var(--err) 10%, transparent);
+}
+
+.ed-diff__row[data-kind="del"] .ed-diff__mark {
+  color: var(--err);
+}
+
+.ed-diff__row[data-kind="del"] .ed-diff__text {
+  text-decoration: line-through;
+}
+
+/* --------------------------------------------------------------------------
+   Rail cards
+   -------------------------------------------------------------------------- */
+
+.ed-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  padding: var(--sp-4);
+}
+
+.ed-card__title {
+  font-family: var(--display);
+  font-size: var(--fs-md);
+  margin: 0 0 var(--sp-2);
+}
+
+.ed-card__note {
+  margin: 0 0 var(--sp-3);
+  color: var(--text-soft);
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+}
+
+.ed-card__status {
+  margin: var(--sp-2) 0 0;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.ed-card__status[data-tone="err"] {
+  color: var(--err);
+}
+
+.ed-card__status[data-tone="ok"] {
+  color: var(--ok);
+}
+
+.ed-agent {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.ed-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: 0;
+}
+
+.btn--sm {
+  padding: 0.3rem 0.6rem;
+  font-size: var(--fs-xs);
+}
+
+/* --------------------------------------------------------------------------
+   Proposals: one hunk, two buttons, no auto-apply
+   -------------------------------------------------------------------------- */
+
+.ed-proposals {
+  display: grid;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+
+.ed-hunk {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--bone);
+  padding: var(--sp-3);
+}
+
+.ed-hunk[data-state="accepted"] {
+  border-left-color: var(--ok);
+}
+
+.ed-hunk[data-state="rejected"] {
+  border-left-color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.ed-hunk__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+
+.ed-hunk__section {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ed-hunk__why {
+  margin: var(--sp-2) 0;
+  font-size: var(--fs-xs);
+  color: var(--text-soft);
+}
+
+.ed-hunk__pair {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0 0 var(--sp-3);
+}
+
+.ed-hunk__before,
+.ed-hunk__after {
+  margin: 0;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--r-folio);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ed-hunk__before {
+  background: color-mix(in srgb, var(--err) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--err) 30%, transparent);
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--err) 55%, transparent);
+}
+
+.ed-hunk__after {
+  background: color-mix(in srgb, var(--ok) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ok) 34%, transparent);
+}
+
+.ed-hunk__label {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+  text-decoration: none;
+}
+
+.ed-hunk__after .ed-hunk__label {
+  text-decoration: none;
+}
+
+.ed-hunk__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* --------------------------------------------------------------------------
+   Sources: parsed profile, merge choices, keyword coverage
+   -------------------------------------------------------------------------- */
+
+.ed-source {
+  border-top: 1px solid var(--line);
+  padding: var(--sp-2) 0;
+}
+
+.ed-source:first-of-type {
+  border-top: 0;
+}
+
+.ed-source > summary {
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  padding: 0.2rem 0;
+}
+
+.ed-source > summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.ed-source__body {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-2) 0 var(--sp-1);
+}
+
+.ed-source__body .hint {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.ed-parse {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: var(--sp-3);
+  background: var(--bone);
+  font-size: var(--fs-xs);
+}
+
+.ed-parse__rows {
+  display: grid;
+  gap: 0.2rem;
+  margin: var(--sp-2) 0;
+}
+
+.ed-parse__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.ed-parse__row span:first-child {
+  color: var(--text-muted);
+}
+
+.ed-merge {
+  border: 0;
+  padding: 0;
+  margin: var(--sp-2) 0;
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.ed-merge legend {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  padding: 0;
+}
+
+.ed-merge label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+}
+
+.ed-merge input {
+  accent-color: var(--accent);
+}
+
+.ed-coverage {
+  display: grid;
+  gap: var(--sp-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: var(--sp-3);
+  background: var(--bone);
+  font-size: var(--fs-xs);
+}
+
+.ed-coverage__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+
+.ed-coverage__score {
+  font-family: var(--mono);
+  font-size: var(--fs-md);
+}
+
+.ed-taglist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ed-tag {
+  border: 1px solid var(--line-meaning);
+  border-radius: var(--r-pill);
+  padding: 0.05rem 0.5rem;
+  font-size: var(--fs-xs);
+  color: var(--text-soft);
+}
+
+.ed-tag[data-state="missing"] {
+  border-style: dashed;
+}
+
+.ed-limits {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--text-soft);
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+  display: grid;
+  gap: 0.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   Print: the document only, A4, one column
+   The values mirror server/lib/packs/build.js so the page and the printable
+   pack look like the same product.
+   -------------------------------------------------------------------------- */
+
+#ed-print-doc {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm;
+  }
+
+  /* A dark visit must not print grey-on-grey. */
+  html,
+  body {
+    background: #ffffff !important;
+    color: #14161a !important;
+  }
+
+  body > *:not(#ed-print-doc) {
+    display: none !important;
+  }
+
+  #ed-print-doc {
+    display: block;
+    background: #ffffff;
+    color: #14161a;
+    font-family: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.42;
+  }
+
+  #ed-print-doc h1 {
+    margin: 0 0 1.5mm;
+    font-size: 18pt;
+    line-height: 1.15;
+    font-weight: 600;
+    font-family: inherit;
+  }
+
+  #ed-print-doc h2 {
+    margin: 5.5mm 0 1.5mm;
+    padding-bottom: 1mm;
+    border-bottom: 0.5pt solid #b9bcc2;
+    font-size: 11pt;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-family: inherit;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  #ed-print-doc p {
+    margin: 0 0 1.8mm;
+  }
+
+  #ed-print-doc ul {
+    margin: 0 0 1.8mm;
+    padding-left: 5mm;
+  }
+
+  #ed-print-doc li {
+    margin: 0 0 0.8mm;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #ed-print-doc .ed-print__contact {
+    margin: 0 0 1mm;
+    color: #333842;
+    overflow-wrap: break-word;
+  }
+
+  #ed-print-doc .ed-print__meta {
+    margin: 0 0 1mm;
+    color: #333842;
+  }
+
+  #ed-print-doc p,
+  #ed-print-doc li {
+    orphans: 3;
+    widows: 3;
+  }
+}
+
+/* The print sheet is built in the DOM, so these two live inline. Anything that
+   would print a control or a rail is removed by the body > * rule above. */
+.ed-print__role {
+  margin: 0;
+}
+
+.ed-print__role-meta {
+  margin: 0 0 1.2mm;
+  color: #333842;
+}

@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CV editor · Applywright</title>
+  <meta name="description" content="Edit your CV as plain text, ask for grounded rewrites one hunk at a time, add data from sources and export Markdown, PDF or DOCX." />
+  <meta name="theme-color" content="#0b0c0e" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/tokens.css" />
+  <link rel="stylesheet" href="/assets/theme.css" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="/assets/editor.css" />
+  <!-- Blocking and after the stylesheets: the saved or system theme is applied
+       before the first paint. Same-origin, so script-src 'self' covers it, and
+       no inline boot code, which the CSP and scripts/check.js both forbid. -->
+  <script src="/assets/theme.js"></script>
+</head>
+<body>
+  <a class="skip" href="#ed-main">Skip to content</a>
+
+  <header class="ed-bar">
+    <div class="ed-bar__inner">
+      <a class="brand" href="/">
+        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+          <circle class="m-ring" cx="16" cy="16" r="13.25" stroke-width="1.5" />
+          <circle class="m-core" cx="16" cy="16" r="5" />
+          <path class="m-ring" d="M16 2.75v4.1M16 25.15v4.1M2.75 16h4.1M25.15 16h4.1" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <span>Applywright</span>
+      </a>
+
+      <nav class="ed-bar__nav" aria-label="Product">
+        <a href="/app">Dashboard</a>
+        <a href="/app/cv">CV library</a>
+      </nav>
+
+      <!-- theme.js injects the colour control here; it needs no other hook. -->
+      <div class="nav__actions">
+        <a class="btn btn--ghost" href="/app/cv">Back to the library</a>
+      </div>
+    </div>
+
+    <div class="ed-bar__head">
+      <div>
+        <p class="eyebrow">Plain text and Markdown</p>
+        <h1 class="ed-bar__title" id="ed-title">CV editor</h1>
+        <p class="ed-bar__meta">
+          <span id="ed-cv-name">Loading your CV…</span>
+          <span class="dot-sep" aria-hidden="true">·</span>
+          <span class="mono ed-save" id="ed-save-state" data-savestate data-state="loading">loading</span>
+        </p>
+      </div>
+      <div class="ed-bar__actions" role="group" aria-label="Document actions">
+        <button class="btn btn--primary" type="button" id="ed-save" data-save aria-keyshortcuts="Control+S Meta+S" disabled>
+          Save
+        </button>
+        <button class="btn btn--ghost" type="button" id="ed-download-md" disabled>Download .md</button>
+        <button class="btn btn--ghost" type="button" id="ed-print" disabled>Print / PDF</button>
+        <button class="btn btn--ghost" type="button" id="ed-download-docx" disabled>Download .docx</button>
+      </div>
+    </div>
+    <p class="ed-bar__hint" id="ed-shortcuts">
+      <span class="mono">⌘/Ctrl + S</span> saves. The document is the text the analyser and the printable pack read —
+      not a layout you have to fight.
+    </p>
+  </header>
+
+  <div class="ed-errors" id="ed-errors" hidden></div>
+
+  <div class="ed-shell">
+    <!-- ---------------------------------------------------- section list -->
+    <nav class="ed-pane ed-pane--nav" aria-labelledby="ed-sections-title">
+      <h2 class="ed-pane__title" id="ed-sections-title">Sections</h2>
+      <ul class="ed-nav" id="ed-nav">
+        <li><a href="#ed-section-contact">Contact <span class="ed-nav__count mono" data-count="contact">—</span></a></li>
+        <li><a href="#ed-section-summary">Summary <span class="ed-nav__count mono" data-count="summary">—</span></a></li>
+        <li><a href="#ed-section-experience">Experience <span class="ed-nav__count mono" data-count="experience">—</span></a></li>
+        <li><a href="#ed-section-education">Education <span class="ed-nav__count mono" data-count="education">—</span></a></li>
+        <li><a href="#ed-section-skills">Skills <span class="ed-nav__count mono" data-count="skills">—</span></a></li>
+        <li><a href="#ed-section-other">Other <span class="ed-nav__count mono" data-count="other">—</span></a></li>
+      </ul>
+      <p class="ed-pane__note">
+        Each count is the number of words in that section on the saved copy. The assistant in the right-hand rail
+        proposes changes; you accept them one at a time.
+      </p>
+    </nav>
+
+    <!-- ---------------------------------------------------- the document -->
+    <main class="ed-pane ed-pane--doc" id="ed-main" tabindex="-1">
+      <h2 class="sr-only" id="ed-doc-title">Your CV document</h2>
+
+      <div class="ed-toolbar">
+        <p class="ed-toolbar__state">
+          <span class="mono ed-save" data-savestate data-state="loading">loading</span>
+        </p>
+        <div class="ed-toolbar__actions">
+          <button class="btn btn--primary" type="button" data-save aria-keyshortcuts="Control+S Meta+S" disabled>Save</button>
+        </div>
+      </div>
+
+      <div class="ed-loading" id="ed-loading" role="status">
+        <p>Loading the CV…</p>
+      </div>
+
+      <form class="ed-paper" id="ed-form" novalidate hidden>
+        <section class="ed-block" id="ed-section-contact" aria-labelledby="ed-h-contact">
+          <h2 class="ed-block__title" id="ed-h-contact">Contact</h2>
+          <p class="ed-block__hint" id="ed-hint-contact">
+            One item per line. A phone number that does not start with <span class="mono">+</span> is written with a
+            <span class="mono">Phone:</span> label on save, because that is what keeps it in the contact block when the
+            server reads the text back.
+          </p>
+          <div class="ed-contact">
+            <div class="field">
+              <label for="ed-contact-name">Name</label>
+              <input class="input" id="ed-contact-name" name="name" type="text" autocomplete="name" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="ed-contact-email">Email</label>
+              <input class="input" id="ed-contact-email" name="email" type="text" inputmode="email" autocomplete="email" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="ed-contact-phone">Phone</label>
+              <input class="input" id="ed-contact-phone" name="phone" type="text" inputmode="tel" autocomplete="tel" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="ed-contact-links">Links</label>
+              <textarea class="textarea ed-input--compact" id="ed-contact-links" name="links" rows="2" spellcheck="false" aria-describedby="ed-hint-contact"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="ed-block" id="ed-section-summary" aria-labelledby="ed-h-summary">
+          <h2 class="ed-block__title" id="ed-h-summary">Summary</h2>
+          <p class="ed-block__hint" id="ed-hint-summary">Two or three sentences. The analyser reads it and the pack prints it.</p>
+          <div class="field">
+            <label class="sr-only" for="ed-text-summary">Summary text</label>
+            <textarea class="textarea ed-input" id="ed-text-summary" name="summary" rows="5" aria-describedby="ed-hint-summary"></textarea>
+          </div>
+        </section>
+
+        <section class="ed-block" id="ed-section-experience" aria-labelledby="ed-h-experience">
+          <h2 class="ed-block__title" id="ed-h-experience">Experience</h2>
+          <p class="ed-block__hint" id="ed-hint-experience">
+            Role lines stay as they are. Lines that start with <span class="mono">-</span>, <span class="mono">*</span> or
+            a number are the bullets the assistant may rewrite.
+          </p>
+          <div class="field">
+            <label class="sr-only" for="ed-text-experience">Experience text</label>
+            <textarea class="textarea ed-input" id="ed-text-experience" name="experience" rows="14" aria-describedby="ed-hint-experience"></textarea>
+          </div>
+        </section>
+
+        <section class="ed-block" id="ed-section-education" aria-labelledby="ed-h-education">
+          <h2 class="ed-block__title" id="ed-h-education">Education</h2>
+          <p class="ed-block__hint" id="ed-hint-education">Qualification, institution and dates. These are facts the assistant may not change.</p>
+          <div class="field">
+            <label class="sr-only" for="ed-text-education">Education text</label>
+            <textarea class="textarea ed-input" id="ed-text-education" name="education" rows="5" aria-describedby="ed-hint-education"></textarea>
+          </div>
+        </section>
+
+        <section class="ed-block" id="ed-section-skills" aria-labelledby="ed-h-skills">
+          <h2 class="ed-block__title" id="ed-h-skills">Skills</h2>
+          <p class="ed-block__hint" id="ed-hint-skills">A comma-separated list reads best to the analyser. Empty sections are left out of the saved text.</p>
+          <div class="field">
+            <label class="sr-only" for="ed-text-skills">Skills text</label>
+            <textarea class="textarea ed-input" id="ed-text-skills" name="skills" rows="4" aria-describedby="ed-hint-skills"></textarea>
+          </div>
+        </section>
+
+        <section class="ed-block" id="ed-section-other" aria-labelledby="ed-h-other">
+          <h2 class="ed-block__title" id="ed-h-other">Other</h2>
+          <p class="ed-block__hint" id="ed-hint-other">
+            Projects, certifications, languages, awards — whichever the parser could not place above. Leave it empty to
+            leave it out.
+          </p>
+          <div class="field">
+            <label class="sr-only" for="ed-text-other">Other content</label>
+            <textarea class="textarea ed-input" id="ed-text-other" name="other" rows="4" aria-describedby="ed-hint-other"></textarea>
+          </div>
+        </section>
+
+        <p class="ed-paper__note">
+          Saved as plain text: the server re-reads it into the same sections, so the analyser, the tailor and the
+          printable pack all see exactly this.
+        </p>
+      </form>
+
+      <section class="ed-diff" id="ed-diff-region" aria-labelledby="ed-diff-title" hidden>
+        <div class="ed-diff__head">
+          <h2 class="ed-diff__title" id="ed-diff-title">What changed on save</h2>
+          <button class="btn btn--ghost btn--sm" type="button" id="ed-diff-close">Hide the diff</button>
+        </div>
+        <p class="ed-diff__summary mono" id="ed-diff-summary"></p>
+        <ol class="ed-diff__rows" id="ed-diff-rows"></ol>
+      </section>
+    </main>
+
+    <!-- ------------------------------------------------------- right rail -->
+    <aside class="ed-pane ed-pane--rail" aria-labelledby="ed-rail-title">
+      <h2 class="sr-only" id="ed-rail-title">Assistant and data sources</h2>
+
+      <section class="ed-card" aria-labelledby="ed-agent-title">
+        <h3 class="ed-card__title" id="ed-agent-title">AI agent</h3>
+        <p class="ed-card__note">
+          It rewrites only what you already wrote. Every proposed string is checked against this CV first: a number,
+          employer, job title, qualification or date that is not in the document rejects the change. Nothing is applied
+          until you accept it, and nothing is saved until you do.
+        </p>
+
+        <form class="ed-agent" id="ed-agent-form" novalidate>
+          <div class="field">
+            <label for="ed-instruction">What should change?</label>
+            <textarea class="textarea" id="ed-instruction" name="instruction" rows="3" aria-describedby="ed-instruction-hint"></textarea>
+            <p class="hint" id="ed-instruction-hint">
+              Shorter, longer, formal, plainer, more senior, less jargon, first person, UK spelling. Quote a phrase in
+              “double quotes” to protect it. <span class="mono">⌘/Ctrl + Enter</span> sends.
+            </p>
+          </div>
+          <div class="field">
+            <label for="ed-scope">Scope</label>
+            <select class="select" id="ed-scope" name="scope">
+              <option value="cv">Whole CV</option>
+              <option value="summary">Summary only</option>
+              <option value="experience">Experience only</option>
+              <option value="education">Education only</option>
+              <option value="skills">Skills only</option>
+              <option value="other">Other only</option>
+            </select>
+          </div>
+          <p class="ed-actions">
+            <button class="btn btn--primary" type="submit" id="ed-ask">Ask for a proposal</button>
+          </p>
+        </form>
+
+        <p class="ed-card__status" id="ed-assist-state" role="status" aria-live="polite"></p>
+        <div class="ed-proposals" id="ed-proposals"></div>
+      </section>
+
+      <section class="ed-card" id="ed-sources" aria-labelledby="ed-sources-title">
+        <h3 class="ed-card__title" id="ed-sources-title">Add data from sources</h3>
+        <p class="ed-card__note">
+          Nothing here is fetched for you. Every source is text you paste, or a file you pick yourself.
+        </p>
+
+        <details class="ed-source" id="ed-source-linkedin">
+          <summary>Paste a LinkedIn profile</summary>
+          <div class="ed-source__body">
+            <p class="hint">
+              LinkedIn does not let other applications read your profile, so there is no sign-in button to offer.
+              Copy the profile text from the browser where you are already signed in — or use your own PDF export —
+              and paste it below. Applywright never signs in to LinkedIn, uses no OAuth, and never fetches the page.
+            </p>
+            <div class="field">
+              <label for="ed-linkedin-text">Profile text</label>
+              <textarea class="textarea" id="ed-linkedin-text" rows="6"></textarea>
+            </div>
+            <div class="ed-actions">
+              <button class="btn btn--ghost" type="button" id="ed-linkedin-read">Read this profile</button>
+              <button class="btn btn--ghost" type="button" id="ed-linkedin-paste">Paste from clipboard</button>
+            </div>
+            <p class="ed-card__status" id="ed-linkedin-state" role="status" aria-live="polite"></p>
+            <div id="ed-linkedin-result"></div>
+          </div>
+        </details>
+
+        <details class="ed-source" id="ed-source-advert">
+          <summary>Paste an advert</summary>
+          <div class="ed-source__body">
+            <p class="hint">
+              Paste the advert and see which of its keywords this CV already covers, measured by the same rubric the
+              score uses. Nothing is stored.
+            </p>
+            <div class="field">
+              <label for="ed-advert-text">Advert text</label>
+              <textarea class="textarea" id="ed-advert-text" rows="6"></textarea>
+            </div>
+            <div class="ed-actions">
+              <button class="btn btn--ghost" type="button" id="ed-advert-check">Check keyword coverage</button>
+            </div>
+            <p class="ed-card__status" id="ed-advert-state" role="status" aria-live="polite"></p>
+            <div id="ed-advert-result"></div>
+          </div>
+        </details>
+
+        <details class="ed-source" id="ed-source-upload">
+          <summary>Upload a file</summary>
+          <div class="ed-source__body">
+            <p class="hint">
+              PDF, DOCX, Markdown and plain text are read in the CV library's ingest drawer, which is also where a
+              new CV is created. This page edits a CV that already exists, so the upload route is a link rather than a
+              second copy of the same form.
+            </p>
+            <p class="ed-actions">
+              <a class="btn btn--ghost" href="/app/cv?import=1#cv-ingest">Open the ingest drawer</a>
+            </p>
+            <p class="hint">
+              It opens the library with the drawer expanded; choose “Upload a file”, then come back here with the new
+              CV selected.
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <section class="ed-card" aria-labelledby="ed-limits-title">
+        <h3 class="ed-card__title" id="ed-limits-title">What this page will not do</h3>
+        <ul class="ed-limits">
+          <li>It does not apply a proposal for you. Accepting a hunk is a click; saving is a second one.</li>
+          <li>It does not invent an employer, title, qualification, date or number, and it rejects a proposal that does.</li>
+          <li>It does not fetch LinkedIn, or any other page. You paste; it reads.</li>
+          <li>It prints a single-column A4 document. Two-column CV designs are out of scope on purpose.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <p class="sr-only" id="ed-status" role="status" aria-live="polite"></p>
+
+  <noscript>
+    <div class="ed-errors">
+      <p>This editor needs JavaScript: every read and write goes through the Applywright API with your session cookie,
+        and the document is rebuilt from the sections the server returns. The API is still there if you want it.</p>
+    </div>
+  </noscript>
+
+  <script src="/assets/editor.js" type="module"></script>
+</body>
+</html>

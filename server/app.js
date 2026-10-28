@@ -58,6 +58,10 @@ import {
 } from "./util.js";
 
 import { extractText, segmentSections } from "./lib/cv/extract.js";
+// The CV editor's document model lives with the page, because the browser, this
+// server and the tests all have to reconstruct the identical text. It is a pure
+// ES module with no DOM access at import time (see public/assets/editor.js).
+import { applyChange, documentFromProfile, reconstructCvText } from "../public/assets/editor.js";
 import { scoreCv } from "./lib/cv/score.js";
 import { tailorCv } from "./lib/cv/tailor.js";
 import { fetchJobs } from "./lib/jobs/sources.js";
@@ -1247,6 +1251,139 @@ ${items}
     });
   });
 
+  /**
+   * The CV editor's agent: propose, never save.
+   *
+   * `refine` is the engine that already keeps the product's promise — it takes
+   * the candidate's instruction, runs the deterministic rules (or one validated
+   * model call) and reverts any edit that fails `groundChanges`. This route
+   * builds a pack out of the CV's own sections, refuses anything that does not
+   * name an editable unit, maps every returned field back to a section, and then
+   * runs the grounding check a second time against the whole CV with the figure
+   * rule switched on. Only proposals reach the client; neither the CV nor the
+   * usage table is written, and accepting is a separate PATCH from the editor.
+   *
+   * Request:  { instruction, scope? }
+   * Response: { proposed: { text, sections }, changes: [{ field, section,
+   *             before, after, why }], rejected: [{ field, section, before,
+   *             after, reasons }], mode, warnings, scope, saved: false }
+   */
+  app.post("/api/cvs/:id/assist", requireUser, async (req, res) => {
+    const body = req.body ?? {};
+    const cv = store.cvById(req.params.id, req.user.id);
+    if (!cv) throw notFound("CV not found");
+
+    const instruction = assertString(body.instruction, "instruction", { min: 3, max: 500 });
+    const scopes = ["cv", "summary", "experience", "education", "skills", "other"];
+    const scope = typeof body.scope === "string" && body.scope.trim() ? body.scope.trim().toLowerCase() : "cv";
+    if (!scopes.includes(scope)) throw badRequest(`scope must be one of ${scopes.join(", ")}`);
+
+    const profile = cv.profile && typeof cv.profile === "object" && cv.profile.sections ? cv.profile : segmentSections(cv.text);
+    const document = documentFromProfile(profile);
+
+    // One editable unit per piece of line-level text. `summary` is refine's own
+    // summary field; everything else is addressed as a bullet, which is how
+    // refine edits a single line. A bullet's marker is stripped from `before`
+    // and restored by applyChange, so a rewrite cannot eat the "- ".
+    const units = [];
+    const bulletText = (line) => line.replace(/^\s*(?:[-*•▪◦‣·]|\d+[.)])\s+/, "").trim();
+    const experience = String(document.sections.experience ?? "");
+    const experienceBullets = experience.split("\n").filter((line) => /^\s*(?:[-*•▪◦‣·]|\d+[.)])\s+/.test(line));
+    if (experienceBullets.length) {
+      for (const line of experienceBullets) units.push({ section: "experience", before: bulletText(line) });
+    } else if (experience.trim()) {
+      units.push({ section: "experience", before: experience });
+    }
+    for (const key of ["education", "skills", "other"]) {
+      const value = String(document.sections[key] ?? "");
+      if (value.trim()) units.push({ section: key, before: value });
+    }
+
+    const pack = {
+      cvTextPlain: cv.text,
+      coverLetterMd: "",
+      answers: [],
+      tailored: {
+        summary: String(document.sections.summary ?? ""),
+        bullets: units.map((unit) => ({ original: unit.before, rewritten: unit.before, section: unit.section })),
+        keywordsPlaced: [],
+      },
+    };
+
+    // A target word in the hint steers the rules path at the requested field.
+    // "bullets" is refine's word for line-level text, which is what education,
+    // skills and other are here; the scope filter below is the real selector.
+    const hints = { summary: "summary", experience: "bullets", education: "bullets", skills: "bullets", other: "bullets" };
+    const hint = scope === "cv" ? "" : hints[scope] ?? "";
+
+    const refineLib = await loadRefine();
+    const refined = await refineLib.refine({ pack, instruction, ...(hint ? { style: hint } : {}), model });
+
+    const proposed = { ...document.sections };
+    const changes = [];
+    const rejected = [];
+
+    for (const change of refined.changes ?? []) {
+      const field = String(change.field ?? "");
+      const before = String(change.before ?? "");
+      const after = String(change.after ?? "");
+      const why = String(change.reason ?? "");
+      let unit = null;
+      if (field === "summary") unit = { section: "summary", before: document.sections.summary };
+      else if (field.startsWith("bullets.")) unit = units[Number(field.split(".")[1])] ?? null;
+
+      if (!unit) {
+        rejected.push({
+          field,
+          section: field === "coverLetter" ? "cover letter" : field || "unknown",
+          before,
+          after,
+          reasons: ["that field is not part of this CV, so it was not proposed"],
+        });
+        continue;
+      }
+      // Out-of-scope proposals are dropped rather than reported: asking for the
+      // summary and being shown four education edits is noise, not a refusal.
+      if (scope !== "cv" && unit.section !== scope) continue;
+
+      // The independent gate. refine checks each field as it edits it; this is
+      // the same check re-run from the route, against the whole stored CV, so a
+      // future change inside refine cannot quietly widen what reaches the user.
+      const check = refineLib.groundChanges(before, after, { context: cv.text });
+      if (!check.ok) {
+        rejected.push({ field, section: unit.section, before, after, reasons: check.reasons });
+        continue;
+      }
+
+      const next = applyChange(proposed[unit.section], before, after);
+      if (next === null) {
+        rejected.push({
+          field,
+          section: unit.section,
+          before,
+          after,
+          reasons: ["that text is no longer in the section it names"],
+        });
+        continue;
+      }
+      proposed[unit.section] = next;
+      changes.push({ field, section: unit.section, before, after, why });
+    }
+
+    res.json({
+      cvId: cv.id,
+      scope,
+      mode: refined.mode === "model" ? "model" : "rules",
+      proposed: { text: reconstructCvText({ contact: document.contact, sections: proposed }), sections: proposed },
+      changes,
+      rejected,
+      warnings: refined.warnings ?? [],
+      saved: false,
+      advisory:
+        "This is a proposal and nothing has been saved. Every string above passed the grounding check: no new number, employer, job title, qualification or date, and no figure dropped. Accepting a change in the editor is what saves it.",
+    });
+  });
+
   // ----------------------------------------------------------------- pages
   app.post("/api/contact", async (req, res) => {
     const body = req.body ?? {};
@@ -1319,6 +1456,20 @@ ${items}
   app.get(APP_ROUTE, async (req, res, next) => {
     try {
       const html = await pages.render("app/app.html", "/app");
+      if (!html) return next();
+      res.setHeader("cache-control", "no-cache");
+      res.type("html").send(html);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // The CV editor is its own page rather than an SPA screen: it needs a print
+  // stylesheet, a three-pane layout and a document that is not re-rendered on
+  // every keystroke. The route is additive, so /app is untouched.
+  app.get("/editor", async (req, res, next) => {
+    try {
+      const html = await pages.render("editor.html", "/editor");
       if (!html) return next();
       res.setHeader("cache-control", "no-cache");
       res.type("html").send(html);

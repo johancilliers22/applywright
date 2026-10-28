@@ -305,7 +305,54 @@ node "$T3\mission.cjs" accept <mission-id> <evidence.md>    # only after you hav
 | **Stripe keys** | no `STRIPE_SECRET_KEY`, webhook secret or price IDs; checkout and portal answer 501 and no real event has ever been seen | `/api/health` → `"stripe": false`; plan 5.5 |
 | **VAT machinery** | the rate and whether displayed prices are inclusive is a legal decision; the copy now says prices include applicable tax, but there is no VAT line, calculation or invoice | `plans.js`; `PROJECT-STATUS.md` §9; `SOTA-20261028.md` §5 |
 | **Scale-tier decision** | Scale was left a quota tier after the unenforceable flags were withdrawn; whether it earns a real differentiator or is repriced is a product decision | `PROJECT-STATUS.md` §9; `SOTA-20261028.md` §5 |
-| **Claude-agent route in T3** | disabled by `ROLES.json` policy; enabling it needs Johan's edit, a recorded reason and the same-commit doc update | `ROLES.json` `providerPolicy`; `mission.cjs:141` |
+| **Claude-agent route in T3** | disabled by `ROLES.json`, and since 28 Oct the usage limit is exhausted anyway; re-enabling needs Johan's edit, a recorded reason and the same-commit doc update | `ROLES.json` `providerPolicy`; `mission.cjs:141`; §10 |
 
 Never put a key on a command line, in a remote URL or in a document. Keys arrive through the estate
 loader or the service environment; the remote is public, so history is not private.
+
+## 10. Live status — you are the orchestrator now, not later
+
+Johan's message on 28 Oct evening: **Claude usage limit hit, so the relay to Codex is happening now.**
+Treat everything below as current, not prospective.
+
+- **Claude is unavailable** for orchestration and review until its limit resets (Johan's estimate:
+  Saturday). The T3 `claudeAgent` route is disabled in `ROLES.json`, which now matches reality rather than
+  merely policy — so nothing here waits on Claude, and no work should be parked for it.
+- **`ROLES.json`'s recorded reason is stale** ("Operator selected Codex-only runtime checks on
+  2026-10-16"). Do not edit the file yourself: ask Johan to replace that reason with the usage-limit one,
+  in the same commit as any role change he makes.
+- **The product's model path is unaffected.** The site's AI editing calls the Claude *org API key*
+  directly through the estate loader (`MODEL-CONFIG.md`), which is a product dependency, not a Claude
+  Code session. It was verified live this evening (`mode: model`, one accepted change, contact-data
+  warning). Leave it alone unless it breaks, and never read or print the key.
+- **An automation already exists** in this Codex workspace ("Estate Codex co-orchestrator continuity",
+  every 2 hours). Use it as the heartbeat: each run should leave one log entry and, if it touched the
+  product, a commit. Do not create a second scheduler.
+
+### The living-docs contract
+
+Codex owns the documents from now on. A session that changes the product without updating them has
+left the next agent a lie, and that has already happened twice on this project (a handoff describing
+master/no-remote, and a CSS cleanup that looked safe and was a contrast regression).
+
+| File | Update when | What to write |
+|---|---|---|
+| `docs/OVERNIGHT-LOG.md` | every working session | what you verified, what changed, what you left, the exact gate output |
+| `docs/PROJECT-STATUS.md` | a route, module, schema version or gate count moves | the new fact, marked measured with the date |
+| `docs/IMPLEMENTATION-PLAN.md` | an item starts or finishes | status plus the commit; never leave a done item reading QUEUED |
+| `docs/E2E-VERIFICATION.md` | the harness runs | the ledger and the commit it measured |
+| `docs/CODEX-ORCHESTRATOR-HANDOFF.md` (this file) | routing or ownership changes | the change and why |
+| `docs/T3-MISSIONS.md` and `docs/t3/*.json` | the flow or a spec changes | keep the specs runnable |
+| `docs/ESTATE-RELAY.md`, `docs/CLAUDE-ESTATE-RELAY.md` | superseded facts | correct or point here; do not leave two truths |
+| vault `brain/applywright-platform.md` | the project's shape changes | this is the only vault file this project may write |
+
+### Delegation, at the scale Johan has authorised
+
+- **DSH (DeepSeek) implements.** One worktree per mission (`git -C <repo> worktree add ..\applywright--<slug> -b wt/<slug>`), disjoint owned paths, and the brief written to a file before launching. The Lead commits named paths; DSH never merges.
+- **T3 records and verifies.** Mission ledger, receipts, read-only review/test children. No child writes this repo until Johan assigns a write surface, and the coordinator is the sole ledger writer.
+- **Cross-CLI is allowed.** Gemini (vision, long-context) and Grok (live web, legal/market) through their own sign-ins; a research note with citations lands in `docs/research/`. Never paste a key anywhere, and never route a provider through another provider's billing.
+- **"Unlimited agents" is capacity, not permission to skip gates.** Every claim ends with a command's output or a screenshot; the three gates and the E2E harness are cheap enough to run every session.
+
+### If Claude comes back on Saturday
+
+Johan re-enables the route (superseding `ROLES.json`'s reason) and Claude returns as a **reviewer child** in T3, not as the orchestrator. Do not hand control back silently: record the switch in `OVERNIGHT-LOG.md` and in this file's §2 table.

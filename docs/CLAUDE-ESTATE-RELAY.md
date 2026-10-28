@@ -1,3 +1,9 @@
+> **Status, 28 Oct evening — this relay has been executed.** Claude's usage limit is exhausted, so the
+> handover to Codex happened immediately rather than on Saturday: the Codex desktop chat is the
+> orchestrator, DSH implements, T3 tracks and verifies. Run §2 once to confirm the handoff is true, then
+> stop — the living-docs duty and the routing are in `CODEX-ORCHESTRATOR-HANDOFF.md` §10, which is now the
+> operating brief. When the Claude limit resets, Claude returns as a reviewer child in T3, not as
+> orchestrator.
 # Applywright — Claude/Estate relay: validate the handoff, stand up the Codex chat
 
 *For a Claude or Estate orchestrator whose job is to check this handoff and create the Codex chat

@@ -3610,10 +3610,10 @@ async function renderBillingScreen(mount, { signal }) {
     const per = interval === "year" ? "a year" : "a month";
     const monthly = plan?.prices?.month ?? plan?.price?.month ?? null;
     const yearly = plan?.prices?.year ?? plan?.price?.year ?? null;
-    let note = `${label} ${per}, excluding VAT`;
+    let note = `${label} ${per}, including any applicable tax`;
     if (interval === "year" && typeof monthly === "number" && typeof yearly === "number") {
       const saving = monthly * 12 - yearly;
-      if (saving > 0) note = `${label} a year, excluding VAT · ${money(saving)} less than twelve monthly payments`;
+      if (saving > 0) note = `${label} a year, including tax · ${money(saving)} less than twelve monthly payments`;
     }
     return { label, note };
   }
@@ -3792,7 +3792,7 @@ async function renderBillingScreen(mount, { signal }) {
     section({ title: "Your subscription", children: portalCard }),
     el("p", {
       class: "aw-note",
-      text: "Prices exclude VAT. Annual billing is ten months for twelve. Your current plan is read from the same entitlement code that enforces the quotas, so what you see here is what the API applies.",
+      text: "Prices are in GBP and include any applicable tax. Annual billing is ten months for twelve. Your current plan is read from the same entitlement code that enforces the quotas, so what you see here is what the API applies.",
     })
   );
 }
@@ -4078,7 +4078,7 @@ const ROUTES = [
   {
     path: "/app/billing",
     title: "Billing",
-    lede: "Three plans, monthly or annual, cancel anytime. Prices exclude VAT.",
+    lede: "Three plans, monthly or annual, cancel anytime. Prices include any applicable tax.",
     loading: "Reading the plans…",
     render: renderBillingScreen,
   },

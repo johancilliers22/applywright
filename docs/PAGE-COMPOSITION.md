@@ -195,6 +195,8 @@ Run from `projects/applywright`:
 | Tables | `caption` present, every `th` has `scope` | 3 tables: pricing 1 (4 `col` headers, 9 rows), security 2 (3 `col` each; 13 and 4 rows) — all compliant |
 | One h1 / one main | DOM counts | 1 / 1 on all three |
 | Switch | click both labels, read the visible amounts | monthly and annual both correct, cards and table, both palettes |
+| Form controls | every `input`/`textarea` resolves a label; every button and link has a name | all labelled; the two radios are implicitly labelled `Monthly` and `Annual, ten months for twelve`, the fieldset legend is `sr-only` (1×1), no unnamed button or empty link |
+| In-page anchors | every `href="#…"` resolves to an element | pricing 4/4, about 4/4, security 9/9 (all new anchors included) |
 | Both palettes | `window.applywrightTheme.set('light'/'dark')` before measuring | measured and captured; no overflow or layout change |
 
 Full-page screenshots (both palettes, three widths, three pages = 18) and section crops are in

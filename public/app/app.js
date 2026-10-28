@@ -1587,13 +1587,13 @@ async function renderCvScreen(mount, { signal }) {
 
   /* --- create by uploading a file ------------------------------------ */
   const uploadName = textInput({ placeholder: "Take the name from the file", autocomplete: "off" });
-  const fileInput = el("input", { type: "file", accept: ".txt,.md,.docx,.pdf,.odt,.rtf,.html,.htm", "aria-describedby": "cv-file-hint" });
+  const fileInput = el("input", { type: "file", accept: ".txt,.md,.docx,.pdf,.odt,.rtf,.html,.htm,.png,.jpg,.jpeg,.webp,.bmp,.tif,.tiff", "aria-describedby": "cv-file-hint" });
   const uploadStatus = statusLine();
   const uploadErrors = el("div", { class: "aw-stack" });
   const uploadForm = el(
     "form",
     { class: "aw-form", novalidate: true },
-    field("File", fileInput, "TXT, MD, DOCX, PDF, ODT, RTF or HTML. PDFs are read with pdftotext (native, or through WSL); scanned images need OCR, which is not installed."),
+    field("File", fileInput, "TXT, MD, DOCX, PDF, ODT, RTF, HTML, or an image (PNG/JPG/TIFF/BMP/WebP) read with OCR. Scanned PDFs are not OCRed — export the pages as images first, and check OCR text against the original."),
     field("Name (optional)", uploadName),
     el("div", { class: "aw-form__actions" }, el("button", { class: "btn btn--primary", type: "submit", text: "Upload and add" }), uploadStatus),
     uploadErrors

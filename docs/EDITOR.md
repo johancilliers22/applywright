@@ -64,6 +64,7 @@ Response (`200`):
   "cvId": "cv_…",
   "scope": "summary",
   "mode": "rules",
+  "modelConfigured": false,
   "proposed": {
     "text": "Ada Lovelace\nada@example.com\n…",
     "sections": { "summary": "…", "experience": "…", "education": "…", "skills": "…", "other": "" }
@@ -84,19 +85,52 @@ Response (`200`):
 - `changes` are the proposals the page offers as accept/reject hunks. Each carries the section it
   belongs to, the exact `before` text and the `after` text, so the page applies it by replacing
   that text and nothing else.
-- `rejected` holds proposals that were refused, with `reasons`. Two things land here: a change that
-  failed the grounding check, and a change to a field that is not part of this CV (for example a
-  cover letter, which `refine` always offers and a CV document has no place for).
+- `rejected` holds proposals that were refused, with `reasons`. Three things land here: a change
+  that failed the grounding check on the route's own second gate; a change to a field that is not
+  part of this CV (for example a cover letter, which `refine` always offers and a CV document has no
+  place for); and — with `field: "refine"` and empty `before`/`after` — a proposal that `refine`
+  itself reverted. It reports those only as warning strings and discards the proposed text, so the
+  route lifts the reason and the section out of the note and leaves the text fields empty. The raw
+  warnings still ship; the page dedupes the two so a reason is never printed twice.
 - Changes outside the requested `scope` are dropped rather than listed as refusals — being shown
   four bullet edits after asking for the summary is noise, not information.
-- `mode` is `model` when the server has a model configured and its reply survived validation, else
-  `rules` (deterministic rules in `lib/cv/refine.js`).
+- `mode` is what produced the changes: `model` when the configured model's reply survived
+  validation, else `rules` (the deterministic rules in `lib/cv/refine.js`). `modelConfigured` says
+  whether a model was available at all, because `refine` also reports `rules` when a model replied
+  and *every* one of its changes was refused — a different state with different copy (see below).
 - `warnings` is `refine`'s own report: unmatched instructions, intents that made no difference, and
   model edits that were reverted. The page shows them under "What the refinement reported".
 - `saved` is always `false`. The route writes nothing: no CV update, no usage row, no report.
 
 Errors: `401 unauthorized`, `404 not_found` (unknown id or another account's CV), `400
 invalid_request` (short instruction, unknown scope), `422` is not used here.
+
+### The proposal panel's three states
+
+The status area (`#ed-assist-state`, a polite live region) is a mode badge, a sentence describing
+what produced the proposal, and a sentence describing what happened. The reasons and the rules
+mode's chips sit in the detail area under it. Nothing is an apology:
+
+| Kind | Badge | Sentence after it |
+|---|---|---|
+| `model` | Model mode | "Proposed by the configured model, then checked against your CV." |
+| `fallback` | Rules fallback | "The model replied, but nothing it proposed passed the grounding check, so the deterministic rules ran instead. They only rephrase — shorter (which also drops filler), more formal, plainer words, tighter bullets — and they left the CV as it was." |
+| `rules` | Rules mode | "The checker ran, but this server has no model: only deterministic rephrasing is available — shorter (which also drops filler), more formal, plainer words, tighter bullets. Instructions about content or positioning need a model." |
+
+`assistModeKind()` decides the kind: `mode: "model"` → model; `mode: "rules"` with a model
+configured (or, for older servers, a note that the model replied) → fallback; otherwise rules. In
+both non-model kinds the panel offers `RULES_SUGGESTIONS` as chips — Shorter, More formal, Plainer,
+Tighter bullets — which fill the instruction box and focus it. "Remove filler" is deliberately not a
+chip: it is not one of `refine`'s instructions and would be a dead button; shortening drops filler,
+which the sentence says.
+
+The outcome sentence has three shapes: changes to review (with the refused count, if any), refusals
+with a pointer to their reasons ("Nothing passed the check: 2 proposed changes failed the grounding
+check. The reasons are below."), or a plain "nothing needed changing for that instruction". When
+there are changes, the review block shows them with a visible "N changes refused, with the reason"
+section — never a closed disclosure, because accepted-and-refused together is the product's
+argument. When there is nothing to accept, the reasons render under the status instead and the review
+block stays closed.
 
 ### Endpoints the page reuses
 
@@ -307,11 +341,14 @@ Run from `projects/applywright` on 28 October 2026:
 
 | Check | Command | Result |
 |---|---|---|
-| Unit and HTTP tests | `node --test tests/` | **143 tests, 143 pass, 0 fail** (31 of them in `tests/editor.test.js`) |
-| Static self-check | `node scripts/check.js` | **10 pages, 24 server modules, 253 css classes — 0 errors, 0 warnings** |
+| Unit and HTTP tests | `node --test tests/` | **150 tests, 150 pass, 0 fail** (38 of them in `tests/editor.test.js`) |
+| Static self-check | `node scripts/check.js` | **10 pages, 24 server modules, 263 css classes — 0 errors, 0 warnings** |
+| The whole journey | `node scripts/e2e-flow.mjs` (the repo's own harness; starts its own instance on PORT 0) | **10/10 steps, 235/235 assertions** — including the rules-mode and model-stub proposal copy |
 | Editor in a real browser | headless Chrome over CDP (scratch server, ephemeral port, temp database) | **65/65 checks** — load, edit, `Ctrl+S`, diff, propose, reject-free accept, LinkedIn parse, advert coverage, `.md`, `.docx`, print sheet, `Page.printToPDF` A4, 1440/768/375 with no horizontal overflow, no console errors, light and dark schemes, the three error states |
 | Export heading (`documentTitle`) | headless Chrome over CDP, CV record "Pasted CV" / contact "Ada Lovelace" | **15/15 checks** — the DOCX, the Markdown and the print sheet are all headed "Ada Lovelace"; the page header keeps "Pasted CV"; the DOCX bytes contain no "Pasted CV"; no console errors |
 | Proposal empty state | headless Chrome over CDP; the drawing, the data condition, the no-CV ordering, and 375 × 812 with the rail scrolled to the block | **34/34 checks** — one `.ed-empty__art`, `aria-hidden`, 200px, `rgb(166,172,182)`, heading read out; 0 art once a hunk exists and 0 after a refusal; 0 art and "Ask" disabled with no CV, whose heading, body and `/app/cv` way out are unchanged and whose rail slot stays empty behind it; at 375 the scrolled block is fully in the viewport and hit-testable; no horizontal overflow; no console errors |
+| Proposal panel copy, model server | headless Chrome over CDP against the running `:3160` (Claude via the org key) | **29/29 checks** across four states — 1 hunk + "Model mode"; refusals only + "Rules fallback" with the inline reason naming the invented qualification; nothing at all + "nothing needed changing"; a partial run showing 1 hunk and "1 change refused, with the reason" together |
+| Proposal panel copy, rules server | headless Chrome over CDP on a no-model scratch instance | **15/15 checks** — "Rules mode", the capability sentence, the four chips as buttons, a change to review, and a no-op that says nothing needed changing |
 | Exported DOCX | `python-docx` 1.2.0 | opens; 210 × 297 mm, 18 mm margins, `Heading 1` = the candidate's name, 4 `Heading 2`, 0 tables |
 
 The browser pass is not in the repository: it needs a Chrome install and a scratch server. The

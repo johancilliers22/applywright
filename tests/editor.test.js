@@ -18,8 +18,12 @@ import { tmpdir } from "node:os";
 
 import { startServer } from "../server/app.js";
 import { segmentSections } from "../server/lib/cv/extract.js";
+import { parseInstruction } from "../server/lib/cv/refine.js";
 import {
   applyChange,
+  assistModeKind,
+  assistModeSentence,
+  assistOutcomeSentence,
   buildDocx,
   diffLines,
   documentFromProfile,
@@ -30,6 +34,8 @@ import {
   PROPOSAL_ART,
   proposalEmptyStateVisible,
   reconstructCvText,
+  refusalEntries,
+  RULES_SUGGESTIONS,
   SECTION_HEADINGS,
   sectionsFromProfile,
 } from "../public/assets/editor.js";
@@ -548,6 +554,7 @@ describe("POST /api/cvs/:id/assist", () => {
     const body = response.json;
     assert.equal(body.saved, false, "the route says it saved nothing");
     assert.equal(body.mode, "rules", "no model is configured on this instance");
+    assert.equal(body.modelConfigured, false, "the response says whether a model was available at all");
     assert.equal(body.scope, "summary");
     assert.ok(typeof body.proposed?.text === "string" && body.proposed.text.length > 80);
     assert.ok(body.proposed.sections && typeof body.proposed.sections.summary === "string");
@@ -667,10 +674,14 @@ describe("the grounding check in the assist route", () => {
     assert.ok(!body.proposed.text.includes("37%"), "the preview does not contain the invention");
     for (const change of body.changes) assert.ok(!String(change.after).includes("37%"));
 
-    // The refusal is visible rather than silent: either the structured list or
-    // the refinement's own notes must name it.
+    // The refusal is visible rather than silent: the route lifts refine's own
+    // revert note into `rejected`, so the page can name the section and the
+    // reason rather than discarding them.
     const reported = JSON.stringify(body.rejected) + " " + (body.warnings ?? []).join(" ");
     assert.match(reported, /37%/, "the refusal names the invented figure");
+    const refusal = body.rejected.find((entry) => /37%/.test((entry.reasons ?? []).join(" ")));
+    assert.ok(refusal, "the refusal is structured, not only a warning");
+    assert.equal(refusal.section, "summary", "the refused field is mapped back to its section");
 
     const after = await call("GET", `/api/cvs/${cv.id}`);
     assert.equal(after.json.cv.text, CV_TEXT, "the CV is untouched");
@@ -712,6 +723,7 @@ describe("the grounding check in the assist route", () => {
       assert.equal(response.status, 200, response.text);
       const body = response.json;
       assert.equal(body.mode, "model");
+      assert.equal(body.modelConfigured, true);
       if (body.changes.length) {
         // The rewrite drops a sentence but keeps every figure it states. It is
         // the model's text, and it is only a proposal.
@@ -725,6 +737,171 @@ describe("the grounding check in the assist route", () => {
       await server.close();
       await new Promise((resolve) => grounded.server.close(resolve));
     }
+  });
+
+  test("a partially refused model run reports the accepted change and the reason for the refused one", async () => {
+    // The combination the editor now shows side by side: refine's model path
+    // keeps the grounded summary rewrite and reverts the invented bullet. Its
+    // refusal arrives as a warning string, and the route lifts it into
+    // `rejected` so the page can render both lists.
+    const dir = await mkdtemp(join(tmpdir(), "aw-test-editor-partial-"));
+    const partial = await startStubModel({
+      summary: "Analytical engine programmer with ten years of mathematical practice.",
+      bullets: [{ index: 0, text: "Cut costs by 37% at Initech and led 12 engineers." }],
+    });
+    const server = await startServer({
+      dataDir: dir,
+      databasePath: join(dir, "partial.db"),
+      PORT: 0,
+      AUTH_RATE_LIMIT_PER_MINUTE: 100,
+      RATE_LIMIT_PER_MINUTE: 1000,
+      ALERTS_SCAN_MINUTES: 0,
+      MODEL_API_KEY: "stub-key-not-a-secret",
+      MODEL_BASE_URL: partial.url,
+      MODEL_NAME: "stub",
+      MODEL_PROVIDER: "openai",
+      ANTHROPIC_ORG_API_KEY: "",
+      MODEL_TIMEOUT_MS: 5000,
+    });
+
+    try {
+      const call = await signedIn(server.url, "assist-partial@example.com");
+      const cv = await createCv(call);
+      const response = await call("POST", `/api/cvs/${cv.id}/assist`, {
+        instruction: "Lead with the payments work.",
+        scope: "cv",
+      });
+
+      assert.equal(response.status, 200, response.text);
+      const body = response.json;
+      assert.equal(body.mode, "model");
+      assert.ok(body.changes.length >= 1, "the grounded summary rewrite is offered");
+      assert.equal(body.changes[0].section, "summary");
+      assert.ok(body.rejected.length >= 1, "the refused bullet is reported, not dropped");
+      const refusal = body.rejected[0];
+      assert.equal(refusal.section, "experience", "bullet 1 of the CV maps back to the experience section");
+      assert.match(refusal.reasons.join(" "), /37%|Initech/, "the reason names what was invented");
+      assert.ok(!body.proposed.text.includes("37%"), "the refused text never reaches the preview");
+      assert.ok(body.proposed.text.includes(body.changes[0].after), "the accepted text does");
+
+      const after = await call("GET", `/api/cvs/${cv.id}`);
+      assert.equal(after.json.cv.text, CV_TEXT, "still a proposal: nothing saved");
+    } finally {
+      await server.close();
+      await new Promise((resolve) => partial.server.close(resolve));
+    }
+  });
+});
+
+/**
+ * The copy in the agent panel. It is the product talking about its own limits,
+ * so it is asserted like any other output: rules mode must not read as a failure,
+ * a refusal must name a reason, and a no-op must say so plainly.
+ */
+describe("the proposal copy", () => {
+  test("rules mode describes a capability limit, not a failure", () => {
+    const sentence = assistModeSentence("rules");
+    assert.match(sentence, /no model/i, "it says the server has no model");
+    assert.match(sentence, /checker ran/i, "it says the check still ran");
+    assert.match(sentence, /shorter/i);
+    assert.match(sentence, /formal/i);
+    assert.match(sentence, /plainer/i);
+    assert.match(sentence, /bullets/i);
+    assert.match(sentence, /content or positioning need a model/i, "it names what needs a model");
+    assert.doesNotMatch(sentence, /sorry|failed|unfortunately/i, "not an apology");
+  });
+
+  test("model mode describes a model run and never mentions rules mode", () => {
+    const sentence = assistModeSentence("model");
+    assert.match(sentence, /configured model, then checked/i);
+    assert.doesNotMatch(sentence, /no model/i, "rules copy must not leak into a model run");
+  });
+
+  test("a refused model run is its own state, not 'no model on this server'", () => {
+    // refine reports mode "rules" when a model replied but nothing it proposed
+    // survived the ground check. Saying "this server has no model" there would be
+    // false, so the panel distinguishes the fallback.
+    assert.equal(assistModeKind({ mode: "model" }), "model");
+    assert.equal(assistModeKind({ mode: "rules", modelConfigured: false }), "rules");
+    assert.equal(assistModeKind({ mode: "rules", modelConfigured: true }), "fallback");
+    // Older servers do not send modelConfigured; the fallback note is the signal.
+    assert.equal(
+      assistModeKind({
+        mode: "rules",
+        warnings: ["the model reply changed nothing that passed the grounding check, so the deterministic rules were used"],
+      }),
+      "fallback"
+    );
+    assert.equal(assistModeKind({ mode: "rules", warnings: ['no rule matches the instruction "add a unicorn"'] }), "rules");
+
+    const fallback = assistModeSentence("fallback");
+    assert.match(fallback, /model replied/i);
+    assert.match(fallback, /grounding check/i);
+    assert.doesNotMatch(fallback, /no model/i, "it must not claim the server has no model");
+    assert.match(fallback, /shorter/i, "it still names what the rules engine can do");
+  });
+
+  test("the outcome sentence separates what happened from what to do", () => {
+    const withChanges = assistOutcomeSentence({
+      mode: "model",
+      scope: "summary",
+      changes: [{ section: "summary" }, { section: "summary" }],
+      rejected: [{ section: "experience", reasons: ["new figure 37% is not in the original"] }],
+    });
+    assert.match(withChanges, /^2 changes to review in the summary, 1 refused; nothing saved yet\.$/);
+
+    const refusedOnly = assistOutcomeSentence({
+      mode: "model",
+      scope: "cv",
+      changes: [],
+      rejected: [{ section: "summary", reasons: ["new name \"Results-driven\" is not in the original"] }],
+    });
+    assert.match(refusedOnly, /Nothing passed the check: 1 proposed change failed the grounding check/);
+    assert.match(refusedOnly, /reasons are below/i, "it points at the reasons instead of apologising");
+
+    const nothing = assistOutcomeSentence({ mode: "rules", scope: "cv", changes: [], rejected: [], warnings: [] });
+    assert.match(nothing, /nothing needed changing for that instruction/i);
+
+    const nothingButNotes = assistOutcomeSentence({
+      mode: "rules",
+      scope: "cv",
+      changes: [],
+      rejected: [],
+      warnings: ["no rule matches the instruction \"add a purple unicorn\", so nothing was changed"],
+    });
+    assert.match(nothingButNotes, /refinement's own notes say why/i);
+  });
+
+  test("every rules-mode chip is an instruction the engine actually understands", () => {
+    assert.deepEqual(
+      RULES_SUGGESTIONS.map((item) => item.label),
+      ["Shorter", "More formal", "Plainer", "Tighter bullets"]
+    );
+    for (const item of RULES_SUGGESTIONS) {
+      const parsed = parseInstruction(item.instruction);
+      assert.ok(parsed.intents.length >= 1, `"${item.instruction}" must parse to a real intent, not be a dead button`);
+    }
+  });
+
+  test("refusals reach the panel even when the server only reported them as notes", () => {
+    const notes = [
+      'a model change to the summary was reverted because it failed the grounding check: new name "Results-driven" is not in the original',
+      "a shorter change to the summary would have altered the wording you quoted, so it was not applied",
+      'no rule matches the instruction "add a unicorn", so nothing was changed',
+    ];
+    const entries = refusalEntries([], notes);
+    assert.equal(entries.length, 2, "the two revert notes are refusals; the unmatched-instruction note is not");
+    assert.match(entries[0].reasons[0], /Results-driven/);
+    assert.match(entries[1].reasons[0], /wording you quoted/);
+
+    // A structured refusal wins over the note that repeats it, so the page never
+    // prints the same reason twice.
+    const deduped = refusalEntries(
+      [{ section: "summary", reasons: ['new name "Results-driven" is not in the original'] }],
+      [notes[0]]
+    );
+    assert.equal(deduped.length, 1);
+    assert.equal(deduped[0].section, "summary");
   });
 });
 

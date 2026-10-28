@@ -604,6 +604,111 @@ body {
   text-align: center;
 }
 
+/* --------------------------------------------------------------------------
+   Proposal status: what ran, what happened, what to try next
+   The mode is a labelled badge so the sentence after it can describe the run
+   instead of apologising for it; refusals get a rule and a reason; rules mode
+   offers its four real moves as chips.
+   -------------------------------------------------------------------------- */
+
+.ed-assist-detail {
+  display: grid;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+
+.ed-assist-detail:empty {
+  display: none;
+}
+
+.ed-mode {
+  display: inline-block;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--line-meaning);
+  border-radius: var(--r-pill);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.ed-mode[data-mode="model"] {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+/* The status paragraph is the live region: badge, what ran, what happened.
+   Each part sits on its own line so a long capability sentence stays readable
+   in a 400px rail. */
+.ed-status__text {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.ed-outcome {
+  display: block;
+  margin: 0.35rem 0 0;
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+
+/* Refusals are the product being honest: a rule and a reason, not a whisper. */
+.ed-reasons {
+  margin-top: var(--sp-4);
+  padding: var(--sp-3);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--warn);
+  border-radius: var(--r-sm);
+  background: var(--bone);
+}
+
+.ed-reasons__title {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: 650;
+}
+
+.ed-reasons__list {
+  margin: 0;
+}
+
+.ed-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.ed-suggestions__label {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.ed-chip {
+  font: inherit;
+  font-size: var(--fs-xs);
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--line-meaning);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.ed-chip:hover {
+  border-color: var(--text-soft);
+  background: var(--bone);
+}
+
+.ed-chip:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
 .ed-hunk {
   border: 1px solid var(--line);
   border-left: 3px solid var(--accent);

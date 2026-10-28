@@ -1491,6 +1491,37 @@ ${items}
     const changes = [];
     const rejected = [];
 
+    // refine reverts a proposal that fails its own grounding check and reports
+    // the reason in `warnings`, not structurally. The editor has to show what was
+    // refused next to what was accepted — that combination is the product's whole
+    // argument — so those notes are lifted into `rejected` here. The proposed
+    // text is discarded inside refine, so `before`/`after` are empty for these
+    // entries; the reason is the part that matters. The raw warnings still ship.
+    const revertNote =
+      /^(?:a model change to|an? .+? change to) (.+?) (?:was reverted because it failed the grounding check: (.+)|would have altered the wording you quoted, so it was not applied)$/;
+    const sectionForRefineLabel = (label) => {
+      if (/^the summary$/i.test(label)) return "summary";
+      const bullet = /^bullet (\d+)$/i.exec(label);
+      if (bullet) return units[Number(bullet[1]) - 1]?.section ?? "unknown";
+      if (/cover letter/i.test(label)) return "cover letter";
+      return "unknown";
+    };
+    for (const note of refined.warnings ?? []) {
+      const match = revertNote.exec(String(note).trim());
+      if (!match) continue;
+      const section = sectionForRefineLabel(match[1]);
+      // Out-of-scope refusals are as much noise as out-of-scope changes: asking
+      // for the summary should not list a refused cover-letter rewrite.
+      if (scope !== "cv" && section !== scope && section !== "unknown") continue;
+      rejected.push({
+        field: "refine",
+        section,
+        before: "",
+        after: "",
+        reasons: [match[2] ?? "the wording you quoted would have been altered"],
+      });
+    }
+
     for (const change of refined.changes ?? []) {
       const field = String(change.field ?? "");
       const before = String(change.before ?? "");
@@ -1541,7 +1572,12 @@ ${items}
     res.json({
       cvId: cv.id,
       scope,
+      // `mode` is what produced the changes; `modelConfigured` says whether a
+      // model was available at all. Without the second field a fully refused
+      // model run is indistinguishable from a server that has no model, and the
+      // editor would tell the user the wrong thing about its own capabilities.
       mode: refined.mode === "model" ? "model" : "rules",
+      modelConfigured: Boolean(model),
       proposed: { text: reconstructCvText({ contact: document.contact, sections: proposed }), sections: proposed },
       changes,
       rejected,

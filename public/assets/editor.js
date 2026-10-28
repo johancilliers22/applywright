@@ -789,6 +789,125 @@ export function proposalEmptyStateVisible(state) {
   return Boolean(source.loaded) && !source.proposal;
 }
 
+/**
+ * The moves the deterministic engine actually has, as chips that fill the
+ * instruction box. "Remove filler" is not one of refine's instructions — asking
+ * for it matches nothing — but shortening *does* drop filler phrases, which the
+ * mode sentence says. Every instruction here is asserted in the tests to parse
+ * to a real intent, so no chip can be a dead button.
+ */
+export const RULES_SUGGESTIONS = Object.freeze([
+  { label: "Shorter", instruction: "Make it shorter." },
+  { label: "More formal", instruction: "Make it more formal." },
+  { label: "Plainer", instruction: "Use plainer words." },
+  { label: "Tighter bullets", instruction: "Tighten the bullets." },
+]);
+
+/**
+ * The mode badge's word. `fallback` is the state refine reports as "rules" when
+ * a model *was* configured but every change it proposed was refused: it is a
+ * third, honest state, not "no model on this server".
+ */
+export const MODE_BADGES = Object.freeze({
+  rules: "Rules mode",
+  model: "Model mode",
+  fallback: "Rules fallback",
+});
+
+/**
+ * Which capability actually produced the proposal.
+ *
+ * `mode: "rules"` is ambiguous: refine returns it both when the server has no
+ * model and when a model replied but nothing it proposed survived the grounding
+ * check. `modelConfigured` settles it; older servers do not send it, so the
+ * fallback marker in the notes is the second signal.
+ *
+ * @param {{ mode?: string, modelConfigured?: boolean, warnings?: unknown[] }} result
+ * @returns {"model"|"fallback"|"rules"}
+ */
+export function assistModeKind(result = {}) {
+  const source = result && typeof result === "object" ? result : {};
+  if (source.mode === "model") return "model";
+  const warnings = Array.isArray(source.warnings) ? source.warnings : [];
+  const modelReplied =
+    source.modelConfigured === true || warnings.some((warning) => /model reply|model change to/i.test(String(warning)));
+  return modelReplied ? "fallback" : "rules";
+}
+
+/**
+ * What produced the proposal. A description of the run, not an apology: each
+ * state names what happened and, where relevant, what the engine can still do.
+ * @param {"rules"|"model"|"fallback"} kind
+ */
+export function assistModeSentence(kind) {
+  if (kind === "model") return "Proposed by the configured model, then checked against your CV.";
+  if (kind === "fallback") {
+    return "The model replied, but nothing it proposed passed the grounding check, so the deterministic rules ran instead. They only rephrase — shorter (which also drops filler), more formal, plainer words, tighter bullets — and they left the CV as it was.";
+  }
+  return "The checker ran, but this server has no model: only deterministic rephrasing is available — shorter (which also drops filler), more formal, plainer words, tighter bullets. Instructions about content or positioning need a model.";
+}
+
+/**
+ * What happened, in one sentence: changes to consider, refusals with a pointer
+ * to their reasons, or a plain statement that nothing needed changing.
+ *
+ * @param {{ mode?: string, scope?: string, changes?: unknown[], rejected?: unknown[],
+ *           warnings?: unknown[] }} result
+ * @returns {string}
+ */
+export function assistOutcomeSentence(result = {}) {
+  const changes = Array.isArray(result.changes) ? result.changes : [];
+  const rejected = Array.isArray(result.rejected) ? result.rejected : [];
+  const warnings = Array.isArray(result.warnings) ? result.warnings : [];
+  const scope = SCOPE_LABELS[result.scope] ?? "whole CV";
+
+  if (changes.length) {
+    const noun = changes.length === 1 ? "change" : "changes";
+    const refused = rejected.length ? `, ${rejected.length} refused` : "";
+    return `${changes.length} ${noun} to review in the ${scope}${refused}; nothing saved yet.`;
+  }
+  if (rejected.length) {
+    const noun = rejected.length === 1 ? "proposed change" : "proposed changes";
+    return `Nothing passed the check: ${rejected.length} ${noun} failed the grounding check. The reasons are below.`;
+  }
+  const notes = warnings.length ? " The refinement's own notes say why." : "";
+  return `Nothing passed the check, and nothing needed changing for that instruction.${notes}`;
+}
+
+/**
+ * Every refusal a proposal response carries, structured or not.
+ *
+ * A current server lifts refine's own revert notes into `rejected`; an older one
+ * may leave them only in `warnings`. Both are shown, deduped on the reason text,
+ * so what was refused is never thrown away — and a model run that half-succeeded
+ * shows the accepted hunks and the refusals together. Pure, and exported so the
+ * behaviour is asserted rather than inferred from the DOM.
+ *
+ * @param {object[]} rejected entries with `reasons`
+ * @param {string[]} warnings refine's own notes
+ * @returns {object[]}
+ */
+export function refusalEntries(rejected, warnings) {
+  const seen = new Set();
+  const entries = [];
+  for (const entry of Array.isArray(rejected) ? rejected : []) {
+    const reasons = Array.isArray(entry?.reasons) ? entry.reasons : [];
+    for (const reason of reasons) seen.add(String(reason));
+    entries.push(entry);
+  }
+  const revertNote =
+    /^(?:a model change to|an? .+? change to) (.+?) (?:was reverted because it failed the grounding check: (.+)|would have altered the wording you quoted, so it was not applied)$/;
+  for (const note of Array.isArray(warnings) ? warnings : []) {
+    const match = revertNote.exec(String(note).trim());
+    if (!match) continue;
+    const reason = match[2] ?? "the wording you quoted would have been altered";
+    if (seen.has(reason)) continue;
+    seen.add(reason);
+    entries.push({ field: "refine", section: "", before: "", after: "", reasons: [reason] });
+  }
+  return entries;
+}
+
 /** The editor's state. Sections are the source of truth; the DOM mirrors it. */
 function initialState() {
   return {
@@ -809,9 +928,10 @@ function initialState() {
     mergePlan: null,
     busy: false,
     // DOM nodes created at boot: the proposal review block (moved out of the
-    // rail), the rail's own empty state for the proposal slot, and the parse
-    // notice that sits above the paper.
+    // rail), the outcome area under the status, the rail's own empty state for
+    // the proposal slot, and the parse notice that sits above the paper.
     review: null,
+    assistDetail: null,
     railEmpty: null,
     notice: null,
   };
@@ -886,10 +1006,17 @@ function bootEditor() {
     // under it. The rail keeps its own empty state for that slot, in the markup
     // position the host left. Hidden until a CV has loaded — the document's own
     // "no CV chosen" state leads — and rendered only when there is no proposal.
+    //
+    // Between the status and that empty state sits the outcome area: the
+    // sentence about what happened, the reasons for anything refused, and (in
+    // rules mode) the supported moves as chips. It is written by the proposal
+    // renderer and cleared when a new request starts.
     const agentStatus = byId("ed-assist-state");
     if (agentStatus && agentStatus.parentElement) {
+      state.assistDetail = el("div", { class: "ed-assist-detail", id: "ed-assist-detail" });
+      agentStatus.insertAdjacentElement("afterend", state.assistDetail);
       state.railEmpty = el("div", { class: "ed-proposals-empty", id: "ed-proposals-empty", hidden: true });
-      agentStatus.insertAdjacentElement("afterend", state.railEmpty);
+      state.assistDetail.insertAdjacentElement("afterend", state.railEmpty);
     }
   }
 
@@ -1206,6 +1333,7 @@ function bootEditor() {
     state.loaded = false;
     state.proposal = null;
     renderRailEmptyProposal();
+    if (state.assistDetail) clear(state.assistDetail);
     const loading = byId("ed-loading");
     if (loading) {
       loading.hidden = false;
@@ -1319,6 +1447,7 @@ function bootEditor() {
     clearErrors();
     clear(byId("ed-proposals"));
     if (state.review) state.review.hidden = true;
+    if (state.assistDetail) clear(state.assistDetail);
     state.proposal = null;
     renderRailEmptyProposal();
 
@@ -1364,6 +1493,97 @@ function bootEditor() {
     }
   }
 
+  /** One refusal, as a list item. Refine-derived entries carry a reason, no text. */
+  function rejectedItem(entry) {
+    const rawSection = String(entry?.section ?? "").trim();
+    const label = rawSection && rawSection !== "unknown" ? SECTION_LABELS[rawSection] ?? rawSection : "Change";
+    const reasons =
+      Array.isArray(entry?.reasons) && entry.reasons.length ? entry.reasons.join(" ") : "the change could not be checked";
+    const before = String(entry?.before ?? "").trim();
+    return el(
+      "li",
+      null,
+      el("strong", { text: `${label}: ` }),
+      before ? el("span", { class: "mono", text: before.slice(0, 120) }) : null,
+      before ? document_.createTextNode(" — ") : null,
+      document_.createTextNode(reasons)
+    );
+  }
+
+  function rejectedList(entries) {
+    return el("ul", { class: "ed-limits ed-reasons__list" }, ...entries.map(rejectedItem));
+  }
+
+  /** Rules mode's real moves, one click from the instruction box. */
+  function suggestionRow() {
+    const row = el("div", { class: "ed-suggestions" }, el("p", { class: "ed-suggestions__label", text: "Supported here:" }));
+    for (const item of RULES_SUGGESTIONS) {
+      row.append(
+        el("button", {
+          class: "ed-chip",
+          type: "button",
+          text: item.label,
+          onClick: () => {
+            const box = byId("ed-instruction");
+            if (!box) return;
+            box.value = item.instruction;
+            box.focus();
+            announce(`${item.label} is in the instruction box. Ask for a proposal when you are ready.`);
+          },
+        })
+      );
+    }
+    return row;
+  }
+
+  /**
+   * The status area: a badge and a description of what produced the proposal,
+   * then the outcome sentence, the reasons for anything refused, and — when the
+   * model was not what produced the text — the moves the rules engine has.
+   * Nothing here is an apology, and every refusal carries its reason.
+   */
+  function renderAssistStatus({ mode, modelConfigured, scope, changes, rejected, warnings }) {
+    const status = byId("ed-assist-state");
+    const detail = state.assistDetail;
+    const kind = assistModeKind({ mode, modelConfigured, warnings });
+    clear(status);
+    if (detail) clear(detail);
+    status.dataset.tone = changes.length ? "ok" : "";
+    status.dataset.mode = kind;
+    // The outcome sentence belongs inside #ed-assist-state: that element is the
+    // polite live region, so the result is announced. The reasons and the chips
+    // go to the detail host below it — interactive controls do not belong in a
+    // status region, and a screen reader should hear the sentence, not a row of
+    // buttons, every time a proposal lands.
+    status.append(
+      el("span", { class: "ed-mode", dataset: { mode: kind }, text: MODE_BADGES[kind] }),
+      el("span", { class: "ed-status__text", text: assistModeSentence(kind) }),
+      el("span", { class: "ed-outcome", text: assistOutcomeSentence({ mode, scope, changes, rejected, warnings }) })
+    );
+    if (!detail) return;
+
+    // Reasons inline, in the panel where the instruction was given, whenever
+    // there is nothing up in the review block to attach them to.
+    if (!changes.length && rejected.length) detail.append(rejectedList(rejected));
+    if (kind !== "model") detail.append(suggestionRow());
+    // With changes, the review block carries the refusals and the warnings; with
+    // none, the review stays closed and the refinement's notes belong here.
+    if (!changes.length && warnings.length) {
+      detail.append(
+        el(
+          "details",
+          { class: "ed-source" },
+          el("summary", { text: "What the refinement reported" }),
+          el(
+            "div",
+            { class: "ed-source__body" },
+            el("ul", { class: "ed-limits" }, ...warnings.map((warning) => el("li", { text: String(warning) })))
+          )
+        )
+      );
+    }
+  }
+
   function renderProposal(data, scope) {
     const status = byId("ed-assist-state");
     const host = byId("ed-proposals");
@@ -1371,22 +1591,23 @@ function bootEditor() {
     const rejected = Array.isArray(data.rejected) ? data.rejected : [];
     const warnings = Array.isArray(data.warnings) ? data.warnings : [];
     const mode = data.mode === "model" ? "model" : "rules";
+    // Structured refusals plus refine's own revert notes, deduped: the panel
+    // must be able to say what was refused even when the server only shipped the
+    // note as a warning.
+    const refusals = refusalEntries(rejected, warnings);
 
     // A proposal exists, so the rail's empty state goes — even when there is
     // nothing to accept, because the refusal reasons are data worth showing.
     renderRailEmptyProposal();
     clear(host);
-    status.dataset.tone = "";
-    const modeLine =
-      mode === "model"
-        ? "Proposed by the configured model, then checked against your CV."
-        : "No model is configured on this server, so the deterministic rules produced this.";
-
-    if (!changes.length) {
-      status.textContent = `${modeLine} Nothing passed the check, so there is nothing to accept.`;
-    } else {
-      status.textContent = `${modeLine} ${changes.length} change${changes.length === 1 ? "" : "s"} in the ${scopeLabel(scope)}, nothing saved yet.`;
-    }
+    renderAssistStatus({
+      mode,
+      modelConfigured: data.modelConfigured === true,
+      scope,
+      changes,
+      rejected: refusals,
+      warnings,
+    });
 
     changes.forEach((change, index) => {
       const section = change.section ?? "summary";
@@ -1434,32 +1655,28 @@ function bootEditor() {
       host.append(article);
     });
 
-    if (rejected.length) {
-      const list = el("ul", { class: "ed-limits" });
-      for (const entry of rejected) {
-        const reasons = Array.isArray(entry.reasons) ? entry.reasons.join(" ") : "the change could not be checked";
-        list.append(
-          el(
-            "li",
-            null,
-            el("strong", { text: `${SECTION_LABELS[entry.section] ?? entry.section ?? "change"}: ` }),
-            el("span", { class: "mono", text: String(entry.before ?? "").slice(0, 120) }),
-            document_.createTextNode(" — "),
-            document_.createTextNode(reasons)
-          )
-        );
-      }
+    // What was refused, next to what was accepted — the combination is the
+    // product's argument, so it is never hidden behind a closed disclosure.
+    // When there is nothing to accept, the reasons render under the status
+    // instead (renderAssistStatus) and this block stays closed.
+    if (changes.length && refusals.length) {
       host.append(
         el(
-          "details",
-          { class: "ed-source" },
-          el("summary", { text: `${rejected.length} proposed change${rejected.length === 1 ? "" : "s"} refused` }),
-          el("div", { class: "ed-source__body" }, list)
+          "section",
+          { class: "ed-reasons" },
+          // h4, not h3: the review block is an h2 and each hunk's title is an h4,
+          // so a sibling section at h3 would read backwards in a screen reader's
+          // heading list.
+          el("h4", {
+            class: "ed-reasons__title",
+            text: `${refusals.length} change${refusals.length === 1 ? "" : "s"} refused, with the reason`,
+          }),
+          rejectedList(refusals)
         )
       );
     }
 
-    if (warnings.length) {
+    if (changes.length && warnings.length) {
       const list = el("ul", { class: "ed-limits" });
       for (const warning of warnings) list.append(el("li", { text: String(warning) }));
       host.append(

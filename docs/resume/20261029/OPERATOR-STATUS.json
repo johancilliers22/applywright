@@ -1,0 +1,76 @@
+{
+  "UpdatedAtUtc": "2026-10-29T17:29:42.4948000Z",
+  "State": "ACTIVE_INCOMPLETE",
+  "Broker": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+  "SourceBase": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+  "ActualDispatches": [
+    {
+      "Lane": "a11y",
+      "TaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14",
+      "RequestId": "applywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14",
+      "ChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14",
+      "RunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14:ordinal:1",
+      "Provider": "acpRegistry_deepseek_windows",
+      "Model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "Options": [
+        {
+          "id": "reasoning_effort",
+          "value": "high"
+        }
+      ],
+      "StatusAtDispatch": "running",
+      "ObservedAtUtc": "2026-10-29T17:28:02.441Z",
+      "Link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14>"
+    },
+    {
+      "Lane": "design-motion",
+      "TaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081",
+      "RequestId": "applywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081",
+      "ChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081",
+      "RunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081:ordinal:1",
+      "Provider": "acpRegistry_deepseek_windows",
+      "Model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "Options": [
+        {
+          "id": "reasoning_effort",
+          "value": "high"
+        }
+      ],
+      "StatusAtDispatch": "running",
+      "ObservedAtUtc": "2026-10-29T17:27:17.537Z",
+      "Link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081>"
+    },
+    {
+      "Lane": "g1-r7-review",
+      "TaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e",
+      "RequestId": "applywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e",
+      "ChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e",
+      "RunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e:ordinal:1",
+      "Provider": "codex",
+      "Model": "gpt-6.1-sol",
+      "Options": [
+        {
+          "id": "reasoningEffort",
+          "value": "xhigh"
+        },
+        {
+          "id": "serviceTier",
+          "value": "default"
+        }
+      ],
+      "StatusAtDispatch": "running",
+      "ObservedAtUtc": "2026-10-29T17:26:29.772Z",
+      "Link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e>"
+    }
+  ],
+  "A11y": {
+    "Status": "ADMIT_SOURCE_DISPATCH_OBSERVATION_ONLY",
+    "FreeKiB": 4355836,
+    "RequiredKiB": 4194304,
+    "TaskDispatched": true,
+    "OriginalHold": "attempt1WINDOWS_RAM_HOLD3993892KiBpreserved",
+    "ChangedState": "design-motion/SOURCE-ADMISSION.attempt1.json:17:27:05Z free4605464KiB versus prior3993892KiB"
+  },
+  "RootQualification": "TERRA_AND_ESTATE_CUA_NOT_USED_BEFORE_ROOT_RELEASE",
+  "Meaning": "Dispatch observations only, no accepted output or live lease inferred"
+}

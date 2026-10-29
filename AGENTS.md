@@ -1,4 +1,15 @@
-# NIGHT STOP — direct Johan29October2026
+# MANUAL RESUME — direct Johan, 29 October 2026, 17:16 GMT
+
+Johan explicitly resumed Applywright and its missions. The night stop below is
+historical. Read docs/resume/20261029/RESUME-PLAN.md and retain all unfinished
+product rows, frozen candidates and ownership gates. Sol 6.1 xhigh orchestrates;
+High/xhigh workers and DSH Flash bulk work are preferred. Root must complete
+Terra 6.1 benchmarks and estate-cua qualification FIRST: no project Terra or
+estate-cua use until Root returns an explicit qualified result/release. Gemini
+AGY Argon and Muse contributor-OFF remain eligible through their native harnesses.
+Disk cleanup is deferred. No automatic recreation of deleted night schedules.
+
+# HISTORICAL NIGHT STOP — direct Johan29October2026
 
 Finish only in-flight work and checkpoint; no new missions, refills or reviews.
 No automatic WSL, goal or scheduler restart. Root owns final WSL shutdown after

@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T02:30:52.4325317Z",
-  "state": "NIGHT_CLOSEOUT_DRAIN_NO_NEW_WORK_THEN_PAUSED",
+  "updatedAt": "2026-10-29T17:29:42.5231297Z",
+  "state": "ACTIVE_INCOMPLETE_MANUAL_RESUME_20261029",
   "operatorThread": "01a183ff-e374-7d32-ae0e-1938714e813c",
   "rootThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
   "nativeParent": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
   "nativeEnvironment": "c9887cd0-5164-44d0-a8c0-acc6c583ca42",
-  "resumeEntry": "docs/OPERATOR-CONTINUATION-PLAN.md",
+  "resumeEntry": "docs/resume/20261029/RESUME-PLAN.md",
   "productPlan": "docs/IMPLEMENTATION-PLAN.md",
   "scopePolicy": "Retain every existing product-plan row and original user ask; these operational units do not renumber or replace them.",
-  "observedMain": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
+  "observedMain": "6e6c13f5db5df83dc625c7197067b851f165f14f",
   "refreshBeforeMutation": true,
   "units": [
     {
       "id": "G1",
-      "state": "R7_COMBINED_FROZEN_UNITS100PASS_INDEPENDENT211PASS_NEW_SOL_PENDING",
+      "state": "ACTUAL_NATIVE_SOL_R7_SOURCE_REVIEW_RUNNING",
       "owner": "native DSH writer / independent Sol / Codex acceptance",
       "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
       "base": "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
@@ -32,7 +32,10 @@
       "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r7-66fbe5c4-d723-4406-a86f-851786759dec",
       "childThreadId": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r7-66fbe5c4-d723-4406-a86f-851786759dec",
       "runId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-dsh-r7-66fbe5c4-d723-4406-a86f-851786759dec:ordinal:1",
-      "worktreeState": "Stopped/reaped exact5hashesunchanged"
+      "worktreeState": "Stopped/reaped exact5hashesunchanged",
+      "currentRequestId": "applywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e",
+      "currentTaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e",
+      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e"
     },
     {
       "id": "CONTRAST-M1",
@@ -50,7 +53,7 @@
     },
     {
       "id": "E2E-LIFECYCLE",
-      "state": "ACCEPTED_SOURCE_NATIVE_AND_ISOLATED_CHROME_JOURNEY_READY_COMMIT",
+      "state": "ACCEPTED_MERGED_PUSHED_8DF799F_NATIVE4_CHROME235",
       "owner": "native DSH writer / independent Sol / Codex tests",
       "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-94aa81d5",
       "evidence": "docs/t3/receipts/20261028-e2e-lifecycle/r3/review/sol-review.FINDINGS.md",
@@ -136,7 +139,7 @@
     },
     {
       "id": "GROK-RESEARCH",
-      "state": "STOPPED_AT_USER_NIGHT_CLOSEOUT_NO_REPORT_INCOMPLETE",
+      "state": "PRIOR_CANCELLED_NO_USEFUL_OUTPUT_NEW_TRIAL_REQUIRES_LIVENESS",
       "brief": "docs/t3/GROK-RESEARCH-BRIEF-20261028.md",
       "route": "qualified native Grok CLI/Build",
       "output": "docs/research/PROVIDER-MODEL-EVIDENCE-20261028.md",
@@ -149,7 +152,7 @@
     },
     {
       "id": "MUSE-REFUTER",
-      "state": "ACTUAL_NATIVE_MUSE_WONDER_RUNNING_ADVISORY",
+      "state": "FROZEN_ADVISORY_23CLEAR_3UNCERTAIN_NOT_ORACLE",
       "route": "native MuseCode Wonder, contributor OFF",
       "output": "docs/research/MUSE-GROUNDING-CASES-20261028.md",
       "tokens": null,
@@ -175,7 +178,7 @@
     },
     {
       "id": "DSH-RESEARCH-USAGE-GLOBAL",
-      "state": "TWO_ACTUAL_NATIVE_DSH_RUNNING_NO_DUPLICATE_FALLBACK",
+      "state": "TWO_PRIOR_TASKS_TERMINAL_ROOT_RESEARCH_ACCEPTED_USAGE_RECONCILIATION_PENDING",
       "owner": "Estate native parent / DSH / Root acceptance",
       "startingCorpusRows": 991,
       "scope": "prioritised saved/public research, approved read-only bookmarks/GitHub, actual implementation inventory; no blanket991fetch or fake private coverage",
@@ -183,13 +186,13 @@
     },
     {
       "id": "TERRA",
-      "state": "ROOT_WINDOWS_CLI_CATALOGUE_ADOPTED_DESKTOP_OBSERVED_MENU_STALE_NO_RESTART",
+      "state": "ROOT_OWNED_BENCHMARKS_AND_CUA_QUALIFICATION_BEFORE_PROJECT_USE",
       "owner": "Root Windows; Estate independent WSL/harness",
       "next": "Metadata-only exact-restore refresh then actual native menu/catalogue/eligibility readback, preserve selected model and active workers"
     },
     {
       "id": "DOCS-RETENTION-GIT",
-      "state": "ACTIVE",
+      "state": "ACTIVE_RESUME_DOCS_CURRENT_OWNER_EDITS_PRESERVED",
       "next": "Keep plan/register/receipt projection/handback/current checkpoint current; curate named paths, sacred checks, normal pushes/remote readbacks; preserve raw local evidence and all worktrees",
       "vaultNote": "brain/applywright-platform.md",
       "publisher": "Estate"
@@ -212,7 +215,34 @@
         "explicit returning-owner/Claude handover ACK"
       ],
       "currentSourceRepairNeedsHumanCommand": false
+    },
+    {
+      "id": "A11Y-D1-D2",
+      "state": "ACTUAL_NATIVE_DSH_FLASH_HIGH_SOURCE_RUNNING",
+      "scope": "field hints describedby and polite save-state status; independent review and runtime checks later",
+      "owner": "T3 broker native DSH new worktree",
+      "retryPolicy": "Fresh attempt only after meaningful changed capacity/terminal-owner cue, preserve original hold",
+      "currentRequestId": "applywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14",
+      "currentTaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14",
+      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14"
+    },
+    {
+      "id": "DESIGN-MOTION-X-RESEARCH",
+      "state": "ACTUAL_NATIVE_DSH_FLASH_HIGH_SOURCE_RUNNING",
+      "scope": "Authorised bookmark access discovery and current public GitHub/tools/motion UX research; Gemini design/Muse advice after validation",
+      "owner": "T3 broker native DSH new worktree",
+      "currentRequestId": "applywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081",
+      "currentTaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081",
+      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081"
+    },
+    {
+      "id": "CUA-ROOT-QUALIFICATION",
+      "state": "ROOT_NOTIFIED_NO_PROJECT_CUA_OR_TERRA_USE_BEFORE_RELEASE",
+      "scope": "Driver version/capabilities and actual Terra computer-use benchmark separately",
+      "owner": "Estate Root"
     }
   ],
-  "nightPolicy": "Finishinflightonly;nonewdispatch/refill;RootsoleshutdownafterREADY_ACK;pauseownGoalatend;explicitmanualtomorrowresumeonly"
+  "nightPolicy": "Historical night stop superseded by explicit Johan manual resume17:16GMT. No automatic scheduler reconstruction. Disk cleanup deferred.",
+  "currentBrokerRun": "run:thread:46ac76de-4e76-42b4-a2b1-9f6d4e09c559:ordinal:40",
+  "latestUsageObservation": "2026-10-29T17:16Z:47%weeklyused,53%remaining,otherwindowunavailable,noresetconsumed"
 }

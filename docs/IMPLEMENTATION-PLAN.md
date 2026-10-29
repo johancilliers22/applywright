@@ -1,4 +1,11 @@
-> NIGHT CLOSEOUT29October: read [TOMORROW](closeout/20261029/TOMORROW.md) and
+> MANUAL RESUME29October17:16GMT: read [current resume plan](resume/20261029/RESUME-PLAN.md).
+> Johan resumed the project; historical night stops below no longer block authorised
+> source work. Grounding R7 independent review, scoped DSH accessibility work and
+> design/motion/bookmark research are commissioned to the existing native broker.
+> Child task IDs require actual native receipts. Root tests Terra and estate-cua
+> before project adoption. Every product row below remains; disk cleanup deferred.
+
+> HISTORICAL NIGHT CLOSEOUT29October: read [TOMORROW](closeout/20261029/TOMORROW.md) and
 > actual delivery receipt first. E2E:38mocks+2race+4realWindows controlsPASS,
 > isolatedChrome10steps235assertionsPASS; integrated209tests+4native skips,
 > 349modules+1environment skip,static58pairsPASS. G1combined100units+211cases

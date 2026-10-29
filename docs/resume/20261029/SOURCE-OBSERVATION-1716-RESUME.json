@@ -1,0 +1,12 @@
+{
+  "atUtc": "2026-10-29T17:19:40.497431+00:00",
+  "scope": "SOURCE_OR_SAME_COORDINATOR_DISPATCH_ONLY_NOT_TEST_OR_LIVE_LEASE",
+  "authority": "ROOT-SOURCE-DISPATCH-LOCK-CLARIFICATION-20261028.md",
+  "path": "/tmp/redline-heavy.lock",
+  "canonicalSharedProbe": true,
+  "probeReleasedBeforeDispatch": true,
+  "actualProviderLifetimeAdmission": "REQUIRED SEPARATELY; untouched",
+  "decision": "PASS_SOURCE_OBSERVATION_ONLY",
+  "windowsFreeKiB": 11113548,
+  "operatorMain": "6e6c13f5db5df83dc625c7197067b851f165f14f"
+}

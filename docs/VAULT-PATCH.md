@@ -39,3 +39,21 @@ project operator. Source: docs/closeout/20261029/TOMORROW.md and actual DELIVERY
 Publisher records actual notehash/A-Bcommit/remote-readback and terminal/active
 actors. Earlier R16/Luna/plugin/usage source commissions are tomorrow inputs,
 not new work tonight. Accepted research publication is artifact-only if ready.
+# Manual resume addendum - 29 October 2026, 17:16 GMT
+
+For the existing sole Estate publisher and assigned brain/applywright-platform.md
+only. Johan explicitly resumed the project; prior night stop is historical.
+Existing goal is ACTIVE/INCOMPLETE. main6e6c13f preserves delivered contrast/E2E
+and frozen unreviewed G1R7. Existing native T3 broker Sol6.1/xhigh/Standard/full
+access received resume runordinal40, with independent grounding review, scoped
+DSH accessibility and design/motion/GitHub/bookmark research commissions. Actual
+native receipts record Sol grounding review17:26, DSH motion research17:27 and
+DSH accessibility17:28 running. Accessibility's first RAM hold is preserved;
+a changed-state fresh attempt passed at4355836KiB. Exact task/thread/run IDs
+are in docs/resume/20261029/OPERATOR-STATUS.json. No output is accepted yet.
+Current plan: docs/resume/20261029/RESUME-PLAN.md, all original product rows retained.
+Root alone qualifies Terra6.1 High/xhigh/Max and latest estate-cua before project
+adoption/use. DSH Flash preferred for bulk work; Gemini Argon leads design and
+Muse contributor-OFF remains advisory. Disk cleanup deferred; no automatic
+schedule reconstruction. Account snapshot17:16:47%weeklyused/53%remaining,
+otherwindowunavailable; no reset consumed. Shared A/B publication stays Estate-owned.

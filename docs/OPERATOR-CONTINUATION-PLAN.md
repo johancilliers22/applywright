@@ -1,4 +1,7 @@
-## FINAL NIGHT OVERRIDE —29October2026
+## MANUAL RESUME —29October2026 17:16GMT
+Johan explicitly resumed the existing project/goal. Read docs/resume/20261029/RESUME-PLAN.md first; it supersedes the historical night blocks below. Existing T3 broker actual run ordinal40 received the source commissions. Child receipt IDs are pending until native dispatch returns. Sol6.1/xhigh orchestrators; prefer DSH Flash implementation/research, qualified Gemini Argon4 and Muse Wonder advisory. Root must test Terra6.1 and estate-cua FIRST before project use. Disk cleanup deferred; no automatic schedule reconstruction. Current observed main6e6c13f; all source candidates and product rows preserved.
+
+## HISTORICAL FINAL NIGHT OVERRIDE —29October2026
 No new work/refill/review tonight. Read docs/closeout/20261029/TOMORROW.md first. E2Esource/native4/Chrome235PASS readycommit; G1R7unreviewed100+211PASS frozenpatch only. GrokStoppedbyuser/incomplete. Resumeonlyexplicitly; RootsoleWSLshutdown afterREADY; ownGoalpausesatend. EarlierACTIVE/RUNNING guidance below is historical.
 
 ## NIGHT STOP — direct Johan instruction29October02:00GMT

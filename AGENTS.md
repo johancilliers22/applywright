@@ -26,6 +26,8 @@ does not grant writes in the hub, another worktree, or another brain/vault note.
   process ownership, security and consequential changes. Its author must not be the
   implementation writer. Use Codex readers/subagents for work whose value justifies
   them; do not keep routine bulk work in Codex by default.
+- Use High for routine Codex work and xhigh for difficult/security/consequential
+  review; effort does not enlarge context. Keep Standard service tier for both.
 - Claude Org API credits may support appropriate bounded work only through the
   approved direct API adapter/selected-variable loader and current shared accounting
   guard. The existing shared cap is USD190; spent and pending/encumbered usage must
@@ -76,4 +78,7 @@ does not grant writes in the hub, another worktree, or another brain/vault note.
   compile-only DLL or docs push is not runtime or whole-mission completion.
 
 Current evidence: docs/verification/20261028-intake/CURRENT-CHECKPOINT.md.
+Resume after compaction/restart: docs/OPERATOR-CONTINUATION-PLAN.md and
+docs/IMPLEMENTATION-REGISTER.json. Preserve every existing product-plan row;
+refresh native status and current HEAD before relying on a historical checkpoint.
 Provider commissions: docs/t3/APPLYWRIGHT-PROVIDER-DELEGATION-20261028.md.

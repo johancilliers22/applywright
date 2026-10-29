@@ -1,0 +1,271 @@
+{
+  "observedAtUtc": "2026-10-29T00:32:20.7020183Z",
+  "nativeDispatchFilesWithRealTask": 27,
+  "uniqueTasks": 27,
+  "providers": [
+    {
+      "Name": "acpRegistry_deepseek_windows",
+      "Count": 13
+    },
+    {
+      "Name": "codex",
+      "Count": 14
+    }
+  ],
+  "models": [
+    {
+      "Name": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "Count": 13
+    },
+    {
+      "Name": "gpt-6.1-sol",
+      "Count": 14
+    }
+  ],
+  "parseFailures": [],
+  "rows": [
+    {
+      "file": "docs\\t3\\receipts\\20261028-contrast-m1\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r1-33be343f-3799-449e-abbe-19dc494ac556",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r1-33be343f-3799-449e-abbe-19dc494ac556",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-contrast-m1-dsh-r1-33be343f-3799-449e-abbe-19dc494ac556:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r1-33be343f-3799-449e-abbe-19dc494ac556>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-contrast-m1\\r2\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r2-addd0462-91b3-4c85-8457-4d4f390b0440",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r2-addd0462-91b3-4c85-8457-4d4f390b0440",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-contrast-m1-dsh-r2-addd0462-91b3-4c85-8457-4d4f390b0440:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r2-addd0462-91b3-4c85-8457-4d4f390b0440>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-contrast-m1\\r3\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r3-e43635eb-72a9-4d51-b221-27cae411766c",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r3-e43635eb-72a9-4d51-b221-27cae411766c",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-contrast-m1-dsh-r3-e43635eb-72a9-4d51-b221-27cae411766c:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r3-e43635eb-72a9-4d51-b221-27cae411766c>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-contrast-m1\\r4\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r4-2240c508-d351-42b9-8205-152b05d29dd3",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r4-2240c508-d351-42b9-8205-152b05d29dd3",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-contrast-m1-dsh-r4-2240c508-d351-42b9-8205-152b05d29dd3:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-dsh-r4-2240c508-d351-42b9-8205-152b05d29dd3>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-contrast-m1\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r1-184c88eb-5925-422d-8b15-ee140412c52d",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r1-184c88eb-5925-422d-8b15-ee140412c52d",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-contrast-m1-sol-review-r1-184c88eb-5925-422d-8b15-ee140412c52d:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r1-184c88eb-5925-422d-8b15-ee140412c52d>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-contrast-m1\\r2\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r2-dcac65f6-eb38-4bc0-8dfd-97c48c196c46",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r2-dcac65f6-eb38-4bc0-8dfd-97c48c196c46",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-contrast-m1-sol-review-r2-dcac65f6-eb38-4bc0-8dfd-97c48c196c46:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r2-dcac65f6-eb38-4bc0-8dfd-97c48c196c46>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-contrast-m1\\r3\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r3-5a6b9814-8b29-42df-a81c-710e6a1fed72",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r3-5a6b9814-8b29-42df-a81c-710e6a1fed72",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-contrast-m1-sol-review-r3-5a6b9814-8b29-42df-a81c-710e6a1fed72:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r3-5a6b9814-8b29-42df-a81c-710e6a1fed72>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-contrast-m1\\r4\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r4-c13adf89-71cf-4abf-ab9c-7ea5962e9f89",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r4-c13adf89-71cf-4abf-ab9c-7ea5962e9f89",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-contrast-m1-sol-review-r4-c13adf89-71cf-4abf-ab9c-7ea5962e9f89:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-contrast-m1-sol-review-r4-c13adf89-71cf-4abf-ab9c-7ea5962e9f89>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-e2e-lifecycle\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r1-f78b27a7-22ea-4866-8d2d-917f1c321cad",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r1-f78b27a7-22ea-4866-8d2d-917f1c321cad",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-e2e-lifecycle-dsh-r1-f78b27a7-22ea-4866-8d2d-917f1c321cad:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r1-f78b27a7-22ea-4866-8d2d-917f1c321cad>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-e2e-lifecycle\\r2\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r2-83db129e-9722-43ee-840c-ebc96570fbf4",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r2-83db129e-9722-43ee-840c-ebc96570fbf4",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-e2e-lifecycle-dsh-r2-83db129e-9722-43ee-840c-ebc96570fbf4:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r2-83db129e-9722-43ee-840c-ebc96570fbf4>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-e2e-lifecycle\\r3\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r3-786ad11a-5d28-404b-b1ab-b875f65629f4",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r3-786ad11a-5d28-404b-b1ab-b875f65629f4",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-e2e-lifecycle-dsh-r3-786ad11a-5d28-404b-b1ab-b875f65629f4:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r3-786ad11a-5d28-404b-b1ab-b875f65629f4>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-e2e-lifecycle\\r4\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r4-b928e7cf-4225-4253-a610-6ab38235a42d",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r4-b928e7cf-4225-4253-a610-6ab38235a42d",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-e2e-lifecycle-dsh-r4-b928e7cf-4225-4253-a610-6ab38235a42d:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r4-b928e7cf-4225-4253-a610-6ab38235a42d>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-e2e-lifecycle\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r1-937911e9-5ff5-4edc-a661-025bbf4ed5d0",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r1-937911e9-5ff5-4edc-a661-025bbf4ed5d0",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-e2e-lifecycle-sol-review-r1-937911e9-5ff5-4edc-a661-025bbf4ed5d0:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r1-937911e9-5ff5-4edc-a661-025bbf4ed5d0>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-e2e-lifecycle\\r2\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r2-bdeeca19-c199-4911-9bff-be2bca546da6",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r2-bdeeca19-c199-4911-9bff-be2bca546da6",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-e2e-lifecycle-sol-review-r2-bdeeca19-c199-4911-9bff-be2bca546da6:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r2-bdeeca19-c199-4911-9bff-be2bca546da6>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-e2e-lifecycle\\r3\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r3-dcba6fba-816b-4631-8fe8-de0d821279b7",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r3-dcba6fba-816b-4631-8fe8-de0d821279b7",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-e2e-lifecycle-sol-review-r3-dcba6fba-816b-4631-8fe8-de0d821279b7:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-sol-review-r3-dcba6fba-816b-4631-8fe8-de0d821279b7>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r1-407c77b9-f5ac-47a9-ab72-d2152c946627",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r1-407c77b9-f5ac-47a9-ab72-d2152c946627",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-dsh-r1-407c77b9-f5ac-47a9-ab72-d2152c946627:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r1-407c77b9-f5ac-47a9-ab72-d2152c946627>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\r2\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r2-ef558890-7a65-411f-b0c5-a60d52220395",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r2-ef558890-7a65-411f-b0c5-a60d52220395",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-dsh-r2-ef558890-7a65-411f-b0c5-a60d52220395:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r2-ef558890-7a65-411f-b0c5-a60d52220395>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\r3\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r3-dd4242e1-9f7e-4c3a-a4fb-f9797d2dadfa",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r3-dd4242e1-9f7e-4c3a-a4fb-f9797d2dadfa",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-dsh-r3-dd4242e1-9f7e-4c3a-a4fb-f9797d2dadfa:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r3-dd4242e1-9f7e-4c3a-a4fb-f9797d2dadfa>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\r4\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r4-7804160f-a073-4577-9858-5622e3a6e560",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r4-7804160f-a073-4577-9858-5622e3a6e560",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-dsh-r4-7804160f-a073-4577-9858-5622e3a6e560:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r4-7804160f-a073-4577-9858-5622e3a6e560>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\r5\\dsh-writer.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r5-5473e92c-9c05-48f9-8483-498dd3704604",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r5-5473e92c-9c05-48f9-8483-498dd3704604",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-dsh-r5-5473e92c-9c05-48f9-8483-498dd3704604:ordinal:1",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r5-5473e92c-9c05-48f9-8483-498dd3704604>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r1-686790fd-2613-46db-83a5-e13b5c9fe3a6",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r1-686790fd-2613-46db-83a5-e13b5c9fe3a6",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-sol-review-r1-686790fd-2613-46db-83a5-e13b5c9fe3a6:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r1-686790fd-2613-46db-83a5-e13b5c9fe3a6>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\r2\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r2-4d4d7955-1d8a-41c0-b0d4-cfbadb5efeb9",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r2-4d4d7955-1d8a-41c0-b0d4-cfbadb5efeb9",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-sol-review-r2-4d4d7955-1d8a-41c0-b0d4-cfbadb5efeb9:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r2-4d4d7955-1d8a-41c0-b0d4-cfbadb5efeb9>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\r3\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r3-f032e21b-fa7c-425a-a129-582fbcbb5300",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r3-f032e21b-fa7c-425a-a129-582fbcbb5300",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-sol-review-r3-f032e21b-fa7c-425a-a129-582fbcbb5300:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r3-f032e21b-fa7c-425a-a129-582fbcbb5300>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\r4\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r4-f803db5a-bd07-4925-b7e5-36f6ac992a98",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r4-f803db5a-bd07-4925-b7e5-36f6ac992a98",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-sol-review-r4-f803db5a-bd07-4925-b7e5-36f6ac992a98:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r4-f803db5a-bd07-4925-b7e5-36f6ac992a98>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-grounding-g1\\r5\\review\\sol-review.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r5-9213ae39-b9bc-44a8-8cbc-fcf197868f14",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r5-9213ae39-b9bc-44a8-8cbc-fcf197868f14",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-sol-review-r5-9213ae39-b9bc-44a8-8cbc-fcf197868f14:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r5-9213ae39-b9bc-44a8-8cbc-fcf197868f14>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-intake\\review-grounding-r1.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3At3mc-applywright-review-r1-review-grounding-r1-8a96140d-8d17-4adb-a076-7180a3a6cdf0",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3At3mc-applywright-review-r1-review-grounding-r1-8a96140d-8d17-4adb-a076-7180a3a6cdf0",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253At3mc-applywright-review-r1-review-grounding-r1-8a96140d-8d17-4adb-a076-7180a3a6cdf0:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3At3mc-applywright-review-r1-review-grounding-r1-8a96140d-8d17-4adb-a076-7180a3a6cdf0>"
+    },
+    {
+      "file": "docs\\t3\\receipts\\20261028-intake\\review-model-path-r1.dispatch.native.json",
+      "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3At3mc-applywright-review-r1-review-model-path-r1-9e79b5c4-2b81-49fc-829f-57140d4ceace",
+      "thread": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3At3mc-applywright-review-r1-review-model-path-r1-9e79b5c4-2b81-49fc-829f-57140d4ceace",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253At3mc-applywright-review-r1-review-model-path-r1-9e79b5c4-2b81-49fc-829f-57140d4ceace:ordinal:1",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3At3mc-applywright-review-r1-review-model-path-r1-9e79b5c4-2b81-49fc-829f-57140d4ceace>"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-10-29T00:34:33.7651538Z",
+  "surface": "T3 Code (Nightly) native desktop estate-cua",
+  "deliveryProof": "Known prefix in direct Conversation under exact Document thread URL; composer draft alone excluded",
+  "relays": [
+    {
+      "observedApproxUtc": "2026-10-29T00:29:00Z",
+      "state": "DELIVERED_CONVERSATION",
+      "target": "3e09eb96-365d-4610-adfe-9de6d68ce445",
+      "prefix": "Johan/Root provider commission 29Oct",
+      "scope": "DSH991research/usage/providerpolicy/globalmaster/publication"
+    },
+    {
+      "state": "DELIVERED_CONVERSATION_ACK_FILE",
+      "target": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+      "ack": "docs/t3/receipts/20261028-provider-delegation/TERRA-NEW-CODEX-START-DEFERRAL-ACK.json",
+      "prefix": "Root-reviewed Terra metadata window",
+      "scope": "brief newCodexstartdeferral and actual projectprovidercommission"
+    },
+    {
+      "state": "DELIVERED_CONVERSATION",
+      "target": "7de07485-8840-4ab3-af32-c2fd9700b643",
+      "prefix": "Johan/Root routing update29Oct",
+      "scope": "policy/mainmaster/DSHnextdisjointunit"
+    },
+    {
+      "state": "DELIVERED_CONVERSATION",
+      "target": "6ea820e3-36c6-4c8f-a3db-447fc7426491",
+      "prefix": "Johan/Root routing update29Oct",
+      "scope": "policy/mainmaster/DSHnextdisjointunit"
+    }
+  ],
+  "newProviderDispatchClaim": false,
+  "originalDshDirectMessage": "DELIVERED_GUI_CONVERSATION_20261029_0036",
+  "tokens": null,
+  "cost": null,
+  "originalDshReply": "RECEIVED_LOCAL_ONLY_20261029_0038",
+  "rawReplyPublication": "DO_NOT_STAGE_RAW; curated summary omits credential recipe and sensitive metadata"
+}

@@ -17,7 +17,12 @@ Read docs/SPEC.md, docs/design/SPEC-V2.md, DESIGN-INPUTS.md, UX-REVIEW-20261028.
 DIRECTION-gemini.md and current status/plan. Inspect the relevant current HTML/CSS/
 app/editor source read-only, and selected existing screenshots:
 screenshots/40-home-light-1440.png,42-home-light-360.png,30-app-dashboard.png,
-31-app-cv.png and existing ux-30…ux-56 screenshots where present. Record exact
+31-app-cv.png and existing ux-30…ux-56 screenshots where present. Prefer the later
+15:32 captures for the app/editor: ux-68-app-empty-cv-two-ctas.png,
+ux-69-editor-skeleton.png, ux-70-app-library-edit-action.png,
+ux-71-app-import-edit-cta.png, ux-72-app-empty-cv-375.png,
+ux-73-editor-skeleton-375.png, ux-74-app-library-edit-375-dark.png; also compare
+final-about2.png, final-how3.png and final-security3.png where relevant. Record exact
 file/time/hash and whether actual pixels were received by the vision route. These
 are historical captures, not a fresh rendered-state measurement. If image handling
 is unavailable, state that and deliver a source-backed proposal without inventing

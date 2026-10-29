@@ -1,0 +1,22 @@
+{
+  "atUtc": "2026-10-29T00:40:49.7316170Z",
+  "types": "JSON parse and literal source inventory only; no product tests run",
+  "files": [
+    {
+      "sha256": "2a73e3539f8b3872606f1aebf0b987bf40031a6f8dd2bf79dc201eb39e38f357",
+      "path": "docs/IMPLEMENTATION-REGISTER.json",
+      "jsonParse": "PASS"
+    },
+    {
+      "sha256": "0063fa65fcc98d2d90630c122153b63e1909fd785e1ba10ca97bb4334d3e5078",
+      "path": "docs/coordination/T3-DISPATCH-PROVENANCE-20261029.json",
+      "jsonParse": "PASS"
+    },
+    {
+      "sha256": "b3e8d837bf4d48116fe85e45b305c039f15a79c171f599675ad9a36e94b804a3",
+      "path": "docs/coordination/COORDINATOR-RELAYS-20261029.json",
+      "jsonParse": "PASS"
+    }
+  ],
+  "secretPatternMatches": []
+}

@@ -1,0 +1,60 @@
+{
+  "observedUtc": "2026-10-28T23:38:24.3585646Z",
+  "state": "VERIFIED_OFF_WITH_EXPLICIT_SCOPE",
+  "WindowsCLI": {
+    "service_tier": "default",
+    "ultrafast_mode": false,
+    "version": "0.165.0",
+    "fast_mode": false
+  },
+  "WSLCLI": {
+    "service_tier": "default",
+    "ultrafast_mode": false,
+    "version": "0.165.0",
+    "fast_mode": false
+  },
+  "T3": {
+    "Windows": {
+      "changed": 310,
+      "errors": 0,
+      "visibleThreads": 428,
+      "alreadyDefault": 19,
+      "Codex": 329,
+      "afterDefault": 329,
+      "remainingFast": 0
+    },
+    "Ubuntu": {
+      "remainingFast": 0,
+      "finalCodex": 53,
+      "visibleThreads": 92,
+      "initialCodex": 51,
+      "newAlreadyDefault": 2,
+      "initialAlreadyDefault": 34,
+      "changed": 17,
+      "afterDefault": 53
+    },
+    "combinedCheckedCodex": 382,
+    "combinedChanged": 327,
+    "modelsEffortContextPermissionsOtherOptionsPreserved": true,
+    "otherProvidersConfigured": 0,
+    "DeepSeek": "unchanged/unlimited policy retained",
+    "retiredGenerations": 0,
+    "WindowsReceipt": "docs/t3/receipts/20261028-fast-off-windows/FAST-OFF-WINDOWS-RECEIPT.json",
+    "WindowsReceiptSha256": "6d6d2258beb205e2cc2b1d0552cf9fb8a8f99e8db00880b9552258e9d473a6ba",
+    "UbuntuOwnerReceipt": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\_laptop-handoff\\ClaudeHandoff\\architecture-20260921\\research\\estate\\claude-out-20261027\\CURRENT-LAUNCH-20261027\\STANDIN-ESTATE\\units\\codex-fast-off-sweep-20261028\\FAST-OFF-RECEIPT.json",
+    "UbuntuReceiptSha256": "831ef599b1036f5d1f26a06a92ed0d01f2cc116e6ae9b455b1c9dc4435df47b0"
+  },
+  "NativeWindowsLivePickers": {
+    "ApplywrightFastSelected": false,
+    "RootFastSelected": false
+  },
+  "scopeLimits": [
+    "API-visible saved/current T3 partitions across both own environments covered; two additional Ubuntu threads were already Standard at final owner readback",
+    "Null project model defaults preserved; no provider/global future-model setter exposed",
+    "Native CLI/IDE/archive histories outside visible T3 API not bulk loaded or privately rewritten",
+    "No unverified remote-host scope claimed",
+    "Already-started requests cannot be retroactively changed"
+  ],
+  "preservation": "No models/context/effort/fullaccess/credentials/DeepSeek/guards changed; no actor restart/cancel/new timer or DB rewrite",
+  "goal": "Core source repair goal ACTIVE/INCOMPLETE"
+}

@@ -1,5 +1,9 @@
 # Applywright — night checkpoint and tomorrow's first checks
 
+Final human-facing closeout: `FINAL-CLOSEOUT.md`. It includes the later T3 Grok
+activity/timing correction supplied by Johan, the actual PAUSED goal status,
+delivery and usage boundaries, and the ordered tomorrow list. No new mission.
+
 Direct Johan instruction,29October2026: **close out tonight; no new missions or
 refill; finish in-flight work, save, then pause. NO automatic WSL reopening.**
 Resume only on Johan's explicit request tomorrow and if usage permits. This rule

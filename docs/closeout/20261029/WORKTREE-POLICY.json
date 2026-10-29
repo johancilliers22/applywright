@@ -1,0 +1,11 @@
+{
+  "atUtc": "2026-10-29T02:38:10.9290233Z",
+  "action": "Read-onlyworktreemetadata inventory; allcheckouts/branchespreserved",
+  "noPruneArchiveReset": true,
+  "readyCommit": "8df799f0016f7f2f021578424f65d59c19d539bf",
+  "source": "git worktree list --porcelain",
+  "details": "WORKTREES-PRESERVED.txt",
+  "untrackedArtifacts": "OriginalDSHstatic-a11y/docsTruth+oldoperatorcompile/nativeattemptsremainlocalunchanged;hashinventorysaved",
+  "rawNative": "docs/t3/receipts remainslocal-only viarepo-localexclude,notdeleted",
+  "credentials": "Noauth/env/tokenvaluesread/copied"
+}

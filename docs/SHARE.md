@@ -1,3 +1,5 @@
+> OFFLINE —29October2026 night closeout. Owned Windows app15812 and quick-tunnel9408 were identity-verified and stopped02:37UTC to prevent OCR auto-starting WSL. No automatic restart; the old quick-tunnel URL below is historical. Source/ready commit: https://github.com/johancilliers22/applywright/commit/8df799f0016f7f2f021578424f65d59c19d539bf . Resume only manually after Johan authorises; see docs/closeout/20261029/TOMORROW.md.
+
 # Sharing Applywright
 
 How to let someone else open Applywright today, how to stop, and what changes when

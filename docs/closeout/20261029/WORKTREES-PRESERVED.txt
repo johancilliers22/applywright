@@ -1,0 +1,79 @@
+worktree C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright
+HEAD 8df799f0016f7f2f021578424f65d59c19d539bf
+branch refs/heads/main
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-06b4af37
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/contrast-m1-r3-correction
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-11473ae7
+HEAD 7d40425a9cbc68fe5f03257036ad9acd1284a786
+branch refs/heads/t3/e2e-r3-source-correction
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-2fb3f4d3
+HEAD 3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc
+branch refs/heads/t3/muse-grounding-cases
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-3669749d
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/e2e-owned-browser-lifecycle
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-551ab369
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/contrast-gate
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-69c42e7b
+HEAD 2927716426538c99f4c90104b3d8e3a280fccf97
+branch refs/heads/t3/e2e-lifecycle-r4-correction
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84
+HEAD 3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc
+branch refs/heads/t3/g1-r7-combined-history
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-84a839b8
+HEAD 3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc
+branch refs/heads/t3/pressproof-gemini-design-review
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-94aa81d5
+HEAD 3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc
+branch refs/heads/t3/e2e-startup-timeout-race
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-9a61eb7d
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/grounding-g1-repair
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-9a759bfe
+HEAD 05b859e13d484e45b8e3c0a25a63b32a6cd81ec1
+branch refs/heads/t3/g1-r6-source-corrections
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-9aa48ded
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/grounding-g1-correction
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-b88271ff
+HEAD 7d40425a9cbc68fe5f03257036ad9acd1284a786
+branch refs/heads/t3/g1-grounding-r4-correction
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-c4597a35
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/contrast-m1-r2-revision
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-e00182b7
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/e2e-lifecycle-r2-source-fixes
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-e05a8f36
+HEAD 3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc
+branch refs/heads/t3/livebench-provider-evidence
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-e8d401d4
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/g1-r3-source-corrections
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-f66efc7c
+HEAD 86b74c3a1869255ce276cfe961474193d6080ca0
+branch refs/heads/t3/contrast-r4-source-correction
+
+worktree C:/Users/johan/.t3/worktrees/applywright/t3-fcd3c5c8
+HEAD 49e2e5ed830418b87a7eeeafccd494fcb3a473d1
+branch refs/heads/t3/grounding-g1-source-corrections

@@ -1,0 +1,17 @@
+{
+  "atUtc": "2026-10-29T02:36:22.5109687Z",
+  "readySourceCommit": "8df799f0016f7f2f021578424f65d59c19d539bf",
+  "originMainReadback": "8df799f0016f7f2f021578424f65d59c19d539bf",
+  "backupMainReadback": "8df799f0016f7f2f021578424f65d59c19d539bf",
+  "url": "https://github.com/johancilliers22/applywright/commit/8df799f0016f7f2f021578424f65d59c19d539bf",
+  "sacredStaged": "48CLEAN",
+  "sacredPostCommit": "48CLEAN",
+  "postDocsStatic": "58pairs0errors0warnings",
+  "scope": "4reviewedE2Esource/testfilesandcuratednightcheckpoint,NOTG1ornewfrontend",
+  "G1": "UNREVIEWED_FROZEN_PATCH_ONLY100plus211PASS",
+  "design": "GeminiSourceOnlyproposal,nopixels,nonewvisualimplementation",
+  "website": "OFFLINE:ownedapp15812andtunnel9408stopped02:37,0listener3160;noWSLautobootfromproject",
+  "goal": "Incomplete,usernightpauserequiredafterfinalcloseout",
+  "credentialMaterial": "No runtime key copied/read;rawDSHreply/nativeinventoriesexcluded",
+  "stopReceipt": "OWNED-SERVICES-STOPPED.json"
+}

@@ -1,0 +1,29 @@
+{
+  "atUtc": "2026-10-29T02:37:06.0319122Z",
+  "reason": "DirectJohan nightcloseout/Rootownerhandoff;preventwebsiteOCRautoWSLboot",
+  "targets": [
+    {
+      "id": 9408,
+      "name": "cloudflared",
+      "birthUtc": "2026-10-28T16:51:27.4962228Z",
+      "exe": "C:/Users/johan/AppData/Local/cloudflared/cloudflared.exe",
+      "ownerVerified": true,
+      "state": "STOPPED_TERMINAL",
+      "stoppedUtc": "2026-10-29T02:37:04.7710017Z"
+    },
+    {
+      "id": 15812,
+      "name": "node",
+      "birthUtc": "2026-10-28T23:54:17.3087479Z",
+      "exe": "C:/Program Files/nodejs/node.exe",
+      "ownerVerified": true,
+      "state": "STOPPED_TERMINAL",
+      "stoppedUtc": "2026-10-29T02:37:06.0311875Z"
+    }
+  ],
+  "listener3160Remaining": 0,
+  "data": "Preservedinplace;noDBcontent/auth/keyreadorcopy",
+  "tunnel": "PriorquickURLoffline;noTailscalereset/unrelatedtunnel/PM2action",
+  "automaticRestart": "Forbidden;originalDSHschedulelistempty/goalnone",
+  "WSL": "Rootsolefinalshutdown;notshutbyprojectoperator"
+}

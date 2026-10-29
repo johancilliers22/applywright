@@ -1,0 +1,10 @@
+{
+  "startedUtc": "2026-10-29T01:45:27.4220714Z",
+  "endedUtc": "2026-10-29T01:45:30.2554340Z",
+  "phase": "G1R7_COMBINED100_AND_INDEPENDENT211",
+  "freeWindowsKiB": 9978024,
+  "exitCode": 0,
+  "lease": "Full-lifetime canonicalEX normal attempt; released on terminal",
+  "testsRan": true,
+  "sourceAcceptance": "NOT_IMPLIED_NEW_SOL_REVIEW_PENDING"
+}

@@ -1,0 +1,33 @@
+{
+  "atUtc": "2026-10-29T02:22:27.1821417Z",
+  "disposition": "ACCEPTED_E2E_LIFECYCLE_AND_BOUNDED_SYNTHETIC_PRODUCT_JOURNEY",
+  "sourceReviewSHA256": "0fc4402899f29029719fc2e889a313723f79db508b340c8f83e144aa3d4b5eba",
+  "native": "4realWindowsownedprocesstreecontrolPASS0skip",
+  "focused": "38ordinaryPASS4nativeopt-inSKIP;separatenative4PASS",
+  "independentRace": "2PASS0FAIL",
+  "integrated": "209HTTPPASS4explicitnativeSKIP;349modulesPASS1environmentSKIP;58contrastpairsPASS0errors0warnings",
+  "journey": "RealownedheadlessChrome10steps235assertionsPASS0fail,localmodelstubonly,ownPort0DBprofiles",
+  "journeyReceiptSHA256": "95d4c82e0020a1378c9b87a1e11b486696349cc7f4877dec9def61687c21bab1",
+  "sourceUnchangedInChecks": true,
+  "files": [
+    {
+      "path": "scripts/e2e-flow.mjs",
+      "sha256": "5b564dcb405ff73ec34249aa0d9fe53e72690b4e8d55fbf7602f0c385de06efd"
+    },
+    {
+      "path": "scripts/e2e-browser-child.mjs",
+      "sha256": "f231563d4c358b6e0b7c34dfb9ccfaede9395f415b469e4d396b739e9ec25c71"
+    },
+    {
+      "path": "scripts/e2e-browser-child.ps1",
+      "sha256": "a4c676f5ae51bc31eaf67a2bbf501f0bd371f02c083b98a06dbfd79f9bab3a4e"
+    },
+    {
+      "path": "tests/e2e-browser-child.test.mjs",
+      "sha256": "3def9dda6ed46a3e1116bdb4ad9526adede1cfcf7c64faac1cd6ea9d310c7d14"
+    }
+  ],
+  "scopeLimits": "Notliveprovider/modelproof,notallvisualstates/axe,notG1fullacceptance,notliveproductiondeployment",
+  "G1": "UnreviewedR7patchandworktreepreserved,notmerged",
+  "commit": "Pendingnamedpathcommit+remote-readbackreceipt"
+}

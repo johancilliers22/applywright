@@ -1,0 +1,9 @@
+{
+  "startedUtc": "2026-10-29T01:06:06.3835809Z",
+  "endedUtc": "2026-10-29T01:06:07.0531136Z",
+  "phase": "R4_INDEPENDENT_SYNTHETIC_STARTUP_RACE",
+  "freeWindowsKiB": 9608520,
+  "exitCode": 1,
+  "lease": "Normal full-lifetime canonicalEX, released on return; no native/browser/model",
+  "testsRan": true
+}

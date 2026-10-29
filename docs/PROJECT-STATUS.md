@@ -1,3 +1,11 @@
+> NIGHT CLOSEOUT29October: read [TOMORROW](closeout/20261029/TOMORROW.md) and
+> actual delivery receipt first. E2E:38mocks+2race+4realWindows controlsPASS,
+> isolatedChrome10steps235assertionsPASS; integrated209tests+4native skips,
+> 349modules+1environment skip,static58pairsPASS. G1combined100units+211cases
+> PASS remains unreviewed/notmerged. Gemini is source-only design proposal;
+> no new visual/animation implementation. No new work/automatic WSL tonight.
+> Older dated checkpoints below are historical.
+
 # Applywright — project status (cold-start brief)
 
 **22:36 UTC checkpoint:** contrastM1 R4 independently reviewed PASS_SOURCE, exactly integrated and accepted after all3gates: HTTP171PASS, modules346PASS/1SKIP, static58comparisons/0errors0warnings. Plan2.3/7.4 closed for the bounded token contract. G1R3 passes80units/all131independent cases but still needs NEW independent Sol review/integration/gates. E2EDSHR2 remains active after seven R1findings; native qualifier/browser journey unproved. Live site preserved, no deployment. Actual receipt index: [`verification/20261028-intake/CURRENT-CHECKPOINT.md`](verification/20261028-intake/CURRENT-CHECKPOINT.md).

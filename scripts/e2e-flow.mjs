@@ -45,6 +45,16 @@
  *
  * Re-runnable and self-cleaning: the temp directory, database, browser profile
  * and both server instances are removed on exit unless --keep is passed.
+ *
+ * Owned browsers
+ * --------------
+ * The main browser and the two one-shot fixture browsers are each started by
+ * `scripts/e2e-browser-child.ps1`, which puts the browser inside a
+ * kill-on-close Job Object while it is still suspended, so every renderer and
+ * utility child belongs to a handle this run can prove closed. The run does not
+ * report success until each owned tree is proved empty and its handle closed;
+ * a timed-out fixture, a spawn error or a leftover descendant fails the run
+ * instead of passing it.
  */
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
@@ -56,6 +66,7 @@ import { fileURLToPath } from "node:url";
 import { inflateRawSync } from "node:zlib";
 
 import { startServer } from "../server/app.js";
+import { provesNoCleanupNeeded, runOwnedBrowserChild, startOwnedBrowserChild } from "./e2e-browser-child.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const HERE = fileURLToPath(import.meta.url);
@@ -564,7 +575,7 @@ class Browser {
     this.artifacts = artifacts;
     this.verbose = verbose;
     this.cdp = null;
-    this.chrome = null;
+    this.owned = null;
     this.profileDir = null;
     this.requests = new Map();
     this.http = [];
@@ -584,9 +595,16 @@ class Browser {
     if (!chromePath) throw new Error("no Chrome or Edge found in the usual Windows locations");
     this.chromePath = chromePath;
     this.profileDir = await mkdtemp(join(tmpdir(), "applywright-e2e-profile-"));
-    this.chrome = spawn(
-      chromePath,
-      [
+    // Owned before it runs: the wrapper starts Chrome inside a kill-on-close
+    // job while it is still suspended, so every renderer and utility child
+    // belongs to a handle this run can prove closed. The main browser lives for
+    // the whole journey; the two one-shot fixture browsers own their own trees.
+    this.owned = startOwnedBrowserChild({
+      executablePath: chromePath,
+      cwd: ROOT,
+      label: "main browser",
+      startupTimeoutMs: 45_000,
+      args: [
         "--headless=new",
         "--disable-gpu",
         "--hide-scrollbars",
@@ -603,11 +621,12 @@ class Browser {
         "--window-size=1440,1000",
         "about:blank",
       ],
-      { stdio: "ignore" }
-    );
+    });
+    await this.owned.started;
 
     let port = 0;
     for (let attempt = 0; attempt < 200 && !port; attempt += 1) {
+      if (this.owned.outcome) break;
       await sleep(100);
       try {
         const text = await readFile(join(this.profileDir, "DevToolsActivePort"), "utf8");
@@ -616,7 +635,11 @@ class Browser {
         /* not written yet */
       }
     }
-    if (!port) throw new Error("Chrome did not open a DevTools port");
+    if (!port) {
+      const outcome = this.owned.outcome;
+      if (outcome) throw new Error(`the owned browser exited before opening a DevTools port (${outcome.kind}, code ${outcome.exitCode})`);
+      throw new Error("Chrome did not open a DevTools port");
+    }
 
     const version = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
     this.wsUrl = version.webSocketDebuggerUrl;
@@ -1102,16 +1125,37 @@ class Browser {
     try {
       this.cdp?.socket.close();
     } catch {
-      /* ignore */
+      /* the socket is already going away */
     }
-    try {
-      this.chrome?.kill();
-    } catch {
-      /* ignore */
+    let cleanupError = null;
+    if (this.owned) {
+      try {
+        // The wrapper kills the whole owned job and reports only after the job
+        // is empty; this await is the closure proof, not a fixed sleep. A
+        // natural nonzero exit is a failed browser, not a clean close.
+        const outcome = await this.owned.terminate("browser close");
+        if (outcome.kind === "exit" && outcome.exitCode !== 0) {
+          cleanupError = new Error(
+            `the owned browser exited on its own with code ${outcome.exitCode}: ${JSON.stringify(this.owned.diagnostics())}`
+          );
+        }
+      } catch (error) {
+        // "Never reported started" is not the same as "nothing was created": a
+        // wrapper can have created a browser that it then failed to contain.
+        // Suppression requires affirmative proof — no process was created, or
+        // the created process was proved terminated and its handles closed.
+        // Missing/null creation state stays a cleanup failure, never "clean".
+        const details = error.details ?? {};
+        const beforeBrowser = !this.owned.everStarted && provesNoCleanupNeeded(details);
+        if (!beforeBrowser) cleanupError = error;
+      } finally {
+        this.owned.dispose();
+      }
     }
-    // Give Windows a moment to release the profile directory before it is removed.
-    await sleep(500);
-    if (this.profileDir) await rm(this.profileDir, { recursive: true, force: true }).catch(() => {});
+    // Only a proved-closed tree may have its profile directory removed; a
+    // cleanup failure keeps the directory for diagnosis instead of hiding it.
+    if (!cleanupError && this.profileDir) await rm(this.profileDir, { recursive: true, force: true }).catch(() => {});
+    if (cleanupError) throw cleanupError;
   }
 }
 
@@ -1210,22 +1254,26 @@ const CV_OCR_HTML = cvHtml(
 <p style="font-size:26px">Kubernetes, Terraform, Go, PostgreSQL, observability</p>`
 );
 
-/** One-shot Chrome, used only for the two fixtures Chrome itself can make. */
-async function oneShotChrome(chromePath, workDir, { url, args }) {
+const ONESHOT_TIMEOUT_MS = 30_000;
+
+/**
+ * One-shot Chrome, used only for the two fixtures Chrome itself can make. The
+ * child runs inside the owned job (see scripts/e2e-browser-child.ps1), so the
+ * call returns only after the wrapper proved the tree empty. Timeout, spawn
+ * failure, a nonzero exit or an unproved closure rejects; none of them is
+ * treated as "the fixture was generated". `expectFile` is checked after that
+ * proof so a completed process that wrote nothing cannot pass.
+ */
+async function oneShotChrome(chromePath, workDir, { url, args, label, expectFile }) {
   const profile = await mkdtemp(join(workDir, "chrome-oneshot-"));
-  const child = spawn(
-    chromePath,
-    ["--headless=new", "--disable-gpu", "--no-first-run", "--no-default-browser-check", "--disable-extensions", `--user-data-dir=${profile}`, ...args, url],
-    { stdio: "ignore" }
-  );
-  await new Promise((done) => {
-    const timer = setTimeout(done, 30_000);
-    child.on("exit", () => {
-      clearTimeout(timer);
-      done();
-    });
+  await runOwnedBrowserChild({
+    executablePath: chromePath,
+    args: ["--headless=new", "--disable-gpu", "--no-first-run", "--no-default-browser-check", "--disable-extensions", `--user-data-dir=${profile}`, ...args, url],
+    cwd: workDir,
+    timeoutMs: ONESHOT_TIMEOUT_MS,
+    label: label ?? "fixture browser",
+    expectFile,
   });
-  await sleep(200);
 }
 
 /** HEAD + dirty state, so a ledger can be tied to the source it measured. */
@@ -1445,10 +1493,14 @@ async function run() {
       await oneShotChrome(browser.chromePath, workDir, {
         url: fileUrl("cv.html"),
         args: ["--no-pdf-header-footer", `--print-to-pdf=${pdfPath}`],
+        label: "PDF fixture browser",
+        expectFile: pdfPath,
       });
       await oneShotChrome(browser.chromePath, workDir, {
         url: fileUrl("cv-ocr.html"),
         args: ["--window-size=900,1400", `--screenshot=${pngPath}`],
+        label: "OCR fixture browser",
+        expectFile: pngPath,
       });
       const pdfBytes = await readFile(pdfPath);
       const pngBytes = await readFile(pngPath);
@@ -2210,7 +2262,17 @@ async function run() {
     console.error(red(`\nrun aborted before the journey finished: ${error.message}`));
     exitCode = 1;
   } finally {
-    await browser.close();
+    // Browser cleanup is part of the result: if the owned tree cannot be proved
+    // closed, the run fails and says why. It is never swallowed into a PASS.
+    let cleanupFailure = null;
+    try {
+      await browser.close();
+    } catch (error) {
+      cleanupFailure = error;
+      exitCode = 1;
+      console.error(red(`\nbrowser lifecycle: cleanup could not be proved: ${error.message}`));
+      if (error.details) console.error(dim(`  ${JSON.stringify(error.details)}`));
+    }
     await instance.close().catch(() => {});
     const seconds = ((Date.now() - started) / 1000).toFixed(1);
     const passed = ledger.steps.filter((entry) => entry.status === "PASS").length;
@@ -2224,6 +2286,7 @@ async function run() {
     if (failed.length) {
       console.log(`  failed       ${failed.map((entry) => `STEP ${entry.id}`).join(", ")}`);
     }
+    if (cleanupFailure) console.log(`  lifecycle    cleanup could not be proved: ${cleanupFailure.message}`);
     const notes = ledger.steps.flatMap((entry) => entry.issues.filter((issue) => issue.kind === "note").map((issue) => `STEP ${entry.id}: ${issue.detail}`));
     if (notes.length) {
       console.log("");

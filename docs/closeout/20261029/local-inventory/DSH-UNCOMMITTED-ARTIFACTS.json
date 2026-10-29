@@ -1,0 +1,26 @@
+[
+  {
+    "path": "docs\\verification\\20261029-a11y-app-editor\\probe-a11y-static.mjs",
+    "bytes": 5324,
+    "sha256": "234f0e0d7e498e06dfbea626bd6a47b24cb4e17d682674b45f033e5e7d7cde7b",
+    "scope": "OriginalDSHdirectunleaseddraft/evidence;preserveNotAcceptedGate"
+  },
+  {
+    "path": "docs\\verification\\20261029-a11y-app-editor\\STATIC-A11Y-AUDIT.md",
+    "bytes": 6624,
+    "sha256": "07b72c22afa0a3fa57df623dc68c53c67444a24503bd893dd4a9d00c57292b4b",
+    "scope": "OriginalDSHdirectunleaseddraft/evidence;preserveNotAcceptedGate"
+  },
+  {
+    "path": "docs\\verification\\20261029-docs-truth\\probe-doc-truth.mjs",
+    "bytes": 3663,
+    "sha256": "b33baee94c047248225680e3dd19eb2d15d79ca71493933a230ebf7aec29b2ee",
+    "scope": "OriginalDSHdirectunleaseddraft/evidence;preserveNotAcceptedGate"
+  },
+  {
+    "path": "docs\\verification\\20261029-docs-truth\\SHIFT-2-EVIDENCE.md",
+    "bytes": 6361,
+    "sha256": "92d341eacb0d119bb77a4ca63f3634b65f484842bfb88c8dca07ec5d33135ab6",
+    "scope": "OriginalDSHdirectunleaseddraft/evidence;preserveNotAcceptedGate"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "startedUtc": "2026-10-29T01:30:54.4674881Z",
+  "endedUtc": "2026-10-29T01:30:57.4416830Z",
+  "phase": "E2ER5_MOCKS_AND_INDEPENDENT_RACE_ONLY",
+  "freeWindowsKiB": 8994268,
+  "exitCode": 0,
+  "lease": "Full-lifetime canonicalEX normal attempt; released on return",
+  "nativeBrowserOrModel": "NOT_RUN",
+  "testsRan": true
+}

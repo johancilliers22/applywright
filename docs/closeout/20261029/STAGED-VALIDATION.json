@@ -1,0 +1,15 @@
+{
+  "atUtc": "2026-10-29T02:34:49.3204734Z",
+  "namedPaths": 47,
+  "productScope": "ExactlyfourE2Esource/testfiles;noG1/frontendcode",
+  "whitespaceCheck": "Allproductandoperator-authoreddocspathsPASS",
+  "frozenEvidenceExceptions": [
+    "docs/closeout/20261029/G1-R7-UNREVIEWED-CANDIDATE.patch",
+    "docs/design/GEMINI-LEAD-REVIEW-20261028.md",
+    "docs/research/MUSE-GROUNDING-CASES-20261028.md"
+  ],
+  "exceptionReason": "ValidunifieddiffblankcontextspacesandoriginalfrozenMarkdownhardbreak/EOFpreservedbyte-for-byte;notproductcodeexceptions",
+  "json": "nightregister+manifestparsechecked",
+  "sourceTestProof": "SourceReviewPASS+38mocks+2race+4realWindowsnative+10steps235Chromeassertions+all3gates",
+  "noBroadRestage": true
+}

@@ -1,0 +1,76 @@
+{
+  "atUtc": "2026-10-29T00:54:52.7776776Z",
+  "base": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
+  "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+  "proof": "Verified docs-only descendant; no product/source/AGENTS changes",
+  "paths": [
+    "docs/IMPLEMENTATION-REGISTER.json",
+    "docs/OPERATOR-CONTINUATION-PLAN.md",
+    "docs/coordination/DELIVERY-20261029.json",
+    "docs/coordination/G1-MAIN-RECONCILIATION-PLAN-20261029.md",
+    "docs/coordination/TERRA-DESKTOP-READBACK-20261029.json",
+    "docs/verification/20261028-intake/Run-FiniteAudit20261029.ps1",
+    "docs/verification/20261028-intake/Run-Verification.ps1",
+    "docs/verification/20261028-intake/verify-grounding-review-r3-cases.mjs",
+    "docs/verification/20261028-intake/verify-grounding-review-r45-cases.mjs",
+    "docs/verification/20261029-PUBLIC-AUDIT-SUMMARY.json",
+    "docs/verification/20261029-e2e-r4-diagnostic-attempt1/verification.json",
+    "docs/verification/20261029-finite-audit-admission-attempt1.json",
+    "docs/verification/20261029-finite-audit-batch-attempt1.json",
+    "docs/verification/20261029-finite-audit-disposition.json",
+    "docs/verification/20261029-g1-r5-diagnostic-attempt1/independent-grounding.json",
+    "docs/verification/20261029-g1-r5-diagnostic-attempt1/review-derived-grounding.json",
+    "docs/verification/20261029-g1-r5-diagnostic-attempt1/review-r2-derived-grounding.json",
+    "docs/verification/20261029-g1-r5-diagnostic-attempt1/review-r3-derived-grounding.json",
+    "docs/verification/20261029-g1-r5-diagnostic-attempt1/review-r45-derived-grounding.json",
+    "docs/verification/20261029-g1-r5-diagnostic-attempt1/verification.json",
+    "docs/verification/20261029-main-grounding-audit-attempt1/independent-grounding.json",
+    "docs/verification/20261029-main-grounding-audit-attempt1/review-derived-grounding.json",
+    "docs/verification/20261029-main-grounding-audit-attempt1/review-r2-derived-grounding.json",
+    "docs/verification/20261029-main-grounding-audit-attempt1/review-r3-derived-grounding.json",
+    "docs/verification/20261029-main-grounding-audit-attempt1/review-r45-derived-grounding.json",
+    "docs/verification/20261029-main-grounding-audit-attempt1/verification.json",
+    "docs/verification/20261029-main-integrated-audit-attempt1/verification.json"
+  ],
+  "sourceBlobs": [
+    {
+      "path": "server/lib/cv/tailor.js",
+      "baseBlob": "f645712fb8232b6dcc68d26a5bff907337b8f56f",
+      "headBlob": "f645712fb8232b6dcc68d26a5bff907337b8f56f",
+      "same": true
+    },
+    {
+      "path": "server/lib/cv/refine.js",
+      "baseBlob": "915c9a59710e23d0f3a7d18fa15e7fc0388b97c8",
+      "headBlob": "915c9a59710e23d0f3a7d18fa15e7fc0388b97c8",
+      "same": true
+    },
+    {
+      "path": "server/lib/cv/tailor.test.mjs",
+      "baseBlob": "81409e858e06a558ae72ffacef175ffca02caf14",
+      "headBlob": "81409e858e06a558ae72ffacef175ffca02caf14",
+      "same": true
+    },
+    {
+      "path": "server/lib/cv/refine.test.mjs",
+      "baseBlob": "aa9f8d898fa4c554812d2c7ea7dd54877908a361",
+      "headBlob": "aa9f8d898fa4c554812d2c7ea7dd54877908a361",
+      "same": true
+    },
+    {
+      "path": "scripts/e2e-flow.mjs",
+      "baseBlob": "bd84ec6794d8267767bc33e12d9f4b68d676982c",
+      "headBlob": "bd84ec6794d8267767bc33e12d9f4b68d676982c",
+      "same": true
+    },
+    {
+      "path": "public/app/app.css",
+      "baseBlob": "79103d404aa8a3a3fa5273e82ebc245ef73b4657",
+      "headBlob": "79103d404aa8a3a3fa5273e82ebc245ef73b4657",
+      "same": true
+    }
+  ],
+  "operatorDecision": "Adopt3b84986 explicitly as current source-task launch base after recording this proof; amend prepared payload/manifest/hash then one fresh normal admission. No wait for user approval; this is a documentation checkpoint, not unknown code drift.",
+  "mainMutation": "Operator will make no further main Git writes until these prepared tasks are actually dispatched/frozen or independently terminal",
+  "scope": "Existing assignments only, all native/RAM/lock/auth/ownership gates stay intact"
+}

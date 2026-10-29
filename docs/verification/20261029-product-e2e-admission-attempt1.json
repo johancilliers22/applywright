@@ -1,0 +1,11 @@
+{
+  "startedUtc": "2026-10-29T01:54:53.1724060Z",
+  "endedUtc": "2026-10-29T01:55:39.3215725Z",
+  "phase": "PRODUCT_OWNED_HEADLESS_CHROME_LOCAL_MODEL_STUB_JOURNEY",
+  "freeWindowsKiB": 10903904,
+  "exitCode": 0,
+  "lease": "Full-lifetime canonicalEX normal attempt, released when owned runner terminal",
+  "testsRan": true,
+  "liveServer": "Not targeted/restarted",
+  "realProviderCalls": "NOT_RUN"
+}

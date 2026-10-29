@@ -1,3 +1,11 @@
+# NIGHT STOP — direct Johan29October2026
+
+Finish only in-flight work and checkpoint; no new missions, refills or reviews.
+No automatic WSL, goal or scheduler restart. Root owns final WSL shutdown after
+owner READY_ACK. Resume and restore temporary pauses only on explicit manual
+Johan request when usage permits. Read docs/closeout/20261029/TOMORROW.md first.
+Older dispatch instructions below are superseded for tonight.
+
 # Applywright operator and delegation rules
 
 This is an independent repository. The current human grant makes Codex the main

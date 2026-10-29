@@ -1,23 +1,41 @@
-> 29October00:40UTC publication supersession: apply ONLY the current named-project-note delta from docs/OPERATOR-CONTINUATION-PLAN.md and IMPLEMENTATION-REGISTER.json; do not publish the stale live-state paragraphs below as current. Goal ACTIVE/INCOMPLETE; contrast7d40425 delivered, G1R5 REQUEST_CHANGES4/R6 prepared, E2ER4 frozen awaiting review/actual native proof; current main6e3 includes original DSH partialc7, preserved but not independently accepted. Original desktop DSH acknowledges internal-only messaging/file relay and no EX for its reported tests; no new paid probes before known shared190 accounting. FastOFF verified382supportedCodex threads/0Fast; actual4parent provider commissions delivered, useful new-provider native receipts pending. New continuation plan/register preserve full backlog, claims and human gates. Estate alone publishes assigned brain/applywright-platform.md, no other vault/MOC edits; raw DSH reply stays local-only, use sanitized coordination record. Historical block retained below for evidence.
-# Applywright named vault-note publication delta
+# Night publication — assigned Applywright note only
 
-Estate is the sole shared A/B publisher. Apply ONLY to `C:/Users/johan/Desktop/Coding/OpenClaw/luna-vault/Luna Vault/brain/applywright-platform.md`: insert or replace ONE28October operator-mission block below the existing title, preserving the remainder and its history. No other vault note, project folder, MOC, shared goal or FINAL-SAVE1/2 change. This supersedes the old broad vault/MOC proposal. No vault write has been performed by this project operator.
+Estate alone publishes A/B. Update ONLY brain/applywright-platform.md, preserving
+its earlier history and other vault/MOC notes. No vault write was made by this
+project operator. Source: docs/closeout/20261029/TOMORROW.md and actual DELIVERY.json.
 
-## Ready publication block — actual evidence at22:32GMT
+> **29October night: INCOMPLETE / PAUSE AFTER DRAIN.** Direct Johan: finish current
+> runs, no newmissions/refill/reviews, save and STOP. NO automatic WSL reopening.
+> Root owns final WSL shutdown after all owners READY; explicit manual resume only.
+>
+> Contrast7d40425 shipped: independentSol/21tests/58light-dark token pairs, allgates.
+> Bounded token coverage, not full rendered/axe proof.
+>
+> E2E R5 independently PASS_SOURCE0fc4402899..., exact4files integrated. ProperEX:
+> 38ordinary+2independentrace+4REAL Windows owned-tree controlsPASS. Integrated
+> 209tests+4explicit native skips,349modules+1environment skip,58pairs/0errors.
+> Actual isolatedChromejourney10steps235assertionsPASS/sourceunchanged/EXreleased
+> 01:55:39. OwnPort0/tempDB/profiles/localmodelstub; no realprovider/live3160 call.
+> Actual readycommit/push must come from delivery receipt; no inference here.
+>
+> G1 combinedR7 t3-7fef5f84 passes100units+211independentcases but finalSolreview
+> PREPARED/notdispatched asof02:07: NOTmerged/accepted. Exact frozenpatch+5hashes
+> saved in docs/closeout/20261029; allWTS/failures preserved. Review nextsession.
+>
+> Gemini actual43KB source-backed proposal, zero decodedpixels; no newvisuals or
+> animations implemented tonight. Validate stalecitations/save-contract/APIpreview
+> dependency before implementation. Muse23clear+3uncertain advisorycases NOToracles.
+> Grok currentoutput/liveness unresolved; no promisedfiles asof02:17, do not call
+> Thinking productive. ActualDSH/Gemini/Grok/Muse/Sol taskreceipts preserved;
+> per-taskcost/tokens UNKNOWN/null. T3weeklycache-heavy figures are not invoices.
+> Codex02:24 accountreadback90%weeklyused/10%left; otherwindowunavailable; noreset.
+>
+> Night changes temporary/manualrestore only. Current appOCR can startWSL, so
+> app/tunnel muststop for no-reopen night; Root owns finalshutdown. Oldquicktunnel
+> becomesoffline, not permanenthosting. Source/manual-nextsession links inTOMORROW.
+> DNS/Stripe/VAT/Scale/knownClaudeOrg190spent+pending/explicitownerhandover remain
+> separate. No credentialcopy/newpaidprobe/PM2mutation/prune/unreviewedinstalledwork.
 
-> **28 October2026 Applywright operator mission — ACTIVE / INCOMPLETE.** Codex `01a183ff-e374-7d32-ae0e-1938714e813c` operates the project through existing native T3 parent **Applywright Native Review Broker**, `46ac76de-4e76-42b4-a2b1-9f6d4e09c559`. DSH official Flash/high implements in separate project worktrees; native Sol6.1/xhigh/Standard independently reviews. Root coordinates estate, Estate publishes shared A/B.
->
-> Accepted Applywright contrast source is now `7d40425a9cbc68fe5f03257036ad9acd1284a786`, exactly verified on origin/main and local backup/main after independent review and full gates. Prior `6e7e68c55bad137c0efbe689431a6aca7fa90784` is documentation/evidence only. Grounding and E2E remain unaccepted. Live local/public demo preserved, no restart/deployment. The product promise Nothing invented is a contract; current heuristic checks have known unsupported-claim bypasses and false rejections.
->
-> **Grounding:** DSH R3 stopped/reaped in `t3-e8d401d4`; exact four-file owner grant/hash saved. Actual proper-EX22:32:45.525–47.063Z: syntax4PASS,80/80unit testsPASS0skip, all131independent comparisonsPASS(52+31+48); source unchanged, EX released. Receipt `docs/verification/20261028-g1-r3-diagnostic-attempt1/verification.json`, SHA `1f344d76b6a2f4ddf4f6196f0d0767f03214d9311dab6bc6973b72d5e6f4be7a`. NEW independent Sol R3 review remains prepared/pending admission after the completed contrast finite phase; no grounding source integration/acceptance yet. R2 REQUEST_CHANGES and its70/74units/95of131comparisons remain historical RED, not the current R3 result. No expectations were weakened.
->
-> **Contrast:** stopped DSH R4 in `t3-f66efc7c` corrects source-extension/leading-dot secret fixture exclusions. Actual R4 EX tests21/21PASS,58token comparisonsPASS (29light/29dark), static10pages/24modules/263CSSclasses,0errors/0warnings, source unchanged. After actual E2E review completion and fresh admission, NEW independent Sol R4 actually dispatched22:29:53, request `applywright-contrast-m1-sol-review-r4-c13adf89-71cf-4abf-ab9c-7ea5962e9f89`, currently RUNNING. Preserve earlier22:22 SH_BUSY/HOLD; no source acceptance inferred. Earlier R3 Sol REQUEST_CHANGES remains provenance. Token coverage is bounded; rendered component/state/axe coverage is separate.
->
-> **E2E:** independent Sol R1 on stopped `t3-3669749d` completed/reaped22:27:30 REQUEST_CHANGES with seven concrete ownership/input/qualification/race/proof defects. New DSH R2 actually dispatched22:29:54, request `applywright-e2e-lifecycle-dsh-r2-83db129e-9722-43ee-840c-ebc96570fbf4`, currently RUNNING. It still needs NEW independent review and actual qualification after correction. Actual mocks18PASS/0FAIL/1SKIP, JavaScript syntax3PASS; original wrapper Windows5.1 parser and extracted-C#net48 compile exit0. Diagnostic DLL NEVERloaded/native methods NEVERcalled. Mandatory Windows owned child/grandchild qualification is hard-skipped and UNPROVED; it must become a safe real opt-in proper-EX test before lifecycle/browser acceptance.
->
-> All actual test/compile leases above released, source hashes unchanged; fresh Windows4GiB/names-only already-running Ubuntu/canonical shared lock/native lifetime gates stay active. No forced unlock, guard/defaultslot/config changes, main Chrome, credential/auth copies or raw secret-store/env reads, PM2/fleet actions, app/WSL shutdown, or another publisher. Only accepted source may integrate after required gates. Source pushes/docs checkpoints are not repaired-site deployment or whole-goal completion.
->
-> Exact current source/execution/handles/hash index: `agent-system/projects/applywright/docs/verification/20261028-intake/CURRENT-CHECKPOINT.md`; contributor closeout `docs/APPLYWRIGHT-HANDBACK-SUBMISSION-20261028.md`. All stopped candidates and worktrees are preserved; metadata inventory in `docs/verification/20261028-intake/WORKTREE-INVENTORY.txt`. Follow actual newer receipts if these live actors terminate. Schema/index/UI model-reporting repairs remain queued; DNS/Stripe/VAT/Scale decisions and live-provider evidence remain separate.
-
-Publisher must record actual note-write time/hash and authoritative contributor version; if a new accepted project commit arrives before publication, reconcile that concrete receipt. If no acceptance arrives, publish the incomplete state without converting the time window, diagnostics or green mocks into completion.
-**22:29 independent E2E review update:** Sol R1 actually completed/reaped at22:27:30 REQUEST_CHANGES, source unchanged. Seven findings: P1 synchronized Windows5.1 Console.In blocks completion/termination; hard-skipped native qualifier has no opt-in/readiness and inadequate timing; assignment-failure branch loses uncontained-process cleanup proof; P2 wrapper nonzero/signal/finalPID acceptance, abort-vs-exit race, early close-grace force-kill, ignored native CloseHandle/Terminate failures becoming proof fields. Exact full report `docs/t3/receipts/20261028-e2e-lifecycle/review/sol-review.FINDINGS.md`. No real browser/native-process qualification is authorised from this candidate. Standing same-pipeline DSH correction/new independent Sol remains necessary. Source-reviewed structure is useful, but green18mocks/compile0 did not certify ownership. G1 R3 report-file metadata has appeared; without terminal/frozen owner receipt it is still not a testable/copyable stopped candidate.
+Publisher records actual notehash/A-Bcommit/remote-readback and terminal/active
+actors. Earlier R16/Luna/plugin/usage source commissions are tomorrow inputs,
+not new work tonight. Accepted research publication is artifact-only if ready.

@@ -1,3 +1,11 @@
+> NIGHT CLOSEOUT29October: read [TOMORROW](closeout/20261029/TOMORROW.md) and
+> actual delivery receipt first. E2E:38mocks+2race+4realWindows controlsPASS,
+> isolatedChrome10steps235assertionsPASS; integrated209tests+4native skips,
+> 349modules+1environment skip,static58pairsPASS. G1combined100units+211cases
+> PASS remains unreviewed/notmerged. Gemini is source-only design proposal;
+> no new visual/animation implementation. No new work/automatic WSL tonight.
+> Older dated checkpoints below are historical.
+
 # Applywright — git and delivery pipeline
 
 *How this project is versioned, verified and published, as it actually is on 2026-10-28 —

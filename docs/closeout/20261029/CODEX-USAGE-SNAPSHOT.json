@@ -1,0 +1,13 @@
+{
+  "observedAtUtc": "2026-10-29T02:24:29Z",
+  "source": "Codex get_usage_limits read-only",
+  "scope": "Signed-in Codex account, not project-specific",
+  "windowMinutes": 10080,
+  "usedPercent": 90,
+  "remainingPercent": 10,
+  "resetEpochSeconds": 1793811041,
+  "otherWindow": "UNAVAILABLE_NOT_ZERO",
+  "resetConsumed": false,
+  "extraCreditPurchased": false,
+  "providerCosts": "UNKNOWN_NOT_INFERRED_FROM_T3_ESTIMATES"
+}

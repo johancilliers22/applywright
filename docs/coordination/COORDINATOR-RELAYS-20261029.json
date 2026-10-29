@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "observedAtUtc": "2026-10-29T00:34:33.7651538Z",
+  "observedAtUtc": "2026-10-29T01:15:51.6609502Z",
   "surface": "T3 Code (Nightly) native desktop estate-cua",
   "deliveryProof": "Known prefix in direct Conversation under exact Document thread URL; composer draft alone excluded",
   "relays": [
@@ -36,5 +36,7 @@
   "tokens": null,
   "cost": null,
   "originalDshReply": "RECEIVED_LOCAL_ONLY_20261029_0038",
-  "rawReplyPublication": "DO_NOT_STAGE_RAW; curated summary omits credential recipe and sensitive metadata"
+  "rawReplyPublication": "DO_NOT_STAGE_RAW; curated summary omits credential recipe and sensitive metadata",
+  "latestR6Diagnostic": "Actual211PASS;unit95of98,3false-refusalregressions; sent existing Windowsbroker01:14 actualConversation; finalcombinedDSH+newSolrequired",
+  "headStableForDispatch": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc"
 }

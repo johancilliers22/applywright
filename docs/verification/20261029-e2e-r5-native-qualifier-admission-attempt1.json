@@ -1,0 +1,12 @@
+{
+  "startedUtc": "2026-10-29T01:43:50.5758181Z",
+  "endedUtc": "2026-10-29T01:43:58.4808464Z",
+  "phase": "E2ER5_ACTUAL_WINDOWS_SYNTHETIC_OWNED_TREE_4_NATIVE_QUALIFIERS",
+  "freeWindowsKiB": 10141008,
+  "reviewSHA256": "0fc4402899f29029719fc2e889a313723f79db508b340c8f83e144aa3d4b5eba",
+  "exitCode": 0,
+  "lease": "Full-lifetime canonicalEX normal attempt; released only on runner terminal",
+  "browserOrModel": "NOT_RUN; native synthetic Node process trees only",
+  "nativeFlag": "1 in isolated verification child environment only",
+  "testsRan": true
+}

@@ -1,0 +1,37 @@
+{
+  "atUtc": "2026-10-29T01:49:43.4846736Z",
+  "mainBase": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+  "candidateRoot": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-94aa81d5",
+  "sourceReview": "PASS_SOURCE",
+  "reviewSHA256": "0fc4402899f29029719fc2e889a313723f79db508b340c8f83e144aa3d4b5eba",
+  "nativeQualification": "4actualWindowscontrolsPASS0skip",
+  "integratedExactly": [
+    {
+      "path": "scripts/e2e-flow.mjs",
+      "candidateSHA256": "5b564dcb405ff73ec34249aa0d9fe53e72690b4e8d55fbf7602f0c385de06efd",
+      "mainSHA256": "5b564dcb405ff73ec34249aa0d9fe53e72690b4e8d55fbf7602f0c385de06efd",
+      "equal": true
+    },
+    {
+      "path": "scripts/e2e-browser-child.mjs",
+      "candidateSHA256": "f231563d4c358b6e0b7c34dfb9ccfaede9395f415b469e4d396b739e9ec25c71",
+      "mainSHA256": "f231563d4c358b6e0b7c34dfb9ccfaede9395f415b469e4d396b739e9ec25c71",
+      "equal": true
+    },
+    {
+      "path": "scripts/e2e-browser-child.ps1",
+      "candidateSHA256": "a4c676f5ae51bc31eaf67a2bbf501f0bd371f02c083b98a06dbfd79f9bab3a4e",
+      "mainSHA256": "a4c676f5ae51bc31eaf67a2bbf501f0bd371f02c083b98a06dbfd79f9bab3a4e",
+      "equal": true
+    },
+    {
+      "path": "tests/e2e-browser-child.test.mjs",
+      "candidateSHA256": "3def9dda6ed46a3e1116bdb4ad9526adede1cfcf7c64faac1cd6ea9d310c7d14",
+      "mainSHA256": "3def9dda6ed46a3e1116bdb4ad9526adede1cfcf7c64faac1cd6ea9d310c7d14",
+      "equal": true
+    }
+  ],
+  "stage": "Workingcopyonly; all3mandatorygatesandownedbrowserstillpending",
+  "G1": "NoCoregroundingfilechanged",
+  "liveServer": "No restart/deployment/modelcall"
+}

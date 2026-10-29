@@ -1,5 +1,5 @@
 param(
-  [Parameter(Mandatory=$true)][ValidateSet('Candidates','GroundingDiagnostic','ContrastDiagnostic','E2EDiagnostic','Integrated')][string]$Phase,
+  [Parameter(Mandatory=$true)][ValidateSet('Candidates','GroundingDiagnostic','ContrastDiagnostic','E2EDiagnostic','E2EStartupRaceDiagnostic','E2ENativeQualifier','Integrated')][string]$Phase,
   [Parameter(Mandatory=$true)][string]$EvidenceRoot,
   [string]$GroundingRoot,
   [string]$ContrastRoot,
@@ -54,6 +54,16 @@ if ($Phase -eq 'Candidates' -or $Phase -eq 'GroundingDiagnostic') {
     @{label='contrast-focused';root=$ContrastRoot;arguments=@('--test','tests/check-contrast.test.js');command='node --test tests/check-contrast.test.js'},
     @{label='contrast-static';root=$ContrastRoot;arguments=@('scripts/check.js');command='node scripts/check.js'}
   )
+} elseif ($Phase -eq 'E2ENativeQualifier') {
+  if (-not $E2ERoot) { throw 'Stopped source-reviewed E2E candidate root is required.' }
+  $steps = @(
+    @{label='e2e-windows-native-owned-process-qualifiers';root=$E2ERoot;arguments=@('--test','--test-name-pattern=^WINDOWS NATIVE OPT-IN','tests/e2e-browser-child.test.mjs');command='node --test --test-name-pattern=^WINDOWS_NATIVE_OPT_IN tests/e2e-browser-child.test.mjs (explicit Windows qualifier opt-in)'}
+  )
+} elseif ($Phase -eq 'E2EStartupRaceDiagnostic') {
+  if (-not $E2ERoot) { throw 'Stopped E2E candidate root is required.' }
+  $steps = @(
+    @{label='e2e-independent-startup-race';root=$projectRoot;arguments=@('docs/verification/20261028-intake/verify-e2e-startup-race.mjs',$E2ERoot,(Join-Path $evidencePath 'independent-startup-race.json'));command='node verify-e2e-startup-race.mjs <stopped-e2e-candidate> <new-result.json>'}
+  )
 } elseif ($Phase -eq 'E2EDiagnostic') {
   if (-not $E2ERoot) { throw 'Stopped E2E candidate root is required.' }
   $steps = @(
@@ -72,11 +82,14 @@ if ($Phase -eq 'Candidates' -or $Phase -eq 'GroundingDiagnostic') {
 foreach ($credentialName in @('ANTHROPIC_ORG_API_KEY','ANTHROPIC_API_KEY','MODEL_API_KEY','OPENAI_API_KEY','STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET')) {
   [Environment]::SetEnvironmentVariable($credentialName,'','Process')
 }
-if ($Phase -eq 'E2EDiagnostic') {
+if ($Phase -ne 'E2ENativeQualifier') {
   [Environment]::SetEnvironmentVariable('APPLYWRIGHT_E2E_NATIVE_QUALIFIER',$null,'Process')
 }
-$snapshotRoot = if ($Phase -eq 'Integrated') {$projectRoot} elseif ($Phase -eq 'ContrastDiagnostic') {$ContrastRoot} elseif ($Phase -eq 'E2EDiagnostic') {$E2ERoot} else {$GroundingRoot}
-$snapshotPaths = if ($Phase -eq 'ContrastDiagnostic') {@('scripts/check.js','scripts/contrast.js','tests/check-contrast.test.js')} elseif ($Phase -eq 'E2EDiagnostic') {@('scripts/e2e-flow.mjs','scripts/e2e-browser-child.mjs','scripts/e2e-browser-child.ps1','tests/e2e-browser-child.test.mjs')} else {@('server/lib/cv/tailor.js','server/lib/cv/refine.js','server/lib/cv/tailor.test.mjs','server/lib/cv/refine.test.mjs')}
+if ($Phase -eq 'E2ENativeQualifier') {
+  [Environment]::SetEnvironmentVariable('APPLYWRIGHT_E2E_NATIVE_QUALIFIER','1','Process')
+}
+$snapshotRoot = if ($Phase -eq 'Integrated') {$projectRoot} elseif ($Phase -eq 'ContrastDiagnostic') {$ContrastRoot} elseif ($Phase -eq 'E2EDiagnostic' -or $Phase -eq 'E2EStartupRaceDiagnostic' -or $Phase -eq 'E2ENativeQualifier') {$E2ERoot} else {$GroundingRoot}
+$snapshotPaths = if ($Phase -eq 'ContrastDiagnostic') {@('scripts/check.js','scripts/contrast.js','tests/check-contrast.test.js')} elseif ($Phase -eq 'E2EDiagnostic' -or $Phase -eq 'E2EStartupRaceDiagnostic' -or $Phase -eq 'E2ENativeQualifier') {@('scripts/e2e-flow.mjs','scripts/e2e-browser-child.mjs','scripts/e2e-browser-child.ps1','tests/e2e-browser-child.test.mjs')} else {@('server/lib/cv/tailor.js','server/lib/cv/refine.js','server/lib/cv/tailor.test.mjs','server/lib/cv/refine.test.mjs')}
 if ($Phase -eq 'Integrated') {
   $snapshotPaths += @('scripts/check.js','scripts/e2e-flow.mjs')
   foreach ($optionalPath in @('scripts/contrast.js','tests/check-contrast.test.js','scripts/e2e-browser-child.mjs','scripts/e2e-browser-child.ps1','tests/e2e-browser-child.test.mjs')) {

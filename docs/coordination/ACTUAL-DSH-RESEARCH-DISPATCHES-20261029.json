@@ -1,0 +1,37 @@
+{
+  "atUtc": "2026-10-29T00:58:13.7411839Z",
+  "scope": "Actual SAMEEstate native dispatch receipts; not task completion/served-model/token proof",
+  "Windows991fallback": "NOT_CREATED_UNNECESSARY_DO_NOT_DUPLICATE",
+  "tasks": [
+    {
+      "unit": "dsh-research-refresh-20261028",
+      "receipt": "C:\\Users\\johan\\Desktop\\ClaudeHandoff\\architecture-20260921\\research\\estate\\claude-out-20261027\\CURRENT-LAUNCH-20261027\\STANDIN-ESTATE\\units\\dsh-research-refresh-20261028\\DISPATCH.json",
+      "sha256": "a8a9cc19767d9f3db5a030b9ee373a893a6727e58d9df8ca8a094af653073d24",
+      "taskId": "node:delegated-task:command%3Amcp%3Ac870a558-fb22-4ac9-abb6-154c8ce4db00%3Adelegate-task%3Aestate-dsh-991-research-refresh-20261029-r1",
+      "childThreadId": "thread:delegated-task:command%3Amcp%3Ac870a558-fb22-4ac9-abb6-154c8ce4db00%3Adelegate-task%3Aestate-dsh-991-research-refresh-20261029-r1",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Ac870a558-fb22-4ac9-abb6-154c8ce4db00%253Adelegate-task%253Aestate-dsh-991-research-refresh-20261029-r1:ordinal:1",
+      "link": "<t3-thread://v2/581dec0a-e5df-4b43-9975-9136f2b84211/thread:delegated-task:command%3Amcp%3Ac870a558-fb22-4ac9-abb6-154c8ce4db00%3Adelegate-task%3Aestate-dsh-991-research-refresh-20261029-r1>",
+      "provider": "acpRegistry_deepseek_ubuntu",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "statusAtDispatch": "running",
+      "workStateAtDispatch": "working",
+      "tokens": null,
+      "cost": null
+    },
+    {
+      "unit": "dsh-usage-implementation-inventory-20261029",
+      "receipt": "C:\\Users\\johan\\Desktop\\ClaudeHandoff\\architecture-20260921\\research\\estate\\claude-out-20261027\\CURRENT-LAUNCH-20261027\\STANDIN-ESTATE\\units\\dsh-usage-implementation-inventory-20261029\\DISPATCH.json",
+      "sha256": "e385863de9a570f2c10e202a9ddf5b20fb51ed475f9998a99f3230054eb25409",
+      "taskId": "node:delegated-task:command%3Amcp%3Ac870a558-fb22-4ac9-abb6-154c8ce4db00%3Adelegate-task%3Aestate-dsh-usage-implementation-inventory-20261029-r1",
+      "childThreadId": "thread:delegated-task:command%3Amcp%3Ac870a558-fb22-4ac9-abb6-154c8ce4db00%3Adelegate-task%3Aestate-dsh-usage-implementation-inventory-20261029-r1",
+      "run": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Ac870a558-fb22-4ac9-abb6-154c8ce4db00%253Adelegate-task%253Aestate-dsh-usage-implementation-inventory-20261029-r1:ordinal:1",
+      "link": "<t3-thread://v2/581dec0a-e5df-4b43-9975-9136f2b84211/thread:delegated-task:command%3Amcp%3Ac870a558-fb22-4ac9-abb6-154c8ce4db00%3Adelegate-task%3Aestate-dsh-usage-implementation-inventory-20261029-r1>",
+      "provider": "acpRegistry_deepseek_ubuntu",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "statusAtDispatch": "running",
+      "workStateAtDispatch": "working",
+      "tokens": null,
+      "cost": null
+    }
+  ]
+}

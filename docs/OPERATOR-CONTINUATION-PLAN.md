@@ -1,11 +1,32 @@
+## FINAL NIGHT OVERRIDE —29October2026
+No new work/refill/review tonight. Read docs/closeout/20261029/TOMORROW.md first. E2Esource/native4/Chrome235PASS readycommit; G1R7unreviewed100+211PASS frozenpatch only. GrokStoppedbyuser/incomplete. Resumeonlyexplicitly; RootsoleWSLshutdown afterREADY; ownGoalpausesatend. EarlierACTIVE/RUNNING guidance below is historical.
+
+## NIGHT STOP — direct Johan instruction29October02:00GMT
+
+Finish in-flight work and close/checkpoint only. No newdispatch/refill/overnightcontinuation. Root owns soleWSLshutdown afterallREADY_ACK; NO automaticreopening. OwnGoal/automations mustbePAUSED atfinalcloseout. Resumeonlyexplicitlytomorrowifusagepermits. Mergeonlyalreadyreviewedready changes; G1R7unreviewedcandidate retainednotmerged. LatestworkingregisterandnightpacketoverrideolderACTIVE/newdispatch instructionsbelow. Details docs/closeout/20261029/TOMORROW.md.
+
 # Applywright operator continuation plan
 
-Updated 29 October 2026, 00:31 GMT. **ACTIVE / INCOMPLETE.** Read this file and
+Updated 29 October 2026, 01:16 GMT. **ACTIVE / INCOMPLETE.** Read this file and
 `IMPLEMENTATION-REGISTER.json` after compaction/restart, then the product
 `IMPLEMENTATION-PLAN.md`, local `AGENTS.md`, and the newest exact native receipts.
 The gym window was a checkpoint, not a stop instruction. Do not replace the full
 product plan with the repair subset, or infer acceptance from a timer or clean Git.
 
+## Latest operator snapshot —01:16GMT
+
+Main3b84986 is pushed/verified and stays stable while prepared provider tasks start.
+G1R6 is stopped/reaped in t3-9a759bfe; actual211casesPASS,95/98unitsPASS. A new combined-history DSH candidate is prepared; preserve all frozen source.
+E2ER4 Sol review returnedREQUEST_CHANGES1startup-race; independent syntheticRED1/2 reproduced underEX. DSHR5correction/newreview required.
+Gemini AGY ArgonHigh design is actually running in t3-84a839b8. Two SAMEEstate
+WSL DSH research/usage tasks are actually running; no duplicate fallback/audit.
+Grok4.7 has actual RUNNINGnative receipt; Muse remains prepared until its receipt exists. Exact IDs live in the
+adjacent register and broker receipts; consume native completion callbacks.
+R16 and our EX batches are terminal/released, no standing finite priority hold.
+Actual main gates171/349+1skip/static58PASS coexist with grounding90/211PASS.
+Frozen R5 has88/91units and189/211cases; preserve RED and final c7 safeguard
+reconciliation requirement. Native E2E/browser/live-model proof remains absent.
+Source/validation/push/publication/full-goal acceptance remain distinct.
 ## Authority and ownership
 
 Johan authorised Codex as Applywright's operator/orchestrator/architect/acceptor,
@@ -22,7 +43,7 @@ Estate `3e09eb96-365d-4610-adfe-9de6d68ce445` alone publishes shared A/B. The on
 assigned project B note is `brain/applywright-platform.md`; other vault/MOC/shared
 writes remain owner-controlled. Use the current Root master, not a second estate
 register: `C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/ROOT-ACTIVE-IMPLEMENTATION-PLAN-20261029.md`
-and adjacent `REGISTER.json`. It retains the original 26 P requirements/20 groups/
+and adjacent `ROOT-ACTIVE-IMPLEMENTATION-REGISTER-20261029.json`. It retains the original 26 P requirements/20 groups/
 18 tools and 19 current work units. Applywright's product P numbers are separate.
 
 ## Current source and provenance
@@ -147,3 +168,13 @@ repairs, runtime/artifact gates, pushes and owner publications are actually met.
 00:38 original DSH reconciliation reply received locally. It confirms internal DSH messaging only/file relay, its own gate runs lacked EX and cannot confer acceptance, and historical paid Org API probes lack known current spent/pending accounting. No further source/Git/restart/live probe will be done by that lead without operator assignment. Preserve server/tunnel; no new paid call until approved accounting. Raw reply is LOCAL ONLY because it contains a credential-launch recipe and metadata; publish only the sanitized provenance summary. Actual GUI delivery and reply are now proved.
 
 00:46 actual EX audit completed/released at00:46:22.306826Z. Main05b859 mandatory gates171HTTP/349modules1SKIP/static58PASS, independent grounding90/211PASS121FAIL. FrozenR5 units88PASS3FAIL; old155casesPASS,new56=34PASS22FAIL (189/211overall). FrozenE2ER4 syntax3PASS/mocks36PASS4nativeSKIP, no native call. All source hashes unchanged. Exact dispositions docs/verification/20261029-finite-audit-disposition.json. G1-main merge decision is coordination/G1-MAIN-RECONCILIATION-PLAN-20261029.md; preserve c7 empty-field/integer-index safeguards and all tests. Actual R16 finite run finished/released00:40:11.455644, now independently confirmed and delivered to broker; no source hold remains beyond fresh ordinary gates. Root Windows CLI Terra catalogue adoption verified; this existing Desktop picker still exposes its old list (Sol selected/FastOFF unchanged), so no Desktop fix/restart is claimed. User explicitly deferred update/restart. Native useful-task proofs and WSL/T3/Hermes Terra checks remain separate.
+
+00:59 native dispatch update (not completion/served-token proof): G1R6 DSH actualRUNNING in t3-9a759bfe, requestapplywright-grounding-g1-dsh-r6-11af04a9-f367-40bb-a897-6d704f33282f; E2ER4 independentSolSOURCEreviewRUNNING requestapplywright-e2e-lifecycle-sol-review-r4-2c38e31f-41b2-4ffa-9ab7-950e3a9674d6; GeminiAGYArgonHigh lead-designRUNNING requestapplywright-gemini-lead-design-r1-6df69f3f-95dc-46da-9ea8-ad648d966436. Root/Estate also actuallydispatched2WSLDSHresearch/usage jobs00:52, realhandles incoordination/ACTUAL-DSH-RESEARCH-DISPATCHES-20261029.json. No Windows991/thirdusageaudit duplicate. Grok/Muse stillprepareduntilactualreceipt. MainHEAD3b84986 remainsstable for tasklaunch; docs-onlybaseproofrecorded. Waitnativecompletioncallback ratherthanpollingactors orreadingactiveG1worktree; source/runtime/acceptancegates remain.
+
+01:07 update: Grok4.7 research nowactuallyRUNNING nativeWindowsT3 requestapplywright-grok-model-research-r1-99d0722f-cb13-4142-ae6b-a0ff002dad6e. E2ER4Sol consumed/reaped REQUEST_CHANGES1startup-timeout/natural-exitrace. Actual independent syntheticrace run undernormalEX01:06:06.383–07.053 confirmedRED1/2 (late30001mswronglyresolves;timely29999mspositivepasses), alltimers/listenersdisposed/sourceunchanged/released; receipt632b5dd28e5dfb5d46db02b2c6d22d1ca1d5b6f4ee57a6e81c047d9f8839146a. Newverify-e2e-startup-race.mjs and runnerphaseE2EStartupRaceDiagnostic stay saved; DSHR5correction/newSolreviewstillrequired. No native/browser call. Main3b remainsstable; allownGUI/EXreleasedafterrelay.
+
+01:12 actual G1R6 update: stopped native t3-9a759bfe, five hashes verified at01:09:57; properEX01:10:09.631–11.956 diagnostic sourceunchanged/released syntax4PASS, all211independentPASS, units95/98PASS3FAIL. Receipt f26a3307e85ca144aab05b9ffe2be5c3ae72c968ab1d804c17ef900818270e59. RemainingRED: contact-only droppedphone wrongly'building'ownership; ordinary 'Additionally,deploy time fellby40%' wrongly'deploy'ownership in2definitions. NewDSHcombinedcandidate mustclose3regressions+preservec7emptyfield/integerindexguards+BOTHtesthistories. NEW independentSol review onexactfinalcombinedbytes mandatory; nointerimPASS/maincopy. Root/operatorclarifyunlimitedlogicaloutstandingworkmayberaisedforreadyindependentroleswithinactualnativephysicalguards; noinstalledslot/lock/RAM/permissionoverrideoractorcancellation. Museadvisoryrolecasesnotacceptedoraclewithoutvalidation.
+
+01:16 Root/user unlimitedLOGICAL outstanding policy relayed toWindowsbroker and SAMEEstate (actual installedslots/locks/RAM/permissions/providerdefaults unchanged; no actorscancelled/no readyfiniteverificationstarvation). TwoexistingDSHresearchjobs mustnot createanartificialsoft2count blocker forR16samebuilder/NativeR5review; record actual native denialifany. CurrentprojectnewG1combinedR7/E2ER5payloads saved, actualnewtaskreceipts pending. Main3bHEADstable, sourceunaccepted; latestworkingplan/register and independentR6/E2Eraceevidence savedlocally whilemainheldstableforlaunch.
+
+01:19 actual native follow-on dispatches: G1combinedR7 requestapplywright-grounding-g1-dsh-r7-66fbe5c4-d723-4406-a86f-851786759dec and E2EraceR5 requestapplywright-e2e-lifecycle-dsh-r5-b480763e-0e07-4b60-b57f-0937167dff1e bothRUNNINGofficialDSHWindowsFlash/high perrealdispatchreceipts01:17. Nativeworktreeidentityreceipts notyetavailable; registermarksUNKNOWN ratherthanoldpaths. Do notreadactivecandidateWTS. RootHermesNativeR6completioncommissionSHAefd163882f3c7fb477c2d8b1d82ad528d9d3198e769b398e5a7efd6c8e014d7d actuallydeliveredSAMEEstate01:19 withconditionalreview/lifecycle/producerCAS/one-moduleamendmentguard. No ownsharedsourcewrites. AllownGUI/EXreleased. Main3bstable, newworkingcontinuityevidenceuncommittedonpurposeuntilpreparedlaunchwindowends.

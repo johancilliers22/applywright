@@ -1,0 +1,9 @@
+{
+  "startedUtc": "2026-10-29T01:49:43.5366657Z",
+  "endedUtc": "2026-10-29T01:49:48.7775960Z",
+  "phase": "E2ER5_EXACT_MAIN_INTEGRATED_3MANDATORY_GATES",
+  "exitCode": 0,
+  "lease": "Full-lifetime canonicalEX normal attempt released on terminal",
+  "nativeRepeated": "OFF in ordinaryIntegrated child; prior4actualPASSretained",
+  "liveModel": "NOT_RUN"
+}

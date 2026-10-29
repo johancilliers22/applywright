@@ -1,0 +1,55 @@
+{
+  "atUtc": "2026-10-29T02:07:56.0885675Z",
+  "state": "FROZEN_UNREVIEWED_DO_NOT_APPLY_OR_MERGE",
+  "worktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84",
+  "branch": "t3/g1-r7-combined-history",
+  "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+  "patch": "G1-R7-UNREVIEWED-CANDIDATE.patch",
+  "patchSha256": "48bcf2bf468f996b17840886ce91f03bd30dfcba1457d03c0528ace151a8ec2e",
+  "sourceHashes": [
+    {
+      "relative": "server/lib/cv/tailor.js",
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84\\server\\lib\\cv\\tailor.js",
+      "bytes": 133748,
+      "sha256": "a776da76ba80cbe483079320d7624051492cb640a09de7463746249d4545dc02",
+      "canonicalLFSha256": "ac95310f3a41b27919677f51bd7a9b583159b2b04995fbca19f370842f9f9d91",
+      "gitBlob": "7cbec015ebd60f5277a6ad8e3cd27586b4c4854a"
+    },
+    {
+      "relative": "server/lib/cv/refine.js",
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84\\server\\lib\\cv\\refine.js",
+      "bytes": 71029,
+      "sha256": "0ce9a7b9e7c7649476ced0928646e50e4fdab91d7bfe9bb78cf573fb1dbb9695",
+      "canonicalLFSha256": "9ebc5c6580ddd0d40cadefbf7fa5ec4a21557161a52ea345c0954b6767072c89",
+      "gitBlob": "70ecca73245eb26330a2265c769cddcc61391396"
+    },
+    {
+      "relative": "server/lib/cv/tailor.test.mjs",
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84\\server\\lib\\cv\\tailor.test.mjs",
+      "bytes": 74496,
+      "sha256": "36eefc4b11eeb214448d691c9bbc88ac700256f12f8f9a74b13359b4657f6a01",
+      "canonicalLFSha256": "3f1f6e59c0ccc5375f805e5bfb60f8a098e30749639174f7c5a652e7e6ba02fd",
+      "gitBlob": "539c0d186b6eaedf55e68c8935685cdda1a86b51"
+    },
+    {
+      "relative": "server/lib/cv/refine.test.mjs",
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84\\server\\lib\\cv\\refine.test.mjs",
+      "bytes": 65192,
+      "sha256": "5941b786fcabb2c7c5264931089e23febc1b982851c60ceeccc14399e8f81ac2",
+      "canonicalLFSha256": "e4acd794369745fd15ef4adf8f6ac50ce1be1ecad915fe1d5e0e2b9094600b45",
+      "gitBlob": "306c67e8a68f3f50ac22b907e9c1fe2432094bdd"
+    },
+    {
+      "relative": "GROUNDING-G1-RESULT.md",
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84\\GROUNDING-G1-RESULT.md",
+      "bytes": 24050,
+      "sha256": "40eca3594fcb2d0f8e5b9e645ef29767467ea769b1c41136a16a06460d862052",
+      "canonicalLFSha256": "40eca3594fcb2d0f8e5b9e645ef29767467ea769b1c41136a16a06460d862052",
+      "gitBlob": "e260e0db02e2f41a1c656e65a78f462237d67239"
+    }
+  ],
+  "executed": "100unit+211independentPASSunderEX;sourceunchanged",
+  "independentReview": "PREPARED_NOT_DISPATCHED_ASOF0207;donotstartnewreviewtonightunlessalreadyinflight",
+  "tomorrow": "FreshindependentSolcombinedsource/testreview,validateMuseadvisorycases/roleprovenance,thenall3gatesbeforeintegration",
+  "worktreePolicy": "Preservedinplace;nogitreset/settle/archive/prune"
+}

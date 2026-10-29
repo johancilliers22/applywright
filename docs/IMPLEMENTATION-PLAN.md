@@ -1,3 +1,11 @@
+> NIGHT CLOSEOUT29October: read [TOMORROW](closeout/20261029/TOMORROW.md) and
+> actual delivery receipt first. E2E:38mocks+2race+4realWindows controlsPASS,
+> isolatedChrome10steps235assertionsPASS; integrated209tests+4native skips,
+> 349modules+1environment skip,static58pairsPASS. G1combined100units+211cases
+> PASS remains unreviewed/notmerged. Gemini is source-only design proposal;
+> no new visual/animation implementation. No new work/automatic WSL tonight.
+> Older dated checkpoints below are historical.
+
 > Current operational status29October: [operator continuation](OPERATOR-CONTINUATION-PLAN.md) and [implementation register](IMPLEMENTATION-REGISTER.json) supersede historical intake checkpoints. Every product row below is retained. G1R5 REQUEST_CHANGES and E2ER4 unreviewed/unexecuted remain incomplete; concurrent main source must reconcile before integration. Contrast token checks accepted7d40425; full rendered/native/browser guarantees remain separate.
 # Applywright — implementation plan
 

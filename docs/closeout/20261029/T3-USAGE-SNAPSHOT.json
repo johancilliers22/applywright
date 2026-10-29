@@ -1,0 +1,53 @@
+{
+  "observedAtUtc": "2026-10-29T02:05:24.5695032Z",
+  "source": "Actual T3 native usage overlay visible at night-closeout",
+  "scope": "All environments/all providers,7days Oct23-29 selected; historical combined account/harness scope, not this project or tonight",
+  "processedTokens": "11.9B",
+  "cachedInput": "11.7B",
+  "uncachedInput": "103M",
+  "output": "40.4M",
+  "sessions": 1056,
+  "providerRows": [
+    {
+      "processed": "4.71B",
+      "provider": "Codex",
+      "sessions": 277,
+      "share": "39.4%"
+    },
+    {
+      "processed": "7.02B",
+      "provider": "Claude Code",
+      "sessions": 609,
+      "share": "58.8%"
+    },
+    {
+      "processed": "30.9M",
+      "provider": "Grok Build",
+      "sessions": 38
+    },
+    {
+      "processed": "12M",
+      "provider": "OpenCode",
+      "sessions": 24
+    },
+    {
+      "processed": "23.1M",
+      "provider": "Antigravity",
+      "sessions": 4
+    },
+    {
+      "processed": "145M",
+      "provider": "Pi",
+      "sessions": 59
+    },
+    {
+      "processed": "2.09M",
+      "provider": "Muse Code",
+      "sessions": 45
+    }
+  ],
+  "actualInvoiceOrSubscriptionSpend": "UNKNOWN; dashboard monetary estimates/cache savings must not be treated as actual charges",
+  "officialDshCoverage": "Not separately shown in visible provider cards; actual nativeDSH tasks proven by receipts, no zero-use inference",
+  "projectUsage": "Per-task tokens/cost UNKNOWN where runtime did not expose them",
+  "next": "Reconcile provider/harness/account dedupe and DSHmeter coverage with accepted inventory, offload bulkreading/docs, frontierreviews only wherevaluable"
+}

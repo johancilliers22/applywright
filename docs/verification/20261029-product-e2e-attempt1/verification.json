@@ -1,0 +1,115 @@
+{
+  "startedUtc": "2026-10-29T01:54:53.7935251Z",
+  "endedUtc": "2026-10-29T01:55:39.2888178Z",
+  "scope": "Owned headless Chrome product journey; ephemeral PORT0/server/database/profiles; local model stub only",
+  "lock": "Caller holds canonical full-lifetime EX",
+  "sourceBefore": [
+    {
+      "relative": "scripts/e2e-flow.mjs",
+      "sha256": "5b564dcb405ff73ec34249aa0d9fe53e72690b4e8d55fbf7602f0c385de06efd"
+    },
+    {
+      "relative": "scripts/e2e-browser-child.mjs",
+      "sha256": "f231563d4c358b6e0b7c34dfb9ccfaede9395f415b469e4d396b739e9ec25c71"
+    },
+    {
+      "relative": "scripts/e2e-browser-child.ps1",
+      "sha256": "a4c676f5ae51bc31eaf67a2bbf501f0bd371f02c083b98a06dbfd79f9bab3a4e"
+    },
+    {
+      "relative": "tests/e2e-browser-child.test.mjs",
+      "sha256": "3def9dda6ed46a3e1116bdb4ad9526adede1cfcf7c64faac1cd6ea9d310c7d14"
+    },
+    {
+      "relative": "server/app.js",
+      "sha256": "27886f36e41e14f107b4f465db19292640fe2a7459dbd2c004173f95ddb6aa33"
+    },
+    {
+      "relative": "server/config.js",
+      "sha256": "f543815cd87af31b90a530eddcd5143eefbb8d3f9bbe1d4c9f95f10269d5c055"
+    },
+    {
+      "relative": "server/lib/cv/tailor.js",
+      "sha256": "afbb42bc25fe1f8aa610898bf5abecbc9a51dd3a3fe9270fdc980e5c63c5defd"
+    },
+    {
+      "relative": "server/lib/cv/refine.js",
+      "sha256": "24907b4faadb7c605dea43c2cb9822694dcc28a26922897215eb345ebe9b5949"
+    },
+    {
+      "relative": "public/editor.html",
+      "sha256": "63d39dcc0cd5cfdb1e45110992ba1e6c1a826c86f225f653bb60632b73f7df20"
+    },
+    {
+      "relative": "public/assets/editor.js",
+      "sha256": "0eac2b1fd02f289b5fda5f2a3c083de9b3f7b9ca0c6759d3e02d8f1b53e58d7d"
+    },
+    {
+      "relative": "public/app/app.js",
+      "sha256": "f1c3cf34c83eadffa10ddafff75f8d5685e7142718ee21ef19f546b46c7a30e0"
+    },
+    {
+      "relative": "public/app/app.css",
+      "sha256": "6a65392ac4fa67a7c6fbb1638c4250714094705814112892dc2924a22e64481e"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "relative": "scripts/e2e-flow.mjs",
+      "sha256": "5b564dcb405ff73ec34249aa0d9fe53e72690b4e8d55fbf7602f0c385de06efd"
+    },
+    {
+      "relative": "scripts/e2e-browser-child.mjs",
+      "sha256": "f231563d4c358b6e0b7c34dfb9ccfaede9395f415b469e4d396b739e9ec25c71"
+    },
+    {
+      "relative": "scripts/e2e-browser-child.ps1",
+      "sha256": "a4c676f5ae51bc31eaf67a2bbf501f0bd371f02c083b98a06dbfd79f9bab3a4e"
+    },
+    {
+      "relative": "tests/e2e-browser-child.test.mjs",
+      "sha256": "3def9dda6ed46a3e1116bdb4ad9526adede1cfcf7c64faac1cd6ea9d310c7d14"
+    },
+    {
+      "relative": "server/app.js",
+      "sha256": "27886f36e41e14f107b4f465db19292640fe2a7459dbd2c004173f95ddb6aa33"
+    },
+    {
+      "relative": "server/config.js",
+      "sha256": "f543815cd87af31b90a530eddcd5143eefbb8d3f9bbe1d4c9f95f10269d5c055"
+    },
+    {
+      "relative": "server/lib/cv/tailor.js",
+      "sha256": "afbb42bc25fe1f8aa610898bf5abecbc9a51dd3a3fe9270fdc980e5c63c5defd"
+    },
+    {
+      "relative": "server/lib/cv/refine.js",
+      "sha256": "24907b4faadb7c605dea43c2cb9822694dcc28a26922897215eb345ebe9b5949"
+    },
+    {
+      "relative": "public/editor.html",
+      "sha256": "63d39dcc0cd5cfdb1e45110992ba1e6c1a826c86f225f653bb60632b73f7df20"
+    },
+    {
+      "relative": "public/assets/editor.js",
+      "sha256": "0eac2b1fd02f289b5fda5f2a3c083de9b3f7b9ca0c6759d3e02d8f1b53e58d7d"
+    },
+    {
+      "relative": "public/app/app.js",
+      "sha256": "f1c3cf34c83eadffa10ddafff75f8d5685e7142718ee21ef19f546b46c7a30e0"
+    },
+    {
+      "relative": "public/app/app.css",
+      "sha256": "6a65392ac4fa67a7c6fbb1638c4250714094705814112892dc2924a22e64481e"
+    }
+  ],
+  "sourceUnchanged": true,
+  "exitCode": 0,
+  "rawLog": "product-e2e.log",
+  "rawLogSHA256": "b7066f47f1155035cbd46f15143d4de04723ce0258d52fd5f6df1acd60ad3a76",
+  "artifacts": "Kept in unique script-owned temp directory printed in raw log (--keep)",
+  "liveServer": "NOT_RESTARTED_OR_TARGETED",
+  "liveModel": "NO_REAL_PROVIDER_CALLS",
+  "nativeQualification": "Four synthetic owned-process controls already passed",
+  "error": null
+}

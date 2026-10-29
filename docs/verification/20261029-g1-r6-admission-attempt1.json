@@ -1,0 +1,9 @@
+{
+  "startedUtc": "2026-10-29T01:10:09.3096130Z",
+  "endedUtc": "2026-10-29T01:10:12.0168700Z",
+  "phase": "G1_R6_FOCUSED98_AND_INDEPENDENT211",
+  "freeWindowsKiB": 11212876,
+  "exitCode": 1,
+  "lease": "Normal full-lifetime canonicalEX, released on return; no native/browser/model",
+  "testsRan": true
+}

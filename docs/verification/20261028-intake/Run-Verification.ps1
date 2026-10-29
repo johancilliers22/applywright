@@ -40,7 +40,9 @@ if ($Phase -eq 'Candidates' -or $Phase -eq 'GroundingDiagnostic') {
     @{label='grounding-focused';root=$GroundingRoot;arguments=@('--test','server/lib/cv/tailor.test.mjs','server/lib/cv/refine.test.mjs');command='node --test server/lib/cv/tailor.test.mjs server/lib/cv/refine.test.mjs'},
     @{label='grounding-independent';root=$projectRoot;arguments=@('docs/verification/20261028-intake/verify-grounding-candidate.mjs',$GroundingRoot,(Join-Path $evidencePath 'independent-grounding.json'));command='node verify-grounding-candidate.mjs <stopped-grounding-candidate> <new-result.json>'},
     @{label='grounding-review-derived';root=$projectRoot;arguments=@('docs/verification/20261028-intake/verify-grounding-review-cases.mjs',$GroundingRoot,(Join-Path $evidencePath 'review-derived-grounding.json'));command='node verify-grounding-review-cases.mjs <stopped-grounding-candidate> <new-result.json>'},
-    @{label='grounding-review-r2-derived';root=$projectRoot;arguments=@('docs/verification/20261028-intake/verify-grounding-review-r2-cases.mjs',$GroundingRoot,(Join-Path $evidencePath 'review-r2-derived-grounding.json'));command='node verify-grounding-review-r2-cases.mjs <stopped-grounding-candidate> <new-result.json>'}
+    @{label='grounding-review-r2-derived';root=$projectRoot;arguments=@('docs/verification/20261028-intake/verify-grounding-review-r2-cases.mjs',$GroundingRoot,(Join-Path $evidencePath 'review-r2-derived-grounding.json'));command='node verify-grounding-review-r2-cases.mjs <stopped-grounding-candidate> <new-result.json>'},
+    @{label='grounding-review-r3-derived';root=$projectRoot;arguments=@('docs/verification/20261028-intake/verify-grounding-review-r3-cases.mjs',$GroundingRoot,(Join-Path $evidencePath 'review-r3-derived-grounding.json'));command='node verify-grounding-review-r3-cases.mjs <stopped-grounding-candidate> <new-result.json>'},
+    @{label='grounding-review-r45-derived';root=$projectRoot;arguments=@('docs/verification/20261028-intake/verify-grounding-review-r45-cases.mjs',$GroundingRoot,(Join-Path $evidencePath 'review-r45-derived-grounding.json'));command='node verify-grounding-review-r45-cases.mjs <stopped-grounding-candidate> <new-result.json>'}
   )
   if ($Phase -eq 'Candidates') { $steps += @(
     @{label='contrast-focused';root=$ContrastRoot;arguments=@('--test','tests/check-contrast.test.js');command='node --test tests/check-contrast.test.js'},
@@ -69,6 +71,9 @@ if ($Phase -eq 'Candidates' -or $Phase -eq 'GroundingDiagnostic') {
 }
 foreach ($credentialName in @('ANTHROPIC_ORG_API_KEY','ANTHROPIC_API_KEY','MODEL_API_KEY','OPENAI_API_KEY','STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET')) {
   [Environment]::SetEnvironmentVariable($credentialName,'','Process')
+}
+if ($Phase -eq 'E2EDiagnostic') {
+  [Environment]::SetEnvironmentVariable('APPLYWRIGHT_E2E_NATIVE_QUALIFIER',$null,'Process')
 }
 $snapshotRoot = if ($Phase -eq 'Integrated') {$projectRoot} elseif ($Phase -eq 'ContrastDiagnostic') {$ContrastRoot} elseif ($Phase -eq 'E2EDiagnostic') {$E2ERoot} else {$GroundingRoot}
 $snapshotPaths = if ($Phase -eq 'ContrastDiagnostic') {@('scripts/check.js','scripts/contrast.js','tests/check-contrast.test.js')} elseif ($Phase -eq 'E2EDiagnostic') {@('scripts/e2e-flow.mjs','scripts/e2e-browser-child.mjs','scripts/e2e-browser-child.ps1','tests/e2e-browser-child.test.mjs')} else {@('server/lib/cv/tailor.js','server/lib/cv/refine.js','server/lib/cv/tailor.test.mjs','server/lib/cv/refine.test.mjs')}

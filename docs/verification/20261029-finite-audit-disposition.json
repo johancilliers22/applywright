@@ -1,0 +1,38 @@
+{
+  "state": "DIAGNOSTICS_COMPLETE_RED_NOT_PRODUCT_PASS",
+  "driverExit": "0 means batch reached all4phases; per-phase tests include FAIL",
+  "steps": [
+    {
+      "phase": "Integrated",
+      "evidence": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-integrated-audit-attempt1",
+      "exitCode": 0,
+      "state": "PASS_EXECUTED_CHECKS_ONLY",
+      "sourceUnchanged": true
+    },
+    {
+      "phase": "GroundingDiagnostic",
+      "evidence": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1",
+      "exitCode": 1,
+      "state": "FAIL",
+      "sourceUnchanged": true
+    },
+    {
+      "phase": "GroundingDiagnostic",
+      "evidence": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-g1-r5-diagnostic-attempt1",
+      "exitCode": 1,
+      "state": "FAIL",
+      "sourceUnchanged": true
+    },
+    {
+      "phase": "E2EDiagnostic",
+      "evidence": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-e2e-r4-diagnostic-attempt1",
+      "exitCode": 0,
+      "state": "PASS_EXECUTED_CHECKS_ONLY",
+      "sourceUnchanged": true
+    }
+  ],
+  "mainIndependent": "90/211PASS,121FAIL",
+  "frozenG1R5": "88/91unitPASS,3FAIL;189/211independentPASS,22FAIL",
+  "frozenE2ER4": "36mockPASS,4nativeSKIP",
+  "lease": "Acquired00:46:10.349978Z, released00:46:22.306826Z"
+}

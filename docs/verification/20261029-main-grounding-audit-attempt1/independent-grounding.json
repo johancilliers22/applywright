@@ -1,0 +1,792 @@
+{
+  "atUtc": "2026-10-29T00:46:17.094Z",
+  "candidateRoot": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright",
+  "hashes": {
+    "server/lib/cv/tailor.js": "afbb42bc25fe1f8aa610898bf5abecbc9a51dd3a3fe9270fdc980e5c63c5defd",
+    "server/lib/cv/refine.js": "24907b4faadb7c605dea43c2cb9822694dcc28a26922897215eb345ebe9b5949"
+  },
+  "scope": "Synthetic direct pure functions; no live model/server/network/credentials; bounded known-claim coverage only",
+  "comparisons": 52,
+  "passed": 27,
+  "failed": 25,
+  "rows": [
+    {
+      "kind": "unsupported",
+      "name": "employer opener",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Initech is my employer.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Initech\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "employer opener",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Initech is my employer.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Initech\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "hyphenated employer",
+      "predicate": "assertGrounded",
+      "before": "Worked on services.",
+      "after": "Worked at Initech-labs.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Initech-labs\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "hyphenated employer",
+      "predicate": "groundChanges",
+      "before": "Worked on services.",
+      "after": "Worked at Initech-labs.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Initech-labs\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "lowercase employer",
+      "predicate": "assertGrounded",
+      "before": "Worked on services.",
+      "after": "Worked at initech.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "lowercase employer",
+      "predicate": "groundChanges",
+      "before": "Worked on services.",
+      "after": "Worked at initech.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "unverified Go",
+      "predicate": "assertGrounded",
+      "before": "Reduced deploy time by 40% by rebuilding the pipeline.",
+      "after": "Cut deploy time by 40% with Go-based services.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "unverified Go",
+      "predicate": "groundChanges",
+      "before": "Reduced deploy time by 40% by rebuilding the pipeline.",
+      "after": "Cut deploy time by 40% with Go-based services.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "ownership adverb",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Effectively led 12 engineers.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "ownership adverb",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Effectively led 12 engineers.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "ownership noun wrapper",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Experience leading 12 engineers.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "ownership noun wrapper",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Experience leading 12 engineers.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "multiline ownership",
+      "predicate": "assertGrounded",
+      "before": "Experience\nHelped with managing 12 engineers across two squads.",
+      "after": "Led a team of 12 engineers across two squads.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "multiline ownership",
+      "predicate": "groundChanges",
+      "before": "Experience\nHelped with managing 12 engineers across two squads.",
+      "after": "Led a team of 12 engineers across two squads.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "unrelated leadership",
+      "predicate": "assertGrounded",
+      "before": "Helped audit 12 engineers.\nLed a sales team of 4.",
+      "after": "Led audits of 12 engineers and a sales team of 4.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "unrelated leadership",
+      "predicate": "groundChanges",
+      "before": "Helped audit 12 engineers.\nLed a sales team of 4.",
+      "after": "Led audits of 12 engineers and a sales team of 4.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "qualification subject",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in medicine.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "qualification subject",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in medicine.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "title seniority",
+      "predicate": "assertGrounded",
+      "before": "Worked as a software engineer.",
+      "after": "Worked as a principal software engineer.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "title seniority",
+      "predicate": "groundChanges",
+      "before": "Worked as a software engineer.",
+      "after": "Worked as a principal software engineer.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "new contextual May",
+      "predicate": "assertGrounded",
+      "before": "Worked through spring.",
+      "after": "Worked through May.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "new contextual May",
+      "predicate": "groundChanges",
+      "before": "Worked through spring.",
+      "after": "Worked through May.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "new spelled count",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built one service.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "new spelled count",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built one service.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "unsupported",
+      "name": "currency swap",
+      "predicate": "assertGrounded",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved $40,000 a year.",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new currency amount $40,000 is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "currency swap",
+      "predicate": "groundChanges",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved $40,000 a year.",
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "Experience grammar",
+      "predicate": "assertGrounded",
+      "before": "Built web services.",
+      "after": "Experience building web services.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "Experience grammar",
+      "predicate": "groundChanges",
+      "before": "Built web services.",
+      "after": "Experience building web services.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "Collaborates grammar",
+      "predicate": "assertGrounded",
+      "before": "Worked effectively with colleagues.",
+      "after": "Collaborates effectively with colleagues.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "Collaborates grammar",
+      "predicate": "groundChanges",
+      "before": "Worked effectively with colleagues.",
+      "after": "Collaborates effectively with colleagues.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "degree idiom",
+      "predicate": "assertGrounded",
+      "before": "Completed work accurately.",
+      "after": "Completed work with a high degree of accuracy.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new qualification \"degree\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "degree idiom",
+      "predicate": "groundChanges",
+      "before": "Completed work accurately.",
+      "after": "Completed work with a high degree of accuracy.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new qualification \"degree\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "backed Go",
+      "predicate": "assertGrounded",
+      "before": "Reduced deploy time by 40% by rebuilding Go services.",
+      "after": "Cut deploy time by 40% with Go-based services.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "backed Go",
+      "predicate": "groundChanges",
+      "before": "Reduced deploy time by 40% by rebuilding Go services.",
+      "after": "Cut deploy time by 40% with Go-based services.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "backed ownership",
+      "predicate": "assertGrounded",
+      "before": "Backend engineer. I led a team of 12 engineers.",
+      "after": "Led a team of 12 engineers.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "backed ownership",
+      "predicate": "groundChanges",
+      "before": "Backend engineer. I led a team of 12 engineers.",
+      "after": "Led a team of 12 engineers.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "support stays support",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Supported management of 12 engineers.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "support stays support",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Supported management of 12 engineers.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "same qualification",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in computing.",
+      "after": "Has a degree in computing.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Has\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "same qualification",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in computing.",
+      "after": "Has a degree in computing.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Has\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "same seniority",
+      "predicate": "assertGrounded",
+      "before": "Worked as a software engineer.",
+      "after": "Worked as a software engineer.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "same seniority",
+      "predicate": "groundChanges",
+      "before": "Worked as a software engineer.",
+      "after": "Worked as a software engineer.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "backed May",
+      "predicate": "assertGrounded",
+      "before": "Worked through May.",
+      "after": "Worked until May.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "backed May",
+      "predicate": "groundChanges",
+      "before": "Worked through May.",
+      "after": "Worked until May.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "modal may",
+      "predicate": "assertGrounded",
+      "before": "Work with colleagues.",
+      "after": "May work with colleagues.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "modal may",
+      "predicate": "groundChanges",
+      "before": "Work with colleagues.",
+      "after": "May work with colleagues.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "one equivalent",
+      "predicate": "assertGrounded",
+      "before": "Built one service.",
+      "after": "Built 1 service.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure 1 is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "one equivalent",
+      "predicate": "groundChanges",
+      "before": "Built one service.",
+      "after": "Built 1 service.",
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure 1 is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "kind": "grounded",
+      "name": "same currency",
+      "predicate": "assertGrounded",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved £40,000 annually.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "grounded",
+      "name": "same currency",
+      "predicate": "groundChanges",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved £40,000 annually.",
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "soft unknown opener",
+      "predicate": "assertGrounded",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Zephyria\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "kind": "unsupported",
+      "name": "soft unknown opener",
+      "predicate": "groundChanges",
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Zephyria\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    }
+  ]
+}

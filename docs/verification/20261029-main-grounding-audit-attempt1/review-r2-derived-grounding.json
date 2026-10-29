@@ -1,0 +1,731 @@
+{
+  "atUtc": "2026-10-29T00:46:17.506Z",
+  "candidateRoot": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright",
+  "hashes": {
+    "server/lib/cv/tailor.js": "afbb42bc25fe1f8aa610898bf5abecbc9a51dd3a3fe9270fdc980e5c63c5defd",
+    "server/lib/cv/refine.js": "24907b4faadb7c605dea43c2cb9822694dcc28a26922897215eb345ebe9b5949"
+  },
+  "provenance": "Independent Sol R2 source report plus actual R2 unit currency regressions; fixed before the next candidate",
+  "scope": "Pure synthetic function calls; no server/network/model/credentials/live data",
+  "comparisons": 48,
+  "passed": 20,
+  "failed": 28,
+  "rows": [
+    {
+      "name": "object noun testing retains provenance",
+      "predicate": "assertGrounded",
+      "before": "Helped with testing.\nPersonally owned successful migration.",
+      "after": "Personally owned successful testing.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "object noun testing retains provenance",
+      "predicate": "groundChanges",
+      "before": "Helped with testing.\nPersonally owned successful migration.",
+      "after": "Personally owned successful testing.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "context cannot license unrelated testing",
+      "predicate": "assertGrounded",
+      "before": "Helped with testing.",
+      "after": "Personally owned successful testing.",
+      "options": {
+        "context": "Personally owned successful migration."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "context cannot license unrelated testing",
+      "predicate": "groundChanges",
+      "before": "Helped with testing.",
+      "after": "Personally owned successful testing.",
+      "options": {
+        "context": "Personally owned successful migration."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "grounded testing ownership",
+      "predicate": "assertGrounded",
+      "before": "Personally owned testing.",
+      "after": "I personally owned testing.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "grounded testing ownership",
+      "predicate": "groundChanges",
+      "before": "Personally owned testing.",
+      "after": "I personally owned testing.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "source wrapper support stays support",
+      "predicate": "assertGrounded",
+      "before": "Experience supporting the rollout.",
+      "after": "Delivered the rollout.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "source wrapper support stays support",
+      "predicate": "groundChanges",
+      "before": "Experience supporting the rollout.",
+      "after": "Delivered the rollout.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "source wrapper leadership retained",
+      "predicate": "assertGrounded",
+      "before": "Experience leading the rollout.",
+      "after": "Led the rollout.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "source wrapper leadership retained",
+      "predicate": "groundChanges",
+      "before": "Experience leading the rollout.",
+      "after": "Led the rollout.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "wrapper noun cannot hide leadership",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Experience in payments leading 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "wrapper noun cannot hide leadership",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Experience in payments leading 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "third-person intro promotion",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "In this role he led 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "third-person intro promotion",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "In this role he led 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "implicit-subject intro promotion",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "In this role effectively led 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "implicit-subject intro promotion",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "In this role effectively led 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "third-person temporal evidence",
+      "predicate": "assertGrounded",
+      "before": "Helped with the migration before he led the rollout.",
+      "after": "Led the rollout.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "third-person temporal evidence",
+      "predicate": "groundChanges",
+      "before": "Helped with the migration before he led the rollout.",
+      "after": "Led the rollout.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "comma-separated degree additions",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in computing, medicine and physics.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "comma-separated degree additions",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in computing, medicine and physics.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "honours descriptor cannot hide subject",
+      "predicate": "assertGrounded",
+      "before": "Holds an honours computing degree.",
+      "after": "Holds an honours medicine degree.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "honours descriptor cannot hide subject",
+      "predicate": "groundChanges",
+      "before": "Holds an honours computing degree.",
+      "after": "Holds an honours medicine degree.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "design is a qualification noun",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in design.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "design is a qualification noun",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in design.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "same honours subject",
+      "predicate": "assertGrounded",
+      "before": "Holds an honours computing degree.",
+      "after": "Holds a computing degree.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "same honours subject",
+      "predicate": "groundChanges",
+      "before": "Holds an honours computing degree.",
+      "after": "Holds a computing degree.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "degree subject may be dropped",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "degree subject may be dropped",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "one case is a new count",
+      "predicate": "assertGrounded",
+      "before": "Handled cases.",
+      "after": "Handled one case.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "one case is a new count",
+      "predicate": "groundChanges",
+      "before": "Handled cases.",
+      "after": "Handled one case.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "one case numeric equivalent",
+      "predicate": "assertGrounded",
+      "before": "Handled one case.",
+      "after": "Handled 1 case.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure 1 is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "one case numeric equivalent",
+      "predicate": "groundChanges",
+      "before": "Handled one case.",
+      "after": "Handled 1 case.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure 1 is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "explicit Go list evidence",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Skills: Go and Python."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "explicit Go list evidence",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Skills: Go and Python."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "technology compound case equivalent",
+      "predicate": "assertGrounded",
+      "before": "Built go-based services.",
+      "after": "Built Go-based services.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "technology compound case equivalent",
+      "predicate": "groundChanges",
+      "before": "Built go-based services.",
+      "after": "Built Go-based services.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "ordinary go remains unsupported",
+      "predicate": "assertGrounded",
+      "before": "Built services and chose to go remote.",
+      "after": "Built Go-based services and chose to go remote.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "ordinary go remains unsupported",
+      "predicate": "groundChanges",
+      "before": "Built services and chose to go remote.",
+      "after": "Built Go-based services and chose to go remote.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "same currency shortened",
+      "predicate": "assertGrounded",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved £40k a year.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "same currency shortened",
+      "predicate": "groundChanges",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved £40k a year.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "same currency expanded",
+      "predicate": "assertGrounded",
+      "before": "Saved £40k a year.",
+      "after": "Saved £40,000 a year.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "same currency expanded",
+      "predicate": "groundChanges",
+      "before": "Saved £40k a year.",
+      "after": "Saved £40,000 a year.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "currency symbol to code equivalent",
+      "predicate": "assertGrounded",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved GBP 40,000 a year.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"GBP\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "currency symbol to code equivalent",
+      "predicate": "groundChanges",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved GBP 40,000 a year.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"GBP\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "currency code to symbol equivalent",
+      "predicate": "assertGrounded",
+      "before": "Saved GBP 40,000 a year.",
+      "after": "Saved £40,000 a year.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new currency amount £40,000 is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "currency code to symbol equivalent",
+      "predicate": "groundChanges",
+      "before": "Saved GBP 40,000 a year.",
+      "after": "Saved £40,000 a year.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "currency identity cannot change",
+      "predicate": "assertGrounded",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved $40,000 a year.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new currency amount $40,000 is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "currency identity cannot change",
+      "predicate": "groundChanges",
+      "before": "Saved £40,000 a year.",
+      "after": "Saved $40,000 a year.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    }
+  ]
+}

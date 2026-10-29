@@ -1,0 +1,39 @@
+{
+  "startedUtc": "2026-10-29T00:46:10.5615410Z",
+  "endedUtc": "2026-10-29T00:46:22.2522671Z",
+  "scope": "Stopped synthetic diagnostics and current-main gates only",
+  "callerLock": "Canonical full-lifetime EX required outside this script",
+  "steps": [
+    {
+      "phase": "Integrated",
+      "evidence": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-integrated-audit-attempt1",
+      "exitCode": 0,
+      "state": "PASS_EXECUTED_CHECKS_ONLY",
+      "sourceUnchanged": true
+    },
+    {
+      "phase": "GroundingDiagnostic",
+      "evidence": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1",
+      "exitCode": 1,
+      "state": "FAIL",
+      "sourceUnchanged": true
+    },
+    {
+      "phase": "GroundingDiagnostic",
+      "evidence": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-g1-r5-diagnostic-attempt1",
+      "exitCode": 1,
+      "state": "FAIL",
+      "sourceUnchanged": true
+    },
+    {
+      "phase": "E2EDiagnostic",
+      "evidence": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-e2e-r4-diagnostic-attempt1",
+      "exitCode": 0,
+      "state": "PASS_EXECUTED_CHECKS_ONLY",
+      "sourceUnchanged": true
+    }
+  ],
+  "liveModel": "NOT_RUN",
+  "nativeBrowser": "NOT_RUN",
+  "error": null
+}

@@ -1,0 +1,387 @@
+{
+  "atUtc": "2026-10-29T00:46:20.333Z",
+  "candidateRoot": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-fcd3c5c8",
+  "hashes": {
+    "server/lib/cv/tailor.js": "57fe1b3b53e28efc55cdc99242073c7d3a6b817d7fc8d293af495dea4d256d91",
+    "server/lib/cv/refine.js": "e83a8afb3ec97fc2f22b9fcfed5f5398c0c0b878e43c7dc6eebc63d02391cf26"
+  },
+  "provenance": "Independent Sol R3 source report dated22:57; script authored without inspecting the R4 implementation",
+  "scope": "Pure synthetic function calls; no server/network/model/credentials/live data",
+  "comparisons": 24,
+  "passed": 24,
+  "failed": 0,
+  "rows": [
+    {
+      "name": "design object provenance",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.\nPersonally owned successful migration.",
+      "after": "Personally owned successful design.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "design object provenance",
+      "predicate": "groundChanges",
+      "before": "Helped with design.\nPersonally owned successful migration.",
+      "after": "Personally owned successful design.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "design context cannot promote",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.",
+      "after": "Personally owned successful design.",
+      "options": {
+        "context": "Personally owned successful migration."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "design context cannot promote",
+      "predicate": "groundChanges",
+      "before": "Helped with design.",
+      "after": "Personally owned successful design.",
+      "options": {
+        "context": "Personally owned successful migration."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "faithful design ownership",
+      "predicate": "assertGrounded",
+      "before": "Personally owned design.",
+      "after": "I personally owned design.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "faithful design ownership",
+      "predicate": "groundChanges",
+      "before": "Personally owned design.",
+      "after": "I personally owned design.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "modifiers cannot outweigh object",
+      "predicate": "assertGrounded",
+      "before": "Helped with testing.\nPersonally owned successful complex migration.",
+      "after": "Personally owned successful complex testing.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "modifiers cannot outweigh object",
+      "predicate": "groundChanges",
+      "before": "Helped with testing.\nPersonally owned successful complex migration.",
+      "after": "Personally owned successful complex testing.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "wrapper support noun hides leadership",
+      "predicate": "assertGrounded",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Experience in customer support leading 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"leading\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "wrapper support noun hides leadership",
+      "predicate": "groundChanges",
+      "before": "Helped with managing 12 engineers.",
+      "after": "Experience in customer support leading 12 engineers.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"leading\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "wrapper leadership evidence retained",
+      "predicate": "assertGrounded",
+      "before": "Experience in customer support leading 12 engineers.",
+      "after": "Led 12 engineers.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "wrapper leadership evidence retained",
+      "predicate": "groundChanges",
+      "before": "Experience in customer support leading 12 engineers.",
+      "after": "Led 12 engineers.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "multiword qualification noun",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in design engineering.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new qualification subject \"design engineering\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "multiword qualification noun",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in computing.",
+      "after": "Holds a degree in design engineering.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new qualification subject \"design engineering\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "same multiword qualification",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in design engineering.",
+      "after": "Has a degree in design engineering.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "same multiword qualification",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in design engineering.",
+      "after": "Has a degree in design engineering.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "hyphenated one-day is new count",
+      "predicate": "assertGrounded",
+      "before": "Completed work in cycles.",
+      "after": "Completed work in one-day cycles.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure one is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "hyphenated one-day is new count",
+      "predicate": "groundChanges",
+      "before": "Completed work in cycles.",
+      "after": "Completed work in one-day cycles.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure one is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "hyphenated one-day equivalent",
+      "predicate": "assertGrounded",
+      "before": "Completed work in one-day cycles.",
+      "after": "Completed work in 1-day cycles.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "hyphenated one-day equivalent",
+      "predicate": "groundChanges",
+      "before": "Completed work in one-day cycles.",
+      "after": "Completed work in 1-day cycles.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "sentence-initial language list",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and Python."
+      },
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "sentence-initial language list",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and Python."
+      },
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "ordinary go remains a verb",
+      "predicate": "assertGrounded",
+      "before": "Built services and chose to go remote.",
+      "after": "Built Go-based services and chose to go remote.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "ordinary go remains a verb",
+      "predicate": "groundChanges",
+      "before": "Built services and chose to go remote.",
+      "after": "Built Go-based services and chose to go remote.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    }
+  ]
+}

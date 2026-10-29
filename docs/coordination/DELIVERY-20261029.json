@@ -1,0 +1,13 @@
+{
+  "observedAtUtc": "2026-10-29T00:43:04.6330948Z",
+  "commit": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
+  "scope": "15named documentation/continuation/provider/provenance files; no product code",
+  "sacredStaged": "CLEAN15",
+  "sacredPostCommit": "CLEAN15",
+  "originMainReadback": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
+  "backupMainReadback": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
+  "rawReplyAndNativeInventories": "LOCAL_ONLY_PRESERVED",
+  "productAcceptance": "NOT_IMPLIED",
+  "tests": "JSON3parse and diffcheck only; new oracles/runner remain uncommitted pending actual EX validation",
+  "goal": "ACTIVE_INCOMPLETE"
+}

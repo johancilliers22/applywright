@@ -1,0 +1,24 @@
+{
+  "observedAtUtc": "2026-10-29T00:50:25.6451269Z",
+  "surface": "Existing native Windows Codex Desktop ChatGPT.exe",
+  "thread": "01a183f2-68ec-7223-bb5b-0705764b0734",
+  "currentSelected": "GPT-6.1 Sol",
+  "effort": "Extra High",
+  "fastSelected": false,
+  "observedModelMenu": [
+    "Default",
+    "GPT-6.1 Sol",
+    "GPT-6 Astra",
+    "GPT-6 Sol",
+    "GPT-6 Luna",
+    "GPT-5.6 Sol",
+    "GPT-5.6 Terra",
+    "GPT-5.6 Luna"
+  ],
+  "terra61InObservedMenu": false,
+  "windowsCliCatalogue": "Root reports account-derived Terra catalogue adopted and independently verified",
+  "scope": "Actual visible picker; no conclusion about unavailable/cached other clients",
+  "modelSettingsChanged": false,
+  "restartOrUpdate": false,
+  "next": "User deferred Desktop update/restart; Root records separate cache/refresh gate, no forced reload"
+}

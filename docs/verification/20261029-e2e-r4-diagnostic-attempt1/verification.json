@@ -1,0 +1,119 @@
+{
+  "phase": "E2EDiagnostic",
+  "startedUtc": "2026-10-29T00:46:20.9767912Z",
+  "endedUtc": "2026-10-29T00:46:22.2013062Z",
+  "state": "PASS_EXECUTED_CHECKS_ONLY",
+  "node": "C:/Program Files/nodejs/node.exe",
+  "resourceLock": "Caller must hold /tmp/redline-heavy.lock EX for full runner lifetime; no lease is created by this script",
+  "sourceHashesBefore": [
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-69c42e7b\\scripts\\e2e-flow.mjs",
+      "relative": "scripts/e2e-flow.mjs",
+      "sha256": "5b564dcb405ff73ec34249aa0d9fe53e72690b4e8d55fbf7602f0c385de06efd"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-69c42e7b\\scripts\\e2e-browser-child.mjs",
+      "relative": "scripts/e2e-browser-child.mjs",
+      "sha256": "6543b60383bdd74854804e1406085f762cc60e23e4698a133e8149b92a4e788e"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-69c42e7b\\scripts\\e2e-browser-child.ps1",
+      "relative": "scripts/e2e-browser-child.ps1",
+      "sha256": "a4c676f5ae51bc31eaf67a2bbf501f0bd371f02c083b98a06dbfd79f9bab3a4e"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-69c42e7b\\tests\\e2e-browser-child.test.mjs",
+      "relative": "tests/e2e-browser-child.test.mjs",
+      "sha256": "90551124f18f053edd71f1c2f145c659113596d3ead1dac9b39b1222d1486aef"
+    }
+  ],
+  "sourceHashesAfter": [
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-69c42e7b\\scripts\\e2e-flow.mjs",
+      "relative": "scripts/e2e-flow.mjs",
+      "sha256": "5b564dcb405ff73ec34249aa0d9fe53e72690b4e8d55fbf7602f0c385de06efd"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-69c42e7b\\scripts\\e2e-browser-child.mjs",
+      "relative": "scripts/e2e-browser-child.mjs",
+      "sha256": "6543b60383bdd74854804e1406085f762cc60e23e4698a133e8149b92a4e788e"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-69c42e7b\\scripts\\e2e-browser-child.ps1",
+      "relative": "scripts/e2e-browser-child.ps1",
+      "sha256": "a4c676f5ae51bc31eaf67a2bbf501f0bd371f02c083b98a06dbfd79f9bab3a4e"
+    },
+    {
+      "path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-69c42e7b\\tests\\e2e-browser-child.test.mjs",
+      "relative": "tests/e2e-browser-child.test.mjs",
+      "sha256": "90551124f18f053edd71f1c2f145c659113596d3ead1dac9b39b1222d1486aef"
+    }
+  ],
+  "sourceUnchanged": true,
+  "independentFixtureSha256": "64330fbe1845f23b3b7ac104defec791813eea7f6766407e455adb8b0c2fc8d6",
+  "checks": [
+    {
+      "label": "syntax-e2e-flow",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-69c42e7b",
+      "command": "node --check scripts/e2e-flow.mjs",
+      "arguments": [
+        "--check",
+        "scripts/e2e-flow.mjs"
+      ],
+      "startedUtc": "2026-10-29T00:46:21.1681320Z",
+      "endedUtc": "2026-10-29T00:46:21.2188222Z",
+      "freeWindowsKiBAtStart": 12949680,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-e2e-r4-diagnostic-attempt1\\syntax-e2e-flow.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-e2e-browser-child",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-69c42e7b",
+      "command": "node --check scripts/e2e-browser-child.mjs",
+      "arguments": [
+        "--check",
+        "scripts/e2e-browser-child.mjs"
+      ],
+      "startedUtc": "2026-10-29T00:46:21.3707660Z",
+      "endedUtc": "2026-10-29T00:46:21.3995981Z",
+      "freeWindowsKiBAtStart": 12953000,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-e2e-r4-diagnostic-attempt1\\syntax-e2e-browser-child.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-e2e-browser-tests",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-69c42e7b",
+      "command": "node --check tests/e2e-browser-child.test.mjs",
+      "arguments": [
+        "--check",
+        "tests/e2e-browser-child.test.mjs"
+      ],
+      "startedUtc": "2026-10-29T00:46:21.5495755Z",
+      "endedUtc": "2026-10-29T00:46:21.5807449Z",
+      "freeWindowsKiBAtStart": 12954012,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-e2e-r4-diagnostic-attempt1\\syntax-e2e-browser-tests.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "e2e-mock-lifecycle",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-69c42e7b",
+      "command": "node --test tests/e2e-browser-child.test.mjs",
+      "arguments": [
+        "--test",
+        "tests/e2e-browser-child.test.mjs"
+      ],
+      "startedUtc": "2026-10-29T00:46:21.7291421Z",
+      "endedUtc": "2026-10-29T00:46:22.1857703Z",
+      "freeWindowsKiBAtStart": 12949668,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-e2e-r4-diagnostic-attempt1\\e2e-mock-lifecycle.log",
+      "sha256": "637d4c817b0b8905a9a9addce19248fe84599291c550a88aeed31a6e44f32385"
+    }
+  ],
+  "error": null,
+  "e2e": "NOT RUN by this runner; separate reviewed browser admission required",
+  "liveModel": "NOT RUN"
+}

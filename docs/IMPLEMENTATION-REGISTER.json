@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T00:39:15.7345177Z",
+  "updatedAt": "2026-10-29T00:51:50.2382700Z",
   "state": "ACTIVE_INCOMPLETE",
   "operatorThread": "01a183ff-e374-7d32-ae0e-1938714e813c",
   "rootThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
@@ -9,18 +9,26 @@
   "resumeEntry": "docs/OPERATOR-CONTINUATION-PLAN.md",
   "productPlan": "docs/IMPLEMENTATION-PLAN.md",
   "scopePolicy": "Retain every existing product-plan row and original user ask; these operational units do not renumber or replace them.",
-  "observedMain": "6e3eb12b3928638acfccfd57413364ba89ecda51",
+  "observedMain": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
   "refreshBeforeMutation": true,
   "units": [
     {
       "id": "G1",
-      "state": "REQUEST_CHANGES_R5",
+      "state": "R5_ACTUAL_RED_88_OF91_UNITS_189_OF211_CASES_R6_CORRECTION_PENDING",
       "owner": "native DSH writer / independent Sol / Codex acceptance",
       "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-fcd3c5c8",
       "base": "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
       "evidence": "docs/t3/receipts/20261028-grounding-g1/r5/review/sol-review.FINDINGS.md",
-      "next": "Preserve R5; DSH structural correction, new Sol review, independent oracles, current-main merge reconciliation and all3gates",
-      "runtimeAccepted": false
+      "next": "DSH structural/Delivers regression correction plus explicit c7 safeguards reconciliation; new Sol/focused211/all3gates",
+      "runtimeAccepted": false,
+      "executed": {
+        "unitsPass": 88,
+        "unitsFail": 3,
+        "independentPass": 189,
+        "independentFail": 22,
+        "sourceUnchanged": true,
+        "receipt": "docs/verification/20261029-g1-r5-diagnostic-attempt1/verification.json"
+      }
     },
     {
       "id": "CONTRAST-M1",
@@ -38,22 +46,22 @@
     },
     {
       "id": "E2E-LIFECYCLE",
-      "state": "R4_FROZEN_NEW_SOL_REVIEW_PREPARED_PRIOR_RAM_HOLD_AND_TERRA_START_DEFERRAL",
+      "state": "R4_ACTUAL_MOCK36PASS_NATIVE4SKIP_NEW_SOL_PENDING",
       "owner": "native DSH writer / independent Sol / Codex tests",
       "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-69c42e7b",
       "evidence": "docs/t3/receipts/20261028-e2e-lifecycle/r3/review/sol-review.FINDINGS.md",
       "executed": {
-        "mockPass": 31,
+        "mockPass": 36,
         "nativeSkip": 4,
         "compileOnly": true
       },
-      "next": "New independent Sol R4 review after explicit Terra release/fresh admission; operator diagnostic then native qualifiers and isolated product journey",
+      "next": "New independent Sol R4 review; then explicit owned Windows native qualifiers and isolated product journey",
       "nativeAccepted": false,
       "productJourneyAccepted": false
     },
     {
       "id": "MAIN-DSH-RECONCILIATION",
-      "state": "ORIGINAL_DESKTOP_ACK_RECEIVED_CURRENT_MAIN_ACCEPTANCE_PENDING",
+      "state": "ORIGINAL_ACKED_MAIN_3GATES_PASS_INDEPENDENT90OF211_NOT_ACCEPTED",
       "commits": [
         "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
         "c7c79cee7bd3ad8d59c243cc290301fa7ade2c2b",
@@ -61,7 +69,7 @@
         "6e3eb12b3928638acfccfd57413364ba89ecda51"
       ],
       "evidence": "docs/coordination/CODEX-TO-ORIGINAL-DSH-20261029.md",
-      "next": "Direct lead acknowledgement; independently test current main and document merge; no reset or backdated T3 dispatch"
+      "next": "See docs/coordination/G1-MAIN-RECONCILIATION-PLAN-20261029.md; preserve c7 P2 safeguards and both test histories"
     },
     {
       "id": "P1-C-CLAIM-CONTRACT",
@@ -136,7 +144,7 @@
     },
     {
       "id": "TERRA",
-      "state": "ROOT_EXPLICIT_RELEASE_CONFIG_RESTORED_CATALOGUE_NOT_ADOPTED_CACHE_COMPARISON_DIAGNOSIS",
+      "state": "ROOT_WINDOWS_CLI_CATALOGUE_ADOPTED_DESKTOP_OBSERVED_MENU_STALE_NO_RESTART",
       "owner": "Root Windows; Estate independent WSL/harness",
       "next": "Metadata-only exact-restore refresh then actual native menu/catalogue/eligibility readback, preserve selected model and active workers"
     },

@@ -1,0 +1,42 @@
+{
+  "observedAtUtc": "2026-10-29T00:53:33.1789366Z",
+  "source": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
+  "lease": "Canonical inode920374 full-lifetimeEX00:46:10.349978Z through00:46:22.306826Z, released",
+  "main": {
+    "httpPass": 171,
+    "modulePass": 349,
+    "moduleSkip": 1,
+    "staticPairsPass": 58,
+    "staticErrors": 0,
+    "staticWarnings": 0,
+    "independentPass": 90,
+    "independentFail": 121,
+    "comparisons": 211,
+    "accepted": false
+  },
+  "G1R5": {
+    "unitPass": 88,
+    "unitFail": 3,
+    "independentPass": 189,
+    "independentFail": 22,
+    "comparisons": 211,
+    "failingUnits": [
+      "ordinary English model summary Delivers ownership regression",
+      "G1-R3 execution prose/same-currency context Delivers refusal",
+      "G1-R3 same-currency/ordinary Delivers-Use refusal"
+    ],
+    "accepted": false
+  },
+  "E2ER4": {
+    "syntaxPass": 3,
+    "mockPass": 36,
+    "nativeSkip": 4,
+    "nativeExecuted": false,
+    "accepted": false
+  },
+  "sourceHashesUnchanged": true,
+  "testExpectationsChanged": false,
+  "overall": "DIAGNOSTIC_RED_NOT_PRODUCT_ACCEPTANCE",
+  "rawLogs": "27existingignored.log files retained locally at canonical receipt paths; their digests in verification.json. Publish semantic tables+curated summary; preserve project log ignore",
+  "driverExit": "0 indicates batch reached all4phases, not that each phase passed; two phases are FAIL"
+}

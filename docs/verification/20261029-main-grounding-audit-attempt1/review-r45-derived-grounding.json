@@ -1,0 +1,921 @@
+{
+  "atUtc": "2026-10-29T00:46:17.906Z",
+  "candidateRoot": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright",
+  "hashes": {
+    "server/lib/cv/tailor.js": "afbb42bc25fe1f8aa610898bf5abecbc9a51dd3a3fe9270fdc980e5c63c5defd",
+    "server/lib/cv/refine.js": "24907b4faadb7c605dea43c2cb9822694dcc28a26922897215eb345ebe9b5949"
+  },
+  "provenance": "Literal independent Sol R4/R5 findings plus paired controls; authored without reading R5/R6 implementation; source reports retained, no older oracle edited",
+  "scope": "Pure synthetic function calls; no server/network/model/credentials/live data",
+  "comparisons": 56,
+  "passed": 26,
+  "failed": 30,
+  "rows": [
+    {
+      "name": "r4 trailing scale cannot transfer ownership",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.\nPersonally owned successful migration at scale.",
+      "after": "Personally owned successful design at scale.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 trailing scale cannot transfer ownership",
+      "predicate": "groundChanges",
+      "before": "Helped with design.\nPersonally owned successful migration at scale.",
+      "after": "Personally owned successful design at scale.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 trailing scale context cannot transfer ownership",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.",
+      "after": "Personally owned successful design at scale.",
+      "options": {
+        "context": "Personally owned successful migration at scale."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 trailing scale context cannot transfer ownership",
+      "predicate": "groundChanges",
+      "before": "Helped with design.",
+      "after": "Personally owned successful design at scale.",
+      "options": {
+        "context": "Personally owned successful migration at scale."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 faithful trailing phrase drop",
+      "predicate": "assertGrounded",
+      "before": "Personally owned design at scale.",
+      "after": "I personally owned design.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 faithful trailing phrase drop",
+      "predicate": "groundChanges",
+      "before": "Personally owned design at scale.",
+      "after": "I personally owned design.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 governing leading gerund",
+      "predicate": "assertGrounded",
+      "before": "Helped with the support team.",
+      "after": "Experience in leading the support team.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 governing leading gerund",
+      "predicate": "groundChanges",
+      "before": "Helped with the support team.",
+      "after": "Experience in leading the support team.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 evidenced leading gerund",
+      "predicate": "assertGrounded",
+      "before": "Experience in leading the support team.",
+      "after": "Led the support team.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 evidenced leading gerund",
+      "predicate": "groundChanges",
+      "before": "Experience in leading the support team.",
+      "after": "Led the support team.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 whole degree subject",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in engineering.",
+      "after": "Holds a degree in design engineering.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 whole degree subject",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in engineering.",
+      "after": "Holds a degree in design engineering.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 whole prenominal degree subject",
+      "predicate": "assertGrounded",
+      "before": "Holds an engineering degree.",
+      "after": "Holds a design engineering degree.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 whole prenominal degree subject",
+      "predicate": "groundChanges",
+      "before": "Holds an engineering degree.",
+      "after": "Holds a design engineering degree.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 same full degree subject",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in design engineering.",
+      "after": "Has a degree in design engineering.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Has\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 same full degree subject",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in design engineering.",
+      "after": "Has a degree in design engineering.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Has\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 Go and imperative is not language",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and build services."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 Go and imperative is not language",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and build services."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 Go or imperative is not language",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go or deploy services."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 Go or imperative is not language",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go or deploy services."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r4 Go and Python list",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and Python."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 Go and Python list",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and Python."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 Go or Rust list",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go or Rust."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r4 Go or Rust list",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go or Rust."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 modifier is not ownership object",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.\nPersonally owned platform design reviews.",
+      "after": "Personally owned platform design.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 modifier is not ownership object",
+      "predicate": "groundChanges",
+      "before": "Helped with design.\nPersonally owned platform design reviews.",
+      "after": "Personally owned platform design.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 modifier context is not ownership object",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.",
+      "after": "Personally owned platform design.",
+      "options": {
+        "context": "Personally owned platform design reviews."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 modifier context is not ownership object",
+      "predicate": "groundChanges",
+      "before": "Helped with design.",
+      "after": "Personally owned platform design.",
+      "options": {
+        "context": "Personally owned platform design reviews."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 duration does not anchor unrelated object",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.\nPersonally owned platform migration in 12 weeks.",
+      "after": "Personally owned platform design in 12 weeks.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 duration does not anchor unrelated object",
+      "predicate": "groundChanges",
+      "before": "Helped with design.\nPersonally owned platform migration in 12 weeks.",
+      "after": "Personally owned platform design in 12 weeks.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 contextual duration does not anchor unrelated object",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.",
+      "after": "Personally owned platform design in 12 weeks.",
+      "options": {
+        "context": "Personally owned platform migration in 12 weeks."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new figure 12 is not in the original",
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 contextual duration does not anchor unrelated object",
+      "predicate": "groundChanges",
+      "before": "Helped with design.",
+      "after": "Personally owned platform design in 12 weeks.",
+      "options": {
+        "context": "Personally owned platform migration in 12 weeks."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"owned\", a stronger level of ownership than the original line supports",
+          "new figure 12 is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 faithful platform design trailing phrase",
+      "predicate": "assertGrounded",
+      "before": "Personally owned platform design at scale.",
+      "after": "I personally owned platform design.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 faithful platform design trailing phrase",
+      "predicate": "groundChanges",
+      "before": "Personally owned platform design at scale.",
+      "after": "I personally owned platform design.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 adverb does not hide leading gerund",
+      "predicate": "assertGrounded",
+      "before": "Helped with support teams.",
+      "after": "Experience in effectively leading support teams.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 adverb does not hide leading gerund",
+      "predicate": "groundChanges",
+      "before": "Helped with support teams.",
+      "after": "Experience in effectively leading support teams.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Experience\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 evidenced adverb leading gerund",
+      "predicate": "assertGrounded",
+      "before": "Experience in effectively leading support teams.",
+      "after": "Led support teams.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 evidenced adverb leading gerund",
+      "predicate": "groundChanges",
+      "before": "Experience in effectively leading support teams.",
+      "after": "Led support teams.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "the rewrite claims \"led\", a stronger level of ownership than the original line supports"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 IT qualification is not pronoun",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in engineering.",
+      "after": "Holds a degree in IT engineering.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 IT qualification is not pronoun",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in engineering.",
+      "after": "Holds a degree in IT engineering.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 IT prenominal qualification is not pronoun",
+      "predicate": "assertGrounded",
+      "before": "Holds an engineering degree.",
+      "after": "Holds an IT engineering degree.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 IT prenominal qualification is not pronoun",
+      "predicate": "groundChanges",
+      "before": "Holds an engineering degree.",
+      "after": "Holds an IT engineering degree.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 faithful IT engineering qualification",
+      "predicate": "assertGrounded",
+      "before": "Holds a degree in IT engineering.",
+      "after": "Has a degree in IT engineering.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Has\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 faithful IT engineering qualification",
+      "predicate": "groundChanges",
+      "before": "Holds a degree in IT engineering.",
+      "after": "Has a degree in IT engineering.",
+      "options": {},
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Has\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 punctuated Build is not language",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and Build."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 punctuated Build is not language",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and Build."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 punctuated Deploy is not language",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go or Deploy."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 punctuated Deploy is not language",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go or Deploy."
+      },
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r5 punctuated lowercase python list",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and python."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 punctuated lowercase python list",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go and python."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 punctuated lowercase rust list",
+      "predicate": "assertGrounded",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go or rust."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r5 punctuated lowercase rust list",
+      "predicate": "groundChanges",
+      "before": "Built services.",
+      "after": "Built Go-based services.",
+      "options": {
+        "context": "Go or rust."
+      },
+      "expected": true,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": false
+    },
+    {
+      "name": "r45 ordinary go remote remains verb",
+      "predicate": "assertGrounded",
+      "before": "Built services and chose to go remote.",
+      "after": "Built Go-based services and chose to go remote.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r45 ordinary go remote remains verb",
+      "predicate": "groundChanges",
+      "before": "Built services and chose to go remote.",
+      "after": "Built Go-based services and chose to go remote.",
+      "options": {},
+      "expected": false,
+      "actual": {
+        "ok": false,
+        "reasons": [
+          "new name \"Go-based\" is not in the original"
+        ],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r45 both original and contextual ownership objects",
+      "predicate": "assertGrounded",
+      "before": "Helped with design.",
+      "after": "Helped with design.",
+      "options": {
+        "context": "Personally owned platform design reviews."
+      },
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "r45 both original and contextual ownership objects",
+      "predicate": "groundChanges",
+      "before": "Helped with design.",
+      "after": "Helped with design.",
+      "options": {
+        "context": "Personally owned platform design reviews."
+      },
+      "expected": true,
+      "actual": {
+        "ok": true,
+        "reasons": [],
+        "warnings": []
+      },
+      "pass": true
+    }
+  ]
+}

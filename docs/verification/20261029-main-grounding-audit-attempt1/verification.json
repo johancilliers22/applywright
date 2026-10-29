@@ -1,0 +1,215 @@
+{
+  "phase": "GroundingDiagnostic",
+  "startedUtc": "2026-10-29T00:46:15.7830391Z",
+  "endedUtc": "2026-10-29T00:46:17.9293022Z",
+  "state": "FAIL",
+  "node": "C:/Program Files/nodejs/node.exe",
+  "resourceLock": "Caller must hold /tmp/redline-heavy.lock EX for full runner lifetime; no lease is created by this script",
+  "sourceHashesBefore": [
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\tailor.js",
+      "relative": "server/lib/cv/tailor.js",
+      "sha256": "afbb42bc25fe1f8aa610898bf5abecbc9a51dd3a3fe9270fdc980e5c63c5defd"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\refine.js",
+      "relative": "server/lib/cv/refine.js",
+      "sha256": "24907b4faadb7c605dea43c2cb9822694dcc28a26922897215eb345ebe9b5949"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\tailor.test.mjs",
+      "relative": "server/lib/cv/tailor.test.mjs",
+      "sha256": "18daf956be96e23f2540ff16e7ace95a2c9e22e253308269f862bb7ebb69babb"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\refine.test.mjs",
+      "relative": "server/lib/cv/refine.test.mjs",
+      "sha256": "339629271e65b9dcdca910bdf5e41a70d1a9ff52f7507b4d610a990b30d84a47"
+    }
+  ],
+  "sourceHashesAfter": [
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\tailor.js",
+      "relative": "server/lib/cv/tailor.js",
+      "sha256": "afbb42bc25fe1f8aa610898bf5abecbc9a51dd3a3fe9270fdc980e5c63c5defd"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\refine.js",
+      "relative": "server/lib/cv/refine.js",
+      "sha256": "24907b4faadb7c605dea43c2cb9822694dcc28a26922897215eb345ebe9b5949"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\tailor.test.mjs",
+      "relative": "server/lib/cv/tailor.test.mjs",
+      "sha256": "18daf956be96e23f2540ff16e7ace95a2c9e22e253308269f862bb7ebb69babb"
+    },
+    {
+      "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\server\\lib\\cv\\refine.test.mjs",
+      "relative": "server/lib/cv/refine.test.mjs",
+      "sha256": "339629271e65b9dcdca910bdf5e41a70d1a9ff52f7507b4d610a990b30d84a47"
+    }
+  ],
+  "sourceUnchanged": true,
+  "independentFixtureSha256": "64330fbe1845f23b3b7ac104defec791813eea7f6766407e455adb8b0c2fc8d6",
+  "checks": [
+    {
+      "label": "syntax-tailor",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node --check server/lib/cv/tailor.js",
+      "arguments": [
+        "--check",
+        "server/lib/cv/tailor.js"
+      ],
+      "startedUtc": "2026-10-29T00:46:15.9946333Z",
+      "endedUtc": "2026-10-29T00:46:16.0487426Z",
+      "freeWindowsKiBAtStart": 12920924,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\syntax-tailor.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-refine",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node --check server/lib/cv/refine.js",
+      "arguments": [
+        "--check",
+        "server/lib/cv/refine.js"
+      ],
+      "startedUtc": "2026-10-29T00:46:16.2059278Z",
+      "endedUtc": "2026-10-29T00:46:16.2375776Z",
+      "freeWindowsKiBAtStart": 12915280,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\syntax-refine.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-tailor-tests",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node --check server/lib/cv/tailor.test.mjs",
+      "arguments": [
+        "--check",
+        "server/lib/cv/tailor.test.mjs"
+      ],
+      "startedUtc": "2026-10-29T00:46:16.3831105Z",
+      "endedUtc": "2026-10-29T00:46:16.4207482Z",
+      "freeWindowsKiBAtStart": 12919196,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\syntax-tailor-tests.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "syntax-refine-tests",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node --check server/lib/cv/refine.test.mjs",
+      "arguments": [
+        "--check",
+        "server/lib/cv/refine.test.mjs"
+      ],
+      "startedUtc": "2026-10-29T00:46:16.5784251Z",
+      "endedUtc": "2026-10-29T00:46:16.6071889Z",
+      "freeWindowsKiBAtStart": 12921052,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\syntax-refine-tests.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "grounding-focused",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node --test server/lib/cv/tailor.test.mjs server/lib/cv/refine.test.mjs",
+      "arguments": [
+        "--test",
+        "server/lib/cv/tailor.test.mjs",
+        "server/lib/cv/refine.test.mjs"
+      ],
+      "startedUtc": "2026-10-29T00:46:16.7573348Z",
+      "endedUtc": "2026-10-29T00:46:16.9019870Z",
+      "freeWindowsKiBAtStart": 12922384,
+      "exitCode": 0,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\grounding-focused.log",
+      "sha256": "e0361c1cf5c5ba2164027334e5b185d9e59487895198444808b8c88c42e24eb1"
+    },
+    {
+      "label": "grounding-independent",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node verify-grounding-candidate.mjs <stopped-grounding-candidate> <new-result.json>",
+      "arguments": [
+        "docs/verification/20261028-intake/verify-grounding-candidate.mjs",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+        "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\independent-grounding.json"
+      ],
+      "startedUtc": "2026-10-29T00:46:17.0499937Z",
+      "endedUtc": "2026-10-29T00:46:17.1028325Z",
+      "freeWindowsKiBAtStart": 12917400,
+      "exitCode": 1,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\grounding-independent.log",
+      "sha256": "e137c528c3c30376636188fc0bc52d462359638403ad55aac83e2e7816b4e727"
+    },
+    {
+      "label": "grounding-review-derived",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node verify-grounding-review-cases.mjs <stopped-grounding-candidate> <new-result.json>",
+      "arguments": [
+        "docs/verification/20261028-intake/verify-grounding-review-cases.mjs",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+        "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\review-derived-grounding.json"
+      ],
+      "startedUtc": "2026-10-29T00:46:17.2561979Z",
+      "endedUtc": "2026-10-29T00:46:17.3039326Z",
+      "freeWindowsKiBAtStart": 12921412,
+      "exitCode": 1,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\grounding-review-derived.log",
+      "sha256": "10b20856ffa41994344795ed3734729df5eecd8a34f14c8673c48b142bf32150"
+    },
+    {
+      "label": "grounding-review-r2-derived",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node verify-grounding-review-r2-cases.mjs <stopped-grounding-candidate> <new-result.json>",
+      "arguments": [
+        "docs/verification/20261028-intake/verify-grounding-review-r2-cases.mjs",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+        "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\review-r2-derived-grounding.json"
+      ],
+      "startedUtc": "2026-10-29T00:46:17.4638169Z",
+      "endedUtc": "2026-10-29T00:46:17.5143416Z",
+      "freeWindowsKiBAtStart": 12915948,
+      "exitCode": 1,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\grounding-review-r2-derived.log",
+      "sha256": "99f044eccfdbc5e8514ebfd67d15b73212408af9e7dfc61d846e39a9a48dea0c"
+    },
+    {
+      "label": "grounding-review-r3-derived",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node verify-grounding-review-r3-cases.mjs <stopped-grounding-candidate> <new-result.json>",
+      "arguments": [
+        "docs/verification/20261028-intake/verify-grounding-review-r3-cases.mjs",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+        "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\review-r3-derived-grounding.json"
+      ],
+      "startedUtc": "2026-10-29T00:46:17.6626115Z",
+      "endedUtc": "2026-10-29T00:46:17.7127304Z",
+      "freeWindowsKiBAtStart": 12916476,
+      "exitCode": 1,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\grounding-review-r3-derived.log",
+      "sha256": "8ea9d820640674bf0d7dd9b6e5c374e8d6102b11899565c20843d13c65d2b0f7"
+    },
+    {
+      "label": "grounding-review-r45-derived",
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "command": "node verify-grounding-review-r45-cases.mjs <stopped-grounding-candidate> <new-result.json>",
+      "arguments": [
+        "docs/verification/20261028-intake/verify-grounding-review-r45-cases.mjs",
+        "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+        "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\review-r45-derived-grounding.json"
+      ],
+      "startedUtc": "2026-10-29T00:46:17.8616543Z",
+      "endedUtc": "2026-10-29T00:46:17.9148795Z",
+      "freeWindowsKiBAtStart": 12914048,
+      "exitCode": 1,
+      "log": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-main-grounding-audit-attempt1\\grounding-review-r45-derived.log",
+      "sha256": "bb222fb450c66af1d85ef6ac29f45d046db93a863afceea615822f07479a5d83"
+    }
+  ],
+  "error": null,
+  "e2e": "NOT RUN by this runner; separate reviewed browser admission required",
+  "liveModel": "NOT RUN"
+}

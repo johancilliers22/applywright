@@ -1,0 +1,80 @@
+{
+  "RecordedAtUtc": "2026-10-29T18:23:20.0072800Z",
+  "SourceOwner": "Estate Root01a183f2-68ec-7223-bb5b-0705764b0734",
+  "Scope": "ONE matched synthetic code pilot, requested-effort labels; no general superiority or actual cost claim",
+  "Arms": [
+    {
+      "RequestedEffort": "high",
+      "Passed": 43,
+      "Total": 45,
+      "FailedIds": [
+        "iso-minute-resolution",
+        "iso-basic-numeric-offset"
+      ],
+      "SourceUnchanged": true,
+      "ResultFile": "C:\\Users\\johan\\Desktop\\ClaudeHandoff\\architecture-20260921\\research\\astra\\coorchestrator-20261028\\resume-20261029\\terra-pilot\\ACTUAL-high.json",
+      "ResultSha256": "84fdd3e9ffaef07eb80afce99dce27e5b32679101310d30373c9a39dddfee82e",
+      "InferenceLatencyMs": null,
+      "ProviderTokenUsage": null,
+      "BilledCost": null
+    },
+    {
+      "RequestedEffort": "xhigh",
+      "Passed": 45,
+      "Total": 45,
+      "FailedIds": [],
+      "SourceUnchanged": true,
+      "ResultFile": "C:\\Users\\johan\\Desktop\\ClaudeHandoff\\architecture-20260921\\research\\astra\\coorchestrator-20261028\\resume-20261029\\terra-pilot\\ACTUAL-xhigh.json",
+      "ResultSha256": "857ee3e8aa5f4d72e6e35fe1f54704f98c44fc922132cb43c2bd195526d22742",
+      "InferenceLatencyMs": null,
+      "ProviderTokenUsage": null,
+      "BilledCost": null
+    },
+    {
+      "RequestedEffort": "max",
+      "Passed": 43,
+      "Total": 45,
+      "FailedIds": [
+        "literal-percent-rule-no-alias",
+        "literal-percent-rule-no-trim"
+      ],
+      "SourceUnchanged": true,
+      "ResultFile": "C:\\Users\\johan\\Desktop\\ClaudeHandoff\\architecture-20260921\\research\\astra\\coorchestrator-20261028\\resume-20261029\\terra-pilot\\ACTUAL-max.json",
+      "ResultSha256": "d840400381108e66025513d2291106deeeb434ea92e9fadbf7d31fef80a939f0",
+      "InferenceLatencyMs": null,
+      "ProviderTokenUsage": null,
+      "BilledCost": null
+    }
+  ],
+  "Lease": {
+    "State": "PASS_EXECUTED_THREE_COMMANDS_ONLY_NOT_PRODUCT_OR_EFFORT_ACCEPTANCE",
+    "Acquired": true,
+    "Released": true,
+    "File": "C:\\Users\\johan\\Desktop\\ClaudeHandoff\\architecture-20260921\\research\\astra\\coorchestrator-20261028\\resume-20261029\\terra-pilot\\ACTUAL-LIFETIME-EX-RECEIPT.json",
+    "Sha256": "912c97b3e12348e8654dadb7986c7793f1c7e1fe77f04a8af50e44e89983cfba"
+  },
+  "RootRelease": "TerraHigh bounded simpleGUI/docs; xhigh bounded coding/normalization secondary; Sol6.1xhighorchestration/criticalreview and DSHbulk unchanged; Maxonlyspecific hardtrial",
+  "Livebench": {
+    "URL": "https://livebench.ai/",
+    "RootCsvFile": "C:\\Users\\johan\\Desktop\\ClaudeHandoff\\architecture-20260921\\research\\astra\\coorchestrator-20261028\\resume-20261029\\livebench-20261025-table.csv",
+    "RootCsvSha256": "92aca6ce8a77cad85b27bda3fea5556029770e720c8fe3ec0371c6471355df36",
+    "RawRootSnapshotRows": [
+      {
+        "model": "gpt-6.1-terra",
+        "long_agentic": "48.6",
+        "reasoning": "88.7",
+        "coding": "94.3",
+        "browser": "93.1",
+        "data_analysis": "82.3",
+        "research": "73.9",
+        "design": "82.3"
+      }
+    ],
+    "DirectWebCheck": "Tool returned JavaScript shell; independently rendered table cells NOT_VERIFIED here",
+    "Freshness": "Filename date is not retrieval proof; captured actual file hash/mtime; Root supplied current download"
+  },
+  "Cua": "Root limited038 driver/HighNotepad proof; fresh4GiB/onecontroller/ownedprofile required; verify_state UNKNOWN is not pass",
+  "ProjectWindowsExecution": "STILL_NOT_ADMITTED_BY_THIS_LINUX_PILOT",
+  "ProfileChanges": "NONE",
+  "T3Availability": "Fresh actual native catalogue required before anyTerra child; no guessed alias"
+}

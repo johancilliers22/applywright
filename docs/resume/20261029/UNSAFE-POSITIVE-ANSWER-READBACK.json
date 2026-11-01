@@ -1,0 +1,10 @@
+{
+  "ObservedAtUtc": "2026-10-29T17:56:00.6877238Z",
+  "ThreadId": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+  "PendingRequestCount": 0,
+  "NativeRecordedAnswer": "Correct it to refusal; preserve frozen history",
+  "AssistantAcknowledgement": "Recorded: change the unsafe positive to a refusal, add an explicitly evidenced ACCEPT control, and preserve the frozen history and 211-case corpus.",
+  "SubmissionActor": "UNKNOWN; native record proves the choice, not which operator clicked",
+  "ProjectEstateCuaInvoked": false,
+  "EarlierCliQueueReceiptPreserved": true
+}

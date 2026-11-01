@@ -1,0 +1,11 @@
+{
+  "AtUtc": "2026-10-29T18:40:06.0917466Z",
+  "RootRulingPath": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261029/ROOT-PHASE-FLOORS-AND-PARENT-FAST-20261029.md",
+  "Sha256": "072f2e98962d67aebcc7637ef0fc010315a0ae0c79e507d355bd21b4d1e47c1b",
+  "SourcePrefilterOnly": "Windowsfinitecase2GiB, actualcontrollerunchanged",
+  "GUIAndWindowsTests": "4GiBunchanged",
+  "OtherSourceFloors": "UNCHANGED",
+  "ParentFast": "PreservehumansetT3parents",
+  "SolChildren": "High/xhighdefault/Standardunlessrecordedneed",
+  "NoRuntimeRelease": true
+}

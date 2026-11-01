@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-01T15:35:44.9887457Z",
+  "source": "native orchestrator_capabilities",
+  "parentThreadId": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+  "parentSelection": {
+    "provider": "acpRegistry_deepseek_windows",
+    "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+    "reasoning_effort": "high",
+    "note": "Existing broker runtime unchanged; no new Sol parent created"
+  },
+  "codex": {
+    "providerInstanceId": "codex",
+    "driverKind": "codex",
+    "models": [
+      "gpt-6.1-sol",
+      "gpt-6-astra",
+      "gpt-6.1-terra",
+      "gpt-6-luna"
+    ],
+    "solOptions": {
+      "reasoningEffort": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ],
+      "serviceTier": [
+        "default",
+        "priority"
+      ],
+      "serviceTierDefault": "priority"
+    },
+    "reviewSelection": "gpt-6.1-sol/xhigh/serviceTier=default (explicit Standard, Fast OFF)"
+  },
+  "deepseek": {
+    "providerInstanceId": "acpRegistry_deepseek_windows",
+    "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+    "options": [
+      "off",
+      "low",
+      "high",
+      "max"
+    ],
+    "estateDefault": "high"
+  },
+  "availabilityNote": "Codex quota failure on 2026-10-29 stated retry 2026-11-04T16:50 local; a new Sol review must be attempted only after sources stop, and a quota failure must be recorded, never substituted."
+}

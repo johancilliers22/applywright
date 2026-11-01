@@ -1,0 +1,536 @@
+{
+  "schema": "applywright-design-motion-sources/v1",
+  "task": "20261029-design-motion",
+  "retrieved_at": "2026-10-29",
+  "retrieved_by": "DSH Flash/high research sub-agent (source-only)",
+  "base_commit": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+  "notes": [
+    "All web sources were fetched live over HTTPS during this task; no content is quoted from search snippets.",
+    "Version numbers in MDN browser-compat-data are the authoritative support statements. Dates are given only where the source itself states one.",
+    "No repository was cloned, installed, or executed. GitHub metadata and npm registry metadata are official publication artefacts.",
+    "No benchmark, throughput, pixel, or accessibility conformance certificate is implied by any record."
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "title": "@starting-style CSS at-rule",
+      "publisher": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style",
+      "type": "reference",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "Baseline 2024; page states the feature works across the latest browser versions 'since August 2024'",
+      "facts_used": [
+        "Defines starting values for properties on an element's first style update.",
+        "Enables entry transitions for elements added to the DOM and for display:none -> visible.",
+        "Baseline 2024 / newly available.",
+        "Only relevant to CSS transitions; not needed for CSS animations."
+      ],
+      "license": "MDN content CC BY-SA 2.5 (per MDN); specification drafts.csswg.org",
+      "notes": "The page URL redirected to /Web/CSS/Reference/At-rules/@starting-style (HTTP 200)."
+    },
+    {
+      "id": "S02",
+      "title": "browser-compat-data: css/at-rules/starting-style.json",
+      "publisher": "MDN / mdn/browser-compat-data",
+      "url": "https://raw.githubusercontent.com/mdn/browser-compat-data/main/css/at-rules/starting-style.json",
+      "type": "compat-data",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated in file",
+      "facts_used": [
+        "Chrome 117",
+        "Firefox 129",
+        "Safari 17.5",
+        "standard_track true, experimental false, deprecated false"
+      ],
+      "license": "CC0-1.0 (mdn/browser-compat-data repository licence)",
+      "notes": "Machine-readable support statement used instead of a prose compatibility table."
+    },
+    {
+      "id": "S03",
+      "title": "browser-compat-data: css/properties/transition-behavior.json",
+      "publisher": "MDN / mdn/browser-compat-data",
+      "url": "https://raw.githubusercontent.com/mdn/browser-compat-data/main/css/properties/transition-behavior.json",
+      "type": "compat-data",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated in file",
+      "facts_used": [
+        "Chrome 117",
+        "Safari 17.4",
+        "Firefox 129 but partial_implementation: transitioning display with allow-discrete is not supported (bug 1882408)",
+        "transitionable_display: Firefox false; Chrome 117; Safari 18",
+        "transitionable_content-visibility: Firefox false"
+      ],
+      "license": "CC0-1.0",
+      "notes": "Explains why exit transitions that depend on animating display are not a cross-browser primitive."
+    },
+    {
+      "id": "S04",
+      "title": "browser-compat-data: css/at-rules/view-transition.json",
+      "publisher": "MDN / mdn/browser-compat-data",
+      "url": "https://raw.githubusercontent.com/mdn/browser-compat-data/main/css/at-rules/view-transition.json",
+      "type": "compat-data",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated in file",
+      "facts_used": [
+        "Chrome 126",
+        "Safari 18.2",
+        "Firefox false (implementation bug 1860854)",
+        "standard_track true, experimental false"
+      ],
+      "license": "CC0-1.0",
+      "notes": "Cross-document View Transitions remain a progressive enhancement, never a requirement."
+    },
+    {
+      "id": "S05",
+      "title": "browser-compat-data: api/ViewTransition.json",
+      "publisher": "MDN / mdn/browser-compat-data",
+      "url": "https://raw.githubusercontent.com/mdn/browser-compat-data/main/api/ViewTransition.json",
+      "type": "compat-data",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated in file",
+      "facts_used": [
+        "ViewTransition interface: Chrome 111, Firefox 144, Safari 18",
+        "finished/ready/updateCallbackDone/skipTransition share that baseline",
+        "viewTransition.transitionRoot: Chrome 147, Firefox false, Safari false, experimental",
+        "types (view-transition types): Chrome 125, Firefox 147, Safari 18.2"
+      ],
+      "license": "CC0-1.0",
+      "notes": "Same-document View Transitions are available in all three engines; only the newer element-scoped features are not."
+    },
+    {
+      "id": "S06",
+      "title": "browser-compat-data: css/properties/view-transition-name.json",
+      "publisher": "MDN / mdn/browser-compat-data",
+      "url": "https://raw.githubusercontent.com/mdn/browser-compat-data/main/css/properties/view-transition-name.json",
+      "type": "compat-data",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated in file",
+      "facts_used": [
+        "Chrome 111, Firefox 144, Safari 18",
+        "match-element: Chrome 137, Firefox 144, Safari 18.4"
+      ],
+      "license": "CC0-1.0",
+      "notes": "Names must be unique among rendered elements; duplicate names skip the transition (Chrome guide S07)."
+    },
+    {
+      "id": "S07",
+      "title": "Same-document view transitions for single-page applications",
+      "publisher": "Chrome for Developers (Jake Archibald, Bramus)",
+      "url": "https://developer.chrome.com/docs/web-platform/view-transitions/same-document",
+      "type": "vendor-guide",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated on page",
+      "facts_used": [
+        "Only one view transition may run at a time; a new one skips the running one to the end.",
+        "The page is frozen during the update callback; network fetches should happen before startViewTransition, not inside it.",
+        "The default ::view-transition-group animates position/transform, width and height; the guide calls width/height animation 'generally frowned upon' because it runs layout per frame, and says the Chrome optimisation has not been implemented.",
+        "Reduced motion is not automatic; the guide shows an explicit prefers-reduced-motion rule and cautions that 'reduced motion doesn't mean no motion'.",
+        "view-transition-class support: Chrome 125, Firefox 144, Safari 18.2 (as printed on the page).",
+        "View transition types: Chrome 125, Firefox 144, Safari 18 (as printed on the page)."
+      ],
+      "license": "Chrome for Developers site terms (CC BY 4.0 for code samples unless stated)",
+      "notes": "Fetched with a paginated reader; quotes verified in the returned body text."
+    },
+    {
+      "id": "S08",
+      "title": "Element.animate() and Using the Web Animations API",
+      "publisher": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/animate",
+      "type": "reference",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated",
+      "facts_used": [
+        "Element.animate() creates and plays an Animation from keyframes and timing options.",
+        "Animation objects expose finished/cancel/playState, which makes interruption and cleanup explicit.",
+        "Transform and opacity are compositor-friendly properties; layout properties are not."
+      ],
+      "license": "MDN content CC BY-SA 2.5",
+      "notes": "Secondary reference page for the Web Animations API guide at /Web/API/Web_Animations_API/Using_the_Web_Animations_API."
+    },
+    {
+      "id": "S09",
+      "title": "browser-compat-data: css/properties/animation-timeline.json",
+      "publisher": "MDN / mdn/browser-compat-data",
+      "url": "https://raw.githubusercontent.com/mdn/browser-compat-data/main/css/properties/animation-timeline.json",
+      "type": "compat-data",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated in file",
+      "facts_used": [
+        "Chrome 115",
+        "Firefox 159",
+        "Safari 26",
+        "scroll() and view() share the same support",
+        "standard_track true, experimental false"
+      ],
+      "license": "CC0-1.0",
+      "notes": "Scroll-driven animations are now broadly available but must still be feature-gated for older engines."
+    },
+    {
+      "id": "S10",
+      "title": "browser-compat-data: css/properties/interpolate-size.json",
+      "publisher": "MDN / mdn/browser-compat-data",
+      "url": "https://raw.githubusercontent.com/mdn/browser-compat-data/main/css/properties/interpolate-size.json",
+      "type": "compat-data",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "not stated in file",
+      "facts_used": [
+        "Chrome 129",
+        "Firefox false (bug 1945962)",
+        "Safari false (bug 295132)",
+        "experimental true"
+      ],
+      "license": "CC0-1.0",
+      "notes": "Rules out height-auto interpolation as a progressive baseline."
+    },
+    {
+      "id": "S11",
+      "title": "Understanding SC 2.3.3: Animation from Interactions (Level AAA)",
+      "publisher": "W3C WAI",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html",
+      "type": "standard-guidance",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "Updated 16 September 2025",
+      "facts_used": [
+        "Motion animation triggered by interaction can be disabled unless essential.",
+        "Sufficient techniques include C39 (CSS prefers-reduced-motion) and SCR40 (the same query in JavaScript).",
+        "Definition: motion animation does not include changes of colour, blurring, or opacity that do not change perceived size, shape, or position.",
+        "Vestibular reactions include nausea, migraine, and distraction."
+      ],
+      "license": "W3C document licence; WAI material usage terms",
+      "notes": "The definition is decisive: an opacity-only crossfade is not 'motion animation' under this SC, while translate/scale is."
+    },
+    {
+      "id": "S12",
+      "title": "Understanding SC 2.2.2: Pause, Stop, Hide (Level A)",
+      "publisher": "W3C WAI",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html",
+      "type": "standard-guidance",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "Updated 10 August 2026",
+      "facts_used": [
+        "Moving/scrolling information that starts automatically, lasts more than five seconds and is parallel to other content needs pause/stop/hide.",
+        "Auto-updating content needs a control regardless of the five-second exception.",
+        "Indirect interaction (focus/hover/scroll into view) can also be 'automatic' for this SC.",
+        "A pause mechanism must not tie up focus or make the page unusable."
+      ],
+      "license": "W3C document licence",
+      "notes": "Short interaction-triggered transitions are 2.3.3 territory, not 2.2.2; long ambient loops are the reverse."
+    },
+    {
+      "id": "S13",
+      "title": "Understanding SC 2.4.11: Focus Not Obscured (Minimum) (Level AA)",
+      "publisher": "W3C WAI",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html",
+      "type": "standard-guidance",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "Updated 15 June 2026",
+      "facts_used": [
+        "A component receiving keyboard focus must not be entirely hidden by author-created content.",
+        "Sticky footers and sticky headers are named as typical obscuring layers.",
+        "Technique C43 uses CSS scroll-padding to un-obscure content.",
+        "Failure F110 covers a sticky footer/header completely hiding focused elements."
+      ],
+      "license": "W3C document licence",
+      "notes": "Directly constrains the proposed mobile save dock and any sticky proof bar."
+    },
+    {
+      "id": "S14",
+      "title": "prefers-reduced-motion CSS media feature",
+      "publisher": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion",
+      "type": "reference",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "Baseline: widely available since January 2020",
+      "facts_used": [
+        "Detects a device setting that asks for non-essential motion to be removed, reduced, or replaced.",
+        "The reduce value can be a muted animation rather than no animation; the example tones scaling down to a dissolve.",
+        "Scaling/panning large objects are named vestibular triggers."
+      ],
+      "license": "MDN content CC BY-SA 2.5",
+      "notes": "Supports treating reduce as a design mode, not just a kill switch."
+    },
+    {
+      "id": "S15",
+      "title": "formkit/auto-animate repository metadata",
+      "publisher": "GitHub REST API",
+      "url": "https://api.github.com/repos/formkit/auto-animate",
+      "type": "repo-metadata",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "created 2022-05-11; pushed_at 2026-07-10T16:08:00Z; updated_at 2026-10-28T16:48:31Z",
+      "facts_used": [
+        "MIT licence",
+        "13,946 stars",
+        "267 forks",
+        "49 open issues",
+        "archived false",
+        "default branch master",
+        "language TypeScript"
+      ],
+      "license": "MIT",
+      "notes": "Star/fork counts are context only, never quality evidence."
+    },
+    {
+      "id": "S16",
+      "title": "formkit/auto-animate v0.10.0 release",
+      "publisher": "GitHub REST API",
+      "url": "https://api.github.com/repos/formkit/auto-animate/releases/latest",
+      "type": "release",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "published 2026-07-10T16:02:09Z",
+      "facts_used": [
+        "Latest release tag v0.10.0",
+        "Marko v6 integration added",
+        "npm publishing via OIDC trusted publishing"
+      ],
+      "license": "MIT",
+      "notes": "Maintenance is recent but not same-week; 49 open issues."
+    },
+    {
+      "id": "S17",
+      "title": "npm registry: @formkit/auto-animate@0.10.0",
+      "publisher": "npm registry",
+      "url": "https://registry.npmjs.org/@formkit/auto-animate/latest",
+      "type": "package-metadata",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "version 0.10.0",
+      "facts_used": [
+        "dist.unpackedSize 59207 bytes",
+        "27 files",
+        "license MIT",
+        "no runtime dependencies field in package.json",
+        "ESM-first exports; framework subpaths for vue/nuxt/react/solid/preact/angular/marko"
+      ],
+      "license": "MIT",
+      "notes": "unpackedSize is a package-level number, not minified+gzip and not tree-shaken. No bundle was built."
+    },
+    {
+      "id": "S18",
+      "title": "formkit/auto-animate source: src/index.ts",
+      "publisher": "GitHub raw",
+      "url": "https://raw.githubusercontent.com/formkit/auto-animate/master/src/index.ts",
+      "type": "source-code",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "master at retrieval",
+      "facts_used": [
+        "Default duration 250 ms, easing ease-in-out; add() uses duration * 1.5",
+        "Uses Element.animate (Web Animations API)",
+        "Disables itself when prefers-reduced-motion: reduce matches, unless disrespectUserMotionPreference is set; the option is documented as 'not recommended'",
+        "remain() animates width/height when the element's size changes",
+        "remove() re-parents the node with position:absolute, pointer-events:none, then removes it on finish",
+        "Installs MutationObserver, ResizeObserver, IntersectionObserver, a 2s setInterval poll per element, and requestIdleCallback/rAF scheduling",
+        "Sets the parent to position: relative if static"
+      ],
+      "license": "MIT",
+      "notes": "This record is the basis for the deferred verdict; it is not a recommendation."
+    },
+    {
+      "id": "S19",
+      "title": "motiondivision/motion repository metadata",
+      "publisher": "GitHub REST API",
+      "url": "https://api.github.com/repos/motiondivision/motion",
+      "type": "repo-metadata",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "created 2018-11-16; pushed_at 2026-10-29T16:20:11Z; updated_at 2026-10-29T16:26:12Z",
+      "facts_used": [
+        "MIT licence",
+        "34,651 stars",
+        "1,479 forks",
+        "6 open issues",
+        "archived false",
+        "default branch main"
+      ],
+      "license": "MIT",
+      "notes": "Very active; activity alone does not justify adoption."
+    },
+    {
+      "id": "S20",
+      "title": "npm registry: motion@14.7.1",
+      "publisher": "npm registry",
+      "url": "https://registry.npmjs.org/motion/latest",
+      "type": "package-metadata",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "version 14.7.1",
+      "facts_used": [
+        "dist.unpackedSize 922802 bytes",
+        "40 files",
+        "license MIT",
+        "dependencies tslib ^2.4.0 and framer-motion 14.7.1",
+        "optional peer react/react-dom ^18 || ^19",
+        "exports include ./mini, ./react, ./three"
+      ],
+      "license": "MIT",
+      "notes": "Package-level size. A subpath import would tree-shake in a bundler, but a plain browser import of the package entry would not. No build was run."
+    },
+    {
+      "id": "S21",
+      "title": "motiondivision/motion releases (current line)",
+      "publisher": "GitHub REST API",
+      "url": "https://api.github.com/repos/motiondivision/motion/releases?per_page=3",
+      "type": "release",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "empty list at retrieval",
+      "facts_used": [
+        "No GitHub release objects published for the current line; npm 14.7.1 is the release evidence."
+      ],
+      "license": "MIT",
+      "notes": "Absence of release objects is not absence of releases; npm and git tags carry it."
+    },
+    {
+      "id": "S22",
+      "title": "darkroomengineering/lenis repository metadata",
+      "publisher": "GitHub REST API",
+      "url": "https://api.github.com/repos/darkroomengineering/lenis",
+      "type": "repo-metadata",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "created 2022-02-21; pushed_at 2026-10-29T16:59:23Z",
+      "facts_used": [
+        "MIT licence",
+        "16,957 stars",
+        "764 forks",
+        "38 open issues",
+        "archived false"
+      ],
+      "license": "MIT",
+      "notes": "Rejected on interaction grounds, not on maintenance."
+    },
+    {
+      "id": "S23",
+      "title": "GSAP Standard 'No Charge' License",
+      "publisher": "Webflow / GSAP",
+      "url": "https://gsap.com/community/standard-license/",
+      "type": "licence",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "Effective date 30 April 2025; last modified 30 May 2025; copyright 2025 Webflow",
+      "facts_used": [
+        "The licence is a Webflow grant, not an OSI licence.",
+        "Prohibited Uses include tools that materially assist building a competing visual animation builder.",
+        "Webflow may terminate the licence and may amend the terms.",
+        "GSAP is described as free for commercial projects under this standard licence."
+      ],
+      "license": "Proprietary 'No Charge' GSAP License (Webflow)",
+      "notes": "This is the reason GSAP is screened out for an MIT product, not a claim that it is unusable."
+    },
+    {
+      "id": "S24",
+      "title": "juliangarnier/anime repository metadata",
+      "publisher": "GitHub REST API",
+      "url": "https://api.github.com/repos/juliangarnier/anime",
+      "type": "repo-metadata",
+      "tier": "A",
+      "retrieved_at": "2026-10-29",
+      "published_or_updated": "created 2016-03-13; pushed_at 2026-08-21T21:29:50Z",
+      "facts_used": [
+        "MIT licence",
+        "74,026 stars",
+        "5,017 forks",
+        "124 open issues",
+        "archived false"
+      ],
+      "license": "MIT",
+      "notes": "Screened out as redundant for this scope; not disqualified."
+    }
+  ],
+  "local_product_sources": [
+    {
+      "path": "public/assets/motion.css",
+      "bytes": 13053,
+      "sha256": "991f7c32b471c3681bb3785b4d8c6040c43cf1fe644fbcf1a92b15316daeebe1",
+      "role": "Existing marketing motion layer, view transitions, reduced-motion resets, scroll hairline."
+    },
+    {
+      "path": "public/assets/tokens.css",
+      "bytes": 17742,
+      "sha256": "466a777c6cb1564546a09a78e911dabfc6cf7e9af40a4b2787b00a0eac000987",
+      "role": "Duration/easing tokens; global reduced-motion collapse at lines 242-253."
+    },
+    {
+      "path": "public/assets/site.css",
+      "bytes": 45755,
+      "sha256": "6cdfcd17651cc5721e604d4f74cb17ad02edc1584ae99e80d10bb5a4b74af436",
+      "role": "Marketing and shared component transitions."
+    },
+    {
+      "path": "public/assets/theme.css",
+      "bytes": 18556,
+      "sha256": "8a30786e4423ee9c3b0bf9553608ca786035327910fb67d66154051c76f26feb",
+      "role": "Theme control motion and scheme rules."
+    },
+    {
+      "path": "public/app/app.css",
+      "bytes": 43680,
+      "sha256": "6a65392ac4fa67a7c6fbb1638c4250714094705814112892dc2924a22e64481e",
+      "role": "SPA styles; four transition declarations and one reduced-motion block."
+    },
+    {
+      "path": "public/app/app.js",
+      "bytes": 165013,
+      "sha256": "f1c3cf34c83eadffa10ddafff75f8d5685e7142718ee21ef19f546b46c7a30e0",
+      "role": "SPA route render (4130-4160), unguarded smooth scrolls (1683, 2196, 2670)."
+    },
+    {
+      "path": "public/app/app.html",
+      "bytes": 10957,
+      "sha256": "79c8e017047916823fe13f2a3299a13ec57885ee9cf8df90455391b29378f57a",
+      "role": "Shell markup; #app-main tabindex=-1 at line 105, no aria-labelledby; no motion.css include."
+    },
+    {
+      "path": "public/assets/editor.css",
+      "bytes": 21889,
+      "sha256": "f53a216714abfafb73e67654889e4b1feeab2714c47ccf7d49d61c683f582856",
+      "role": "Editor styles; zero transition/animation declarations."
+    },
+    {
+      "path": "public/assets/editor.js",
+      "bytes": 87049,
+      "sha256": "0eac2b1fd02f289b5fda5f2a3c083de9b3f7b9ca0c6759d3e02d8f1b53e58d7d",
+      "role": "Save state (1148-1161, 1354-1399), announcements (1129-1132), guarded scroll (1090-1092), unguarded scroll (1433)."
+    },
+    {
+      "path": "public/editor.html",
+      "bytes": 17486,
+      "sha256": "63d39dcc0cd5cfdb1e45110992ba1e6c1a826c86f225f653bb60632b73f7df20",
+      "role": "Editor markup; #ed-save-state line 52, #ed-status live region line 320."
+    },
+    {
+      "path": "public/assets/site.js",
+      "bytes": 6565,
+      "sha256": "8dc11cddb775508282f4fc9c68df8a31c600af6a5d566e8fc8f375290a04a283",
+      "role": "Sheet-settle IntersectionObserver; no route transitions."
+    },
+    {
+      "path": "docs/MOTION.md",
+      "bytes": 42922,
+      "sha256": "dd0d9327ca6a3c26a6dec4187caac2fdf693dc63b704875d25932795c10a42cd",
+      "role": "Historical operator measurements and the existing motion contract (Tier C)."
+    }
+  ],
+  "access_limitations": [
+    "No X bookmark export or public-safe connector was available; ACCESS_ABSENT.",
+    "Raw bookmark/list files named by CHECKPOINT-RESEARCH-20261019.md are absent from the intake directory.",
+    "The two documented X capture routes require an interactive signed-in Chrome session and a private agent profile, both out of scope.",
+    "No private saved text, cookie, token, auth/profile file, or account page was read."
+  ]
+}

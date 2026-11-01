@@ -1,4 +1,19 @@
-## MANUAL RESUME —29October2026 17:16GMT
+## Current resume — 1 November 2026
+
+Johan resumed after the usage interruption. Start at
+docs/resume/20261101/RESUME-AND-HANDOFF-PLAN.md and refresh live native state.
+Sol6.1 High/xhigh parents and children now use Standard/default (Fast OFF).
+Historical night/usage stops and parent-Fast steering below are superseded for
+this resume. Complete verification and accepted named-path integration before
+the Claude/Estate handoff; preserve every incomplete implementation-register row.
+Shared A/B publication remains Estate-owned via the project VAULT-PATCH proposal.
+
+## Historical manual resume —29October2026 17:16GMT
+Latest direct Johan tier steering: keep his Fast T3 parent selections. Sol workers
+remain High/xhigh and default Standard/Fast OFF, with specific needed exceptions
+recorded. Do not inherit parent Fast into children or change global CLI defaults.
+Terra remains Root-test-gated; retain the bounds of any released pilot roles.
+
 Johan explicitly resumed the existing project/goal. Read docs/resume/20261029/RESUME-PLAN.md first; it supersedes the historical night blocks below. Existing T3 broker actual run ordinal40 received the source commissions. Child receipt IDs are pending until native dispatch returns. Sol6.1/xhigh orchestrators; prefer DSH Flash implementation/research, qualified Gemini Argon4 and Muse Wonder advisory. Root must test Terra6.1 and estate-cua FIRST before project use. Disk cleanup deferred; no automatic schedule reconstruction. Current observed main6e6c13f; all source candidates and product rows preserved.
 
 ## HISTORICAL FINAL NIGHT OVERRIDE —29October2026

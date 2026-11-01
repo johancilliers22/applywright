@@ -1,5 +1,10 @@
 # Applywright manual resume - 29 October 2026, 17:16 GMT
 
+LATEST direct Johan steering: he enabled Fast on T3 parent threads. Keep those
+manual selections. Sol subagents remain High/xhigh with Fast OFF/Standard by
+default; record a specific needed exception rather than inheriting parent Fast.
+CLI/global defaults stay unchanged. Terra testing/scoped release remains Root-owned.
+
 Johan explicitly resumed this project after night shutdown. The existing goal is
 ACTIVE / INCOMPLETE. Preserve the full product plan and prior tests/failures.
 Source starts at main6e6c13f5db5df83dc625c7197067b851f165f14f; refresh before
@@ -14,7 +19,8 @@ source/native task receipts belong there. Root01a183f2-68ec-7223-bb5b-0705764b07
 coordinates estate and sole shared A/B publisher. No duplicate coordinator/timer.
 
 Use Sol6.1/xhigh for orchestrators and consequential review, High/xhigh where
-appropriate for workers; Standard service/Fast OFF and supported context maxima.
+appropriate for workers; workers default Standard/Fast OFF and supported context
+maxima. Preserve the human-selected Fast tier on T3 parent threads.
 Prefer official DSH Flash/high for implementation and bulk research. Luna Max
 is an alternative for bounded careful retrieval. Qualified AGY Gemini Argon4
 leads design; Muse Wonder/contributor OFF provides advisory synthesis/refutation.

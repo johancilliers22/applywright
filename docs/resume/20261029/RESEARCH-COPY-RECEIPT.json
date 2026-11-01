@@ -1,0 +1,39 @@
+{
+  "AtUtc": "2026-10-29T17:41:10.6691555Z",
+  "Source": "C:/Users/johan/.t3/worktrees/applywright/t3-a4aeb610/docs/research/20261029-design-motion",
+  "Destination": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\research\\20261029-design-motion",
+  "Rows": [
+    {
+      "Relative": "ADOPTION-PLAN.md",
+      "Sha256": "706b432345714d5dbdba22e577ec24ef1ab84fa6823783db8aba30d2317d2a74",
+      "Bytes": 20893
+    },
+    {
+      "Relative": "SOURCES.json",
+      "Sha256": "7393b5ce94b9b386cd588004e3802cc914d8a788aaa5aae7b125deb55c05ee22",
+      "Bytes": 24125
+    },
+    {
+      "Relative": "NEXT-MUSE-BRIEF.md",
+      "Sha256": "9bbd9f364fbac983192b49b1e79ef17d92436ddb6ecbbb8d7099d63dd78d736c",
+      "Bytes": 5749
+    },
+    {
+      "Relative": "NEXT-GEMINI-BRIEF.md",
+      "Sha256": "0082560d8aeb0489b4f64ce914ce8e9ca994acb76947034c6e15dfb1175e3f06",
+      "Bytes": 8633
+    },
+    {
+      "Relative": "RESULT.md",
+      "Sha256": "9fbddef06f8ced1998197cec715c629ebf19ab4351d0f78cc1fa625d935a2f85",
+      "Bytes": 9699
+    },
+    {
+      "Relative": "RESEARCH.md",
+      "Sha256": "5fbf8cc2b38d0c4edb3cf9f7a4cc1405770a44458f6837f53173ed2d089f6ed7",
+      "Bytes": 28597
+    }
+  ],
+  "Scope": "Accepted as source research with operator corrections, not implementation/runtime acceptance",
+  "SourceUnchanged": true
+}

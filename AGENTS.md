@@ -1,3 +1,23 @@
+# Current resume — direct Johan, 1 November 2026
+
+Resume the existing missions after the usage interruption and prepare a verified
+Claude/Estate handoff. Codex remains project operator until that handoff. Sol6.1
+High/xhigh with explicit Standard/default (Fast OFF) applies to resumed Codex
+parents and children; this supersedes the historical parent-Fast preference below.
+Keep DSH Flash bulk workers and other qualified provider harnesses. Terra remains
+limited to Root-tested roles with current catalogue proof. Read
+docs/resume/20261101/RESUME-AND-HANDOFF-PLAN.md first. Preserve all unfinished plan
+rows, stopped candidates, failures, source/runtime distinctions and shared owners.
+
+# Historical service-tier steering — direct Johan, 29 October 2026
+
+Johan manually enabled Fast on T3 parent threads. Preserve those human selections;
+do not reset them to Standard. Sol subagents remain High/xhigh and Fast OFF /
+Standard by default. A particular needed exception may be selected deliberately
+and recorded, never inherited silently from a Fast parent. This does not change
+global Windows/WSL CLI defaults, model/context/access or admission settings.
+Terra remains Root-test-gated; a limited pilot is not blanket product adoption.
+
 # MANUAL RESUME — direct Johan, 29 October 2026, 17:16 GMT
 
 Johan explicitly resumed Applywright and its missions. The night stop below is
@@ -45,8 +65,9 @@ does not grant writes in the hub, another worktree, or another brain/vault note.
   process ownership, security and consequential changes. Its author must not be the
   implementation writer. Use Codex readers/subagents for work whose value justifies
   them; do not keep routine bulk work in Codex by default.
-- Use High for routine Codex work and xhigh for difficult/security/consequential
-  review; effort does not enlarge context. Keep Standard service tier for both.
+- Use High for routine Sol workers and xhigh for difficult/security/consequential
+  review; effort does not enlarge context. Workers default to Standard/Fast OFF;
+  T3 parent service tiers follow Johan's latest manual Fast selection above.
 - Claude Org API credits may support appropriate bounded work only through the
   approved direct API adapter/selected-variable loader and current shared accounting
   guard. The existing shared cap is USD190; spent and pending/encumbered usage must
@@ -58,9 +79,10 @@ does not grant writes in the hub, another worktree, or another brain/vault note.
 
 ## Preserve current settings and ownership
 
-- Fast and Ultrafast are OFF for Codex. Explicitly request Standard/default for new
-  Codex children. Preserve each model's supported maximum context, effort, full
-  access, accounts and MCPs. DeepSeek and other providers are not altered by this.
+- Explicitly request Standard/default and Fast/Ultrafast OFF for new Sol children
+  unless a particular necessary exception is recorded. Preserve Johan's Fast T3
+  parents and unchanged CLI defaults, supported maximum context, effort, access,
+  accounts and MCPs. DeepSeek and other providers are not altered by this.
 - Workers use new assigned worktrees and exact file sets; they are not alone and
   must preserve other edits. Workers never commit, self-merge, publish or accept.
 - Core G1 owns tailor/refine and their tests; E2E owns its flow/owned-child helpers
@@ -76,6 +98,10 @@ does not grant writes in the hub, another worktree, or another brain/vault note.
 
 - Fresh Windows4GiB and already-running Ubuntu names-only checks precede relevant
   Windows-origin launches. Never boot/shutdown WSL or close apps to force admission.
+  Root's29October phase-floor ruling permits ONLY the prepared Windows finite-case
+  non-GUI SOURCE observation to use the existing native DSH2GiB floor (guest3GiB
+  where applicable). Preserve old4GiB holds and actual native admission; this does
+  not change GUI/Windows-test4GiB, other task floors, slots or installed guards.
 - SOURCE dispatch uses the approved released SH observation and separate actual
   native/provider lifetime admission. Tests/builds need the canonical heavy lock EX
   for their full lifetime. No unchanged busy loop, guard/slot/default bypass or

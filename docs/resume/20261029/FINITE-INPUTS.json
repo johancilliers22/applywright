@@ -1,0 +1,79 @@
+{
+  "state": "DEFINED_NOT_EXECUTED",
+  "scope": "Offline synthetic stopped-candidate Node checks only",
+  "admission": "CURRENT_REVIEWED_FULL_LIFETIME_EX_EXECUTOR_REQUIRED; this JSON creates no lease or controller",
+  "node": "C:/Program Files/nodejs/node.exe",
+  "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+  "evidence": "docs/verification/20261029-resume-r7-red-a11y-r1-attempt1",
+  "steps": [
+    {
+      "label": "syntax-independent-r7",
+      "cwd": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "args": [
+        "--check",
+        "docs/verification/20261029-resume/verify-grounding-r7-review.mjs"
+      ],
+      "expected": "exit0"
+    },
+    {
+      "label": "r7-review-derived-red",
+      "cwd": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "args": [
+        "docs/verification/20261029-resume/verify-grounding-r7-review.mjs",
+        "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
+        "docs/verification/20261029-resume-r7-red-a11y-r1-attempt1/r7-review-cases.json"
+      ],
+      "expected": "Controlled RED predicted. Require full result rows and unchanged hashes; an exception or syntax failure is not predicate behavior proof."
+    },
+    {
+      "label": "a11y-r1-focused-red",
+      "cwd": "C:/Users/johan/.t3/worktrees/applywright/t3-ea0c895a",
+      "args": [
+        "--test",
+        "docs/verification/20261029-a11y-fix/a11y-focused.test.mjs"
+      ],
+      "expected": "Source predicts import TypeError before20 definitions. Capture actual TAP/exit; do not claim0of20 PASS."
+    }
+  ],
+  "constraints": [
+    "Fresh normal Windows4GiB and current required guest/native resource checks",
+    "Canonical inode/waiter/lifetime custody through Root/Estate reviewed executor",
+    "Exact before/after source and fixture hashes; new evidence only",
+    "No SOURCE model child runs tests under SH",
+    "No server/network/live model/credential/real-data/GUI/estate-cua/Terra/install/WSL-boot phase",
+    "Unapplied candidates and no acceptance inferred"
+  ],
+  "inputs": [
+    {
+      "Path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\verification\\20261029-resume\\verify-grounding-r7-review.mjs",
+      "Sha256": "0c25f24ac47ce49f71def6ac4f7843a820f3e812e93cd7e3da5ba46235038d44",
+      "Bytes": 8223
+    },
+    {
+      "Path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84\\server\\lib\\cv\\tailor.js",
+      "Sha256": "a776da76ba80cbe483079320d7624051492cb640a09de7463746249d4545dc02",
+      "Bytes": 133748
+    },
+    {
+      "Path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84\\server\\lib\\cv\\refine.js",
+      "Sha256": "0ce9a7b9e7c7649476ced0928646e50e4fdab91d7bfe9bb78cf573fb1dbb9695",
+      "Bytes": 71029
+    },
+    {
+      "Path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ea0c895a\\public\\app\\app.js",
+      "Sha256": "c842370df569766776d67f4cd8603b1ec7bd9701dbe2018cdaee35d831cbd76a",
+      "Bytes": 165985
+    },
+    {
+      "Path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ea0c895a\\public\\assets\\editor.js",
+      "Sha256": "965ee68506b2c908ab8a1362a490207b31885f74195de735ff5e243f2b141412",
+      "Bytes": 92134
+    },
+    {
+      "Path": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ea0c895a\\docs\\verification\\20261029-a11y-fix\\a11y-focused.test.mjs",
+      "Sha256": "969ab51da5569d0934614ba12ebca8a18d3a4019a3c087a7da3b4cfcf023cf52",
+      "Bytes": 10829
+    }
+  ],
+  "definedAtUtc": "2026-10-29T18:02:07.0768225Z"
+}

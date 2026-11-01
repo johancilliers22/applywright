@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 1,
+  "capturedAtUtc": "2026-11-01T15:41:01.5804537Z",
+  "archiveRoot": "G:/Backups/Applywright/20261101-resume",
+  "copiesHashVerified": true,
+  "sourceUnchangedByArchive": true,
+  "candidates": [
+    {
+      "name": "g1-r10",
+      "actualRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-bf853bb9",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "t3/g1-r10-grounding-source-correction",
+      "files": [
+        {
+          "path": "server/lib/cv/tailor.js",
+          "bytes": 182026,
+          "sha256": "bae55900ba920505b69a31e74d9824de5b0bea02ba942ddbe8f5e6fc78cb4fd5"
+        },
+        {
+          "path": "server/lib/cv/refine.js",
+          "bytes": 84653,
+          "sha256": "fe37313a754685d89d11ff11a39d2428ed9b6e2aa98f51c16bb81e6b9f527b8d"
+        },
+        {
+          "path": "server/lib/cv/tailor.test.mjs",
+          "bytes": 120358,
+          "sha256": "018443fa5bf061a8477954bf8bef5b5ec3c8e0e5eeb865ee51974f9480a0a87d"
+        },
+        {
+          "path": "server/lib/cv/refine.test.mjs",
+          "bytes": 81074,
+          "sha256": "f01215dcad6181c1f22cc0c1e20814ed264eae583d34c8f0ba69e9b3535749d2"
+        },
+        {
+          "path": "GROUNDING-G1-R10-RESULT.md",
+          "bytes": 21069,
+          "sha256": "9ac148b2eead7bd87d6fb13fb430536a01d5a6ff9ec2db72f91fbbbc4fa9b516"
+        }
+      ],
+      "sourceStatus": [
+        " M server/lib/cv/refine.js",
+        " M server/lib/cv/refine.test.mjs",
+        " M server/lib/cv/tailor.js",
+        " M server/lib/cv/tailor.test.mjs",
+        "?? GROUNDING-G1-R10-RESULT.md"
+      ],
+      "accepted": false,
+      "testsRunByArchive": false
+    },
+    {
+      "name": "g1-r9",
+      "actualRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-76750b9f",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "t3/g1-r9-source-correction",
+      "files": [
+        {
+          "path": "server/lib/cv/tailor.js",
+          "bytes": 166641,
+          "sha256": "f9a92df697f4dbcf2d5026b77a63ba6751082ecc58bbd1d024c9b5ab5d56dbde"
+        },
+        {
+          "path": "server/lib/cv/refine.js",
+          "bytes": 82001,
+          "sha256": "869702614ea8c15875c07d3776b4e06f1369238c1637ed75e42e5dcdabc7b470"
+        },
+        {
+          "path": "server/lib/cv/tailor.test.mjs",
+          "bytes": 105741,
+          "sha256": "5e7caf86a5814ef94ab6f2047478a74151d17ffce8756cf22fc87223602dd2e8"
+        },
+        {
+          "path": "server/lib/cv/refine.test.mjs",
+          "bytes": 77119,
+          "sha256": "81d65ca4b4eacfec72b7597eaea84e9e0c7ddf0d58eedaa38e98761e09e907c4"
+        },
+        {
+          "path": "GROUNDING-G1-RESULT.md",
+          "bytes": 25254,
+          "sha256": "fe1654b2e4aefb1a7a0b00b635ff52e7e1178d346127c7220facf91e9e649931"
+        }
+      ],
+      "sourceStatus": [
+        " M server/lib/cv/refine.js",
+        " M server/lib/cv/refine.test.mjs",
+        " M server/lib/cv/tailor.js",
+        " M server/lib/cv/tailor.test.mjs",
+        "?? GROUNDING-G1-RESULT.md"
+      ],
+      "accepted": false,
+      "testsRunByArchive": false
+    },
+    {
+      "name": "g1-r7",
+      "actualRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "branch": "t3/g1-r7-combined-history",
+      "files": [
+        {
+          "path": "server/lib/cv/tailor.js",
+          "bytes": 133748,
+          "sha256": "a776da76ba80cbe483079320d7624051492cb640a09de7463746249d4545dc02"
+        },
+        {
+          "path": "server/lib/cv/refine.js",
+          "bytes": 71029,
+          "sha256": "0ce9a7b9e7c7649476ced0928646e50e4fdab91d7bfe9bb78cf573fb1dbb9695"
+        },
+        {
+          "path": "server/lib/cv/tailor.test.mjs",
+          "bytes": 74496,
+          "sha256": "36eefc4b11eeb214448d691c9bbc88ac700256f12f8f9a74b13359b4657f6a01"
+        },
+        {
+          "path": "server/lib/cv/refine.test.mjs",
+          "bytes": 65192,
+          "sha256": "5941b786fcabb2c7c5264931089e23febc1b982851c60ceeccc14399e8f81ac2"
+        },
+        {
+          "path": "GROUNDING-G1-RESULT.md",
+          "bytes": 24050,
+          "sha256": "40eca3594fcb2d0f8e5b9e645ef29767467ea769b1c41136a16a06460d862052"
+        }
+      ],
+      "sourceStatus": [
+        " M server/lib/cv/refine.js",
+        " M server/lib/cv/refine.test.mjs",
+        " M server/lib/cv/tailor.js",
+        " M server/lib/cv/tailor.test.mjs",
+        "?? GROUNDING-G1-RESULT.md"
+      ],
+      "accepted": false,
+      "testsRunByArchive": false
+    },
+    {
+      "name": "a11y-r3",
+      "actualRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-6e5f7dd4",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "t3/a11y-hint-id-collision-fix",
+      "files": [
+        {
+          "path": "public/app/app.js",
+          "bytes": 169696,
+          "sha256": "60d545b11ac5b842f607eb7851eb582d3a90b7f531e19a19512765ec96e46dd7"
+        },
+        {
+          "path": "public/assets/editor.js",
+          "bytes": 92658,
+          "sha256": "82e889c4029da675f594e7e10f0479c30d1f2184855ff406839d7146f7c12fae"
+        },
+        {
+          "path": "public/editor.html",
+          "bytes": 17803,
+          "sha256": "7746ca280729e709aa005772283eb08e558dc2c6757fcd121c4b5161693486d3"
+        },
+        {
+          "path": "docs/verification/20261029-a11y-fix/a11y-focused.test.mjs",
+          "bytes": 37374,
+          "sha256": "5d9572e7df7e0791699cfe7f56374d6faf1f58e74024b7b66792eca335736c42"
+        },
+        {
+          "path": "docs/verification/20261029-a11y-fix/A11Y-RESULT.md",
+          "bytes": 14391,
+          "sha256": "92f34fb983a6e7fa89247b2d5d49a1c06bd6d9b1cfacfea533bf3aee2e552de8"
+        },
+        {
+          "path": "docs/verification/20261029-a11y-fix/A11Y-MANIFEST.json",
+          "bytes": 11645,
+          "sha256": "a4d5f0d5bcd81f155c0baf18a21d3cef6f2147aa830736912d01098255ff657a"
+        }
+      ],
+      "sourceStatus": [
+        " M public/app/app.js",
+        " M public/assets/editor.js",
+        " M public/editor.html",
+        "?? docs/verification/20261029-a11y-fix/"
+      ],
+      "accepted": false,
+      "testsRunByArchive": false
+    },
+    {
+      "name": "windows-finite-case-r2",
+      "actualRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-a4173ab2",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "t3/windows-finite-case-revision",
+      "files": [
+        {
+          "path": "docs/verification/20261029-windows-finite-case/APPROVAL-TEMPLATE-NOT-AUTHORITY.json",
+          "bytes": 4781,
+          "sha256": "361aee0bc0c9ef26d394b7ec70232bfa5fd2003eae505ce649731218f6133904"
+        },
+        {
+          "path": "docs/verification/20261029-windows-finite-case/CAPTURE-AND-CLOSURE-DESIGN.md",
+          "bytes": 7234,
+          "sha256": "6ff0beb6498d4fb0a5dfed919e2709813a61e373e7f3670eb8ce9da50622777e"
+        },
+        {
+          "path": "docs/verification/20261029-windows-finite-case/DESIGN.md",
+          "bytes": 49506,
+          "sha256": "80eb159c90f3720983942bb973b13de2577c0d55af668299a9570cdb6c88b409"
+        },
+        {
+          "path": "docs/verification/20261029-windows-finite-case/PLAN-TEMPLATE-NOT-ADMITTED.json",
+          "bytes": 15826,
+          "sha256": "ad39621d3167889d26a1405cd482b08a6707fa6a218696ce94d446dabd692f45"
+        },
+        {
+          "path": "docs/verification/20261029-windows-finite-case/PROTOCOL-GAPS.md",
+          "bytes": 16776,
+          "sha256": "b63643a13424c93b872567b2ded565a69d15d1534f53916cbd23812b0c61425d"
+        },
+        {
+          "path": "docs/verification/20261029-windows-finite-case/RESULT.md",
+          "bytes": 21581,
+          "sha256": "9dce6af44e1007b4e10f5b0e157f34e4de4dbca618fbcc6a4eb3f28e5c74bc01"
+        },
+        {
+          "path": "docs/verification/20261029-windows-finite-case/SOURCE-CHECKS.md",
+          "bytes": 17824,
+          "sha256": "b8c0400a6316b90d6129b33474d368d543f7038b3fa4f532aadec99e7bfc65db"
+        },
+        {
+          "path": "docs/verification/20261029-windows-finite-case/windows-bridge-proposal.ps1",
+          "bytes": 20319,
+          "sha256": "e0286d84de3f24917a0ef24e23fe1806c5669e303adc756412b892f46e53d9d3"
+        }
+      ],
+      "sourceStatus": [
+        "?? docs/verification/20261029-windows-finite-case/"
+      ],
+      "accepted": false,
+      "testsRunByArchive": false
+    }
+  ]
+}

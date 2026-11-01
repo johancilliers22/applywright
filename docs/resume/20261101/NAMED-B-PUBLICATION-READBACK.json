@@ -1,0 +1,39 @@
+{
+  "verifiedAtUtc": "2026-11-01T20:28:46.6603021Z",
+  "publisherReceipt": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/ESTATE-APPLYWRIGHT-NAMED-B-NOTE-ACTUAL-RECEIPT-20261101.json",
+  "publisherReceiptSHA256": "08200e5aba31cc88f63316e32d22bcd4f71b86aab48fef9b0d3e7f369543f20e",
+  "actualNote": "C:/Users/johan/Desktop/Coding/OpenClaw/luna-vault/Luna Vault/brain/applywright-platform.md",
+  "actualNoteSHA256": "6cd8b86320a8c0135d4d23134aa3576c454991c38d1ad36a842a93cba549f29c",
+  "currentDatedTopStatusPresent": true,
+  "previewOfflineAtTop": true,
+  "projectOperatorWroteVault": false,
+  "latestR12TerminalStatus": "Still needs a later owner reconciliation; published note states19:55 running-review snapshot",
+  "publisherReported": {
+    "atUtc": "2026-11-01T20:14:43.548739+00:00",
+    "scope": "Root explicitly requested ONLY named Applywright B top-status correction after main owner batch completed",
+    "note": "brain/applywright-platform.md",
+    "beforeSha256": "90c5b05de4f28f4deb39bc6926308762df3bf22347b7eef6447cf2d0d2a31a66",
+    "afterSha256": "6cd8b86320a8c0135d4d23134aa3576c454991c38d1ad36a842a93cba549f29c",
+    "historicalRemainderSha256": "bc70c7f88fb577bd956ddc9f928f34b20b34a4ac661633e9f56d92d4d2722276",
+    "historyAndOtherEditsPreserved": true,
+    "source": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/VAULT-PATCH.md",
+    "sourceRawSha256": "6c088741b01ececcfa6158b753cd0f075126ef604572b2d39c4db2f9bab4a878",
+    "sourceUncommittedOwnerProposal": true,
+    "sourceCheckpoint": "607675003733fdd201e552a7137ce1b8fa64aa78",
+    "sourceCurrentProjectHeadObserved": "bc912de743c158d80603c4ec9ef190197ab061ce",
+    "newRuntimeOrProjectGitWrite": false,
+    "finalHandoff": false,
+    "readbackAtUtc": "2026-11-01T20:14:57.556136+00:00",
+    "commit": "76cfad794466df6770ca6c98bbfced6e70363a3d",
+    "subject": "brain: refresh named Applywright top status and preserve history",
+    "committedBlobSha256": "6cd8b86320a8c0135d4d23134aa3576c454991c38d1ad36a842a93cba549f29c",
+    "commitPaths": [
+      "brain/applywright-platform.md"
+    ],
+    "stagedSacred": "PASS1",
+    "postCommitSacredAdditive": "PASS1_17insertions0deletions",
+    "remoteProof": "NOT_CLAIMED",
+    "genericBatchA": "1c32bcd7dea8a4233547717f5f8d8bd6f4df40ee",
+    "genericBatchB": "6186d4d67516df71a9a56e48c923af72a5c66745"
+  }
+}

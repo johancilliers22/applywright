@@ -1,0 +1,52 @@
+{
+  "capturedAtUtc": "2026-11-01T20:26:11.9859365Z",
+  "revision": "SOURCE_R1.1",
+  "state": "UNEXECUTED_SOURCE_DRAFT_PENDING_INDEPENDENT_REVIEW",
+  "scope": "docs/t3/receipts/20261101-resume/a11y-only-full-gate-source",
+  "originalR1Snapshot": "G:/Backups/Applywright/20261101-resume/full-gate-source-r1-frozen",
+  "changes": [
+    "Durable fsynced terminal record before EX close; failed pre-release evidence retains EX",
+    "Post-release evidence failure is explicit non-success, no fabricated complete receipt",
+    "Manager keeper-loss watcher signals/drains instead of immediate os._exit",
+    "Manager tracks/reaps every still-waitable owned child through cleanup",
+    "Materialization checks cancellation/keeper-loss between positive input writes"
+  ],
+  "files": [
+    {
+      "name": "linux-full-gate-parent.py.SOURCE.txt",
+      "bytes": 10072,
+      "sha256": "3f92ea5809ff038fd6724b199190d78532f340060d53921348c41907408bea1d"
+    },
+    {
+      "name": "linux-full-gate-keeper.py.SOURCE.txt",
+      "bytes": 12757,
+      "sha256": "bb8e27315fc10767bfce0da17154e167db7789858a83bf58033f80ea70e1d96f"
+    },
+    {
+      "name": "worker-effects-guard.cjs.SOURCE.txt",
+      "bytes": 9803,
+      "sha256": "afb9648ad6a0992a7c3f8a2981c01136efc2ea44af2cdb6c0af765009775cc8a"
+    },
+    {
+      "name": "SETUP-EXECUTABLE-ENVELOPE-SOURCE.json",
+      "bytes": 3077,
+      "sha256": "e8734ede1f6485dd52db6a48ff334b003fcefa91532ff26980a09d00a3a9bf83"
+    },
+    {
+      "name": "FINITE-GATES-ENVELOPE-SOURCE.json",
+      "bytes": 3434,
+      "sha256": "527eb68d024e5513e4af124efc15006d09cd2989b81061dd106f3cd72c5c38aa"
+    }
+  ],
+  "parserImportsControlsOrRuntimeExecuted": false,
+  "rootApproval": false,
+  "remainingUnqualified": [
+    "actual cgroup/delegation/kernel proof and native/domain admission",
+    "Node builtin default-worker/preload/stdio propagation",
+    "complete nativeSQLite/ESM/fs/net/effects coverage",
+    "bounded protocol framing and exact one-use freshness/cancel edge semantics",
+    "durable unknown-custody recovery",
+    "dependency/npm/startup/payload/config graph",
+    "actual reached/fired/lifecycle/death/control evidence"
+  ]
+}

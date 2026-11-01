@@ -1,3 +1,14 @@
+## Current continuation checkpoint — 1 November 2026
+
+Start at docs/resume/20261101/FINAL-CONTINUATION-HANDOFF.md and its validation
+receipt. R12 has now actually run: fixture76/76, replay233/244, claims29/29,
+tailor66/72 and refine64/68; independent Source review still6P1/3P2. It is frozen,
+unaccepted and unmerged. A11Y R5 SourcePASS and focused57/57 do not waive the
+three integrated gates. One already-running full-gate Source reviewer is finishing;
+no automatic R13 or new provider actor during handoff convergence. All23 register
+units and product P0–P7 remain. Programme ACTIVE/INCOMPLETE; a continuation-ready
+packet is distinct from completed product work or actual incoming-owner ACK.
+
 ## Current resume — 1 November 2026
 
 Johan resumed after the usage interruption. Start at

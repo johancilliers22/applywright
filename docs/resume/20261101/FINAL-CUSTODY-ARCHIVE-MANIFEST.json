@@ -1,0 +1,140 @@
+{
+  "capturedAtUtc": "2026-11-01T21:27:06.9397455Z",
+  "archive": "G:/Backups/Applywright/20261101-resume/final-native-custody",
+  "files": 26,
+  "bytes": 1032316.0,
+  "hashesVerified": true,
+  "scope": "Stopped review inputs/outputs/reap evidence and native final inventory; no claim of later broker narrative outputs",
+  "entries": [
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/ACTIVE-INVENTORY.before.native.json",
+      "bytes": 1115,
+      "sha256": "a9a1b7a9112389e2ebab01bcd370db03e743a1d83b25ab886165c14a6eff9956"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/CAPABILITIES.native.json",
+      "bytes": 13701,
+      "sha256": "291d211764e8f60c843318bae861e7e1d4c624b980af62acc8689d3c071a5514"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/CHECKPOINT.started.json",
+      "bytes": 7915,
+      "sha256": "3d0e35f60c1e32ce46be1d74ad2bafd5df95e3047f0470e5db6d112a73a58697"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/delegate.payload.json",
+      "bytes": 17646,
+      "sha256": "00488759745e7e310c383aa5410e2e9bad3fdb3d0288bd69d6e81246f1fab873"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/DOCUMENTARY-PLAN-DRIFT-OPERATOR-ACK.json",
+      "bytes": 7922,
+      "sha256": "f7bd2a916938dc50919f9ba839b46f6304cb41f264729f1d33b6b675e7455d1f"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/INPUT-CUSTODY.before.json",
+      "bytes": 10045,
+      "sha256": "8fbc11e835131554b025f52c43bdb2ad6c6ba61e0f8dc8ac059354729ed399d7"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/NATIVE-DISPATCH-STATUS.before-documentary-drift-ack.json",
+      "bytes": 107619,
+      "sha256": "56da9e0b6953678c61a273a7550dcffb962e34a373ee297ba8fa8f5ac2c43abe"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/NATIVE-DISPATCH-STATUS.before-terminal.json",
+      "bytes": 108075,
+      "sha256": "1fcce366df1a2a0686a16e0bcfeadf5bd0b8608b0aa5c1eabe25c73ed43cd13b"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/NATIVE-DISPATCH-STATUS.before.json",
+      "bytes": 103874,
+      "sha256": "2bf5d4c7dc58e451c0059478e83b24fc571b743d26e506975da2e90c72b53f7f"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/OUTPUT-EVIDENCE.after-reap.json",
+      "bytes": 71692,
+      "sha256": "bcb224f69cdb5fba7af894e594c3c93ef6d396ea857236276fbc876e01e6f077"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/OUTPUT-EVIDENCE.before-reap.json",
+      "bytes": 71692,
+      "sha256": "2dfe1b4be652897e9958915770ed68015e2126217eedf5aad9d33c4f0b95818b"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/REAP-VERIFIED.json",
+      "bytes": 6913,
+      "sha256": "89241b10ad32b3302691bce5d905e9b2978604291c12e73ff5bf5005ecaabf4c"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/SOURCE-ADMISSION.attempt1.json",
+      "bytes": 2827,
+      "sha256": "38b9bbdd9453d8278c67dcea1d5853ec1f6025ca5b07f16b1a7c6e66a7a0bf33"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/task.after-reap.native.json",
+      "bytes": 2587,
+      "sha256": "a1db7b7d9eb87b9b2bb4bf849a6a72a965d0d7669fa602b80467eec1c1ba2ea1"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/task.dispatch.native.json",
+      "bytes": 2336,
+      "sha256": "bf0af96364111d10d4de94b9bd0247f90ab5a33ad8f87216d55d37f5fe872580"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/task.identity.native.json",
+      "bytes": 3529,
+      "sha256": "0722c6492629df86f709a0266b7bdbf68d945efc28517ecae6d5f05a80a10b61"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/task.reap.native.json",
+      "bytes": 200,
+      "sha256": "6c58d63d1775aa2ee29d65a5a4c3788dc8dc04eaf355bd4a2e9207ef43795ca0"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/task.terminal-identity.native.json",
+      "bytes": 3369,
+      "sha256": "846b885a5916ac8cf829bdee734d4290b4953395cffae1bd5965465e2a2fcd0c"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review-native/task.terminal.native.json",
+      "bytes": 2587,
+      "sha256": "a1db7b7d9eb87b9b2bb4bf849a6a72a965d0d7669fa602b80467eec1c1ba2ea1"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review/REVIEW-IDENTITIES.json",
+      "bytes": 171777,
+      "sha256": "428cfb2baef3469c022c6287f1ecbe6e8984c034d631c96895feb692bf38edca"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/full-gate-r1-1-independent-review/REVIEW.md",
+      "bytes": 44268,
+      "sha256": "0b0b97eaffef030de5aa0bd2574c9ae543d6cf3ae457690a640e639801253aab"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/broker-final-handoff/NATIVE-INVENTORY.final.json",
+      "bytes": 92670,
+      "sha256": "00e22afbd01afd9835ebbd145eed79d6ec6be309a5ecd37513dbf39b2bf81260"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/broker-final-handoff/PARENT-CONFIG.final.native.json",
+      "bytes": 374,
+      "sha256": "a2675c86fdaf59fb9e1182598a60e7b8c41737545695e77747ea343e5dd2ba27"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/broker-final-handoff/ROOT-R12-ACTUAL-OUTCOMES.json",
+      "bytes": 9462,
+      "sha256": "cdaa7e9009a36185ec3d46daafd4c025a61ff1fa83d32db2d05584173559c3f6"
+    },
+    {
+      "relative": "docs/t3/receipts/20261101-resume/broker-final-handoff/CLOSEOUT-INPUTS.json",
+      "bytes": 59326,
+      "sha256": "401582695e3f62dc6d2e53cdec535c77bf51cc4735c4bb562df0048ce159eca8"
+    },
+    {
+      "relative": "docs/resume/20261029/NATIVE-DISPATCH-STATUS.json",
+      "bytes": 108795,
+      "sha256": "36a30fc454feed2ec86f4a33fc35916fafa0b48e6311063a87eab801ea82a668"
+    }
+  ]
+}

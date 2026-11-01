@@ -1,6 +1,23 @@
 # Applywright orchestration lessons — current resume
 
-1 November 2026; this is an interim record, not mission completion.
+1 November 2026; this records a continuation checkpoint, not product completion.
+
+- End the heuristic refill loop when actual evidence contradicts progress.
+  R11 passed76/244/29-case corpora yet failed8 focused tests and independent
+  Source review. R12 then regressed11 faithful replay positives and failed10
+  focused tests while still passing76 and29. Use one occurrence-bound claim
+  contract and independent faithful/adverse pairs before another implementation.
+- Require merge infrastructure early. A11Y57/57 and SourcePASS are useful, but
+  a late unqualified full-gate supervisor still prevents integration. Prepare
+  the dependency/startup/effects/worker-custody route alongside implementation,
+  without substituting a single-process test for the default integrated gates.
+- Keep one current continuation entry. Older accurate snapshots became stale
+  across the register, handoff and B note. Link them to FINAL-CONTINUATION-HANDOFF
+  and preserve dated history; verify the actual named B note, not a generic batch.
+- Match useful roles rather than token quotas. Native DSH implementation and
+  independent Sol review supplied concrete source work; actual Root execution
+  found regressions neither a dispatch receipt nor an author summary revealed.
+  Provider task counts are not token spend or a cross-model benchmark.
 
 - Establish a usable, reviewed finite executor early. Repeated SOURCE-only
   rounds accumulated unexecuted code and contradictory retained assertions.

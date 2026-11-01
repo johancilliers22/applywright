@@ -1,5 +1,10 @@
 # Applywright resume and Claude/Estate handoff — 1 November 2026
 
+Latest results and next-owner entry are FINAL-CONTINUATION-HANDOFF.md, with actual
+R12 failures in G1-R12-ACTUAL-RESULTS.json. The original sequence and starting
+snapshot below are preserved as history. R12 diagnostics are complete; do not
+continue to wait for them or automatically start another semantic writer.
+
 Johan explicitly resumes the existing missions after the usage interruption.
 Codex remains project operator until a separate Claude co-orchestrator is created.
 Use Sol 6.1 High/xhigh with Standard/default (Fast OFF) for resumed Codex parents

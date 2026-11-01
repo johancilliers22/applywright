@@ -1,0 +1,33 @@
+{
+  "preparedAtUtc": "2026-11-01T21:22:09.9132340Z",
+  "scope": "Documentary continuation only; no product candidate or raw private receipt staging",
+  "paths": [
+    "docs/IMPLEMENTATION-REGISTER.json",
+    "docs/OPERATOR-CONTINUATION-PLAN.md",
+    "docs/VAULT-PATCH.md",
+    "docs/resume/20261101/APPLYWRIGHT-B-NOTE-EXACT-DELTA.md",
+    "docs/resume/20261101/CLAUDE-ESTATE-HANDOFF-IN-PROGRESS.md",
+    "docs/resume/20261101/ORCHESTRATION-LESSONS.md",
+    "docs/resume/20261101/RESUME-AND-HANDOFF-PLAN.md",
+    "docs/resume/20261101/MANUAL-RESUME-AFTER-PAUSE.json",
+    "docs/resume/20261101/FULL-GATE-R1.1-INDEPENDENT-REVIEW-BRIEF.md",
+    "docs/resume/20261101/FINAL-CONTINUATION-HANDOFF.md",
+    "docs/resume/20261101/FINAL-USAGE-OBSERVATION.json",
+    "docs/resume/20261101/FINAL-WORKTREE-AND-GIT-SNAPSHOT.json",
+    "docs/resume/20261101/G1-R12-ACTUAL-RESULTS.json",
+    "docs/resume/20261101/G1-R12-INDEPENDENT-REVIEW.md",
+    "docs/resume/20261101/R12-ACTUAL-ARCHIVE-MANIFEST.json",
+    "docs/resume/20261101/FULL-GATE-R1.1-ARCHIVE.json",
+    "docs/resume/20261101/FULL-GATE-R1.1-INDEPENDENT-REVIEW.md",
+    "docs/resume/20261101/FULL-GATE-R1.1-REVIEW-SUMMARY.json",
+    "docs/resume/20261101/FINAL-BROKER-SNAPSHOT.json",
+    "docs/resume/20261101/FINAL-CUSTODY-ARCHIVE-MANIFEST.json",
+    "docs/resume/20261101/FINAL-CHECKPOINT-PATHS.json"
+  ],
+  "postCommitReadbackReceipt": "docs/resume/20261101/FINAL-CHECKPOINT-VALIDATION.json",
+  "frozenReports": [
+    "docs/resume/20261101/G1-R12-INDEPENDENT-REVIEW.md",
+    "docs/resume/20261101/FULL-GATE-R1.1-INDEPENDENT-REVIEW.md"
+  ],
+  "rawReportHashBoundary": "Raw source/archive hashes bind exact frozen evidence. Git text checkout may normalize line endings; delivery validation also records committed blob identities."
+}

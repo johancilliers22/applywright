@@ -1,0 +1,54 @@
+{
+  "capturedAtUtc": "2026-11-01T21:08:34.0513614Z",
+  "archive": "G:/Backups/Applywright/20261101-resume/full-gate-source-r1-1-frozen",
+  "sourceIdentity": "docs/resume/20261101/FULL-GATE-SOURCE-R1.1-IDENTITIES.json",
+  "files": [
+    {
+      "name": "linux-full-gate-parent.py.SOURCE.txt",
+      "bytes": 10072,
+      "sha256": "3f92ea5809ff038fd6724b199190d78532f340060d53921348c41907408bea1d"
+    },
+    {
+      "name": "linux-full-gate-keeper.py.SOURCE.txt",
+      "bytes": 12757,
+      "sha256": "bb8e27315fc10767bfce0da17154e167db7789858a83bf58033f80ea70e1d96f"
+    },
+    {
+      "name": "worker-effects-guard.cjs.SOURCE.txt",
+      "bytes": 9803,
+      "sha256": "afb9648ad6a0992a7c3f8a2981c01136efc2ea44af2cdb6c0af765009775cc8a"
+    },
+    {
+      "name": "SETUP-EXECUTABLE-ENVELOPE-SOURCE.json",
+      "bytes": 3077,
+      "sha256": "e8734ede1f6485dd52db6a48ff334b003fcefa91532ff26980a09d00a3a9bf83"
+    },
+    {
+      "name": "FINITE-GATES-ENVELOPE-SOURCE.json",
+      "bytes": 3434,
+      "sha256": "527eb68d024e5513e4af124efc15006d09cd2989b81061dd106f3cd72c5c38aa"
+    }
+  ],
+  "allHashesMatch": true,
+  "executedOrQualified": false,
+  "review": {
+    "capturedAtUtc": "2026-11-01T21:20:14.9819763Z",
+    "archive": "G:/Backups/Applywright/20261101-resume/full-gate-r1-1-review-frozen",
+    "files": [
+      {
+        "name": "REVIEW.md",
+        "bytes": 44268,
+        "sha256": "0b0b97eaffef030de5aa0bd2574c9ae543d6cf3ae457690a640e639801253aab"
+      },
+      {
+        "name": "REVIEW-IDENTITIES.json",
+        "bytes": 171777,
+        "sha256": "428cfb2baef3469c022c6287f1ecbe6e8984c034d631c96895feb692bf38edca"
+      }
+    ],
+    "hashesMatch": true,
+    "verdict": "REQUEST_CHANGES_9P1_3P2",
+    "allInputsUnchanged": false,
+    "documentaryDriftPreserved": true
+  }
+}

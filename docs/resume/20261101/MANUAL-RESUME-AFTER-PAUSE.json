@@ -1,0 +1,13 @@
+{
+  "atUtc": "2026-11-01T20:40:27.1657053Z",
+  "authority": "Direct Johan explicit resume after paused status",
+  "scope": "Full original Applywright goal; DSH implementation, independent Sol review, gates/eligible merge/docs/owner vault/Claude handoff",
+  "priorPauseRevoked": true,
+  "goal": "ACTIVE_INCOMPLETE",
+  "entry": "G1-CLAIM-RECORD-REPAIR-CONTRACT.md",
+  "next": "Already-prepared exact R12 Root diagnostics first, then one evidence-driven DSH successor; no stale approval reuse or unsafe merge",
+  "RootThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
+  "broker": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+  "sourceActorChange": "None claimed until actual dispatch",
+  "allOriginalProductPlanRowsRetained": true
+}

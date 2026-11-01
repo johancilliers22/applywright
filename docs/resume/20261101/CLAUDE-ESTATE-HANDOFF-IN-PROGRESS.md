@@ -1,5 +1,15 @@
 # Applywright continuation / Claude-Estate handoff — IN PROGRESS
 
+## Latest entry
+
+Use FINAL-CONTINUATION-HANDOFF.md for current outcomes and its separately saved
+delivery validation. R12 Source review and all four exact Root diagnostics have
+finished:6P1/3P2,76/76,233/244,29/29,66/72,64/68. The dated sections below are
+historical checkpoints, including the now-superseded running-R12 statements.
+No G1/A11Y product merge or full-gate pass is claimed. The remaining full-gate
+Source reviewer finished REQUEST_CHANGES9P1/3P2 and is reaped. Current final
+custody, delivery and named-note readbacks belong to the new continuation entry.
+
 ## Latest gym checkpoint — 1 November,19:55UTC
 
 R12 Source author finished naturally19:41:11. Its exact five files in

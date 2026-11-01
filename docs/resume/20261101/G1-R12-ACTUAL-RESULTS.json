@@ -1,0 +1,276 @@
+{
+  "observedAtUtc": "2026-11-01T20:59:05.5290246Z",
+  "rootAdjudicatedAtUtc": "2026-11-01T20:52:05.9029889Z",
+  "rootAdjudicationSHA256": "38ebf1c636bbba4fca94dbace213342d430d08fe58abde022c93176eb148f194",
+  "rawArchiveManifest": "docs/resume/20261101/R12-ACTUAL-ARCHIVE-MANIFEST.json",
+  "candidate": "C:/Users/johan/.t3/worktrees/applywright/t3-0564e52d",
+  "base": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+  "sourceReview": "REQUEST_CHANGES_6P1_3P2_REMAINS",
+  "verdict": "ACTUAL_BOUNDED_DIAGNOSTICS_CONSUMED_R12_NOT_ACCEPTED",
+  "fixture76": {
+    "passed": 76,
+    "total": 76,
+    "exitCode": 0
+  },
+  "replay244": {
+    "passed": 233,
+    "total": 244,
+    "failed": 11,
+    "errors": 0,
+    "controlFailures": [],
+    "adjudicatedFailures": [],
+    "positiveFailures": [
+      {
+        "corpus": "history",
+        "name": "same currency",
+        "predicate": "assertGrounded",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "sentence-initial language list",
+        "predicate": "assertGrounded",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "sentence-initial language list",
+        "predicate": "groundChanges",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "r4 Go and Python list",
+        "predicate": "assertGrounded",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "r4 Go and Python list",
+        "predicate": "groundChanges",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "r4 Go or Rust list",
+        "predicate": "assertGrounded",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "r4 Go or Rust list",
+        "predicate": "groundChanges",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "r5 punctuated lowercase python list",
+        "predicate": "assertGrounded",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "r5 punctuated lowercase python list",
+        "predicate": "groundChanges",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "r5 punctuated lowercase rust list",
+        "predicate": "assertGrounded",
+        "error": null
+      },
+      {
+        "corpus": "history",
+        "name": "r5 punctuated lowercase rust list",
+        "predicate": "groundChanges",
+        "error": null
+      }
+    ]
+  },
+  "review29": {
+    "passed": 29,
+    "total": 29,
+    "exitCode": 0
+  },
+  "tailor": {
+    "counts": {
+      "tests": 72,
+      "suites": 0,
+      "pass": 66,
+      "fail": 6,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "validSummary": true,
+    "exitCode": 1,
+    "failureHeaders": [
+      "not ok 3 - a same-level measurable rewrite is allowed",
+      "not ok 33 - G1-R4: a sentence-initial Go list is technology evidence",
+      "not ok 37 - G1-R5: a Go conjunction needs a language item, not an imperative",
+      "not ok 46 - G1-R6: a Go list item is classified after sentence punctuation",
+      "not ok 70 - G1-R11: actual-diagnostic ownership and measure positives with adverse twins",
+      "not ok 72 - G1-R12: review finite pairs bind technology, measures, actors, periods and units"
+    ],
+    "rawFailureBlocks": [
+      "not ok 3 - a same-level measurable rewrite is allowed\n  ---\n  duration_ms: 3.27563\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:60:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:68:10)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n",
+      "not ok 33 - G1-R4: a sentence-initial Go list is technology evidence\n  ---\n  duration_ms: 0.96488\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:1088:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Go and Python at a sentence start: assertGrounded refused it: [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:1096:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n",
+      "not ok 37 - G1-R5: a Go conjunction needs a language item, not an imperative\n  ---\n  duration_ms: 2.896909\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:1245:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Go and Python: assertGrounded refused it: [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:1282:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n",
+      "not ok 46 - G1-R6: a Go list item is classified after sentence punctuation\n  ---\n  duration_ms: 3.060526\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:1623:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    python. is a language item: assertGrounded refused it: [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:1653:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n",
+      "not ok 70 - G1-R11: actual-diagnostic ownership and measure positives with adverse twins\n  ---\n  duration_ms: 1.882549\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:2677:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    sentence-initial Go list: assertGrounded refused \"Built Go-based services.\": [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:2695:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n",
+      "not ok 72 - G1-R12: review finite pairs bind technology, measures, actors, periods and units\n  ---\n  duration_ms: 2.429047\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:2792:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    assertGrounded refused the candidate language list: [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/tailor.test.mjs:2815:12)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n"
+    ]
+  },
+  "refine": {
+    "counts": {
+      "tests": 68,
+      "suites": 0,
+      "pass": 64,
+      "fail": 4,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "validSummary": true,
+    "exitCode": 1,
+    "failureHeaders": [
+      "not ok 25 - groundChanges rejects a dropped figure and accepts a faithful rephrase",
+      "not ok 38 - G1-R4: groundChanges shares the provenance, wrapper, subject, count and Go-list corrections",
+      "not ok 39 - G1-R5: groundChanges shares the adjunct, wrapper, subject and Go-list corrections",
+      "not ok 53 - G1-R6: groundChanges shares the adverb, IT-subject and punctuated Go-list corrections"
+    ],
+    "rawFailureBlocks": [
+      "not ok 25 - groundChanges rejects a dropped figure and accepts a faithful rephrase\n  ---\n  duration_ms: 1.503692\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/refine.test.mjs:639:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/refine.test.mjs:645:10)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n",
+      "not ok 38 - G1-R4: groundChanges shares the provenance, wrapper, subject, count and Go-list corrections\n  ---\n  duration_ms: 4.726031\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/refine.test.mjs:953:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Go and Python at a sentence start: groundChanges refused \"Built Go-based services.\": [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/refine.test.mjs:1010:12)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n",
+      "not ok 39 - G1-R5: groundChanges shares the adjunct, wrapper, subject and Go-list corrections\n  ---\n  duration_ms: 3.147787\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/refine.test.mjs:1019:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Go and Python: groundChanges refused \"Built Go-based services.\": [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/refine.test.mjs:1068:12)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n",
+      "not ok 53 - G1-R6: groundChanges shares the adverb, IT-subject and punctuated Go-list corrections\n  ---\n  duration_ms: 2.68398\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/refine.test.mjs:1369:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    python. is a language item: groundChanges refused \"Built Go-based services.\": [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-0564e52d/server/lib/cv/refine.test.mjs:1405:12)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n"
+    ]
+  },
+  "cases": [
+    {
+      "id": "G1-R12",
+      "state": "DIAGNOSTIC_UNEXPECTED_DIRECTION",
+      "controls": {
+        "protocol": 32,
+        "release": 9,
+        "classify": 16,
+        "total": 57
+      },
+      "leaseReleased": true,
+      "started": "2026-11-01T20:45:27.631638Z",
+      "finished": "2026-11-01T20:46:39.282613Z",
+      "parentPid": 1055907,
+      "steps": [
+        {
+          "label": "r12-fixture76",
+          "exit": 0,
+          "detail": "76/76, source unchanged, exit 0",
+          "classification": "GREEN",
+          "resultFile": "r12-fixture76.result.json",
+          "pid": 1055915
+        },
+        {
+          "label": "r12-harness",
+          "exit": 1,
+          "detail": "unexpected semantic failure",
+          "classification": "UNEXPECTED_DIRECTION",
+          "resultFile": "r12-harness.result.json",
+          "pid": 1056415
+        }
+      ],
+      "rawFileCount": 7
+    },
+    {
+      "id": "G1-R12-REVIEW29",
+      "state": "PASS_EXPECTED_DIRECTIONS_OBSERVED_NOT_ACCEPTANCE",
+      "controls": {
+        "protocol": 32,
+        "release": 9,
+        "classify": 20,
+        "total": 61
+      },
+      "leaseReleased": true,
+      "started": "2026-11-01T20:47:07.241468Z",
+      "finished": "2026-11-01T20:47:32.19856Z",
+      "parentPid": 1057706,
+      "steps": [
+        {
+          "label": "r12-review29",
+          "exit": 0,
+          "detail": "29/29, source unchanged, exit 0",
+          "classification": "GREEN",
+          "resultFile": "r12-review29.result.json",
+          "pid": 1057709
+        }
+      ],
+      "rawFileCount": 4
+    },
+    {
+      "id": "G1-R12-tailor-TAP",
+      "state": "DIAGNOSTIC_UNEXPECTED_DIRECTION",
+      "controls": {
+        "protocol": 32,
+        "release": 9,
+        "classify": 29,
+        "total": 70
+      },
+      "leaseReleased": true,
+      "started": "2026-11-01T20:48:17.611641Z",
+      "finished": "2026-11-01T20:48:41.721883Z",
+      "parentPid": 1059098,
+      "steps": [
+        {
+          "label": "r12-tailor-focused",
+          "exit": 1,
+          "detail": "TAP_TEST_FAILURE",
+          "classification": "UNEXPECTED_DIRECTION",
+          "resultFile": "r12-tailor-focused.result.json",
+          "pid": 1059109
+        }
+      ],
+      "rawFileCount": 4
+    },
+    {
+      "id": "G1-R12-refine-TAP",
+      "state": "DIAGNOSTIC_UNEXPECTED_DIRECTION",
+      "controls": {
+        "protocol": 32,
+        "release": 9,
+        "classify": 29,
+        "total": 70
+      },
+      "leaseReleased": true,
+      "started": "2026-11-01T20:49:11.130513Z",
+      "finished": "2026-11-01T20:49:32.677852Z",
+      "parentPid": 1060344,
+      "steps": [
+        {
+          "label": "r12-refine-focused",
+          "exit": 1,
+          "detail": "TAP_TEST_FAILURE",
+          "classification": "UNEXPECTED_DIRECTION",
+          "resultFile": "r12-refine-focused.result.json",
+          "pid": 1060352
+        }
+      ],
+      "rawFileCount": 4
+    }
+  ],
+  "beforeAfter": "56 mounted-Windows source/control/oracle input rows matched across four exact plans; pinned Python and Node binary hashes independently remeasured unchanged after all cases",
+  "nativePostcheck": "ps query for all9 Root parent/child PIDs returned no rows/exit1; canonical device2128 inode436950 uid1000 mode0600 nlink1 remeasured, lock rows empty",
+  "safety": "All4 parent native sessions terminal, own children waitpid-terminal; 57/61/70/70 protocol/release/classification controls all PASS; no skip/cancel/todo/timeouts/unhandled/stderr. Root supervision used five fresh direct Windows RAM/running-distro ACKs at >=4GiB and guest >=3GiB inside canonical EX; normal home; no API/model/browser/HTTP/service/product mutation",
+  "next": "Preserve R12 frozen; complete occurrence-bound claim-record repair contract, R12 nine source findings and actual 11 replay/10 focused test failures are concrete next-owner inputs. No automatic next writer during handoff convergence.",
+  "notGranted": [
+    "product/source acceptance",
+    "integration/merge",
+    "HTTP/full module gates",
+    "Windows/DOM/AT/browser/native consumer proof",
+    "API/model spend",
+    "new correction writer",
+    "installed changes"
+  ],
+  "fullGatesRun": false,
+  "merged": false,
+  "productAccepted": false
+}

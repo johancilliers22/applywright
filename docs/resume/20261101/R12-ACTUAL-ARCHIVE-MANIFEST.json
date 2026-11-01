@@ -1,0 +1,130 @@
+{
+  "capturedAtUtc": "2026-11-01T20:59:05.5093425Z",
+  "archive": "G:/Backups/Applywright/20261101-resume/r12-actual-attempt1-final",
+  "source": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101",
+  "files": 24,
+  "bytes": 328529,
+  "perFileHashesVerified": true,
+  "contents": [
+    {
+      "relative": "G1-R12-ACTUAL-ATTEMPT1/r12-fixture76.result.json",
+      "bytes": 31963,
+      "sha256": "2d8d6ebd742e47fe260ffbcb0c4a17bde4c50093dfa8383f224167c42d7670da"
+    },
+    {
+      "relative": "G1-R12-ACTUAL-ATTEMPT1/r12-fixture76.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "G1-R12-ACTUAL-ATTEMPT1/r12-fixture76.stdout",
+      "bytes": 71,
+      "sha256": "b125b940bc5980ff2ff316ef57f5c67f051fb5f3e172ef9abfed410d3a6c1aa2"
+    },
+    {
+      "relative": "G1-R12-ACTUAL-ATTEMPT1/r12-harness.result.json",
+      "bytes": 153274,
+      "sha256": "f0054c18cee694cdd695d597375c20bc148c976d2d00443e567e939ad4d77a03"
+    },
+    {
+      "relative": "G1-R12-ACTUAL-ATTEMPT1/r12-harness.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "G1-R12-ACTUAL-ATTEMPT1/r12-harness.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "G1-R12-ACTUAL-ATTEMPT1/RECEIPT.json",
+      "bytes": 19600,
+      "sha256": "cebe997cd4460774c5940f159e31d4dfdd512a09766440480c837f16862fa60d"
+    },
+    {
+      "relative": "G1-R12-ACTUAL-ATTEMPT1/ROOT-COPY-MANIFEST.json",
+      "bytes": 1043,
+      "sha256": "8c2393c46cdc4220b666a010525240de237e292f44cd7572b5798b60c847ec28"
+    },
+    {
+      "relative": "G1-R12-refine-TAP-ACTUAL-ATTEMPT1/r12-refine-focused.result.json",
+      "bytes": 218,
+      "sha256": "17b59f0aa218cf0bd7994b91ec811488b4e93cfd9bb11b329c222316f2aa7b22"
+    },
+    {
+      "relative": "G1-R12-refine-TAP-ACTUAL-ATTEMPT1/r12-refine-focused.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "G1-R12-refine-TAP-ACTUAL-ATTEMPT1/r12-refine-focused.stdout",
+      "bytes": 17219,
+      "sha256": "4a8f691f43c0347a90a20902e1756e67f3a45019c23857895893a1f1243bd77e"
+    },
+    {
+      "relative": "G1-R12-refine-TAP-ACTUAL-ATTEMPT1/RECEIPT.json",
+      "bytes": 15695,
+      "sha256": "04445a9a01b50a7f2be09dc6381b1e5ed01460a376c794b767d6825e441ad852"
+    },
+    {
+      "relative": "G1-R12-refine-TAP-ACTUAL-ATTEMPT1/ROOT-COPY-MANIFEST.json",
+      "bytes": 614,
+      "sha256": "07a5b2296b2efa17eeaf97e9356f5fb63151ba7a3f0b2bf52a38047c5a918ebd"
+    },
+    {
+      "relative": "G1-R12-REVIEW29-ACTUAL-ATTEMPT1/r12-review29.result.json",
+      "bytes": 13822,
+      "sha256": "55e22c8da5980d93097605ecf34f6a261c0ac3a29ef6d96fd0ba7e88911bd68d"
+    },
+    {
+      "relative": "G1-R12-REVIEW29-ACTUAL-ATTEMPT1/r12-review29.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "G1-R12-REVIEW29-ACTUAL-ATTEMPT1/r12-review29.stdout",
+      "bytes": 72,
+      "sha256": "40a47c8bb4815345eecd1f4787aa59f50397c9f1e8829186a218fc2f7b970304"
+    },
+    {
+      "relative": "G1-R12-REVIEW29-ACTUAL-ATTEMPT1/RECEIPT.json",
+      "bytes": 14576,
+      "sha256": "639381fbce3d2c0c9d3590bc6fd7cea32e597d4874b623a2dc3d8b14bf0fc20e"
+    },
+    {
+      "relative": "G1-R12-REVIEW29-ACTUAL-ATTEMPT1/ROOT-COPY-MANIFEST.json",
+      "bytes": 595,
+      "sha256": "08821a37bd277e49ca739a299a8eecb7fe96e59d8ffcf7ea76990433ca310891"
+    },
+    {
+      "relative": "G1-R12-tailor-TAP-ACTUAL-ATTEMPT1/r12-tailor-focused.result.json",
+      "bytes": 218,
+      "sha256": "b04e7c7a329ebe01395c244929eaabdd1a5ebdc87ae376feb3e9ea163a7e8414"
+    },
+    {
+      "relative": "G1-R12-tailor-TAP-ACTUAL-ATTEMPT1/r12-tailor-focused.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "G1-R12-tailor-TAP-ACTUAL-ATTEMPT1/r12-tailor-focused.stdout",
+      "bytes": 20364,
+      "sha256": "900acf59ed01af8531e6b608acb6d146b648fff79685673c41f50fa333bd885d"
+    },
+    {
+      "relative": "G1-R12-tailor-TAP-ACTUAL-ATTEMPT1/RECEIPT.json",
+      "bytes": 15694,
+      "sha256": "acd6e79618ce468361412677ab1866fe717eae4cfdb144871d25b2fbdea609ce"
+    },
+    {
+      "relative": "G1-R12-tailor-TAP-ACTUAL-ATTEMPT1/ROOT-COPY-MANIFEST.json",
+      "bytes": 614,
+      "sha256": "c44ff647cea524e09beb00319dc8b604cc395b2c8bd7bdc130ca8264b5511294"
+    },
+    {
+      "relative": "ROOT-G1-R12-FOUR-ACTUAL-ADJUDICATION.json",
+      "bytes": 22877,
+      "sha256": "38ebf1c636bbba4fca94dbace213342d430d08fe58abde022c93176eb148f194"
+    }
+  ]
+}

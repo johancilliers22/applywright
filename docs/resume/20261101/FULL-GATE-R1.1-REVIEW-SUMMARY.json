@@ -1,0 +1,355 @@
+{
+  "capturedAtUtc": "2026-11-01T21:16:25.4002021Z",
+  "verdict": "REQUEST_CHANGES",
+  "priorityCounts": {
+    "P1": 9,
+    "P2": 3,
+    "total": 12
+  },
+  "evidenceClass": "SOURCE_TRACED_NOT_RUN",
+  "nativeRequestId": "applywright-full-gate-r1-1-sol-source-review-20261101T205430565Z",
+  "report": "docs/resume/20261101/FULL-GATE-R1.1-INDEPENDENT-REVIEW.md",
+  "reportSHA256": "0b0b97eaffef030de5aa0bd2574c9ae543d6cf3ae457690a640e639801253aab",
+  "privateIdentitySHA256": "428cfb2baef3469c022c6287f1ecbe6e8984c034d631c96895feb692bf38edca",
+  "sourcePins": "docs/resume/20261101/FULL-GATE-SOURCE-R1.1-IDENTITIES.json",
+  "sourceArchive": "docs/resume/20261101/FULL-GATE-R1.1-ARCHIVE.json",
+  "allCommissionPinsUnchanged": false,
+  "executableDraftsAndPublicGraphUnchanged": true,
+  "documentaryPlanDrift": {
+    "path": "docs/resume/20261101/RESUME-AND-HANDOFF-PLAN.md",
+    "beforeBytes": 3932,
+    "beforeSHA256": "bfe1d06632d6181f598913fd60536f502cfa59c59961ffa58810cf9085e154c0",
+    "afterBytes": 4247,
+    "afterSHA256": "d252b431b0468bbc993a1373b526f493ee78c4f32946a91eaa7daabd2ad7642e",
+    "operatorAcknowledged": true,
+    "reviewerReread": true,
+    "meaning": "Operator added latest-entry paragraph during review. Both identities preserved; no all-inputs-unchanged certificate, no runtime approval."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "priority": "P1",
+      "title": "Post-input drift can still return COMPLETE and exit zero",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 244,
+          "lineEnd": 250
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 263,
+          "lineEnd": 285
+        }
+      ],
+      "witness": "Let the manager finish with code 0 and no cancellation. Line 244 sets state=COMPLETE. A changed or unreadable pinned input at 245-247 raises POST_INPUT_DRIFT (or an I/O exception). The catch only adds reason; it never changes state. If final evidence writes succeed, the pre-release and final records retain COMPLETE and line 285 returns 0. This requires only ordinary concurrent input drift or a failed post-read, not hostile code.",
+      "correction": "Make every validation/cleanup exception set a sticky non-success outcome before cleanup. Compute COMPLETE only after all postconditions and evidence obligations succeed; preserve the validation error separately from the cleanup certificate.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F02",
+      "priority": "P1",
+      "title": "Forced cleanup and timeout can be converted into a successful gate",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 185,
+          "lineEnd": 202
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 220,
+          "lineEnd": 244
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\FINITE-GATES-ENVELOPE-SOURCE.json",
+          "lineStart": 15,
+          "lineEnd": 19
+        }
+      ],
+      "witness": "A Node root exits 0 while a worker remains. The manager reaps the root, sees populated at 197, kills/drains that worker, appends treeEmpty=True and passes the step because only root code/cancel/keeper-loss are tested. The next gate can run. A command-deadline branch likewise calls drain without latching timedOut; if the root races to a zero wait status, that path can pass. The keeper's case-deadline branch also lacks a sticky timeout outcome. The envelope explicitly expects no next gate for root-exit/live-worker.",
+      "correction": "Latch residual-tree, timeout and forced-termination failures before any kill/drain. Cleanup may establish safe disposal, but cannot upgrade the case outcome. Record the raw wait status, root exit, cause, actual remaining-worker evidence and cleanup result independently; stop subsequent gates.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F03",
+      "priority": "P1",
+      "title": "Partial pre-exec placement leaves an untracked blocked child and an unbounded wait",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 143,
+          "lineEnd": 174
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 205,
+          "lineEnd": 214
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 219,
+          "lineEnd": 243
+        }
+      ],
+      "witness": "After fork, the child blocks on gate_r at 150. If birth(child) at 169 or the cgroup.procs write/read at 170-171 raises before a successful placement, gate_w is not closed on that exception path. The finally block drains an empty group, then waitpid(child,0) waits for a child still blocked on that open pipe. Cancellation only sets a flag and this blocking wait does not inspect it. A later keeper escalation can kill the manager, but the keeper has never received this child PID/birth/placement or its wait status. Manager SIGKILL between fork and placement has the same ownership-evidence gap. Cgroup-empty does not establish the unplaced child's termination. Additionally, owned_children only contains direct fork roots: there is no subreaper/adoption/wait protocol for orphan worker/helper descendants.",
+      "correction": "Track each child and gate descriptor immediately, publish its exact identity to the independent custodian before progressing, and close/abort its gate on every failing branch. Terminate and reap an unplaced child through its owned identity before blocking. Establish an explicit bounded reaping/adoption contract for waitable descendants and a durable recovery contract for unknown custody; do not infer waitpid completion from cgroup emptiness.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F04",
+      "priority": "P1",
+      "title": "Evidence failure or keeper loss can still exit the last custodian without durable disposition",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 74,
+          "lineEnd": 98
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 120,
+          "lineEnd": 127
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 263,
+          "lineEnd": 284
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 103,
+          "lineEnd": 117
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 203,
+          "lineEnd": 214
+        }
+      ],
+      "witness": "After the manager has exited/reaped, let the terminal-record write/fsync fail and the Root stdout reader be closed. retain_on_evidence_failure prints before entering its hold loop. BrokenPipeError from that print escapes the finally block; process exit closes the last flock description without durable terminal evidence. Separately, if the keeper dies, R1.1's manager watcher sets keeper_lost and drains, and main eventually raises and exits after its finally. The manager has no durable failure/terminal-record path, so the surviving holder can release without any keeper terminal record. The success-only MANAGER-RECEIPT uses unsynced write_text. Cleanup wait records appended during finally are never persisted. Unknown-cgroup records are also unsynced and best-effort.",
+      "correction": "Custody must not depend on successful logging. Catch logging failures inside the retaining state, give every possible last holder the same durable terminal-or-explicit-unknown protocol, and define case-scoped accountable Root recovery for holds. Publish complete evidence with atomic commit/readback semantics, including output durability and actual reaps, before the final holder closes. A failed ordinary evidence channel must not abort the custodian.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F05",
+      "priority": "P1",
+      "title": "Canonical inode equality and an arbitrary admission value do not establish the required kernel/domain/native binding",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 54,
+          "lineEnd": 59
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 178,
+          "lineEnd": 216
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 231,
+          "lineEnd": 235
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 98,
+          "lineEnd": 105
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\worker-effects-guard.cjs.SOURCE.txt",
+          "lineStart": 18,
+          "lineEnd": 24
+        }
+      ],
+      "witness": "A plan and approval with nativeAdmission=true satisfy 178-179: there is no schema, freshness, reservation/claim owner, slot/waiter or native lifetime verifier behind that comparison. A same-device/inode plan can also be consumed in another mount/lock domain because no current kernel/domain binding is checked. The cgroup parent test is lexical startswith plus final-component is_symlink; a /sys/fs/cgroup/.../../../... path or symlinked ancestor is not rejected by that test. Cgroup file names/content and is_file(cgroup.kill) do not prove cgroup-v2 filesystem identity, delegation, kill permission or exact group ownership. The source does compare current file UID=1000, mode, link count, device and inode with the plan. It does not implement current kernel FLOCK-row/holder, namespace/domain, conflicting write-row/waiter or native-lifetime evidence. This is a missing source contract, not a claim about the live machine.",
+      "correction": "Bind a concrete current canonical open, kernel/namespace/domain, exact lock row, mode/owner/link policy, waiter/native claim and delegated cgroup identity through the authorized native/Root mechanism, and revalidate relevant identities before effects. Reject arbitrary scalars and noncanonical/ancestor-traversing paths. Include full-lifetime native custody and explicit recovery in the protocol. Retain host 4 GiB/guest 3 GiB; no low-floor waiver is inferred.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F06",
+      "priority": "P1",
+      "title": "The required positive input/startup/one-use contract is optional rather than enforced",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 162,
+          "lineEnd": 179
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 203,
+          "lineEnd": 216
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 53,
+          "lineEnd": 96
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\worker-effects-guard.cjs.SOURCE.txt",
+          "lineStart": 14,
+          "lineEnd": 29
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\SETUP-EXECUTABLE-ENVELOPE-SOURCE.json",
+          "lineStart": 11,
+          "lineEnd": 14
+        }
+      ],
+      "witness": "The keeper only requires its own path in inputs; manager, Python, Node/npm CLI, guard, policy, manifest and payload closure may be omitted. It hashes whichever input keys the plan supplies, then the manager reopens AW_PLAN without a verified digest. The materializer accepts any publicInputs/overlays lists passing per-item caller pins; it never matches the exact 115 base records, six R5 path/postimage records or manifest digest, and overlays permit duplicates/additional paths. Stage/payload/output ancestry, modes and no-follow opens are not comprehensively enforced; overlays read before any source-type check. dummyEnvironment is only checked for eight protected keys, with no required nonempty dummy set and no closed startup-variable allowlist. Approval/plan schemas, issue/expiry/case identity and durable consumed approval are absent. Reusing an existing attempt causes mkdir to fail after EX is acquired; the no-attempt evidence branch then holds EX indefinitely. Neither directory creation nor approval consumption is fsynced before effects.",
+      "correction": "Supply and validate a closed exact case/plan/approval schema with required startup/input/policy pins, exact manifest/path sets and six overlays, byte/mode/ancestry checks and immutable same-byte handoff to the manager. Bind genuine nonempty dummy values and exact startup environment before imports, preserving real HOME. Consume the approval durably with expiry and no replay before executable effects; reject a known used attempt without taking an unrecoverable new EX hold. Use safe owned directory/FD-relative publication and verify stage postimages and outputs.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F07",
+      "priority": "P1",
+      "title": "Root freshness, step order and bounded framing are not applied through every effect",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 130,
+          "lineEnd": 154
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 220,
+          "lineEnd": 235
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 129,
+          "lineEnd": 140
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 175,
+          "lineEnd": 184
+        }
+      ],
+      "witness": "A valid setup-public-stage GO can sit unread/scheduled for more than five seconds. The manager checks kind/step/cancel but immediately materializes for argv=None; unlike Node release at 179 it never checks the ACK age. The materializer can continue through all writes without a resource/TTL refresh. Attempt/group creation and manager exec occur before the first root_ack. The keeper accepts any READY_COMMAND step without enforcing the phase's next literal step or one-use sequence. All three pipe directions use one os.read as a complete JSON message and unchecked single os.write calls; partial reads/writes, two queued frames and short writes have no buffered bounded protocol. select timeout does not bound subsequent blocking writes/stdout logging; cancellation is not checked inside root_ack. PID/canonical equality and nonce freshness cover some fields, but ACK has no exact approval/attempt/input-policy digest or step sequence, and runningDistros element/key/value types are not a full closed schema.",
+      "correction": "Use a framed, length-bounded, partial-I/O-safe, cancellable protocol with absolute deadlines and exact message/key/type/phase/sequence/nonce/case binding. Require fresh applicable native and host/guest proofs before every effectful launch/step and enforce expiry immediately before materialization and throughout bounded setup work. Account for EOF, malformed/duplicate/replayed frames, blocked output and Root loss without releasing unknown custody. Do not replace real admission with serialized resource claims.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F08",
+      "priority": "P1",
+      "title": "The guard leaves concrete filesystem/FD and SQLite native effect routes uncovered",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\worker-effects-guard.cjs.SOURCE.txt",
+          "lineStart": 57,
+          "lineEnd": 95
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\worker-effects-guard.cjs.SOURCE.txt",
+          "lineStart": 161,
+          "lineEnd": 167
+        }
+      ],
+      "witness": "The wrapped-name lists omit fchmod/fchown/ftruncate/write/read FD APIs, opendir/watch and existsSync; numeric allowedFixtureFDs have no open-description/path/birth binding. A proposed negative control calling fs.fchmodSync(AW_LOCK_FD, ...) reaches an unwrapped function despite the protected canonical-FD claim (not executed here). createRead/WriteStream checks its filename only, not options.fd. The SQLite subclass checks only the constructor filename: a :memory: database followed by SQL ATTACH of an out-of-root filename reaches native SQLite without check(), as do native SQLite file operations beyond that constructor. There is no SQL/backup/extension closure. The canonicalizer also follows only existing paths: a dangling symlink is treated as an absent tail, while the subsequent original open can follow its target. These are concrete unguarded API routes; no assertion is made that the frozen tests currently use each route or that a hostile OS enclosure exists.",
+      "correction": "Enumerate and enforce the actual FS/FD/FileHandle/native SQLite closure, bind FDs to owned capabilities, validate stream FD options and symlink/ancestor opens, and deny all unqualified native operations. If retained as a cooperative guard, narrow its certificate to the exact audited source/API graph and provide bounded reached/fired controls; do not advertise complete native/internal coverage from the monkeypatch.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F09",
+      "priority": "P1",
+      "title": "Network coverage and listener ownership are incomplete before effects",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\worker-effects-guard.cjs.SOURCE.txt",
+          "lineStart": 97,
+          "lineEnd": 144
+        }
+      ],
+      "witness": "The guard never wraps or denies node:dns/node:dgram, so a DNS lookup or datagram-send control has no guard decision on that API path. Those are not demonstrated egress events here. activePorts accepts a plaintext journal entry based only on nonce and port, without validating the listener's live PID/birth, membership or actual socket. An owned listener can die without CLOSE_LISTENER; a later unrelated listener reusing the port is still allowed. listen(0) checks the actual reserved port only in the listening callback, after bind has happened. http.request/get and fetch inspect the first URL but do not validate the complete options/redirect/agent/dispatcher chain; lower native coverage remains unqualified rather than assumed bypassed or safe. localhost also retains an unqualified resolver edge.",
+      "correction": "Deny or qualify every actual DNS/datagram/TLS/HTTP/HTTPS/undici/fetch/redirect/listener path. Keep an authoritative live case-owned endpoint registry with PID/birth/socket/member validation and stale-owner removal, and a before-effect reserved-port disposition. Validate all effective endpoints/options and remove unqualified name-resolution or native/internal paths from the allowed closure. Preserve test-local mocks and cleanup.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F10",
+      "priority": "P2",
+      "title": "The guard prevents required real helper-process assertions from running",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\worker-effects-guard.cjs.SOURCE.txt",
+          "lineStart": 145,
+          "lineEnd": 167
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\FINITE-GATES-ENVELOPE-SOURCE.json",
+          "lineStart": 6,
+          "lineEnd": 8
+        }
+      ],
+      "witness": "In base blob 946e6200dcf9678c830aa9291fbbbcfe6b7b3fb1, tests/check-contrast.test.js:60-70 calls spawnSync(process.execPath,['scripts/check.js']) and asserts the actual child result; examples at 488-504 require specific real failure output. Guard line 160 unconditionally replaces spawnSync with a throwing denial and 167 attempts to synchronize ESM exports. If that export synchronization works as intended, these mandatory helper assertions fail before the check runs; if it does not, their helper path is unguarded. allowedNodeChildren cannot authorize spawnSync. Module-gate native extractor probes at extract.test.mjs:243-250 also use spawnSync and require a separate exact tool disposition. No same-process replacement, skipped test or quiet capability downgrade is valid proof.",
+      "correction": "Provide an exact reviewed synchronous-helper route with before-effect ownership, FD/preload/cgroup/env/argv/cwd propagation and faithful raw child result/timeout semantics, plus separate explicit disposition of native extractor capabilities. Preserve these tests and default per-file isolation. Qualify the precise built-in test-runner/ESM paths rather than assuming public spawn patches cover them.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F11",
+      "priority": "P2",
+      "title": "The filename guard rejects a required known-dummy secret-exclusion fixture",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\worker-effects-guard.cjs.SOURCE.txt",
+          "lineStart": 63,
+          "lineEnd": 67
+        }
+      ],
+      "witness": "Base tests/check-contrast.test.js blob 946e6200dcf9678c830aa9291fbbbcfe6b7b3fb1:510-524 deliberately creates public/.env with a known dummy constant and public/auth.json containing only a known dummy token, then proves the copier excludes them. Even with syntheticFixtureRoot correctly bound, line 66 denies every auth.json before the synthetic exception at 67. The fixture throws on its dummy auth.json write and cannot reach its exclusion assertions. This is distinct from reading real credentials; no real values were read here.",
+      "correction": "Give only the exact owned synthetic-fixture paths/content a reviewed narrow capability that permits the required fixture construction/cleanup while retaining the real-store prohibition. Do not relax credential guards globally or remove the exclusion test.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    },
+    {
+      "id": "F12",
+      "priority": "P2",
+      "title": "The claimed failure controls and complete terminal evidence are not supplied as reachable source controls",
+      "refs": [
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\SETUP-EXECUTABLE-ENVELOPE-SOURCE.json",
+          "lineStart": 17,
+          "lineEnd": 25
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\FINITE-GATES-ENVELOPE-SOURCE.json",
+          "lineStart": 13,
+          "lineEnd": 24
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-parent.py.SOURCE.txt",
+          "lineStart": 199,
+          "lineEnd": 214
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 185,
+          "lineEnd": 185
+        },
+        {
+          "path": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright\\docs\\t3\\receipts\\20261101-resume\\a11y-only-full-gate-source\\linux-full-gate-keeper.py.SOURCE.txt",
+          "lineStart": 244,
+          "lineEnd": 268
+        }
+      ],
+      "witness": "The envelopes contain fixture/expected prose, but no bounded control bodies, selectors, orchestration or independent oracle can drive those cases. The supplied parent has only two setup actions or three gates. Manager records contain direct root PIDs/exits and a literal treeEmpty=True; keeper children starts [] and is never populated. Neither validates the guard journal, observes actual worker/helper counts, imports/preload ACKs, listener disposal, raw output durability or descendant waits before recording a final certificate. Thus a zero root/manager exit alone cannot prove the promised reached/fired/cleanup evidence. Historical A11Y 57/57 and source-defined expectations are separate.",
+      "correction": "Supply exact immutable useful-path and fault-control source with finite steps, independent observations and expected terminal obligations, still unexecuted at this phase. Persist and verify case outcome, cleanup certificate, actual discovered test/worker/helper counts, raw exits/stdout/stderr and evidence integrity separately before release. Missing observations must remain UNKNOWN/NOT_RUN, never success or zero.",
+      "status": "SOURCE_TRACED_NOT_RUN"
+    }
+  ],
+  "qualification": {
+    "runtimeApproved": false,
+    "setupApproved": false,
+    "gateApproved": false,
+    "accepted": false,
+    "mergeEligible": false,
+    "wholeProductPass": false,
+    "WindowsBrowserATPass": false,
+    "newRootAuthorityRequired": true,
+    "rootR12DataOnly": true,
+    "stoppedAfterSourceReview": true
+  },
+  "runtime": "NOT_RUN",
+  "reviewTerminalAtUtc": "2026-11-01T21:13:49.808Z",
+  "brokerCustody": "Final native task completed, consumed and reaped; REAP-VERIFIED.json, exact Source/public graph stable, documentary plan exception preserved"
+}

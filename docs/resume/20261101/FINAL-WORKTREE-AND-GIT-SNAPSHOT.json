@@ -1,0 +1,227 @@
+{
+  "capturedAtUtc": "2026-11-01T21:00:33.8531702Z",
+  "observedMain": "393d818fb130b2094ed499a866284487539f9cc6",
+  "worktrees": [
+    {
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "head": "393d818fb130b2094ed499a866284487539f9cc6",
+      "branch": "refs/heads/main"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-0564e52d",
+      "head": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+      "branch": "refs/heads/t3/g1-r12-source-successor"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-06b4af37",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/contrast-m1-r3-correction"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-11473ae7",
+      "head": "7d40425a9cbc68fe5f03257036ad9acd1284a786",
+      "branch": "refs/heads/t3/e2e-r3-source-correction"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-2fb3f4d3",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "branch": "refs/heads/t3/muse-grounding-cases"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-3669749d",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/e2e-owned-browser-lifecycle"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-551ab369",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/contrast-gate"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-69c42e7b",
+      "head": "2927716426538c99f4c90104b3d8e3a280fccf97",
+      "branch": "refs/heads/t3/e2e-lifecycle-r4-correction"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/prepare-wsl-predicate-case"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6e5f7dd4",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/a11y-hint-id-collision-fix"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6f365ec7",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/a11y-hint-id-collision"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-76750b9f",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/g1-r9-source-correction"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "branch": "refs/heads/t3/g1-r7-combined-history"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-84a839b8",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "branch": "refs/heads/t3/pressproof-gemini-design-review"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-94aa81d5",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "branch": "refs/heads/t3/e2e-startup-timeout-race"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-9a61eb7d",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/grounding-g1-repair"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-9a759bfe",
+      "head": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
+      "branch": "refs/heads/t3/g1-r6-source-corrections"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-9aa48ded",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/grounding-g1-correction"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-a4173ab2",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/windows-finite-case-revision"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-a4aeb610",
+      "head": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+      "branch": "refs/heads/t3/design-motion-research"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-afca85b6",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/a11y-hint-save-status"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5",
+      "head": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+      "branch": "refs/heads/t3/g1-r11-a11y-r5"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-b88271ff",
+      "head": "7d40425a9cbc68fe5f03257036ad9acd1284a786",
+      "branch": "refs/heads/t3/g1-grounding-r4-correction"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-bf853bb9",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/g1-r10-grounding-source-correction"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-c4597a35",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/contrast-m1-r2-revision"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-cf7041b5",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/windows-finite-case-proposal"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-e00182b7",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/e2e-lifecycle-r2-source-fixes"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-e05a8f36",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "branch": "refs/heads/t3/livebench-provider-evidence"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-e8d401d4",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/g1-r3-source-corrections"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-ea0c895a",
+      "head": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+      "branch": "refs/heads/t3/a11y-hints-save-status"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-eb89e021",
+      "head": "5199d328d97e4871f286442f36fe2a7751e3819a",
+      "branch": "refs/heads/t3/wsl-predicate-case-r2"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f54d4b75",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/g1-r10-1-grounding-fixes"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f66efc7c",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "branch": "refs/heads/t3/contrast-r4-source-correction"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-fcd3c5c8",
+      "head": "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
+      "branch": "refs/heads/t3/grounding-g1-source-corrections"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-ff301e75",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "branch": "refs/heads/t3/grounding-g1-r8-corrections"
+    }
+  ],
+  "worktreeCount": 35,
+  "frozenChecks": [
+    {
+      "manifest": "docs/resume/20261101/R12-FROZEN-ARCHIVE.json",
+      "source": "C:/Users/johan/.t3/worktrees/applywright/t3-0564e52d",
+      "archive": "G:/Backups/Applywright/20261101-resume/g1-r12-frozen",
+      "checked": 5,
+      "allMatch": true
+    },
+    {
+      "manifest": "docs/resume/20261101/R11-R5-FROZEN-ARCHIVE.json",
+      "source": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5",
+      "archive": "G:/Backups/Applywright/20261101-resume/combined-g1-r11-a11y-r5-frozen",
+      "checked": 11,
+      "allMatch": true
+    }
+  ],
+  "candidateStatus": {
+    "r12": [
+      " M server/lib/cv/refine.js",
+      " M server/lib/cv/refine.test.mjs",
+      " M server/lib/cv/tailor.js",
+      " M server/lib/cv/tailor.test.mjs",
+      "?? GROUNDING-G1-R12-RESULT.md"
+    ],
+    "r11r5": [
+      " M public/app/app.js",
+      " M public/assets/editor.js",
+      " M public/editor.html",
+      " M server/lib/cv/refine.js",
+      " M server/lib/cv/refine.test.mjs",
+      " M server/lib/cv/tailor.js",
+      " M server/lib/cv/tailor.test.mjs",
+      "?? GROUNDING-G1-R11-RESULT.md",
+      "?? docs/verification/20261029-a11y-fix/"
+    ]
+  },
+  "productPathsChangedSinceResume": [],
+  "preservedForeignDirtyPath": "docs/verification/20261028-intake/VAULT-PUBLICATION-RECEIPT.json",
+  "preview": {
+    "port": 3160,
+    "listening": false,
+    "newTunnel": false,
+    "newLaunch": false
+  },
+  "worktreePruneResetDeleteOrMove": false
+}

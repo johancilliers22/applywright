@@ -1,82 +1,83 @@
-# Exact named-note publication delta — owner applies only
+# Applywright named-note continuation delta — Estate applies only
 
-Target: brain/applywright-platform.md in B. Observed raw base SHA256:
-90c5b05de4f28f4deb39bc6926308762df3bf22347b7eef6447cf2d0d2a31a66.
-Estate is the sole publisher. This operator has NOT written B or the hub.
-If that base changed, reconcile the current note before applying; preserve its
-earlier content as dated history rather than asserting an unchanged base.
+Target ONLY: brain/applywright-platform.md. Base observed on 1 November 2026:
+SHA256 6cd8b86320a8c0135d4d23134aa3576c454991c38d1ad36a842a93cba549f29c.
+Publisher's existing named-note commit: 76cfad794466df6770ca6c98bbfced6e70363a3d.
+If the base changed, reconcile it; preserve all history and unrelated edits.
+Codex project operator has made no vault/hub write. This is a proposal, not a
+publication receipt or incoming-owner ACK. Replace the old current-status block
+with the dated block below, moving its accurate prior snapshot into history.
 
-Immediately after the title, insert this current status before the old28October
-block. Mark the older opening status/demo statements as historical so they do
-not override this date. No other note or MOC is in scope.
+## Proposed current block — 1 November 2026, final continuation checkpoint
 
----
+**Programme ACTIVE / INCOMPLETE. Preview offline. No new G1/A11Y product merge.**
+The current entry is project docs/resume/20261101/FINAL-CONTINUATION-HANDOFF.md.
+Its FINAL-CHECKPOINT-VALIDATION.json records the documentary delivery SHA and
+actual origin/backup readbacks; no receipt or docs push is product acceptance.
+All 23 implementation units and original product P0–P7 remain available.
 
-## Current status — 1 November2026,20:10UTC — ACTIVE / INCOMPLETE
+- G1 R12, frozen t3-0564e52d: DSH Flash/high author complete/reaped; independent
+  Sol 6.1 / xhigh / Standard REQUEST_CHANGES, 6 P1 + 3 P2. All four NEW exact
+  Root diagnostics are actual: fixture 76/76, replay 233/244 (11 faithful-positive
+  false refusals, zero errors/control/adjudicated failures), independent claims
+  29/29, tailoring 66/72, refinement 64/68. Zero skipped/cancelled/todo/timeouts
+  or stderr. Root verified 56 input rows, pinned runtimes and all owned cleanup;
+  all four EX/native sessions released. No automatic R13 during handoff.
+- G1-CLAIM-RECORD-REPAIR-CONTRACT.md, complete frozen Sol report and actual raw
+  failures are next-owner inputs. Bind actor/predicate/full object/relations/
+  polarity/value/unit/currency/period to one occurrence; retain faithful and
+  adverse cases and both historical test sets. Source findings remain open.
+- A11Y R5, frozen within t3-b1a7a4d5: independent PASS_SOURCE, actual 57/57 in
+  12 suites, zero skips/cancelled/todo. Hint/control ownership, ARIA tokens and
+  save/error/retry repairs are candidates only. Full integrated gates and real
+  DOM/AT/browser checks remain. Do not overlay its failed G1 files.
+- The A11Y-only full-gate R1.1 keeper/manager/worker-guard/envelope drafts remain
+  unexecuted and unqualified. The independent Sol SOURCE review finished
+  REQUEST_CHANGES, 9 P1 + 3 P2. The native reviewer is reaped and all executable
+  pins/public graph stayed unchanged. One concurrent documentary plan edit is
+  preserved as an explicit authority-pin exception, not hidden as unchanged.
+  No stage, dependency installation, full gate, new server or paid model call.
+  Windows finite-case R2 remains REQUEST_CHANGES 4 P2 / BLOCKED_CUSTODY_ABI.
+- Earlier contrast 7d40425 and E2E 8df799f remain accepted bounded history:
+  58 contrast pairs; native ownership controls and isolated Chrome 10 steps /
+  235 assertions with a local model stub. These do not accept current G1 or
+  certify whole WCAG/deployment/live-model behavior. No new rendered visual or
+  animation was delivered; Gemini design and DSH motion research are proposals.
 
-Johan resumed Applywright after the quota interruption. Existing project operator
-Codex01a183ff and native T3 broker46ac76de retain project ownership; Estate is
-the sole shared A/B publisher and Root coordinates infrastructure. Broker is now
-native Sol6.1/xhigh/default(Standard), Fast OFF, Full access; DSH Flash/high wrote
-the stopped successors. Real task IDs, models, selected tiers, hashes, failures
-and unexposed usage remain in the project ledger; no invented cost/token zeros.
+All 35 registered project worktrees are retained. Sixteen frozen R12/combined
+R11-R5 files were rechecked unchanged against their G: copies. The four R12
+actual folders plus manifests/adjudication have a new verified 24-file,
+328529-byte archive. Public manifests and private source/evidence archives at
+G:/Backups/Applywright/20261101-resume survive a PC/WSL shutdown. Raw private
+receipts and foreign dirty files are not indiscriminately committed.
 
-Earlier accepted contrast7d40425 and E2E8df799f remain delivered, with bounded
-historical evidence:58contrast pairs/21focused;38mock+2race+4actual Windows tree
-controls; isolated Chrome10steps/235assertions using a local model stub. These
-are not G1/live-model/full-WCAG/deployment proof. No new G1/A11Y product source
-has reached main during this resume. Public docs checkpointbc912de is verified
-on origin and backup; future delivery SHA must come from actual remote readback.
+Codex operator 01a183ff and native T3 broker 46ac76de retain project ownership
+until actual handoff. Root 01a183f2 coordinates shared resources; SAME Estate
+3e09eb96 is sole A/B publisher. Sol parents/workers are 6.1 High/xhigh Standard,
+Fast OFF; DSH bulk implementation and independent Sol review ran as native T3
+children. No replacement broker, timer, unqualified Terra/CUA trial or new
+Claude project lead was started. Claude subscription advisory is deferred to
+incoming Claude architecture review, then a bounded DSH repair commission.
 
-Root independently qualified and ran new exact finite G1 and focused TAP cases,
-with actual current canonical EX, fresh resource/Root ACK and terminal children.
-R11 unchanged76/76,244/244 and29/29 pass, but broader focused tests63/70 and65/66
-fail eight real assertions. Source review REQUEST_CHANGES5P1+3P2 demonstrated
-related provenance gaps. Passing a narrower corpus does not certify the product.
-Root receipts/source pins/output hashes are saved; all completed leases released.
+Latest saved Codex usage is account-wide 26% weekly used / 74% remaining; the
+2% starting snapshot is historical, and the difference is not project spend.
+Per-task tokens, served identity and billed cost remain unknown when unexposed.
+Johan says assume MORE THAN USD100 available for each Org API provider; Claude
+expiry 22 November, exact balances/OpenAI expiry unknown. No repeat question
+now. Approved adapters and known spent/pending/reservations plus shared Claude
+USD190 cap remain prerequisites. Promotional OpenAI API credits exclude Codex
+API-key use; Claude monthly API grants exclude Claude Code/apps/extra usage.
+No project paid Org call or purchase was made. Keep subscription/API paths separate.
 
-R12 DSH successor stopped19:41:11 in t3-0564e52d,140 definitions retaining136
-intents, exact five-file scope. New independent Sol review is completing with
-nine source findings6P1/3P2; do not infer runtime acceptance from its source
-report. New fixed R12 diagnostics are SOURCE-prepared and need new Root approval,
-never reuse/retarget a consumed R11 approval. No unaccepted merge or goal closure.
+Port 3160 had no listener at the final snapshot. There is no new usable preview
+link; old tunnel links are historical. A qualified controlled launch comes
+later. DNS, Stripe/VAT and Scale choices remain dependency-gated. No immediate
+human key/sign-in/finance action is required for this checkpoint. Final broker
+and owner-publication receipts determine continuation readiness; readiness is
+not full programme completion or automatic authority transfer.
 
-A11YR5 remains independently PASS_SOURCE, actual57/57 tests/12suites pass with
-zero skip/cancel/todo,70wrapper controls pass. The fake-DOM focus does not certify
-real DOM/AT/browser or the full integrated commands. Source route for A11Y-only
-full gates positively names115 base blobs+six R5 overlays+65 dependency records;
-new keeper/manager/worker-guard/setup/gate bodies are unexecuted drafts needing
-independent source/startup/dependency/tree/death/effects qualification. Windows
-finite-case R2 has four P2 source findings and BLOCKED_CUSTODY_ABI, not an executor.
+## Publisher proof required
 
-Current preview is OFFLINE: the latest operator check found no3160 listener;
-old quick-tunnel URLs/live-demo statements below are historical. No controlled
-preview restart/deployment or new rendered visuals/animations is claimed today.
-Gemini design and motion/repo research remain durable proposals, not pixel/AT
-acceptance. Preserve the editor save/accept contract and all product-plan rows.
-
-Johan's Root-recorded assumption is more thanUSD100 available per API org, use
-conservativeUSD100 planning envelopes; Claude expiry22Nov2026, exact balances and
-OpenAI expiry unverified. Do not ask those figures again now. Eligible direct API
-routes and reservations remain separate from subscriptions; promotional grants
-exclude API-key Codex and Claude Code/apps respectively. No new project Org call,
-purchase, auth/config copy or secret-store/.env value read occurred. The bounded
-eligible advisory pilot is prepared only; existing ClaudeUSD190 cycle cap remains.
-
-All frozen sources, raw results and private Source snapshots are hash-backed up
-under G:/Backups/Applywright/20261101-resume; public manifests are in project Git.
-All34 registered worktrees were preserved. No prune/reset/sweep/PM2/hub/source
-ownership change or WSL autostart/shutdown was performed by this project lane.
-Claude project co-orchestrator authority has NOT transferred. Final handoff is
-NOT_READY. Continue from docs/resume/20261101/CLAUDE-ESTATE-HANDOFF-IN-PROGRESS.md,
-IMPLEMENTATION-REGISTER.json and fresh native receipts; do not use the old19:10
-CURRENT-CHECKPOINT as the live ledger. Human DNS/Stripe/VAT/Scale and Root's
-attended canary remain separate when reached. No current project key/sign-in
-request is pending.
-
----
-
-Publisher returns actual named-note raw hash, local B commit (and remote state
-where applicable), A owner-publication commit/readback, exact scope and residual
-actor/goal state. A generic batch receipt without this named-note hash is not
-evidence that this current project note was updated.
+Report actual note before/after SHA, scope/history preservation, A/B commit(s),
+readback and remote proof where available. Project operator will verify the
+physical named note read-only; generic batch completion is not named-note proof.

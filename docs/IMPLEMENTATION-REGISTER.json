@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T20:21:06.9076531Z",
-  "state": "GYM_CHECKPOINT_ACTIVE_INCOMPLETE_CLAUDE_HANDOFF_NOT_READY",
+  "updatedAt": "2026-11-01T21:27:06.9511568Z",
+  "state": "CONTINUATION_READY_FOR_CLAUDE_ESTATE_PRODUCT_PROGRAMME_INCOMPLETE",
   "operatorThread": "01a183ff-e374-7d32-ae0e-1938714e813c",
   "rootThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
   "nativeParent": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
@@ -9,17 +9,17 @@
   "resumeEntry": "docs/resume/20261101/RESUME-AND-HANDOFF-PLAN.md",
   "productPlan": "docs/IMPLEMENTATION-PLAN.md",
   "scopePolicy": "Retain every existing product-plan row and original user ask; these operational units do not renumber or replace them.",
-  "observedMain": "a1d7592e65ba291c0bf89d8a6552ab4090073037; refreshed before named-path checkpoint",
+  "observedMain": "393d818fb130b2094ed499a866284487539f9cc6; predecessor at final packet preparation; delivery SHA and remote proof in docs/resume/20261101/FINAL-CHECKPOINT-VALIDATION.json",
   "refreshBeforeMutation": true,
   "units": [
     {
       "id": "G1",
-      "state": "R12_SOURCE_REQUEST_CHANGES6P1_3P2_NEW_ROOT_DIAGNOSTICS_PENDING_NO_MERGE",
+      "state": "R12_ACTUAL_FAILED_233OF244_66OF72_64OF68_SOURCE_6P1_3P2_FROZEN_NOT_MERGED",
       "owner": "native DSH writer / independent Sol / Codex acceptance",
       "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
       "base": "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
       "evidence": "docs/t3/receipts/20261028-grounding-g1/r5/review/sol-review.FINDINGS.md",
-      "next": "Consume final R12 review/identities, preserve five-file candidate; Root NEW exact diagnostics before next semantic writer; next repair uses complete claim-record contract; all mandatory integrated gates still required",
+      "next": "Incoming Claude/Estate owner reviews complete claim-record repair contract plus nine Source findings and actual11 replay/10 focused failures. No automatic R13 during handoff. Preserve frozen candidates/oracles; independent review and all mandatory gates before merge.",
       "runtimeAccepted": false,
       "executed": {
         "unitsPass": 100,
@@ -37,11 +37,26 @@
       "currentTaskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-dsh-source-20261101T192000705Z",
       "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-dsh-source-20261101T192000705Z",
       "currentCandidateRoot": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-0564e52d",
-      "currentReview": "docs/resume/20261101/G1-R10-1-INDEPENDENT-REVIEW.md",
-      "historicalExecutedAppliesTo": "The executed100+211 fields and old worktree/task/run anchors describe frozen R7 only; they are not current R10.1 results.",
-      "currentActualEvidence": "docs/resume/20261101/G1-R11-ACTUAL-SUMMARY.json and R11-FOCUSED-ACTUAL-RESULTS.json; actual pass scope is limited and does not override Source RC",
+      "currentReview": "docs/resume/20261101/G1-R12-INDEPENDENT-REVIEW.md",
+      "historicalExecutedAppliesTo": "The executed100+211 fields and old worktree/task/run anchors describe frozen R7 only. Current R12 identity, review and actual results use currentCandidateRoot/currentReview/currentActualEvidence.",
+      "currentActualEvidence": "docs/resume/20261101/G1-R12-ACTUAL-RESULTS.json",
       "newReviewRequest": "applywright-g1-r12-sol-review-20261101T194326352Z",
-      "latestReview": "docs/t3/receipts/20261101-resume/g1-r12/review/REVIEW.md rawSHA8e7c1ecbaa80b87cf30f4f8912222be1e1b01278b9687ccde81429ad51e8cf39"
+      "latestReview": "docs/t3/receipts/20261101-resume/g1-r12/review/REVIEW.md rawSHA8e7c1ecbaa80b87cf30f4f8912222be1e1b01278b9687ccde81429ad51e8cf39",
+      "latestActual": {
+        "fixturePassed": 76,
+        "fixtureTotal": 76,
+        "replayPassed": 233,
+        "replayTotal": 244,
+        "claimPassed": 29,
+        "claimTotal": 29,
+        "tailorPassed": 66,
+        "tailorTotal": 72,
+        "refinePassed": 64,
+        "refineTotal": 68,
+        "sourceVerdict": "REQUEST_CHANGES_6P1_3P2",
+        "fullGatesRun": false,
+        "merged": false
+      }
     },
     {
       "id": "CONTRAST-M1",
@@ -201,8 +216,8 @@
     },
     {
       "id": "DOCS-RETENTION-GIT",
-      "state": "1088_RECEIPTS_AND_29_CANDIDATE_FILES_HASH_VERIFIED_G_BACKUP_CHECKPOINT_PENDING",
-      "next": "Named-path documentary checkpoint and remote readback; extend archive with new output after stop; owner publication patch then final Claude handoff",
+      "state": "CONTINUATION_READY_ALL_ASSIGNED_CHILDREN_TERMINAL_PRIVATE_ARCHIVES_VERIFIED",
+      "next": "Delivery/readbacks in FINAL-CHECKPOINT-VALIDATION.json; Root/Estate final named-note publication and incoming Claude owner ACK",
       "vaultNote": "brain/applywright-platform.md",
       "publisher": "Estate"
     },
@@ -231,11 +246,12 @@
       "scope": "field hints describedby and polite save-state status; independent review and runtime checks later",
       "owner": "T3 broker native DSH new worktree",
       "retryPolicy": "Fresh attempt only after meaningful changed capacity/terminal-owner cue, preserve original hold",
-      "currentRequestId": "applywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
-      "currentTaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
-      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
-      "next": "Preserve frozenR5; qualified A11Y-only full-gate setup/descendant supervisor route and three actual required gates before eligible integration",
-      "currentEvidence": "Root ROOT-A11Y-R5-TAP-ACTUAL-ADJUDICATION.json receipt6acfe811…; native Sol R5 REVIEW.md; source-only full-gate proposal under docs/t3/receipts/20261101-resume/a11y-only-full-gate-source/"
+      "currentRequestId": "applywright-a11y-r5-review-sol-20261101T184655910Z",
+      "currentTaskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-a11y-r5-review-sol-20261101T184655910Z",
+      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-a11y-r5-review-sol-20261101T184655910Z",
+      "next": "Preserve six exact R5 A11Y files; consume independent full-gate R1.1 Source review, qualify setup/descendant custody/effects, then execute all three required integrated gates before eligible integration. No failed G1 overlay.",
+      "currentEvidence": "Root ROOT-A11Y-R5-TAP-ACTUAL-ADJUDICATION.json receipt6acfe811…; native Sol R5 REVIEW.md; source-only full-gate proposal under docs/t3/receipts/20261101-resume/a11y-only-full-gate-source/",
+      "currentCandidateRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5"
     },
     {
       "id": "DESIGN-MOTION-X-RESEARCH",
@@ -265,7 +281,7 @@
     },
     {
       "id": "WSL-PREDICATE-CASE",
-      "state": "ROOT_QUALIFIED_EXACT_CASES_ACTUALLY_EXECUTED_57_61_70CONTROLS_SCOPE_BOUND",
+      "state": "ROOT_EXACT_R10_R11_R12_AND_FOCUSED_DIAGNOSTICS_EXECUTED_ALL_COMPLETED_LEASES_RELEASED_NOT_FULL_GATES",
       "next": "Every successor needs new exact Source/startup/target/oracle/output approval; no generic/Windows/HTTP/browser authority. All completed leases released.",
       "currentTaskId": "node:delegated-task:command%3Amcp%3A33ec4620-b25e-4e5f-97c5-aa2bf20ae728%3Adelegate-task%3Aapplywright-wsl-predicate-dsh-r2-20261101T162805994Z",
       "currentWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-eb89e021"
@@ -277,7 +293,8 @@
     }
   ],
   "nightPolicy": "Historical night stop superseded by explicit Johan manual resume17:16GMT. No automatic scheduler reconstruction. Disk cleanup deferred.",
-  "currentBrokerRun": "run:thread:46ac76de-4e76-42b4-a2b1-9f6d4e09c559:ordinal:40",
-  "latestUsageObservation": "2026-10-29T17:16Z:47%weeklyused,53%remaining,otherwindowunavailable,noresetconsumed",
-  "currentResumePolicy": "1Nov Sol6.1 High/xhigh parents+children Standard/default FastOFF; DSH bulk preferred; Claude co-orchestrator after handoff; Root shared owner"
+  "currentBrokerRun": "run:thread:46ac76de-4e76-42b4-a2b1-9f6d4e09c559:ordinal:88; child ledger quiescent, final operator checkpoint follows",
+  "latestUsageObservation": "1Nov final observed account26%weeklyused/74%remaining; account-wide not project attributable; other window unknown; no reset consumed; FINAL-USAGE-OBSERVATION.json",
+  "currentResumePolicy": "1Nov Sol6.1 High/xhigh parents+children Standard/default FastOFF; DSH bulk preferred; Claude co-orchestrator after handoff; Root shared owner",
+  "continuationHandoff": "docs/resume/20261101/FINAL-CONTINUATION-HANDOFF.md"
 }

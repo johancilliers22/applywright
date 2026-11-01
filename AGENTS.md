@@ -96,6 +96,13 @@ does not grant writes in the hub, another worktree, or another brain/vault note.
 
 ## Admission and verification
 
+- Root's1November exact ruling additionally aligns ONLY the extra coordinator
+  observation for ONE official Windows DSH WSL-predicate-R2 SOURCE author to
+  the native2GiB host floor (guest3GiB where applicable). Actual fresh native
+  guard/reservations/slots/waiters/lifetime remain authoritative. See
+  docs/resume/20261101/ROOT-R2-SOURCE-PREFILTER-RECEIPT.json. Preserve old4GiB
+  holds; no installed policy change or runtime approval. Sol/new reviewers,
+  GUI and Windows verification retain4GiB. Do not generalise this exception.
 - Fresh Windows4GiB and already-running Ubuntu names-only checks precede relevant
   Windows-origin launches. Never boot/shutdown WSL or close apps to force admission.
   Root's29October phase-floor ruling permits ONLY the prepared Windows finite-case

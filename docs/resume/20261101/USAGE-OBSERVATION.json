@@ -1,0 +1,15 @@
+{
+  "observedAtUtc": "2026-11-01T15:49:59.0956029Z",
+  "source": "Codex desktop get_usage_limits",
+  "ordinaryUsageAllowed": true,
+  "windowMinutes": 10080,
+  "usedPercent": 2,
+  "remainingPercent": 98,
+  "resetsAtUnix": 1794151020,
+  "secondaryWindow": null,
+  "subscriptionExtraUsageCredits": "hasCredits=false, balance0; this is not OpenAI Org API credit balance",
+  "openAIOrgBalance": null,
+  "perTaskTokens": null,
+  "perTaskCost": null,
+  "resetConsumed": false
+}

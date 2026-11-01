@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T15:42:40.7299549Z",
+  "updatedAt": "2026-11-01T16:54:59.9917021Z",
   "state": "ACTIVE_20261101_NATIVE_SOURCE_REPAIRS_AND_EXECUTOR_PREPARATION",
   "operatorThread": "01a183ff-e374-7d32-ae0e-1938714e813c",
   "rootThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
@@ -14,12 +14,12 @@
   "units": [
     {
       "id": "G1",
-      "state": "R10_FROZEN_UNACCEPTED_R10_1_DSH_SOURCE_DISPATCHED_20261101",
+      "state": "R10_1_SOL_REQUEST_CHANGES_TWO_P1_RESIDUALS_ONE_RETAINED_ASSERTION_CONFLICT",
       "owner": "native DSH writer / independent Sol / Codex acceptance",
       "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
       "base": "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
       "evidence": "docs/t3/receipts/20261028-grounding-g1/r5/review/sol-review.FINDINGS.md",
-      "next": "Stop/hash/reap R10.1; new independent Sol xhigh Standard review and exact qualified runtime diagnostic; preserve histories and refusal controls before accepted merge",
+      "next": "Actual Root-approved finite diagnostic first; prepared R11 corrections not dispatched; preserve all old oracles and controls; independent stopped-source review and mandatory gates before acceptance",
       "runtimeAccepted": false,
       "executed": {
         "unitsPass": 100,
@@ -33,9 +33,12 @@
       "childThreadId": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r7-66fbe5c4-d723-4406-a86f-851786759dec",
       "runId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-dsh-r7-66fbe5c4-d723-4406-a86f-851786759dec:ordinal:1",
       "worktreeState": "Stopped/reaped exact5hashesunchanged",
-      "currentRequestId": "applywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674",
-      "currentTaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674",
-      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674"
+      "currentRequestId": "applywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
+      "currentTaskId": "node:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
+      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
+      "currentCandidateRoot": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f54d4b75",
+      "currentReview": "docs/resume/20261101/G1-R10-1-INDEPENDENT-REVIEW.md",
+      "historicalExecutedAppliesTo": "The executed100+211 fields and old worktree/task/run anchors describe frozen R7 only; they are not current R10.1 results."
     },
     {
       "id": "CONTRAST-M1",
@@ -70,8 +73,8 @@
         "chromeAssertionsPass": 235
       },
       "next": "Already delivered on8df799f; new product integration requires appropriate new verification, not unchanged repeated testing",
-      "nativeAccepted": false,
-      "productJourneyAccepted": false,
+      "nativeAccepted": true,
+      "productJourneyAccepted": true,
       "taskId": "node:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r5-b480763e-0e07-4b60-b57f-0937167dff1e",
       "childThreadId": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-e2e-lifecycle-dsh-r5-b480763e-0e07-4b60-b57f-0937167dff1e",
       "independentRace": {
@@ -85,7 +88,9 @@
       },
       "runId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-e2e-lifecycle-dsh-r5-b480763e-0e07-4b60-b57f-0937167dff1e:ordinal:1",
       "worktreeState": "Frozen/reaped; fivehashesmatched before/after executeddiagnostic",
-      "independentSourceReview": "PASS_SOURCE;0fc4402899f29029719fc2e889a313723f79db508b340c8f83e144aa3d4b5eba"
+      "independentSourceReview": "PASS_SOURCE;0fc4402899f29029719fc2e889a313723f79db508b340c8f83e144aa3d4b5eba",
+      "acceptanceScope": "Bounded accepted29Oct lifecycle and synthetic local-model-stub journey only; not live model, deployment, G1 acceptance or headless-agent CUA capability",
+      "acceptanceEvidence": "docs/closeout/20261029/READY-E2E-ACCEPTANCE.json"
     },
     {
       "id": "MAIN-DSH-RECONCILIATION",
@@ -219,7 +224,7 @@
     },
     {
       "id": "A11Y-D1-D2",
-      "state": "R3_REQUEST_CHANGES_TWO_P2_R4_DSH_SOURCE_DISPATCHED_20261101",
+      "state": "R4_SOURCE_COMPLETE_55_DEFINITIONS_SOL_REVIEW_HELD_RAM",
       "scope": "field hints describedby and polite save-state status; independent review and runtime checks later",
       "owner": "T3 broker native DSH new worktree",
       "retryPolicy": "Fresh attempt only after meaningful changed capacity/terminal-owner cue, preserve original hold",
@@ -256,8 +261,10 @@
     },
     {
       "id": "WSL-PREDICATE-CASE",
-      "state": "DSH_SOURCE_DISPATCHED_20261101",
-      "next": "Exact pure closure, independent Sol safety review, Root new approval, actual full-lifetime EX diagnostic; not Windows/HTTP/browser qualification"
+      "state": "R1_ROOT_REQUEST_CHANGES_R2_NATIVE_DSH_SOURCE_RUNNING",
+      "next": "Freeze/hash/reap stopped R2; Root direct source and startup/module/oracle/resource/cleanup review, then NEW exact runtime approval and actual EX execution",
+      "currentTaskId": "node:delegated-task:command%3Amcp%3A33ec4620-b25e-4e5f-97c5-aa2bf20ae728%3Adelegate-task%3Aapplywright-wsl-predicate-dsh-r2-20261101T162805994Z",
+      "currentWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-eb89e021"
     },
     {
       "id": "CODEX-ORG-API",

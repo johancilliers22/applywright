@@ -1,0 +1,26 @@
+{
+  "atUtc": "2026-11-01T16:55:41.7859886Z",
+  "scope": "Named documentary and unexecuted fixture checkpoint; no product candidate integration",
+  "whitespaceCheck": "All editable named paths pass; frozen verbatim independent review preserves its existing extra blank EOF",
+  "frozenCopy": "docs/resume/20261101/G1-R10-1-INDEPENDENT-REVIEW.md",
+  "frozenRawSHA256": "fbf86043f103631953e514f3527cbbe22500f2f3bcafc1876331703723b18b73",
+  "nativeReview": "docs/t3/receipts/20261101-resume/g1-r10-1/review/REVIEW.md",
+  "nativeRawSHA256": "fbf86043f103631953e514f3527cbbe22500f2f3bcafc1876331703723b18b73",
+  "tests": "NOT_RUN; no product source changed",
+  "paths": [
+    "AGENTS.md",
+    "docs/IMPLEMENTATION-REGISTER.json",
+    "docs/VAULT-PATCH.md",
+    "docs/verification/20261029-resume/verify-grounding-r10-review.mjs",
+    "docs/resume/20261101/USAGE-OBSERVATION.json",
+    "docs/resume/20261101/VERIFICATION-ARCHIVE-MANIFEST.json",
+    "docs/resume/20261101/ROOT-FINITE-CASE-HANDOFF.json",
+    "docs/resume/20261101/WSL-CASE-R2-COMMISSION.md",
+    "docs/resume/20261101/G1-R11-PREPARED-CORRECTIONS.md",
+    "docs/resume/20261101/G1-R10-1-INDEPENDENT-REVIEW.md",
+    "docs/resume/20261101/COMPLETED-SOURCE-ARCHIVE.json",
+    "docs/resume/20261101/ROOT-R2-SOURCE-PREFILTER-RECEIPT.json",
+    "docs/resume/20261101/ORCHESTRATION-LESSONS.md",
+    "docs/resume/20261101/ROOT-WSL-PREDICATE-R1-REVIEW.md"
+  ]
+}

@@ -1,4 +1,54 @@
-# Night publication — assigned Applywright note only
+# Current publisher update — 1 November 2026, resume in progress
+
+Proposal for the sole Estate publisher; update ONLY brain/applywright-platform.md
+and preserve its history. This project has made no shared brain/vault write.
+
+Johan resumed after the usage interruption. The existing Applywright T3 broker
+46ac76de is now actually configured as native Codex Sol6.1/xhigh/default(Standard),
+Fast OFF, Full access. Root restored Estate, Luna and StationOps parents too.
+DSH Flash/high remains the native bulk writer. No Claude project co-orchestrator
+has been created; it follows a verified handoff. Provider/Org credit routes and
+remaining unknown accounting are documented in PROVIDER-CREDITS-AND-HANDOFF.md.
+Actual Codex account snapshot on1Nov: ordinary usage allowed,2%weekly used,
+98%remaining. This is not OpenAI Org API credit accounting or per-task cost.
+
+Project main5199d328d97e4871f286442f36fe2a7751e3819a is pushed and exact-readback
+verified on origin and backup. It is a documentary/source-fixture checkpoint,
+with no new product source integration. The 31Oct DSH reviews, design/motion
+research, continuation plan and immutable native evidence manifests are durable.
+Private hash-verified backup G:/Backups/Applywright/20261101-resume covers1088
+native receipt files,29 historical candidate files,280 verification files and
+22 newly stopped candidate files. Later outputs require their next snapshot.
+
+G1 R10.1 DSH fixes completed,134 definitions retained. Independent native Sol
+review REQUEST_CHANGES: the two narrow repairs are correct, but an inherited
+unit-bearing diagnostic assertion conflict and two P1 provenance residuals remain
+(same-clause measure reassignment and colleague employer transfer). Exact review
+copy G1-R10-1-INDEPENDENT-REVIEW.md is in docs/resume/20261101. Prepared R11 is not
+dispatched ahead of the finite diagnostic opportunity. A11Y R4 DSH source is
+complete with55 definitions; its new Sol review is RAM-held, not accepted/tested.
+
+Root independently rejected WSL executor R1 for five concrete instrumentation,
+resource, exit, closure and cancellation defects. Root explicitly assigned its
+R2 source correction and direct independent review. A native DSH R2 author is
+actually running in t3-eb89e021 after one fresh native admission, under the exact
+case-specific source-observation alignment to native2GiB host/3GiB guest. Sol
+reviewer/GUI/Windows verification4GiB floors and installed guards remain unchanged.
+No test/EX/runtime approval follows. Root alone issues a new exact finite approval
+after reviewing R2 and its actual module/oracle/startup/resource/cleanup closure.
+Windows finite-case R2 remains separately unreviewed/unqualified. All frozen
+attempts, controls, failures and unknown usage/served identity remain preserved.
+
+Delivered contrast7d40425 and E2E8df799f remain the accepted earlier changes;
+the29Oct native4 controls and isolated Chrome10steps/235assertions are historical
+bounded evidence, not a new live provider/deployment or G1 acceptance. No new
+visuals or animations are claimed today. No live preview launch occurred.
+
+Current start: docs/resume/20261101/RESUME-AND-HANDOFF-PLAN.md and the23-row
+IMPLEMENTATION-REGISTER.json, plus fresh native manifest/actual receipts. Goal
+ACTIVE/INCOMPLETE. Final Claude/Estate handoff and publication are still pending.
+
+# Historical night publication — assigned Applywright note only
 
 Estate alone publishes A/B. Update ONLY brain/applywright-platform.md, preserving
 its earlier history and other vault/MOC notes. No vault write was made by this

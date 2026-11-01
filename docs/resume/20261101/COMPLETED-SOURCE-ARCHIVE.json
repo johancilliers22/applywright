@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "capturedAtUtc": "2026-11-01T16:38:49.5779480Z",
+  "archiveRoot": "G:/Backups/Applywright/20261101-resume/completed-20261101",
+  "files": [
+    {
+      "case": "g1-r10-1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f54d4b75",
+      "path": "server/lib/cv/tailor.js",
+      "bytes": 182026,
+      "sha256": "bae55900ba920505b69a31e74d9824de5b0bea02ba942ddbe8f5e6fc78cb4fd5"
+    },
+    {
+      "case": "g1-r10-1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f54d4b75",
+      "path": "server/lib/cv/refine.js",
+      "bytes": 85028,
+      "sha256": "52b3b2d7ab953771c9caa025f02522533b897e1f15fcf0a83c7315bb1404920f"
+    },
+    {
+      "case": "g1-r10-1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f54d4b75",
+      "path": "server/lib/cv/tailor.test.mjs",
+      "bytes": 122035,
+      "sha256": "c5720d759475cb4ca102f0d192107a99109a5cb27b6dab74f7a5ca94561b20f2"
+    },
+    {
+      "case": "g1-r10-1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f54d4b75",
+      "path": "server/lib/cv/refine.test.mjs",
+      "bytes": 81182,
+      "sha256": "2b4ad2ef83d3fd18ad0751778689e7c6d114003a2c2b1c350e2ca3537de260d5"
+    },
+    {
+      "case": "g1-r10-1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f54d4b75",
+      "path": "GROUNDING-G1-R10-1-RESULT.md",
+      "bytes": 13303,
+      "sha256": "538aacce9b94daa8fd669213bcb593d457cf288b4f024fe681f9375df08e589f"
+    },
+    {
+      "case": "g1-r10-1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f54d4b75",
+      "path": "GROUNDING-G1-R10-RESULT.md",
+      "bytes": 21069,
+      "sha256": "9ac148b2eead7bd87d6fb13fb430536a01d5a6ff9ec2db72f91fbbbc4fa9b516"
+    },
+    {
+      "case": "a11y-r4",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6f365ec7",
+      "path": "public/app/app.js",
+      "bytes": 173372,
+      "sha256": "ddfecbad7c7b4b19380295dd5fbb122088820238bf743d73ae5159af7fb05254"
+    },
+    {
+      "case": "a11y-r4",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6f365ec7",
+      "path": "public/assets/editor.js",
+      "bytes": 92658,
+      "sha256": "82e889c4029da675f594e7e10f0479c30d1f2184855ff406839d7146f7c12fae"
+    },
+    {
+      "case": "a11y-r4",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6f365ec7",
+      "path": "public/editor.html",
+      "bytes": 17803,
+      "sha256": "7746ca280729e709aa005772283eb08e558dc2c6757fcd121c4b5161693486d3"
+    },
+    {
+      "case": "a11y-r4",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6f365ec7",
+      "path": "docs/verification/20261029-a11y-fix/a11y-focused.test.mjs",
+      "bytes": 50832,
+      "sha256": "5d7b075d35289405c9b6b68bc8482cf79d54849610735aa0aee6aedc0994eac3"
+    },
+    {
+      "case": "a11y-r4",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6f365ec7",
+      "path": "docs/verification/20261029-a11y-fix/A11Y-RESULT.md",
+      "bytes": 15998,
+      "sha256": "6e7377e0602bdc9007fc1dd9bf8ae7896b5d901dc2d314f79237d3d8f7565605"
+    },
+    {
+      "case": "a11y-r4",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6f365ec7",
+      "path": "docs/verification/20261029-a11y-fix/A11Y-MANIFEST.json",
+      "bytes": 14622,
+      "sha256": "7839e6233dca7b1f8af843c2d1467e51fa5c7d220e8cc61ac6b3d17d11e8e378"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/APPROVAL-TEMPLATE-NOT-AUTHORITY.json",
+      "bytes": 482,
+      "sha256": "6b3e1192a9c3aa813759c185381eef51ed7ea123c46aafdcfeabfda8171dc8d2"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/ARTIFACT-MANIFEST.json",
+      "bytes": 1984,
+      "sha256": "fd132fcc103988b5d6c082d2cffdd15c753bb33871b10ce2ca66bb303563dd62"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/DESIGN.md",
+      "bytes": 12930,
+      "sha256": "2a8e6e3bca101858bb885e6ac6f824668f2077f8378ecea53d2b4a369c014c62"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/LEGACY-DISPOSITION.json",
+      "bytes": 2651,
+      "sha256": "db8849e2429b6effd155a3a9ff5aeb8f64c9e07a30dfd9a251085c67cb775d6a"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/MANIFEST.json",
+      "bytes": 8669,
+      "sha256": "ef1c1d97d472a96219e95963d048b5a573010bd269e8c9bbcc4e7de92e5c14cf"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/parent-applywright-g1-pure-js.py",
+      "bytes": 23602,
+      "sha256": "56ddd1e0d0ce60ea01fb7db9ce6b2d7d1c36f59c639f4c55c4d3122f39574050"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/PLAN-TEMPLATE-NOT-ADMITTED.json",
+      "bytes": 782,
+      "sha256": "a2acf587ecc8d71efb1bebcd858e36f9b3117c55feca27c2bf3a0b69b959e424"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/RESULT.md",
+      "bytes": 9921,
+      "sha256": "750c57eeee9c89c0c99db5d3aeeac543a2242e4f0d2ce8feb8b3d8347df41244"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/SOURCE-CHECKS.md",
+      "bytes": 8071,
+      "sha256": "8a7872baf06e433734c01bf7c194b224d7394f5c3f61ea92a5f76de84a9c71cd"
+    },
+    {
+      "case": "wsl-case-r1",
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "path": "docs/verification/20261029-wsl-predicate-case/verify-grounding-g1-pure-js.mjs",
+      "bytes": 22905,
+      "sha256": "3bec9512573e3bfe60c817033334831fcffa253a2fc5847d7a91d6eb5ff3a946"
+    }
+  ],
+  "accepted": false,
+  "executedByArchive": false,
+  "dispositions": {
+    "A11Y": "Source complete, review held",
+    "G1": "Independent Sol REQUEST_CHANGES",
+    "WSL": "Independent Root REQUEST_CHANGES, frozen R1"
+  }
+}

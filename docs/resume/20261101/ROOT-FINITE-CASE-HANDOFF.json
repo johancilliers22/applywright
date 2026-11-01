@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "capturedAtUtc": "2026-11-01T16:04:35.2092622Z",
+  "state": "STOPPED_SOURCE_PACKET_ROOT_INDEPENDENT_REVIEW_NOT_RUNTIME_APPROVAL",
+  "caseWindows": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797/docs/verification/20261029-wsl-predicate-case",
+  "caseWSL": "/mnt/c/Users/johan/.t3/worktrees/applywright/t3-6d10e797/docs/verification/20261029-wsl-predicate-case",
+  "mainHead": "5199d328d97e4871f286442f36fe2a7751e3819a",
+  "caseBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+  "mainProductDeltaSinceResumeBase": [],
+  "caseFiles": [
+    {
+      "name": "APPROVAL-TEMPLATE-NOT-AUTHORITY.json",
+      "bytes": 482,
+      "sha256": "6b3e1192a9c3aa813759c185381eef51ed7ea123c46aafdcfeabfda8171dc8d2"
+    },
+    {
+      "name": "ARTIFACT-MANIFEST.json",
+      "bytes": 1984,
+      "sha256": "fd132fcc103988b5d6c082d2cffdd15c753bb33871b10ce2ca66bb303563dd62"
+    },
+    {
+      "name": "DESIGN.md",
+      "bytes": 12930,
+      "sha256": "2a8e6e3bca101858bb885e6ac6f824668f2077f8378ecea53d2b4a369c014c62"
+    },
+    {
+      "name": "LEGACY-DISPOSITION.json",
+      "bytes": 2651,
+      "sha256": "db8849e2429b6effd155a3a9ff5aeb8f64c9e07a30dfd9a251085c67cb775d6a"
+    },
+    {
+      "name": "MANIFEST.json",
+      "bytes": 8669,
+      "sha256": "ef1c1d97d472a96219e95963d048b5a573010bd269e8c9bbcc4e7de92e5c14cf"
+    },
+    {
+      "name": "parent-applywright-g1-pure-js.py",
+      "bytes": 23602,
+      "sha256": "56ddd1e0d0ce60ea01fb7db9ce6b2d7d1c36f59c639f4c55c4d3122f39574050"
+    },
+    {
+      "name": "PLAN-TEMPLATE-NOT-ADMITTED.json",
+      "bytes": 782,
+      "sha256": "a2acf587ecc8d71efb1bebcd858e36f9b3117c55feca27c2bf3a0b69b959e424"
+    },
+    {
+      "name": "RESULT.md",
+      "bytes": 9921,
+      "sha256": "750c57eeee9c89c0c99db5d3aeeac543a2242e4f0d2ce8feb8b3d8347df41244"
+    },
+    {
+      "name": "SOURCE-CHECKS.md",
+      "bytes": 8071,
+      "sha256": "8a7872baf06e433734c01bf7c194b224d7394f5c3f61ea92a5f76de84a9c71cd"
+    },
+    {
+      "name": "verify-grounding-g1-pure-js.mjs",
+      "bytes": 22905,
+      "sha256": "3bec9512573e3bfe60c817033334831fcffa253a2fc5847d7a91d6eb5ff3a946"
+    }
+  ],
+  "currentProjectPins": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 8811,
+      "sha256": "f2b8b008fbd47c61507449909c97801b3d91e6a0aedc2f28ccc11a353a2e28de"
+    },
+    {
+      "path": "server/lib/text.js",
+      "bytes": 7557,
+      "sha256": "3f3f132a3f822f672ad60fb9cc27f8c810389e0fc77b4596e1e9d8be4cefecf8"
+    },
+    {
+      "path": "package.json",
+      "bytes": 456,
+      "sha256": "68c651cad05d6e40cf9536ee2f6178438e93f05c535e04d86e7016c29aa7ea54"
+    },
+    {
+      "path": "docs/verification/20261029-resume/verify-grounding-r7-review.mjs",
+      "bytes": 8223,
+      "sha256": "0c25f24ac47ce49f71def6ac4f7843a820f3e812e93cd7e3da5ba46235038d44"
+    },
+    {
+      "path": "docs/verification/20261029-resume/verify-grounding-r10-review.mjs",
+      "bytes": 5317,
+      "sha256": "f07bacf028887d03c7f31be92fa7e8ae8a7951a6a38368b2999075d98033294a"
+    }
+  ],
+  "sourceAndOracles": "MANIFEST.json targets/oracles/closure/commands describe fixedR10+R7 target/source path maps and every76/211history SHA; ARTIFACT-MANIFEST pins the case files",
+  "unboundRuntimeFields": [
+    "actual pinned Linux Node binary/path/hash",
+    "actual current boot canonical device/inode/owner/mode/link identity",
+    "Root-owned exact plan/approval/output attempt",
+    "phase-specific host/guest resource decision and lifetime admission"
+  ],
+  "environment": "Direct exec fixed HOME=/home/johan USER/LOGNAME=johan PATH=/usr/bin:/bin LANG=C.UTF-8 TZ=UTC. No provider/model/secret loader; parent forbids Node/Python/LD startup overrides. Root must adjudicate the direct store-free environment vs commission loader wording.",
+  "resourceBoundary": "Sourceparent checks guest MemAvailable>=3GiB inEX and explicitly records windowsObserved=false; no Windows host floor qualified. Root must decide exact phase policy; no implied waiver.",
+  "directions": "R10GREEN is an authored expectation, not observed. Any failed comparison or import/harness/control error stays RED/error. R7 controlledRED requires retained history passes plus actual adjudicated failures. No product acceptance from parent direction receipt.",
+  "new29Fixture": "Operator-authored, not in this frozen case; no implicit substitution after approval",
+  "review": "Root elected to review as already-active independent frontier acceptor; no new child-launch4GiB waiver",
+  "execution": "NOT_RUN"
+}

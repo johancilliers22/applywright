@@ -1,0 +1,11 @@
+{
+  "observedAtUtc": "2026-11-01T16:41:12.5884934Z",
+  "authorityThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
+  "source": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/ROOT-WSL-CASE-R2-SOURCE-PREFILTER-20261101.md",
+  "sha256": "8a1c7d689172ef61da718cd255eea2aac03b31edc91dc35c157a57268074ebfe",
+  "scope": "ONE official Windows DSH WSL-predicate-R2 SOURCE author; extra coordinator observation aligns with actual native2GiB host and3GiB guest where applicable; native lifetime guard remains authoritative",
+  "existingHoldsPreserved": true,
+  "installedPolicyChanged": false,
+  "solGuiWindowsVerification4GiBUnchanged": true,
+  "executionApproved": false
+}

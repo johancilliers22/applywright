@@ -1,0 +1,85 @@
+{
+  "verifiedAtUtc": "2026-11-01T21:30:08.6830063Z",
+  "scope": "21 named documentary continuation paths only",
+  "deliveryCommit": "536e45457f315ff7b9823a01ac7d3676bd18b138",
+  "originMain": "536e45457f315ff7b9823a01ac7d3676bd18b138",
+  "backupMain": "536e45457f315ff7b9823a01ac7d3676bd18b138",
+  "stagedSacred": {
+    "status": "clean",
+    "checked": 21
+  },
+  "committedSacred": {
+    "status": "clean",
+    "checked": 21
+  },
+  "namedPathSet": "docs/resume/20261101/FINAL-CHECKPOINT-PATHS.json",
+  "editableWhitespace": "PASS",
+  "frozenRawWhitespaceException": {
+    "path": "docs/resume/20261101/G1-R12-INDEPENDENT-REVIEW.md",
+    "lines": [
+      11,
+      12,
+      27,
+      28,
+      29,
+      385
+    ],
+    "reason": "Exact immutable source copy retains Markdown two-space hard breaks and blank EOF. No evidence normalization performed."
+  },
+  "reportGitBlobIdentities": [
+    {
+      "path": "docs/resume/20261101/G1-R12-INDEPENDENT-REVIEW.md",
+      "gitBlobOID": "520c456399df181da1790725081fd0ccc3bbfee9",
+      "gitBlobBytes": 39784,
+      "gitBlobSHA256": "8e7c1ecbaa80b87cf30f4f8912222be1e1b01278b9687ccde81429ad51e8cf39",
+      "currentWorkingRawSHA256": "8e7c1ecbaa80b87cf30f4f8912222be1e1b01278b9687ccde81429ad51e8cf39"
+    },
+    {
+      "path": "docs/resume/20261101/FULL-GATE-R1.1-INDEPENDENT-REVIEW.md",
+      "gitBlobOID": "c84b3f29d986a6cce4bb2f4d1e57e329ddeb87b3",
+      "gitBlobBytes": 44268,
+      "gitBlobSHA256": "0b0b97eaffef030de5aa0bd2574c9ae543d6cf3ae457690a640e639801253aab",
+      "currentWorkingRawSHA256": "0b0b97eaffef030de5aa0bd2574c9ae543d6cf3ae457690a640e639801253aab"
+    }
+  ],
+  "finalBrokerPrivateBackup": {
+    "archive": "G:/Backups/Applywright/20261101-resume/final-broker-handoff",
+    "files": [
+      {
+        "name": "BROKER-HANDOFF.md",
+        "bytes": 6641,
+        "sha256": "88a16c24eb3e23e96911e62fe5df4f7b462392eda2fc223ad9a8d2ed44d7978c"
+      },
+      {
+        "name": "BROKER-HANDOFF.json",
+        "bytes": 91452,
+        "sha256": "a001ae6e8f8245a0a3280c0d9273be887359c41b9a39c871dc5d0818c9d11e3b"
+      }
+    ]
+  },
+  "nativeChildrenActive": 0,
+  "productPathsChangedSinceResume": [],
+  "g1Merged": false,
+  "a11yMerged": false,
+  "fullGates": "NOT_RUN on candidates",
+  "preview": "OFFLINE, no new URL",
+  "publisherStatus": "Final named B note independently verified at local commit cfd5ab01d8ae171adc04e84b1ea08bd08c01e6c4; exact physical/committed SHA86cf9c44..., only named note changed; B remote not claimed",
+  "programme": "ACTIVE_INCOMPLETE",
+  "authorityTransferred": false,
+  "verificationOnlyMetadata": true,
+  "rootDocumentaryDisposition": {
+    "path": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/ROOT-APPLYWRIGHT-FINAL-REVIEW-DOC-DRIFT-DISPOSITION-20261101.md",
+    "sha256": "9fab9ddea9c6a0c36c2afd958e91ba6437b9368cdd872eb8e8fbd4b153f33786",
+    "privateBackup": "G:/Backups/Applywright/20261101-resume/final-broker-handoff/ROOT-DOCUMENTARY-DRIFT-DISPOSITION.md",
+    "decision": "Authorized documentary maintenance; real authority-pin drift retained. Unchanged-source findings adopted as useful REQUEST_CHANGES, no retroactive continuity or runtime/merge approval. NEW exact authority required for any later case."
+  },
+  "nativeBrokerFinal": {
+    "status": "completed",
+    "completedAtUtc": "2026-11-01T21:33:01.74Z",
+    "nativeActiveChildren": 0,
+    "ownGitWrites": false,
+    "laterOperatorHEADReadback": "536e454 documentary-only",
+    "privateFinalPacket": "docs/t3/receipts/20261101-resume/broker-final-handoff/BROKER-HANDOFF.md"
+  },
+  "namedBProof": "docs/resume/20261101/FINAL-B-PUBLICATION-READBACK.json"
+}

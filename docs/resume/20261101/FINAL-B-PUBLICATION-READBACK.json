@@ -1,0 +1,29 @@
+{
+  "verifiedAtUtc": "2026-11-01T21:46:10.1853463Z",
+  "basis": "Project independent read-only physical note and exact local B committed blob verification; owner receipt may follow separately",
+  "note": "brain/applywright-platform.md",
+  "physicalPath": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\luna-vault\\Luna Vault\\brain\\applywright-platform.md",
+  "physicalSHA256": "86cf9c44a4966a1619c3a964a3cb2619569be11079d97e4fc1b4a22c735fd746",
+  "localBCommit": "cfd5ab01d8ae171adc04e84b1ea08bd08c01e6c4",
+  "committedBlobOID": "c1bb64ab181a048f829e23efd39c6d3942b4a631",
+  "committedBlobSHA256": "86cf9c44a4966a1619c3a964a3cb2619569be11079d97e4fc1b4a22c735fd746",
+  "commitPaths": [
+    "brain/applywright-platform.md"
+  ],
+  "currentStatus": {
+    "documentaryDelivery": "536e45457f315ff7b9823a01ac7d3676bd18b138",
+    "programme": "ACTIVE_INCOMPLETE",
+    "preview": "OFFLINE",
+    "G1": "R12_REQUEST_CHANGES_6P1_3P2_AND_ACTUAL_FAILURES",
+    "fullGateSource": "REQUEST_CHANGES_9P1_3P2_REVIEWER_REAPED",
+    "fullGates": "NOT_RUN",
+    "productMerge": false
+  },
+  "projectOperatorWroteSharedNote": false,
+  "owner": "SAME Estate; coordinated through Root",
+  "previousObservedNoteSHA256": "09eaf7866a91e0b78025d5ba52a80111b8786a06b571c7b3fd830024fdae2514",
+  "earlierPublishedSHA256": "6cd8b86320a8c0135d4d23134aa3576c454991c38d1ad36a842a93cba549f29c",
+  "BRemoteProof": "NOT_CLAIMED",
+  "sharedAFinalPacket": "Root/Estate-owned; project makes no hub Git writes",
+  "authorityTransferred": false
+}

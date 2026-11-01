@@ -1,0 +1,15 @@
+{
+  "observedAtUtc": "2026-11-01T20:03:32.5976398Z",
+  "source": "Codex desktop get_usage_limits",
+  "ordinaryUsageAllowed": true,
+  "windowMinutes": 10080,
+  "usedPercent": 22,
+  "remainingPercent": 78,
+  "resetsAtUnix": 1794151020,
+  "secondaryWindow": null,
+  "accountWideNotProjectAttributable": true,
+  "perTaskProviderTokens": null,
+  "perTaskProviderCost": null,
+  "apiOrgBalancesNotMeasured": true,
+  "resetConsumed": false
+}

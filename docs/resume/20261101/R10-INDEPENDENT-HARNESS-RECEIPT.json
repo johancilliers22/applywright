@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "atUtc": "2026-11-01T15:48:04.8193000Z",
+  "path": "docs/verification/20261029-resume/verify-grounding-r10-review.mjs",
+  "bytes": 5317,
+  "sha256": "f07bacf028887d03c7f31be92fa7e8ae8a7951a6a38368b2999075d98033294a",
+  "author": "Johan/operator",
+  "scope": "14 paired claims under BOTH plus 1 refine-only long-metric drop; 29 literal comparisons",
+  "retention": "211 + 76 unchanged",
+  "status": "AUTHORED_NOT_RUN",
+  "adoption": "May be included in a NEW Root-case approval ONLY after exact closure pin and source review; must not be substituted into an already-approved plan",
+  "execution": "ZERO",
+  "note": "Includes same-clause 3 ms/5 ms swap, third-party employer/title ownership, complete object, unit/control pairs, qualification owner and 5-modifier long metric."
+}

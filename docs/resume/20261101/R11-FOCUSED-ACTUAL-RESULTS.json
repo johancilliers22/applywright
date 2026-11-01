@@ -1,0 +1,159 @@
+{
+  "recordedAtUtc": "2026-11-01T19:16:30.8144327Z",
+  "authority": "ACTUAL Root fixed-case adjudications; all leases released",
+  "frozenCandidate": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5",
+  "tailor": {
+    "receiptSHA256": "61967138c983485ad7b475a295c0bc87e3fb10fdc01d7f0b3a6eede866884618",
+    "failureBlocks": [
+      "not ok 9 - a hyphenated compound adjective is grammar, but its head is still evidenced\n  ---\n  duration_ms: 3.225552\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:201:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:236:10)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: a fabricated employer is still rejected, sentence-initial or not",
+      "not ok 16 - G1: claim units keep degree subject, seniority, date and currency identity\n  ---\n  duration_ms: 4.836667\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:490:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:534:10)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: G1-R2: a coordinated object keeps the support verb's scope",
+      "not ok 22 - G1-R2: the ordinary verb go is not the Go language\n  ---\n  duration_ms: 1.842807\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:675:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    assertGrounded refused grounded Go: [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:692:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: G1-R2: date, duration and number-word claim units stay consistent",
+      "not ok 59 - G1-R9: a title phrase keeps its modifiers inside an ordinary complement\n  ---\n  duration_ms: 1.145152\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:2315:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    a source-backed innovation title: assertGrounded refused \"Innovation engineer with experience.\": [\"new name \\\"experience\\\" is not in the original\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:2340:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: G1-R9: ordinary worked-at complements stay grammar",
+      "not ok 62 - G1-R10: ownership binds the complete governed object, not its head\n  ---\n  duration_ms: 1.481449\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:2409:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    a same-head pre-modifier is a different object: assertGrounded accepted \"Personally owned bridge design.\"\n    \n    true !== false\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: false\n  actual: true\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:2429:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: G1-R10: titles and employment need the candidate's own actor and occurrence",
+      "not ok 66 - G1-R10: a title inside a longer ordinary complement is still a title\n  ---\n  duration_ms: 0.937885\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:2584:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    a generic engineer title: assertGrounded refused \"Engineer with experience in web services across multiple teams.\": [\"new name \\\"experience\\\" is not in the original\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:2602:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: G1-R10: a two-month range is one complete endpoint pair",
+      "not ok 70 - G1-R11: actual-diagnostic ownership and measure positives with adverse twins\n  ---\n  duration_ms: 1.518081\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:2677:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    own Go evidence: assertGrounded refused \"Built Go-based services.\": [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.test.mjs:2695:14)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ..."
+    ],
+    "actual": {
+      "tapStatus": "FAIL",
+      "validSummary": true,
+      "counts": {
+        "tests": 70,
+        "suites": 0,
+        "pass": 63,
+        "fail": 7,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "detail": "TAP_TEST_FAILURE"
+    }
+  },
+  "refine": {
+    "receiptSHA256": "79cfa99cee9a19919876b78d5363d83525b064ea52476d65667986b2572b49e1",
+    "failureBlocks": [
+      "not ok 32 - G1-R2: ordinary go is not Go, and a lower-case employer is still a name\n  ---\n  duration_ms: 0.979887\n  type: 'test'\n  location: '/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/refine.test.mjs:826:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    [\"the rewrite claims \\\"built\\\", a stronger level of ownership than the original line supports\"]\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/refine.test.mjs:832:10)\n    Test.runInAsyncScope (node:async_hooks:226:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: G1-R2: a dropped phone number is contact data, not a returned figure"
+    ],
+    "actual": {
+      "tapStatus": "FAIL",
+      "validSummary": true,
+      "counts": {
+        "tests": 66,
+        "suites": 0,
+        "pass": 65,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "detail": "TAP_TEST_FAILURE"
+    }
+  },
+  "a11y": {
+    "actual": null,
+    "receiptSHA256": "6acfe811b6e23d6f6760011a780ef7c1c6170b4d1dbf8ce02cbb9302bd75eb61"
+  },
+  "review29": {
+    "atUtc": "2026-11-01T19:08:04.421616+00:00",
+    "verdict": "ACCEPT_ACTUAL_FIXED29_DIAGNOSTIC_PASS_NOT_FULL_G1_ACCEPTANCE",
+    "state": "PASS_EXPECTED_DIRECTIONS_OBSERVED_NOT_ACCEPTANCE",
+    "parentExitCode": 0,
+    "receiptSHA256": "b9960520943f36e7a1daeb08760d2df4e1991a08659ee670bdefb737de789d90",
+    "controls": {
+      "protocol": 32,
+      "release": 9,
+      "classify": 20,
+      "total": 61
+    },
+    "controlFailures": [],
+    "comparisons": 29,
+    "passed": 29,
+    "failedRows": [],
+    "errorRows": [],
+    "nonBooleanRows": [],
+    "sourceUnchanged": true,
+    "all16InputsStillMatch": true,
+    "inputs": [
+      {
+        "path": "/home/johan/.nvm/versions/node/v26.13.0/bin/node",
+        "match": true
+      },
+      {
+        "path": "/usr/bin/python3.12",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/verification/20261028-intake/verify-grounding-review-cases.mjs",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/verification/20261028-intake/verify-grounding-candidate.mjs",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/verification/20261029-g1-r7-diagnostic-attempt1/independent-grounding.json",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/verification/20261029-g1-r7-diagnostic-attempt1/review-derived-grounding.json",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/verification/20261029-g1-r7-diagnostic-attempt1/review-r2-derived-grounding.json",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/verification/20261029-g1-r7-diagnostic-attempt1/review-r3-derived-grounding.json",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/verification/20261029-g1-r7-diagnostic-attempt1/review-r45-derived-grounding.json",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/tailor.js",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/cv/refine.js",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/server/lib/text.js",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5/package.json",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/_laptop-handoff/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/g1-r11-review29-independent-source/parent-fixed-review29.py",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/_laptop-handoff/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/g1-r11-review29-independent-source/verify-grounding-g1-pure-js.mjs",
+        "match": true
+      },
+      {
+        "path": "/mnt/c/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/verification/20261029-resume/verify-grounding-r10-review.mjs",
+        "match": true
+      }
+    ],
+    "leaseAcquiredAtUtc": "2026-11-01T19:06:36.28979Z",
+    "leaseReleasedAtUtc": "2026-11-01T19:07:01.181614Z",
+    "canonicalAfter": {
+      "device": 2128,
+      "inode": 436950,
+      "uid": 1000,
+      "mode": 384,
+      "nlink": 1
+    },
+    "canonicalUnchanged": true,
+    "remainingPids": [],
+    "ownLockRowsAfter": [],
+    "limits": "Previously authored29claim-role/metric controls only; newly reported G1sourcefindings/focused136/integrated/Windows/HTTP/browser/AT remain separate."
+  },
+  "sourceReview": "G1REQUEST_CHANGES5P1+3P2; A11YPASS_SOURCE",
+  "oraclesChanged": false,
+  "wholeProductAccepted": false,
+  "requiredIntegratedGatesRun": false
+}

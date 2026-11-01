@@ -1,0 +1,110 @@
+{
+  "recordedAtUtc": "2026-11-01T19:04:01.4183769Z",
+  "scope": "LIMITED EXACT R11 DIAGNOSTIC PASS; not Source/TAP/29/whole-product acceptance",
+  "source": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/G1-R11-ACTUAL-ATTEMPT1",
+  "archive": "G:/Backups/Applywright/20261101-resume/G1-R11-ACTUAL-ATTEMPT1",
+  "receiptSHA256": "403837843f4ad21c4873df07a35c49324ea8d9866ac69cc28bc00092c81c1cb8",
+  "state": "PASS_EXPECTED_DIRECTIONS_OBSERVED_NOT_ACCEPTANCE",
+  "fixture76": {
+    "sourceUnchanged": true,
+    "fail": 0,
+    "pass": 76
+  },
+  "harness": {
+    "checks": {
+      "historyExecuted": true,
+      "historyVerdictsPassed": true,
+      "historyAllPassed": true,
+      "adjudicatedExecuted": true,
+      "adjudicatedAllPassed": true,
+      "controlsExecuted": true,
+      "controlsAllPassed": true,
+      "positiveExpectedAllPassed": true,
+      "oracleProbesPassed": true,
+      "mutationProbesPassed": true,
+      "targetSourceUnchanged": true,
+      "sourcePinsBeforeAfter": true,
+      "closureAudited": true,
+      "countsConsistent": true,
+      "instrumentationControlsPassed": true,
+      "labelLiveExecuted": true,
+      "noPairLiveExecuted": true
+    },
+    "comparisons": 244,
+    "fail": 0,
+    "pass": 244
+  },
+  "guardControls": {
+    "protocol": 32,
+    "release": 9,
+    "classify": 16,
+    "total": 57
+  },
+  "guardControlsPassed": true,
+  "leaseAcquired": true,
+  "leaseReleased": true,
+  "steps": [
+    {
+      "label": "r11-fixture76",
+      "pid": 678215,
+      "birthTicks": 1320017,
+      "exitCode": 0,
+      "timedOut": false,
+      "state": "ACTUAL_WAITPID_TERMINAL",
+      "directionMatched": true
+    },
+    {
+      "label": "r11-harness",
+      "pid": 678678,
+      "birthTicks": 1322622,
+      "exitCode": 0,
+      "timedOut": false,
+      "state": "ACTUAL_WAITPID_TERMINAL",
+      "directionMatched": true
+    }
+  ],
+  "files": [
+    {
+      "name": "r11-fixture76.result.json",
+      "bytes": 31963,
+      "sha256": "b0bb875ac6220e4d0c72a2fdb9674763215dd01d0d09c993cd9fa076ac02ddfb"
+    },
+    {
+      "name": "r11-fixture76.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "r11-fixture76.stdout",
+      "bytes": 71,
+      "sha256": "b125b940bc5980ff2ff316ef57f5c67f051fb5f3e172ef9abfed410d3a6c1aa2"
+    },
+    {
+      "name": "r11-harness.result.json",
+      "bytes": 147850,
+      "sha256": "a8c409a9db27300d52c89ea6a0f3453ee1d1d7808f3b9f4e9923a8029e0965c1"
+    },
+    {
+      "name": "r11-harness.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "r11-harness.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "RECEIPT.json",
+      "bytes": 19611,
+      "sha256": "403837843f4ad21c4873df07a35c49324ea8d9866ac69cc28bc00092c81c1cb8"
+    },
+    {
+      "name": "ROOT-COPY-MANIFEST.json",
+      "bytes": 1007,
+      "sha256": "584a3ca5b5085c5e5e7ef32bf6fb68508c566bb5fa67c602c17b415570abe1e3"
+    }
+  ],
+  "integratedGatesRun": false,
+  "productAccepted": false
+}

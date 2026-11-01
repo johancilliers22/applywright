@@ -1,0 +1,1708 @@
+{
+  "capturedAtUtc": "2026-11-01T19:55:52.9475840Z",
+  "source": "docs/resume/20261029/NATIVE-DISPATCH-STATUS.json",
+  "sourceSHA256": "acd0ec04525f890985d60990d49ed50d91e2c86080fa7843ff2b31b019abb255",
+  "state": "GYM_CHECKPOINT_INCOMPLETE_NOT_FULL_CLAUDE_HANDOFF",
+  "snapshot": {
+    "schemaVersion": 1,
+    "parentThreadId": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+    "operatorThreadId": "01a183ff-e374-7d32-ae0e-1938714e813c",
+    "environmentId": "c9887cd0-5164-44d0-a8c0-acc6c583ca42",
+    "projectId": "52d7ab92-2c81-44ec-b5a3-a014fa65c6d6",
+    "initialInventory": "36 visible project threads; zero active OWN children before resume starts; historical terminal/cancelled records retained",
+    "sourceIdentityReceipt": "docs/t3/receipts/20261029-resume/SOURCE-IDENTITIES.json",
+    "frozenFiveAndPatchVerified": true,
+    "main14SourceUnchanged": true,
+    "tasks": [
+      {
+        "lane": "g1-r7-review",
+        "state": "completed",
+        "stateBasis": "Terminal result consumed, quiescent thread, terminal cleanup and after-status; all input/output hashes verified",
+        "clientRequestId": "applywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-grounding-g1-sol-review-r7-2914d8df-2c6c-419a-90f4-8ae3d58b5b3e>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T17:26:29.724Z",
+        "startedAtUtc": "2026-10-29T17:26:30.048Z",
+        "actualWorktree": null,
+        "actualBranch": "main",
+        "actualWorktreeBase": null,
+        "sharedReviewCheckout": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright",
+        "frozenReviewCandidate": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84",
+        "sourceAdmission": "SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T17:26:24.3310354Z",
+        "freeWindowsKiB": 4239384,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "native task accepted; no EX/runtime lease claimed",
+        "payloadSha256": "679d2800703eafaadae7e5ae8d874edc88b828978768669b82af56092ccb5e3e",
+        "outputStatus": "REQUEST_CHANGES_SEVEN_SOURCE_TRACED_FINDINGS_NOT_EXECUTED",
+        "execution": "NOT_RUN / SOURCE_ONLY",
+        "acceptance": null,
+        "next": "R8 source correction commissioned; independent new review required after stopped writer",
+        "verdict": "REQUEST_CHANGES",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/g1-r7-review/REAP-VERIFIED.json",
+        "lastNativeObservationAtUtc": "2026-10-29T17:48:20.1351935Z"
+      },
+      {
+        "lane": "a11y",
+        "state": "completed",
+        "stateBasis": "Native terminal and post-reap statuses; six identities unchanged before/after terminal cleanup",
+        "clientRequestId": "applywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r1-cd46294d-482e-430b-9ca5-6ab10b411d14>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T17:28:02.417Z",
+        "startedAtUtc": "2026-10-29T17:28:05.832Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ea0c895a",
+        "actualBranch": "t3/a11y-hints-save-status",
+        "actualWorktreeBase": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+        "sharedReviewCheckout": null,
+        "frozenReviewCandidate": null,
+        "sourceAdmission": "SOURCE-ADMISSION.attempt2.json",
+        "admissionAtUtc": "2026-10-29T17:27:53.5435651Z",
+        "freeWindowsKiB": 4355836,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "native task accepted; no EX/runtime lease claimed",
+        "payloadSha256": "0eed469e2b53dd0dfd2c01f3ac61b79ece03e28d90798aeb5a7076e119ff0d05",
+        "outputStatus": "STOPPED_SOURCE_CANDIDATE_CUSTODY_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+        "execution": "NOT_RUN / SOURCE_ONLY",
+        "acceptance": null,
+        "next": "Independent source review then operator-only admitted runtime/full gates; no acceptance",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/a11y/REAP-VERIFIED.json",
+        "lastNativeObservationAtUtc": "2026-10-29T17:42:39.3851357Z"
+      },
+      {
+        "lane": "design-motion",
+        "state": "completed",
+        "stateBasis": "terminal native task_status, quiescent thread metadata, exact terminal cleanup and post-reap status",
+        "clientRequestId": "applywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-design-motion-dsh-r1-9a168c96-039d-4b7d-be82-42d574c61081>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T17:27:17.494Z",
+        "startedAtUtc": "2026-10-29T17:27:21.78Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-a4aeb610",
+        "actualBranch": "t3/design-motion-research",
+        "actualWorktreeBase": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+        "sharedReviewCheckout": null,
+        "frozenReviewCandidate": null,
+        "sourceAdmission": "SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T17:27:05.7734946Z",
+        "freeWindowsKiB": 4605464,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "native task accepted; no EX/runtime lease claimed",
+        "payloadSha256": "9daab33181c20f0d7c6478154122b59de9b5393dd1b38d26dc2795a194b42f3b",
+        "outputStatus": "SIX_OUTPUTS_HASH_VERIFIED_BEFORE_AFTER_REAP; RESEARCH_PROPOSAL_NOT_ACCEPTED",
+        "execution": "NOT_RUN / SOURCE_ONLY",
+        "acceptance": null,
+        "next": "Operator review of research and draft Gemini/Muse briefs; no new child dispatched by intake",
+        "terminalReceipt": "docs/t3/receipts/20261029-resume/design-motion/task.terminal.native.json",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/design-motion/REAP-VERIFIED.json",
+        "lastNativeObservationAtUtc": "2026-10-29T17:37:57.8528921Z"
+      },
+      {
+        "lane": "a11y-review",
+        "state": "completed",
+        "stateBasis": "Native terminal and post-reap statuses, six candidate and two review output identities verified",
+        "clientRequestId": "applywright-resume-a11y-sol-review-r1-349f08f7-3786-4a02-83af-d2dc39b4e6c0",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r1-349f08f7-3786-4a02-83af-d2dc39b4e6c0",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r1-349f08f7-3786-4a02-83af-d2dc39b4e6c0",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-a11y-sol-review-r1-349f08f7-3786-4a02-83af-d2dc39b4e6c0:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r1-349f08f7-3786-4a02-83af-d2dc39b4e6c0>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T17:42:04.597Z",
+        "startedAtUtc": "2026-10-29T17:42:04.854Z",
+        "actualWorktree": null,
+        "actualBranch": "main",
+        "actualWorktreeBase": null,
+        "sharedReviewCheckout": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright",
+        "frozenReviewCandidate": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ea0c895a",
+        "candidateBase": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/a11y/review/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T17:41:44.6185212Z",
+        "freeWindowsKiB": 9765596,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Actual native task accepted; no EX/runtime lease",
+        "payloadSha256": "9503249e49342d6b381645f6535511361e829dac0eb9e97ffb290972d814b7e6",
+        "outputStatus": "REQUEST_CHANGES_FOUR_SOURCE_TRACED_FINDINGS_NOT_EXECUTED",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "next": "R2 isolated SOURCE correction dispatched; new independent review after stopped writer",
+        "verdict": "REQUEST_CHANGES",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/a11y/review/REAP-VERIFIED.json",
+        "lastNativeObservationAtUtc": "2026-10-29T17:54:59.2078412Z"
+      },
+      {
+        "lane": "g1-r8",
+        "state": "completed",
+        "stateBasis": "Native terminal and after-reap status; exact source identities verified before/after terminal cleanup",
+        "clientRequestId": "applywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T17:47:45.274Z",
+        "startedAtUtc": "2026-10-29T17:47:48.769Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ff301e75",
+        "actualBranch": "t3/grounding-g1-r8-corrections",
+        "actualWorktreeBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-7fef5f84",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/g1-r8/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T17:47:37.4035244Z",
+        "freeWindowsKiB": 9810356,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Native task accepted; no EX/runtime lease",
+        "payloadSha256": "854e00343b85cddd1f329c193016e0cb2bdad0fe9e0c63bc83b2178ba6fac0bf",
+        "outputStatus": "STOPPED_SOURCE_CANDIDATE; 5 identities verified; 111 claimed definitions NOT_RUN",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "next": "Independent new Sol SOURCE review dispatched; operator EX/runtime/full gates and acceptance remain pending",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/g1-r8/REAP-VERIFIED.json",
+        "lastNativeObservationAtUtc": "2026-10-29T18:10:50.7902053Z"
+      },
+      {
+        "lane": "a11y-r2",
+        "state": "completed",
+        "stateBasis": "Native terminal and after-reap status; exact source identities verified before/after terminal cleanup",
+        "clientRequestId": "applywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T17:54:30.801Z",
+        "startedAtUtc": "2026-10-29T17:54:34.343Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-afca85b6",
+        "actualBranch": "t3/a11y-hint-save-status",
+        "actualWorktreeBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ea0c895a",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/a11y/r2/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T17:54:25.6413763Z",
+        "freeWindowsKiB": 8803792,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Native task accepted; no EX/runtime lease",
+        "payloadSha256": "4e50f534819a7987b0b9bc01f4869085dc182f2183010e850421438de9979e6f",
+        "outputStatus": "STOPPED_SOURCE_CANDIDATE; 6 identities verified; 38 claimed definitions NOT_RUN",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "next": "Independent new Sol SOURCE review dispatched; operator EX/runtime/full gates and acceptance remain pending",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/a11y/r2/REAP-VERIFIED.json",
+        "lastNativeObservationAtUtc": "2026-10-29T18:10:50.7672852Z"
+      },
+      {
+        "lane": "a11y-r2-review",
+        "state": "completed",
+        "stateBasis": "Actual terminal+post-reap native status and source/output hash custody",
+        "clientRequestId": "applywright-resume-a11y-sol-review-r2-26317fa5-40b7-4b5b-8471-1083595c12df",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r2-26317fa5-40b7-4b5b-8471-1083595c12df",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r2-26317fa5-40b7-4b5b-8471-1083595c12df",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-a11y-sol-review-r2-26317fa5-40b7-4b5b-8471-1083595c12df:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r2-26317fa5-40b7-4b5b-8471-1083595c12df>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T18:10:59.121Z",
+        "startedAtUtc": "2026-10-29T18:10:59.399Z",
+        "actualWorktree": null,
+        "actualBranch": "main",
+        "sharedReviewCheckout": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright",
+        "frozenReviewCandidate": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-afca85b6",
+        "candidateBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/a11y/r2/review/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T18:10:51.6975139Z",
+        "freeWindowsKiB": 5855488,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Native task accepted; no EX/runtime lease",
+        "payloadSha256": "81e34da69cc1b307825f2f8f7164310a615ff6d907bb5b7474b56397c74e1584",
+        "outputStatus": "REQUEST_CHANGES_F3_P2_DETACHED_LATER_CALLER_ID",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "next": "R3 prepared; no launch while shared RAM gate holds",
+        "lastNativeObservationAtUtc": "2026-10-29T18:24:56.0620451Z",
+        "verdict": "REQUEST_CHANGES",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/a11y/r2/review/REAP-VERIFIED.json"
+      },
+      {
+        "lane": "g1-r8-review",
+        "state": "completed",
+        "stateBasis": "Native terminal/post-reap; all five candidate and both review-output identities unchanged",
+        "clientRequestId": "applywright-resume-g1-sol-review-r8-9bb05ac3-b14d-420c-89a1-ab01afc5d775",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r8-9bb05ac3-b14d-420c-89a1-ab01afc5d775",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r8-9bb05ac3-b14d-420c-89a1-ab01afc5d775",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-g1-sol-review-r8-9bb05ac3-b14d-420c-89a1-ab01afc5d775:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r8-9bb05ac3-b14d-420c-89a1-ab01afc5d775>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T18:11:38.266Z",
+        "startedAtUtc": "2026-10-29T18:11:38.579Z",
+        "actualWorktree": null,
+        "actualBranch": "main",
+        "sharedReviewCheckout": "C:\\Users\\johan\\Desktop\\Coding\\OpenClaw\\agent-system\\projects\\applywright",
+        "frozenReviewCandidate": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ff301e75",
+        "candidateBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/g1-r8/review/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T18:11:32.2381334Z",
+        "freeWindowsKiB": 5341028,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Native task accepted; no EX/runtime lease",
+        "payloadSha256": "54e1b447246985c8176836a458b4aa4333a4835c99ff8652b4a3b944c685f975",
+        "outputStatus": "REQUEST_CHANGES_NINE_SOURCE_TRACED_FINDINGS_NOT_EXECUTED",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "next": "R9 prepared, not launched while RAM gate holds",
+        "lastNativeObservationAtUtc": "2026-10-29T18:34:14.812484Z",
+        "verdict": "REQUEST_CHANGES",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/g1-r8/review/REAP-VERIFIED.json"
+      },
+      {
+        "lane": "windows-finite-case",
+        "state": "completed",
+        "stateBasis": "Actual terminal and post-reap native status;7output identities unchanged",
+        "clientRequestId": "applywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8>",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-cf7041b5",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "requestedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "requestedOptions": {
+          "reasoning_effort": "high"
+        },
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "admissionAtUtc": "2026-10-29T18:28:58.4320976Z",
+        "freeWindowsKiB": 8972608,
+        "minimumWindowsKiB": 4194304,
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/windows-finite-case/SOURCE-ADMISSION.attempt3.json",
+        "payloadSha256": "af62a345331609d22b3311389519005ca9e0945c90b4c0ba6e9185037640505f",
+        "outputStatus": "BLOCKED_ABI_GAP_SOURCE_PROPOSAL_NOT_RUNTIME_QUALIFICATION",
+        "execution": "NOT_RUN_NOT_AUTHORIZED",
+        "acceptance": null,
+        "next": "Independent exact-source Sol review now dispatched; Root+project-owner acceptance and qualified implementation still prerequisite to runtime",
+        "lastNativeObservationAtUtc": "2026-10-29T18:43:54.5776974Z",
+        "actualBranch": "t3/windows-finite-case-proposal",
+        "actualWorktreeBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "startedAtUtc": "2026-10-29T18:29:28.946Z",
+        "sourceProbeReleased": true,
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/windows-finite-case/REAP-VERIFIED.json"
+      },
+      {
+        "lane": "windows-finite-case-review",
+        "state": "completed",
+        "stateBasis": "Actual terminal, exact OWN reap and post-reap status; candidate/report hash custody",
+        "clientRequestId": "applywright-windows-finite-case-sol-review-r1-6601462f-64c7-45d9-b1ab-b0bd1977c539",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-sol-review-r1-6601462f-64c7-45d9-b1ab-b0bd1977c539",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-sol-review-r1-6601462f-64c7-45d9-b1ab-b0bd1977c539",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-windows-finite-case-sol-review-r1-6601462f-64c7-45d9-b1ab-b0bd1977c539:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-sol-review-r1-6601462f-64c7-45d9-b1ab-b0bd1977c539>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T18:40:35.879Z",
+        "startedAtUtc": "2026-10-29T18:40:36.119Z",
+        "actualWorktree": null,
+        "actualBranch": "main",
+        "actualWorktreeBase": null,
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-cf7041b5",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/windows-finite-case/review/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T18:40:29.8819575Z",
+        "freeWindowsKiB": 5092180,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Native task accepted; no EX/runtime lease",
+        "payloadSha256": "e7c274d8f09a0782d6a4ff1865c7eadcfc9137a3c893819e63fcc2530f13766b",
+        "outputStatus": "9 findings;62definitions,0steps",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "next": "Same-case R2 SOURCE proposal revision dispatched; runtime BLOCKED",
+        "lastNativeObservationAtUtc": "2026-10-29T19:10:16.7618602Z",
+        "verdict": "REQUEST_CHANGES",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/windows-finite-case/review/REAP-VERIFIED.json"
+      },
+      {
+        "lane": "a11y-r3",
+        "state": "completed",
+        "stateBasis": "Actual terminal, exact OWN reap and post-reap status; candidate/report hash custody",
+        "clientRequestId": "applywright-resume-a11y-dsh-r3-e18fea8b-831a-442c-b010-e3769c2b4ee3",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r3-e18fea8b-831a-442c-b010-e3769c2b4ee3",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r3-e18fea8b-831a-442c-b010-e3769c2b4ee3",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-a11y-dsh-r3-e18fea8b-831a-442c-b010-e3769c2b4ee3:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r3-e18fea8b-831a-442c-b010-e3769c2b4ee3>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T18:41:48.419Z",
+        "startedAtUtc": "2026-10-29T18:41:52.121Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-6e5f7dd4",
+        "actualBranch": "t3/a11y-hint-id-collision-fix",
+        "actualWorktreeBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-afca85b6",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/a11y/r3/SOURCE-ADMISSION.attempt2.json",
+        "admissionAtUtc": "2026-10-29T18:41:41.3603729Z",
+        "freeWindowsKiB": 6094892,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Native task accepted; no EX/runtime lease",
+        "payloadSha256": "4364879a4065b63b5512b19c4a77273bf8b7e8bc98bfb106d5918a2e0d73ca42",
+        "outputStatus": "6hashes/46definitions NOT_RUN; weak ownership ledger pending independent review",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "next": "New Sol R3 SOURCE review dispatched",
+        "lastNativeObservationAtUtc": "2026-10-29T19:10:16.7662437Z",
+        "operatorArchitectureSteering": {
+          "receipt": "docs\\t3\\receipts\\20261029-resume\\a11y\\r3\\OPERATOR-ARCHITECTURE-STEER.json",
+          "delivery": "steered",
+          "messageId": "message:mcp:61e24d2a-bb16-49fb-8ac2-c6a3f5a80588:thread-send:applywright-a11y-r3-ownership-steer-20261029",
+          "runId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-a11y-dsh-r3-e18fea8b-831a-442c-b010-e3769c2b4ee3:ordinal:1",
+          "sameRun": true,
+          "uptake": "IMPLEMENTATION_NOT_YET_VERIFIED"
+        },
+        "verdict": "SOURCE_COMPLETE_WRITER_ONLY",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/a11y/r3/REAP-VERIFIED.json"
+      },
+      {
+        "lane": "g1-r9",
+        "state": "completed",
+        "stateBasis": "Actual terminal, exact OWN reap and post-reap status; candidate/report hash custody",
+        "clientRequestId": "applywright-resume-g1-dsh-r9-fea1adcf-49d7-473b-a131-881b24e24bcb",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-dsh-r9-fea1adcf-49d7-473b-a131-881b24e24bcb",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-dsh-r9-fea1adcf-49d7-473b-a131-881b24e24bcb",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-g1-dsh-r9-fea1adcf-49d7-473b-a131-881b24e24bcb:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-dsh-r9-fea1adcf-49d7-473b-a131-881b24e24bcb>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T18:42:35.469Z",
+        "startedAtUtc": "2026-10-29T18:42:38.69Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-76750b9f",
+        "actualBranch": "t3/g1-r9-source-correction",
+        "actualWorktreeBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-ff301e75",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/g1-r9/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T18:42:29.9177042Z",
+        "freeWindowsKiB": 5440092,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Native task accepted; no EX/runtime lease",
+        "payloadSha256": "d5950325051c9c42ecca7f0a6b84c5bbff7236baed9dd67186e0be8f7b7a6a09",
+        "outputStatus": "5hashes/123definitions NOT_RUN; typed architecture uptake author-reported",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "next": "New Sol R9 SOURCE review dispatched",
+        "lastNativeObservationAtUtc": "2026-10-29T19:10:16.7667559Z",
+        "operatorArchitectureSteering": {
+          "receipt": "docs\\t3\\receipts\\20261029-resume\\g1-r9\\OPERATOR-ARCHITECTURE-STEER.json",
+          "delivery": "steered",
+          "messageId": "message:mcp:61e24d2a-bb16-49fb-8ac2-c6a3f5a80588:thread-send:applywright-g1-r9-architecture-steer-20261029",
+          "runId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-g1-dsh-r9-fea1adcf-49d7-473b-a131-881b24e24bcb:ordinal:1",
+          "sameRun": true,
+          "uptake": "IMPLEMENTATION_NOT_YET_VERIFIED"
+        },
+        "verdict": "SOURCE_COMPLETE_WRITER_ONLY",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/g1-r9/REAP-VERIFIED.json"
+      },
+      {
+        "lane": "windows-finite-case-r2",
+        "clientRequestId": "applywright-windows-finite-case-dsh-r2-7cd7b64a-dca9-40de-8b98-f148146df733",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r2-7cd7b64a-dca9-40de-8b98-f148146df733",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r2-7cd7b64a-dca9-40de-8b98-f148146df733",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-windows-finite-case-dsh-r2-7cd7b64a-dca9-40de-8b98-f148146df733:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r2-7cd7b64a-dca9-40de-8b98-f148146df733>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T19:06:19.956Z",
+        "startedAtUtc": "2026-10-29T19:06:25.23Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-a4173ab2",
+        "actualBranch": "t3/windows-finite-case-revision",
+        "actualWorktreeBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-cf7041b5",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/windows-finite-case/r2/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T19:06:02.0173505Z",
+        "freeWindowsKiB": 6645232,
+        "adHocFloorKiB": 2097152,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Actual native task accepted; no EX/runtime lease",
+        "payloadSha256": "7722e2ed56d09081f754852defcc3eab664dbacf685191d4ea6c139e98df0433",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "lastNativeObservationAtUtc": "2026-10-29T19:10:16.839279Z",
+        "state": "completed",
+        "outputStatus": "SOURCE_REVISION_COMPLETE_PENDING_INDEPENDENT_REVIEW",
+        "completedAtUtc": "2026-10-29T19:21:20.861Z",
+        "stateBasis": "Actual original native terminal/readback consumed; exact8 hashes match native summary and31Oct ledger2.1; terminal cleanup and after-status complete; before/after8 unchanged",
+        "custodyReceipt": "docs/t3/receipts/20261101-resume/windows-finite-case-r2-custody/REAP-VERIFIED.json",
+        "next": "New exact SOURCE Sol6.1/xhigh/default review now running in sol-r1; source-only output remains proposal/ABI blocked, not executor"
+      },
+      {
+        "lane": "a11y-r3-review",
+        "stateBasis": "Actual native delegate plus initial thread/run metadata",
+        "clientRequestId": "applywright-resume-a11y-sol-review-r3-9ed688c0-af66-4d34-808f-f4ac8587b47f",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r3-9ed688c0-af66-4d34-808f-f4ac8587b47f",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r3-9ed688c0-af66-4d34-808f-f4ac8587b47f",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-a11y-sol-review-r3-9ed688c0-af66-4d34-808f-f4ac8587b47f:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r3-9ed688c0-af66-4d34-808f-f4ac8587b47f>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T19:08:15.894Z",
+        "startedAtUtc": "2026-10-29T19:08:16.339Z",
+        "actualWorktree": null,
+        "actualBranch": "main",
+        "actualWorktreeBase": null,
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-6e5f7dd4",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/a11y/r3/review/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T19:08:08.6420114Z",
+        "freeWindowsKiB": 6743172,
+        "adHocFloorKiB": 4194304,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Actual native task accepted; no EX/runtime lease",
+        "payloadSha256": "1b751182bb73de6228607ae05d08548fbed11c066eeb3ff8ded878f275f8faed",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "lastNativeObservationAtUtc": "2026-10-29T19:10:16.8651139Z",
+        "childTierReadback": {
+          "observedAtUtc": "2026-10-29T19:10:16.359Z",
+          "requested": {
+            "model": "gpt-6.1-sol",
+            "reasoningEffort": "xhigh",
+            "serviceTier": "default"
+          },
+          "nativeObserved": {
+            "threadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-sol-review-r3-9ed688c0-af66-4d34-808f-f4ac8587b47f",
+            "modelSelection": {
+              "instanceId": "codex",
+              "model": "gpt-6.1-sol",
+              "options": [
+                {
+                  "id": "reasoningEffort",
+                  "value": "xhigh"
+                },
+                {
+                  "id": "serviceTier",
+                  "value": "default"
+                }
+              ]
+            },
+            "runtimeMode": "full-access",
+            "interactionMode": "default"
+          },
+          "backendTier": null,
+          "servedIdentity": null,
+          "settingsChanged": false
+        },
+        "state": "completed",
+        "outputStatus": "REQUEST_CHANGES_TWO_P2_SOURCE_TRACED_NOT_EXECUTED",
+        "verdict": "REQUEST_CHANGES",
+        "completedAtUtc": "2026-10-29T19:18:26.705Z",
+        "consumedAtUtc": "2026-10-29T19:28:47.4077676Z",
+        "reviewPath": "docs/t3/receipts/20261029-resume/a11y/r3/review/REVIEW.md",
+        "next": "A11Y R4 correction not yet dispatched"
+      },
+      {
+        "lane": "g1-r9-review",
+        "stateBasis": "Actual native delegate plus initial thread/run metadata",
+        "clientRequestId": "applywright-resume-g1-sol-review-r9-d0fd9d94-ceeb-485b-bbd4-980a4fd5657f",
+        "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r9-d0fd9d94-ceeb-485b-bbd4-980a4fd5657f",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r9-d0fd9d94-ceeb-485b-bbd4-980a4fd5657f",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-resume-g1-sol-review-r9-d0fd9d94-ceeb-485b-bbd4-980a4fd5657f:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r9-d0fd9d94-ceeb-485b-bbd4-980a4fd5657f>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "requestedAtUtc": "2026-10-29T19:08:51.114Z",
+        "startedAtUtc": "2026-10-29T19:08:51.405Z",
+        "actualWorktree": null,
+        "actualBranch": "main",
+        "actualWorktreeBase": null,
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-76750b9f",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/g1-r9/review/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T19:08:45.1932704Z",
+        "freeWindowsKiB": 8355612,
+        "adHocFloorKiB": 4194304,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Actual native task accepted; no EX/runtime lease",
+        "payloadSha256": "0d2326ec1df7560f71fb2b5500a80a0d4c510745025177a74366bf85638fdf33",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "lastNativeObservationAtUtc": "2026-10-29T19:10:16.8725988Z",
+        "childTierReadback": {
+          "observedAtUtc": "2026-10-29T19:10:16.359Z",
+          "requested": {
+            "model": "gpt-6.1-sol",
+            "reasoningEffort": "xhigh",
+            "serviceTier": "default"
+          },
+          "nativeObserved": {
+            "threadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r9-d0fd9d94-ceeb-485b-bbd4-980a4fd5657f",
+            "modelSelection": {
+              "instanceId": "codex",
+              "model": "gpt-6.1-sol",
+              "options": [
+                {
+                  "id": "reasoningEffort",
+                  "value": "xhigh"
+                },
+                {
+                  "id": "serviceTier",
+                  "value": "default"
+                }
+              ]
+            },
+            "runtimeMode": "full-access",
+            "interactionMode": "default"
+          },
+          "backendTier": null,
+          "servedIdentity": null,
+          "settingsChanged": false
+        },
+        "state": "completed",
+        "outputStatus": "REQUEST_CHANGES_7P1_2P2_SOURCE_TRACED_NOT_EXECUTED",
+        "verdict": "REQUEST_CHANGES",
+        "completedAtUtc": "2026-10-29T19:25:48.453Z",
+        "consumedAtUtc": "2026-10-29T19:28:47.4077676Z",
+        "reviewPath": "docs/t3/receipts/20261029-resume/g1-r9/review/REVIEW.md",
+        "reviewSha256": "54ce5586f80ad59acb032947e94c7499c9ffe3d4b3e6ac08e180c35f5aceed43",
+        "consumptionReceipt": "docs/t3/receipts/20261029-resume/g1-r9/review/REVIEW-CONSUMPTION.json",
+        "next": "G1 R10 SOURCE correction dispatched"
+      },
+      {
+        "lane": "g1-r10",
+        "stateBasis": "Actual native delegate response plus admission receipt",
+        "clientRequestId": "applywright-resume-g1-dsh-r10-0207be3c-2bff-4428-95f3-47e7d09ef7e5",
+        "taskId": "node:delegated-task:command%3Amcp%3Ab50a9714-4b0d-459e-a7a3-dfe69bf2cfed%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-0207be3c-2bff-4428-95f3-47e7d09ef7e5",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3Ab50a9714-4b0d-459e-a7a3-dfe69bf2cfed%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-0207be3c-2bff-4428-95f3-47e7d09ef7e5",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Ab50a9714-4b0d-459e-a7a3-dfe69bf2cfed%253Adelegate-task%253Aapplywright-resume-g1-dsh-r10-0207be3c-2bff-4428-95f3-47e7d09ef7e5:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Ab50a9714-4b0d-459e-a7a3-dfe69bf2cfed%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-0207be3c-2bff-4428-95f3-47e7d09ef7e5>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "startedAtUtc": null,
+        "actualWorktreeBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-76750b9f",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/g1-r10/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T19:27:44.3283949Z",
+        "freeWindowsKiB": 8825008,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Actual native task accepted; no EX/runtime lease",
+        "payloadSha256": "58e550b90fdec061a6eacc52a96083096bd684ee7361c4647112785c25e6ae09",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "lastNativeObservationAtUtc": "2026-10-29T19:28:40.4077738Z",
+        "state": "completed",
+        "outputStatus": "SOURCE_CORRECTION_COMPLETE_5HASHES_134DEFINITIONS_NOT_RUN_PENDING_INDEPENDENT_REVIEW",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-bf853bb9",
+        "actualBranch": "t3/g1-r10-grounding-source-correction",
+        "completedAtUtc": "2026-10-29T19:48:11.0762661Z",
+        "custodyReceipt": "docs/t3/receipts/20261029-resume/g1-r10/REAP-VERIFIED.json",
+        "next": "Independent Sol R10 review dispatched"
+      },
+      {
+        "lane": "g1-r10-review",
+        "stateBasis": "Actual native delegate response plus admission receipt",
+        "clientRequestId": "applywright-resume-g1-sol-review-r10-719f23e6-8fbd-4056-ba90-4b10235b7bf1",
+        "taskId": "node:delegated-task:command%3Amcp%3Ab50a9714-4b0d-459e-a7a3-dfe69bf2cfed%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r10-719f23e6-8fbd-4056-ba90-4b10235b7bf1",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3Ab50a9714-4b0d-459e-a7a3-dfe69bf2cfed%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r10-719f23e6-8fbd-4056-ba90-4b10235b7bf1",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Ab50a9714-4b0d-459e-a7a3-dfe69bf2cfed%253Adelegate-task%253Aapplywright-resume-g1-sol-review-r10-719f23e6-8fbd-4056-ba90-4b10235b7bf1:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Ab50a9714-4b0d-459e-a7a3-dfe69bf2cfed%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r10-719f23e6-8fbd-4056-ba90-4b10235b7bf1>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "actualWorktree": null,
+        "actualBranch": "main",
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-bf853bb9",
+        "sourceAdmission": "docs/t3/receipts/20261029-resume/g1-r10/review/SOURCE-ADMISSION.attempt1.json",
+        "admissionAtUtc": "2026-10-29T19:48:11.0762661Z",
+        "freeWindowsKiB": 9436372,
+        "sourceProbeReleased": true,
+        "nativeLifetimeAdmission": "Actual native task accepted; no EX/runtime lease",
+        "payloadSha256": "c223a136ed09018938ab9e0ad0a6c3690c5483255317a0522103aa838460c31a",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "lastNativeObservationAtUtc": "2026-10-29T19:48:11.0762661Z",
+        "state": "failed",
+        "outputStatus": "FAILED_PROVIDER_USAGE_LIMIT_NO_OUTPUT",
+        "failureReason": "Codex usage limit reached before any read; provider-stated retry 2026-11-04T16:50 local",
+        "failedAtUtc": "2026-10-29T19:48:00.898Z",
+        "providerStatedReset": "2026-11-04T16:50 local (timezone unverified)",
+        "reviewFilesWritten": 0,
+        "candidateUnchangedAfterFailure": true,
+        "failureReceipt": "docs/t3/receipts/20261029-resume/g1-r10/review/REVIEW-DISPATCH-FAILED.json",
+        "next": "Hold for Codex reset; retry same payload SHA c223a136... with fresh request id; no provider substitution"
+      },
+      {
+        "lane": "wsl-predicate-case",
+        "stateBasis": "Actual native delegate response plus admission receipt",
+        "clientRequestId": "applywright-resume-wsl-predicate-dsh-r1-428422cf-d885-441a-be2b-53576299ed70",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-wsl-predicate-dsh-r1-428422cf-d885-441a-be2b-53576299ed70>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-6d10e797",
+        "actualBranch": "t3/prepare-wsl-predicate-case",
+        "startedAtUtc": "2026-11-01T15:35:27.267Z",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-wsl-predicate-dsh-r1-428422cf-d885-441a-be2b-53576299ed70",
+        "childRunId": "run:thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-wsl-predicate-dsh-r1-428422cf-d885-441a-be2b-53576299ed70:ordinal:1",
+        "taskId": "node:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-wsl-predicate-dsh-r1-428422cf-d885-441a-be2b-53576299ed70",
+        "state": "completed",
+        "outputStatus": "SOURCE_PREPARED_10FILES_NOT_RUN_PENDING_SOL_SAFETY_REVIEW",
+        "completedAtUtc": "2026-11-01T15:52:02.5386537Z",
+        "custodyReceipt": "docs/t3/receipts/20261101-resume/wsl-predicate-case/REAP-VERIFIED.json",
+        "next": "Root R1 REQUEST_CHANGES; exact DSH R2 prerequisite prepared, normal SOURCE admission held; frozen R1 unchanged",
+        "rootReviewDisposition": "docs/t3/receipts/20261101-resume/wsl-predicate-case/review/ROOT-R1-DISPOSITION.json"
+      },
+      {
+        "lane": "a11y-r4",
+        "stateBasis": "Actual native delegate response plus admission receipt",
+        "clientRequestId": "applywright-resume-a11y-dsh-r4-cc56cd9e-bc4c-4f46-a413-4a59bfc9e072",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r4-cc56cd9e-bc4c-4f46-a413-4a59bfc9e072>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "startedAtUtc": "2026-11-01T15:35:26.786Z",
+        "state": "completed",
+        "outputStatus": "SOURCE_COMPLETE_4CHANGED_55DEFS_NOT_RUN_PENDING_SOL_REVIEW",
+        "completedAtUtc": "2026-11-01T15:45:01.2410008Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-6f365ec7",
+        "actualBranch": "t3/a11y-hint-id-collision",
+        "custodyReceipt": "docs/t3/receipts/20261101-resume/a11y-r4/REAP-VERIFIED.json",
+        "next": "Sol review held at RAM gate; retry on fresh admission",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r4-cc56cd9e-bc4c-4f46-a413-4a59bfc9e072",
+        "childRunId": "run:thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r4-cc56cd9e-bc4c-4f46-a413-4a59bfc9e072:ordinal:1",
+        "taskId": "node:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r4-cc56cd9e-bc4c-4f46-a413-4a59bfc9e072"
+      },
+      {
+        "lane": "g1-r10-1",
+        "stateBasis": "Actual native delegate response plus admission receipt",
+        "clientRequestId": "applywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909>",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f54d4b75",
+        "actualBranch": "t3/g1-r10-1-grounding-fixes",
+        "startedAtUtc": "2026-11-01T15:35:26.85Z",
+        "state": "completed",
+        "outputStatus": "SOURCE_COMPLETE_5HASHES_134DEFS_NOT_RUN_PENDING_SOL_REVIEW",
+        "completedAtUtc": "2026-11-01T15:43:45.7566281Z",
+        "custodyReceipt": "docs/t3/receipts/20261101-resume/g1-r10-1/REAP-VERIFIED.json",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
+        "childRunId": "run:thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909:ordinal:1",
+        "taskId": "node:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
+        "next": "Independent Sol review REQUEST_CHANGES; two commissioned fixes addressed, inherited assertion conflict and four advisory residuals remain, execution NOT_RUN"
+      },
+      {
+        "lane": "g1-r10-1-review",
+        "clientRequestId": "applywright-resume-g1-sol-review-r10-1-f4dd025c-aaeb-4ec2-992c-b4570b529095",
+        "taskId": "node:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r10-1-f4dd025c-aaeb-4ec2-992c-b4570b529095",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r10-1-f4dd025c-aaeb-4ec2-992c-b4570b529095>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "runtimeMode": "full-access",
+        "interactionMode": "default",
+        "frozenSource": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f54d4b75",
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/g1-r10-1/review/SOURCE-ADMISSION.attempt1.json",
+        "payloadSha256": "fb2e6722ee71d63335b5795a15f06b9c8ac8d299230af794f662db4569cc990e",
+        "freeWindowsKiB": 4883652,
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "childThreadId": "thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-sol-review-r10-1-f4dd025c-aaeb-4ec2-992c-b4570b529095",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Ae83c7a7d-8813-454d-8ac9-929f7be82854%253Adelegate-task%253Aapplywright-resume-g1-sol-review-r10-1-f4dd025c-aaeb-4ec2-992c-b4570b529095:ordinal:1",
+        "state": "completed",
+        "stateBasis": "Exact terminal completion consumed; own native task_cancel cleanup and after-status completed/no pending child work; before/after six candidate and two output hashes verified",
+        "outputStatus": "REQUEST_CHANGES_2COMMISSIONED_FIXED_1INHERITED_P2_4RESIDUALS_OPEN_134DEFS_NOT_RUN",
+        "verdict": "REQUEST_CHANGES",
+        "custodyReceipt": "docs/t3/receipts/20261101-resume/g1-r10-1/review/REAP-VERIFIED.json",
+        "lastNativeObservationAtUtc": "2026-11-01T15:59:21.6213907Z",
+        "next": "Operator finite-case diagnostics and explicit adjudication of retained refine.test.mjs:542; no new source repair or acceptance in configuration turn"
+      },
+      {
+        "lane": "a11y-r4-review",
+        "state": "held",
+        "stateBasis": "Fresh normal4GiB SOURCE-review observation after stopped/reaped WSL R2 author: 2,719,792 KiB < 4,194,304 KiB; running Ubuntu; native task/probe not requested",
+        "clientRequestId": "applywright-resume-a11y-sol-review-r4-3e71ff7b-185c-4cad-b72a-b0898c665864",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "payloadSha256": "68a407fdf29900667f15ef88e110e36cc1bc90cc8cc0c7d2531d1963b951d557",
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/a11y-r4/review/ADMISSION-HOLD.attempt3.json",
+        "windowsFreeKiB": 2719792,
+        "outputStatus": "HELD_RAM_GATE_NO_TASK",
+        "execution": "NOT_RUN",
+        "acceptance": null,
+        "next": "DO NOT DISPATCH A11Y Sol child. Root logical direct review assigned after WSL finite-case priority; actual source read/report pending, no RUNNING/PASS claim or4GiB waiver",
+        "historicalAdmission": "docs/t3/receipts/20261101-resume/a11y-r4/review/ADMISSION-HOLD.attempt1.json",
+        "dispatchSuppressedBy": "docs/t3/receipts/20261101-resume/a11y-r4/review/EXTERNAL-ROOT-ASSIGNMENT.json"
+      },
+      {
+        "lane": "wsl-predicate-case-review",
+        "state": "held",
+        "stateBasis": "RAM gate below 4 GiB",
+        "clientRequestId": "applywright-resume-wsl-sol-review-r1-d7110243-1bfb-42f4-9ea6-a38f9cc99454",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "payloadSha256": "9ac73faea33e8e094c74190356072ccda806c01af245e23e421315f57321c4a3",
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/wsl-predicate-case/review/ADMISSION-HOLD.attempt1.json",
+        "windowsFreeKiB": 2755104,
+        "outputStatus": "HELD_RAM_GATE_NO_TASK",
+        "execution": "NOT_RUN",
+        "acceptance": null,
+        "next": "DO NOT DISPATCH: historical child HOLD preserved; Root directly reviews coherent R2 after stopped source author",
+        "dispatchSuppressedBy": "docs/t3/receipts/20261101-resume/wsl-predicate-case/review/EXTERNAL-ROOT-ASSIGNMENT.json"
+      },
+      {
+        "lane": "wsl-predicate-case-r2",
+        "clientRequestId": "applywright-wsl-predicate-dsh-r2-20261101T162805994Z",
+        "requestedBase": "5199d328d97e4871f286442f36fe2a7751e3819a",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "payloadSha256": "b55deb59f471ef882d4682711eed5ae65b1c1d9bcbdd9800fd79c832a2a91170",
+        "execution": "NOT_RUN",
+        "acceptance": null,
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "taskId": "node:delegated-task:command%3Amcp%3A33ec4620-b25e-4e5f-97c5-aa2bf20ae728%3Adelegate-task%3Aapplywright-wsl-predicate-dsh-r2-20261101T162805994Z",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A33ec4620-b25e-4e5f-97c5-aa2bf20ae728%3Adelegate-task%3Aapplywright-wsl-predicate-dsh-r2-20261101T162805994Z",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A33ec4620-b25e-4e5f-97c5-aa2bf20ae728%253Adelegate-task%253Aapplywright-wsl-predicate-dsh-r2-20261101T162805994Z:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A33ec4620-b25e-4e5f-97c5-aa2bf20ae728%3Adelegate-task%3Aapplywright-wsl-predicate-dsh-r2-20261101T162805994Z>",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-eb89e021",
+        "actualBranch": "t3/wsl-predicate-case-r2",
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/wsl-predicate-case-r2/SOURCE-ADMISSION.attempt3.json",
+        "rulingReceipt": "docs/t3/receipts/20261101-resume/wsl-predicate-case-r2/ROOT-SOURCE-PREFILTER-RULING.json",
+        "freeWindowsKiB": 2920080,
+        "coordinatorObservationFloorKiB": 2097152,
+        "guestAvailableKiB": 34131284,
+        "nativeAdmission": "Actual T3 delegate accepted/running; installed native guard/reservation details not separately exposed by this response",
+        "state": "completed",
+        "stateBasis": "Exact native terminal completion consumed; metadata/scope and13 source hashes verified, all R1/R10/R7/history/oracle pins rehashed before/after exact terminal native cleanup; no pending child work",
+        "outputStatus": "SOURCE_AUTHORED_STOPPED_13FILES_HASH_VERIFIED_REAPED_PENDING_ROOT_DIRECT_REVIEW_NOT_RUN",
+        "custodyReceipt": "docs\\t3\\receipts\\20261101-resume\\wsl-predicate-case-r2\\REAP-VERIFIED.json",
+        "rootReviewHandoff": "docs\\t3\\receipts\\20261101-resume\\wsl-predicate-case-r2\\ROOT-REVIEW-HANDOFF.json",
+        "completedAtUtc": "2026-11-01T17:04:26.9373327Z",
+        "externalActualDiagnostic": {
+          "projection": "docs/resume/20261101/G1-R10-ACTUAL-FAILURES.json",
+          "rawReceipt": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/G1-R2.1-ACTUAL-ATTEMPT1/RECEIPT.json",
+          "receiptSha256": "d84425361f416cd984c51e88f09ba821aba199eaad06cf12bfe3a974eb654698",
+          "state": "DIAGNOSTIC_UNEXPECTED_DIRECTION",
+          "exReleased": true,
+          "productAccepted": false
+        },
+        "next": "Actual Root R2.1 run complete: d84425361f416cd984c51e88f09ba821aba199eaad06cf12bfe3a974eb654698 / DIAGNOSTIC_UNEXPECTED_DIRECTION / EX released. Historical13-file R2 SOURCE custody remains unchanged, not current product acceptance. Existing operator prepares a NEW fixed2-step76+244 case only after combined source terminal; no R7 rerun or consumed-approval retarget."
+      },
+      {
+        "lane": "combined-g1-r11-a11y-r5-source",
+        "taskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-combined-g1-r11-a11y-r5-dsh-20261101T181831947Z",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-combined-g1-r11-a11y-r5-dsh-20261101T181831947Z",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A99f71b76-4f80-4207-b0b2-337d2cf7602d%253Adelegate-task%253Aapplywright-combined-g1-r11-a11y-r5-dsh-20261101T181831947Z:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-combined-g1-r11-a11y-r5-dsh-20261101T181831947Z>",
+        "clientRequestId": "applywright-combined-g1-r11-a11y-r5-dsh-20261101T181831947Z",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-b1a7a4d5",
+        "actualBranch": "t3/g1-r11-a11y-r5",
+        "actualWorktreeBase": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/combined-g1-r11-a11y-r5/SOURCE-ADMISSION.attempt1.json",
+        "freeWindowsKiB": 8062312,
+        "normalObservationFloorKiB": 4194304,
+        "expiredWslR2ExceptionApplied": false,
+        "payloadSha256": "8dc67c49492ff04882148d6fc10bd9d8699aa919b41606c35d1ececf7217a414",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "state": "completed",
+        "stateBasis": "Actual terminal consumed;11 output paths,12 frozen origins and all pinned histories/oracles verified; exact task terminal cleanup complete, after-status quiescent and all hashes/scope unchanged",
+        "outputStatus": "SOURCE_ONLY_G1_R11_136DEFS_A11Y_R5_57DEFS_STOPPED_REAPED_PENDING_NEW_REVIEWS",
+        "custodyReceipt": "docs/t3/receipts/20261101-resume/combined-g1-r11-a11y-r5/REAP-VERIFIED.json",
+        "next": "New separate exact G1 R11 and A11Y R5 Sol reviews under normal admission; existing operator prepares new fixed two-step case, no old approval retarget"
+      },
+      {
+        "lane": "windows-finite-case-r2-sol-review-r1",
+        "taskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-windows-finite-case-r2-sol-review-20261101T182813792Z",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-windows-finite-case-r2-sol-review-20261101T182813792Z",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A99f71b76-4f80-4207-b0b2-337d2cf7602d%253Adelegate-task%253Aapplywright-windows-finite-case-r2-sol-review-20261101T182813792Z:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-windows-finite-case-r2-sol-review-20261101T182813792Z>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "candidate": "C:/Users/johan/.t3/worktrees/applywright/t3-a4173ab2",
+        "candidateBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/windows-finite-case-r2-review/sol-r1/SOURCE-ADMISSION.attempt1.json",
+        "freeWindowsKiB": 8135132,
+        "normalMinimumWindowsKiB": 4194304,
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "state": "completed",
+        "stateBasis": "Actual review terminal consumed;45 input pins plus both reports verified unchanged across exact native terminal cleanup; no pending work",
+        "outputStatus": "REQUEST_CHANGES_4P2_0P1_RUNTIME_BLOCKED_CUSTODY_ABI_NOT_RUN",
+        "verdict": "REQUEST_CHANGES",
+        "custodyReceipt": "docs/t3/receipts/20261101-resume/windows-finite-case-r2-review/sol-r1/REAP-VERIFIED.json",
+        "next": "Preserve frozen proposal and4P2 report; source-only, not an executor. No correction/implementation release"
+      },
+      {
+        "lane": "g1-r11-review",
+        "clientRequestId": "applywright-g1-r11-review-sol-20261101T184655901Z",
+        "taskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r11-review-sol-20261101T184655901Z",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r11-review-sol-20261101T184655901Z",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A99f71b76-4f80-4207-b0b2-337d2cf7602d%253Adelegate-task%253Aapplywright-g1-r11-review-sol-20261101T184655901Z:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r11-review-sol-20261101T184655901Z>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "candidate": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5",
+        "candidateBase": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/combined-g1-r11-a11y-r5/g1-r11-review/SOURCE-ADMISSION.attempt1.json",
+        "freeWindowsKiB": 8320596,
+        "normalMinimumWindowsKiB": 4194304,
+        "payloadSha256": "2df53315b7a341f5fc170d582c216f61bad6f4f0892e0279459c46a3b14b4aff",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "state": "completed",
+        "stateBasis": "Actual REQUEST_CHANGES terminal consumed;69 input pins+both review outputs verified before/after exact native terminal cleanup; no pending child work",
+        "outputStatus": "REQUEST_CHANGES_5P1_3P2_134RETAINED_136DEFS_R11_NOT_RUN",
+        "verdict": "REQUEST_CHANGES",
+        "custodyReceipt": "docs\\t3\\receipts\\20261101-resume\\combined-g1-r11-a11y-r5\\g1-r11-review\\REAP-VERIFIED.json",
+        "sourceReviewHandoff": "docs\\t3\\receipts\\20261101-resume\\combined-g1-r11-a11y-r5\\g1-r11-review\\SOURCE-REVIEW-HANDOFF.json",
+        "completedAtUtc": "2026-11-01T19:06:55.0979209Z",
+        "next": "Root/project operator disposition of fiveP1/threeP2 source findings and separately prepared new exact diagnostic case. No new correction writer, source mutation, oracle change, case retarget, execution or product acceptance released by this review."
+      },
+      {
+        "lane": "a11y-r5-review",
+        "clientRequestId": "applywright-a11y-r5-review-sol-20261101T184655910Z",
+        "taskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-a11y-r5-review-sol-20261101T184655910Z",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-a11y-r5-review-sol-20261101T184655910Z",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A99f71b76-4f80-4207-b0b2-337d2cf7602d%253Adelegate-task%253Aapplywright-a11y-r5-review-sol-20261101T184655910Z:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-a11y-r5-review-sol-20261101T184655910Z>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "candidate": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5",
+        "candidateBase": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/combined-g1-r11-a11y-r5/a11y-r5-review/SOURCE-ADMISSION.attempt1.json",
+        "freeWindowsKiB": 7836492,
+        "normalMinimumWindowsKiB": 4194304,
+        "payloadSha256": "90a383301d0324e2c6e763cb8d61bb406a20e2463732f361b983344872e0b9cc",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "state": "completed",
+        "stateBasis": "Actual PASS_SOURCE terminal consumed;37 input identities plus both reports match before/after exact terminal cleanup; native after-status completed/no pending child work; G1 untouched",
+        "outputStatus": "PASS_SOURCE_0P1_0P2_2P3_55RETAINED_57DEFS_12SUITES_0EXECUTED",
+        "verdict": "PASS_SOURCE",
+        "custodyReceipt": "docs\\t3\\receipts\\20261101-resume\\combined-g1-r11-a11y-r5\\a11y-r5-review\\REAP-VERIFIED.json",
+        "sourcePassHandoff": "docs\\t3\\receipts\\20261101-resume\\combined-g1-r11-a11y-r5\\a11y-r5-review\\SOURCE-PASS-HANDOFF.json",
+        "completedAtUtc": "2026-11-01T18:58:32.2226603Z",
+        "next": "Preserve exact passed A11Y R5 candidate/report and live G1 review. Optional one-process A11Y finite case requires exact public startup/import/read closure review, new Root binding and actual full-lifetime admission before execution."
+      },
+      {
+        "lane": "g1-r12",
+        "clientRequestId": "applywright-g1-r12-dsh-source-20261101T192000705Z",
+        "taskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-dsh-source-20261101T192000705Z",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-dsh-source-20261101T192000705Z",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A99f71b76-4f80-4207-b0b2-337d2cf7602d%253Adelegate-task%253Aapplywright-g1-r12-dsh-source-20261101T192000705Z:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-dsh-source-20261101T192000705Z>",
+        "actualWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-0564e52d",
+        "actualBranch": "t3/g1-r12-source-successor",
+        "actualWorktreeBase": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+        "provider": "acpRegistry_deepseek_windows",
+        "selectedModel": "[\"deepseek-official\",\"deepseek-flash\"]",
+        "selectedOptions": [
+          {
+            "id": "reasoning_effort",
+            "value": "high"
+          }
+        ],
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/g1-r12/SOURCE-ADMISSION.attempt1.json",
+        "freeWindowsKiB": 9563232,
+        "minimumWindowsKiB": 4194304,
+        "guestAvailableKiB": 34647276,
+        "narrowR2ExceptionApplied": false,
+        "payloadSha256": "42d39dc69a1a85565185d60d83ef0fd28739712e2f0b85320be80351fe66d922",
+        "editablePaths": [
+          "server/lib/cv/tailor.js",
+          "server/lib/cv/refine.js",
+          "server/lib/cv/tailor.test.mjs",
+          "server/lib/cv/refine.test.mjs",
+          "GROUNDING-G1-R12-RESULT.md"
+        ],
+        "a11yWritesOrCopy": false,
+        "checkpoint1942CancellationDeadline": false,
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "acceptance": null,
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "state": "completed",
+        "stateBasis": "Actual natural terminal19:38:59 consumed;exact5 scope/raw hashes,whole prior test prefixes,origins/oracles verified before/after exact terminal native cleanup;quiescent",
+        "outputStatus": "SOURCE_ONLY_5FILES_136INTENTS_RETAINED_140DEFS_REAPED_PENDING_NEW_SOL_REVIEW",
+        "custodyReceipt": "docs\\t3\\receipts\\20261101-resume\\g1-r12\\REAP-VERIFIED.json",
+        "completedAtUtc": "2026-11-01T19:38:59.606Z",
+        "next": "One NEW independent Sol6.1/xhigh/default exact SOURCE review after fresh NORMAL4GiB and actual native admission. New Root candidate binding before any R12 execution; old approvals consumed, no retarget."
+      },
+      {
+        "lane": "g1-r12-review",
+        "state": "running",
+        "stateBasis": "NEW independent Sol6.1/xhigh/default exact SOURCE review accepted/running after natural source completion/hash/reap and own fresh normal4GiB/released SH observation",
+        "clientRequestId": "applywright-g1-r12-sol-review-20261101T194326352Z",
+        "taskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-sol-review-20261101T194326352Z",
+        "childThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-sol-review-20261101T194326352Z",
+        "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A99f71b76-4f80-4207-b0b2-337d2cf7602d%253Adelegate-task%253Aapplywright-g1-r12-sol-review-20261101T194326352Z:ordinal:1",
+        "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-sol-review-20261101T194326352Z>",
+        "provider": "codex",
+        "selectedModel": "gpt-6.1-sol",
+        "selectedOptions": [
+          {
+            "id": "reasoningEffort",
+            "value": "xhigh"
+          },
+          {
+            "id": "serviceTier",
+            "value": "default"
+          }
+        ],
+        "candidate": "C:/Users/johan/.t3/worktrees/applywright/t3-0564e52d",
+        "candidateBase": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+        "sourceAdmission": "docs/t3/receipts/20261101-resume/g1-r12/review/SOURCE-ADMISSION.attempt1.json",
+        "freeWindowsKiB": 7013428,
+        "normalMinimumWindowsKiB": 4194304,
+        "payloadSha256": "c55c8a36f458c1ffd99ee5e54fea1c781ccb7129a3eb80a845d3bede16751e46",
+        "execution": "NOT_RUN/SOURCE_ONLY",
+        "outputStatus": "INDEPENDENT_SOURCE_REVIEW_RUNNING_NO_VERDICT",
+        "acceptance": null,
+        "servedIdentity": null,
+        "tokens": null,
+        "cost": null,
+        "next": "Native review completion callback; consume exact report, verify unchanged stopped source/origins, terminal cleanup. No polling/refill, source self-acceptance or R12 execution before new Root binding and actual full-lifetime admission."
+      }
+    ],
+    "priorA11yHold": "Attempt1 at17:26:44Z Windows3993892KiB below4194304; preserved. Actual later research observation4605464KiB justified ONE new attempt2, which passed4355836KiB.",
+    "rootQualification": "Terra and estate-cua remain Root-only until explicit qualified release; neither invoked here",
+    "installedSettings": "Unchanged",
+    "logicalDelegation": "User unlimited logical authorization; all installed RAM/capacity/locks/provider gates preserved",
+    "testsBuildNativeBrowser": "NOT_RUN; all SOURCE observations released, no EX lease",
+    "sourceAcceptance": null,
+    "noNewCoordinatorGoalTimer": true,
+    "metrics": "Cost/tokens/served identity UNKNOWN/null",
+    "receiptRoot": "docs/t3/receipts/20261029-resume/",
+    "latestSourceReadback": {
+      "atUtc": "2026-10-29T17:38:22.0532374Z",
+      "currentMainHead": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "originalMainHead": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+      "main14RawHashesUnchanged": true,
+      "frozen5RawHashesUnchanged": true,
+      "execution": "HASHING_ONLY_NO_TEST_OR_SOURCE_EXECUTION",
+      "baseAdoption": "No new launch/integration; newer main merely observed, frozen task bases preserved"
+    },
+    "latestA11yReviewAdmission": {
+      "atUtc": "2026-10-29T17:41:44.6185212Z",
+      "clientRequestId": "applywright-resume-a11y-sol-review-r1-349f08f7-3786-4a02-83af-d2dc39b4e6c0",
+      "phase": "INDEPENDENT_A11Y_SOURCE_REVIEW",
+      "mainHead": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "candidateBase": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+      "payloadSha256": "9503249e49342d6b381645f6535511361e829dac0eb9e97ffb290972d814b7e6",
+      "windowsFreeKiB": 9765596,
+      "minimumWindowsKiB": 4194304,
+      "namesExit": 0,
+      "alreadyRunningNames": [
+        "Ubuntu",
+        "docker-desktop"
+      ],
+      "candidateHashesVerified": 6,
+      "mainHashesVerified": 14,
+      "docsOnlyMainDelta": [
+        "AGENTS.md",
+        "docs/IMPLEMENTATION-PLAN.md",
+        "docs/IMPLEMENTATION-REGISTER.json",
+        "docs/OPERATOR-CONTINUATION-PLAN.md",
+        "docs/VAULT-PATCH.md",
+        "docs/resume/20261029/BROKER-COMMISSION.md",
+        "docs/resume/20261029/BROKER-SEND-RECEIPT.json",
+        "docs/resume/20261029/EDITOR-DESIGN-CONTRACT.md",
+        "docs/resume/20261029/NATIVE-DISPATCH-SNAPSHOT.json",
+        "docs/resume/20261029/OPERATOR-STATUS.json",
+        "docs/resume/20261029/RESUME-PLAN.md",
+        "docs/resume/20261029/SOURCE-OBSERVATION-1716-RESUME.json",
+        "docs/resume/20261029/USAGE-OBSERVATION.json"
+      ],
+      "sourceProbeExit": 0,
+      "sourceProbe": {
+        "atUtc": "2026-10-29T17:41:45.198251+00:00",
+        "scope": "SOURCE_OR_SAME_COORDINATOR_DISPATCH_ONLY_NOT_TEST_OR_LIVE_LEASE",
+        "authority": "ROOT-SOURCE-DISPATCH-LOCK-CLARIFICATION-20261028.md",
+        "path": "/tmp/redline-heavy.lock",
+        "canonicalSharedProbe": true,
+        "probeReleasedBeforeDispatch": true,
+        "actualProviderLifetimeAdmission": "REQUIRED SEPARATELY; untouched",
+        "decision": "PASS_SOURCE_OBSERVATION_ONLY"
+      },
+      "decision": "ADMIT_SOURCE_DISPATCH_OBSERVATION_ONLY",
+      "nativeAdmission": "REQUIRED_SEPARATELY_BY_ACTUAL_DELEGATE",
+      "finishedAtUtc": "2026-10-29T17:41:45.2300184Z"
+    },
+    "g1UnitContractCorrection": "EXPLICIT_OPERATOR_ADJUDICATION: refusal plus grounded ACCEPT control, frozen history and211 corpus preserved. Existing R8 payload already matches; no arbitrary expectation change or execution release.",
+    "latestG1Admission": {
+      "atUtc": "2026-10-29T17:47:37.4035244Z",
+      "clientRequestId": "applywright-resume-g1-dsh-r8-2bf401bd-cde7-4884-a43a-ccc7a8b41674",
+      "phase": "G1_R8_CLAIM_ROLE_SOURCE_CORRECTION",
+      "mainHead": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "expectedBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "payloadSha256": "854e00343b85cddd1f329c193016e0cb2bdad0fe9e0c63bc83b2178ba6fac0bf",
+      "windowsFreeKiB": 9810356,
+      "minimumWindowsKiB": 4194304,
+      "namesExit": 0,
+      "alreadyRunningNames": [
+        "Ubuntu",
+        "docker-desktop"
+      ],
+      "mainVerified": 14,
+      "frozenVerified": 5,
+      "sourceProbeExit": 0,
+      "sourceProbe": {
+        "atUtc": "2026-10-29T17:47:37.812865+00:00",
+        "scope": "SOURCE_OR_SAME_COORDINATOR_DISPATCH_ONLY_NOT_TEST_OR_LIVE_LEASE",
+        "authority": "ROOT-SOURCE-DISPATCH-LOCK-CLARIFICATION-20261028.md",
+        "path": "/tmp/redline-heavy.lock",
+        "canonicalSharedProbe": true,
+        "probeReleasedBeforeDispatch": true,
+        "actualProviderLifetimeAdmission": "REQUIRED SEPARATELY; untouched",
+        "decision": "PASS_SOURCE_OBSERVATION_ONLY"
+      },
+      "decision": "ADMIT_SOURCE_DISPATCH_OBSERVATION_ONLY",
+      "nativeAdmission": "REQUIRED_SEPARATELY_BY_ACTUAL_DELEGATE",
+      "finishedAtUtc": "2026-10-29T17:47:37.8374337Z"
+    },
+    "latestA11yR2Admission": {
+      "atUtc": "2026-10-29T17:54:25.6413763Z",
+      "clientRequestId": "applywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
+      "phase": "A11Y_R2_SOURCE_CORRECTION",
+      "mainHead": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "expectedBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "payloadSha256": "4e50f534819a7987b0b9bc01f4869085dc182f2183010e850421438de9979e6f",
+      "windowsFreeKiB": 8803792,
+      "minimumWindowsKiB": 4194304,
+      "namesExit": 0,
+      "alreadyRunningNames": [
+        "Ubuntu",
+        "docker-desktop"
+      ],
+      "candidateVerified": 6,
+      "mainVerified": 14,
+      "sourceProbeExit": 0,
+      "sourceProbe": {
+        "atUtc": "2026-10-29T17:54:26.038082+00:00",
+        "scope": "SOURCE_OR_SAME_COORDINATOR_DISPATCH_ONLY_NOT_TEST_OR_LIVE_LEASE",
+        "authority": "ROOT-SOURCE-DISPATCH-LOCK-CLARIFICATION-20261028.md",
+        "path": "/tmp/redline-heavy.lock",
+        "canonicalSharedProbe": true,
+        "probeReleasedBeforeDispatch": true,
+        "actualProviderLifetimeAdmission": "REQUIRED SEPARATELY; untouched",
+        "decision": "PASS_SOURCE_OBSERVATION_ONLY"
+      },
+      "decision": "ADMIT_SOURCE_DISPATCH_OBSERVATION_ONLY",
+      "nativeAdmission": "REQUIRED_SEPARATELY_BY_ACTUAL_DELEGATE",
+      "finishedAtUtc": "2026-10-29T17:54:26.0709104Z"
+    },
+    "explicitG1Adjudication": {
+      "atUtc": "2026-10-29T17:56:25.8080778Z",
+      "operatorAdjudicationPath": "docs/t3/receipts/20261029-resume/g1-r8/OPERATOR-ADJUDICATION.json",
+      "operatorAdjudicationSha256": "d6bd635a2740feebffc364646461f50424224acf57b92a44e18ddaf1ac1396ed",
+      "commissionPath": "docs/resume/20261029/G1-R8-CORRECTION-COMMISSION.md",
+      "commissionSha256": "f12641e8b3344b778c5e8802acee8a8a027c4796c4a901efcc5434ba0a81b737",
+      "nativePendingRequestCount": 0,
+      "currentChildrenUntouched": true,
+      "execution": "NOT_RUN",
+      "integration": false,
+      "acceptance": null
+    },
+    "currentExecutionBoundary": "Root obtaining reviewed finite EX executor; all new runtime/Node/syntax/oracle/browser execution NOT_RUN; no raw flock bypass, Terra or estate-cua",
+    "windowsFiniteCaseHold": null,
+    "windowsFiniteCaseActual": {
+      "atUtc": "2026-10-29T18:43:54.5776974Z",
+      "state": "COMPLETED_CONSUMED_REAPED_BLOCKED_ABI_GAP_PENDING_INDEPENDENT_REVIEW",
+      "clientRequestId": "applywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8",
+      "taskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8",
+      "childThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8",
+      "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%253Adelegate-task%253Aapplywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8:ordinal:1",
+      "link": "<t3-thread://v2/c9887cd0-5164-44d0-a8c0-acc6c583ca42/thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8>",
+      "provider": "acpRegistry_deepseek_windows",
+      "model": "[\"deepseek-official\",\"deepseek-flash\"]",
+      "options": [
+        {
+          "id": "reasoning_effort",
+          "value": "high"
+        }
+      ],
+      "worktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-cf7041b5",
+      "branch": "t3/windows-finite-case-proposal",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "startedAtUtc": "2026-10-29T18:29:28.946Z",
+      "admission": "SOURCE-ADMISSION.attempt3.json",
+      "payloadSha256": "af62a345331609d22b3311389519005ca9e0945c90b4c0ba6e9185037640505f",
+      "prelaunchFreeWindowsKiB": 8972608,
+      "sourceProbeReleased": true,
+      "priorRamHolds": "attempt1/2 preserved; attempt3 only after actual G1 reviewer terminal cleanup and fresh physical/source checks",
+      "owner": "ONE project Windows finite-case source proposal, no other owner observed",
+      "nativeLifetimeAdmission": "Native task accepted; no runtime/EX lease inferred",
+      "qualifiedWindowsExecutor": false,
+      "execution": "NOT_RUN_NOT_AUTHORIZED",
+      "acceptance": null,
+      "tokens": null,
+      "cost": null,
+      "servedIdentity": null,
+      "next": "Independent exact-source Sol review now dispatched; Root+project-owner acceptance and qualified implementation still prerequisite to runtime",
+      "outputCustody": "REAP-VERIFIED.json;7hashes unchanged",
+      "researcherVerdict": "BLOCKED_ABI_GAP; not operator acceptance"
+    },
+    "latestResourceHold": {
+      "atUtc": "2026-10-29T18:32:47.5126873Z",
+      "lane": "a11y/r3",
+      "clientRequestId": "applywright-resume-a11y-dsh-r3-e18fea8b-831a-442c-b010-e3769c2b4ee3",
+      "phase": "SCOPED_DSH_SOURCE_CORRECTION",
+      "mainHead": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "expectedBase": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "payloadSha256": "4364879a4065b63b5512b19c4a77273bf8b7e8bc98bfb106d5918a2e0d73ca42",
+      "windowsFreeKiB": 750132,
+      "minimumWindowsKiB": 4194304,
+      "namesExit": null,
+      "alreadyRunningNames": [],
+      "inputCandidateVerified": 0,
+      "mainSourceVerified": 0,
+      "sourceProbeExit": null,
+      "sourceProbe": null,
+      "decision": "HOLD",
+      "nativeAdmission": "REQUIRED_SEPARATELY_BY_ACTUAL_DELEGATE",
+      "finitePrerequisite": "Actual earlier admission+native SOURCE dispatch; runtime remains NOT READY",
+      "reason": "WINDOWS_RAM_HOLD",
+      "finishedAtUtc": "2026-10-29T18:32:47.8489805Z"
+    },
+    "parentTierPolicy": {
+      "recordedAtUtc": "2026-10-29T18:35:36.836Z",
+      "source": "Direct latest Johan steering in existing native broker parent",
+      "scope": "Codex speed-tier policy only; supersedes earlier parent Standard/Fast-OFF advice",
+      "parentCoordinators": {
+        "instruction": "PRESERVE human-selected Fast/priority; do not reset this or other parents to Standard",
+        "actualCurrentSelection": "NOT_FRESHLY_OBSERVED_BY_THIS_INTAKE",
+        "verification": "Read-only native configuration at next natural metadata/admission refresh; selected identity/tier distinct from served telemetry"
+      },
+      "nativeSolChildren": {
+        "reasoningEffort": "High or xhigh as task requires",
+        "requiredExplicitOptions": {
+          "serviceTier": "default"
+        },
+        "defaultFast": "OFF",
+        "inheritParentPriority": "NEVER silently inherit",
+        "exceptions": "Only a specifically necessary deliberately chosen exception, recorded with requested/observed tier separately"
+      },
+      "unchanged": [
+        "global CLI defaults",
+        "supported context",
+        "access/permissions",
+        "DSH defaults",
+        "resource/slot/lock guards",
+        "Root-only Terra qualification"
+      ],
+      "actionsTaken": {
+        "settingsChanged": false,
+        "nativeConfigQueried": false,
+        "modelOrChildStarted": false,
+        "runtimeAttempt": false
+      },
+      "currentMissions": "Continue existing owned finite SOURCE chains under actual admission; no unchanged RAM-HOLD retry or new execution release"
+    },
+    "latestParentTierObservation": {
+      "observedAtUtc": "2026-10-29T18:37:40.886Z",
+      "source": "Read-only t3_thread_configure during natural review intake",
+      "configuration": {
+        "threadId": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
+        "modelSelection": {
+          "instanceId": "codex",
+          "model": "gpt-6.1-sol",
+          "options": [
+            {
+              "id": "reasoningEffort",
+              "value": "xhigh"
+            },
+            {
+              "id": "serviceTier",
+              "value": "default"
+            }
+          ]
+        },
+        "runtimeMode": "full-access",
+        "interactionMode": "default"
+      },
+      "settingsChanged": false,
+      "interpretation": "Native API selection observed as returned; no inference from picker, no parent tier reset or switch. Human-selected parent Fast remains permitted/preserved."
+    },
+    "latestSolChildTierObservation": {
+      "observedAtUtc": "2026-10-29T18:43:54.306Z",
+      "requested": {
+        "model": "gpt-6.1-sol",
+        "reasoningEffort": "xhigh",
+        "serviceTier": "default"
+      },
+      "nativeObserved": {
+        "threadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-windows-finite-case-sol-review-r1-6601462f-64c7-45d9-b1ab-b0bd1977c539",
+        "modelSelection": {
+          "instanceId": "codex",
+          "model": "gpt-6.1-sol",
+          "options": [
+            {
+              "id": "reasoningEffort",
+              "value": "xhigh"
+            },
+            {
+              "id": "serviceTier",
+              "value": "default"
+            }
+          ]
+        },
+        "runtimeMode": "full-access",
+        "interactionMode": "default"
+      },
+      "servedIdentity": null,
+      "actualBackendTier": null,
+      "settingsChanged": false
+    },
+    "operatorArchitectureHandoff": "docs/t3/receipts/20261029-resume/OPERATOR-ARCHITECTURE-HANDOFF.json",
+    "scopedRootPhaseFloorRuling": {
+      "recordedAtUtc": "2026-10-29T18:49:29.766Z",
+      "authority": {
+        "path": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261029/ROOT-PHASE-FLOORS-AND-PARENT-FAST-20261029.md",
+        "sha256": "072f2e98962d67aebcc7637ef0fc010315a0ae0c79e507d355bd21b4d1e47c1b"
+      },
+      "scope": "ONLY named prepared Windows finite-case non-GUI official DSH SOURCE-authoring ad-hoc coordinator prefilter",
+      "namedSourceRequest": "applywright-windows-finite-case-dsh-r1-b6881959-4f3a-43df-9a6a-7c3e029a6fe8",
+      "priorAdHocFloorKiB": 4194304,
+      "permittedNamedAdHocFloorKiB": 2097152,
+      "guestFloorWhereApplicableKiB": 3145728,
+      "installedNativeController": "66a01cfa remains authoritative: host/guest/waiters/reservations/slots/lifetime untouched",
+      "notExtendedTo": [
+        "G1 DSH source tasks",
+        "A11Y DSH source tasks",
+        "Sol source reviews",
+        "GUI/CUA",
+        "Run-Verification.ps1 or Windows offline/native execution",
+        "other task/provider/profile"
+      ],
+      "unchangedGuiAndWindowsTestFloorKiB": 4194304,
+      "historicalAttempts": "All earlier4GiB HOLD/passed admissions remain factual and unmodified; b688 actually started with8972608KiB. No restart or retroactive dispatch.",
+      "action": "POLICY_SCOPE_RECORDED_ONLY_NO_INSTALLED_GUARD_OR_PREFILTER_CODE_CHANGED_IN_THIS_INTAKE",
+      "currentRoom": "No fresh capacity or GUI claim from this steering intake; operator18:32 960548KiB is dated observation only",
+      "rootPilotUserReported": {
+        "checks": 45,
+        "highPass": 43,
+        "xhighPass": 45,
+        "maxPass": 43,
+        "cost": null,
+        "latency": null,
+        "interpretation": "Limited Root pilot, not project adoption, Max default, guessed native model alias or WindowsEX ABI"
+      },
+      "runtime": "Windows EX composition remains unqualified; SOURCE/execution/acceptance distinct"
+    },
+    "currentFixtureState": "R7 independent76comparison fixture AUTHORED_NOT_RUN; FINITE-INPUTS pins no grant; WindowsEX unqualified",
+    "timingReadbackLimits": "Native steer returned same T3 runId/no newtask; initial/final startedAt differs for two writers. Raw receipts/timing notes preserved; no underlying provider-process continuity claim.",
+    "latestG1R10Admission": {
+      "atUtc": "2026-10-29T19:28:47.4077676Z",
+      "lane": "g1-r10",
+      "phase": "G1_R10_F1_F9_SOURCE_CORRECTION",
+      "mainHead": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "payloadSha256": "58e550b90fdec061a6eacc52a96083096bd684ee7361c4647112785c25e6ae09",
+      "windowsFreeKiB": 8825008,
+      "minimumWindowsKiB": 4194304,
+      "namesExit": 0,
+      "alreadyRunningNames": [
+        "Ubuntu",
+        "docker-desktop"
+      ],
+      "productDiffFrom6e6c13": "EMPTY",
+      "sourceProbeExit": 0,
+      "decision": "ADMIT_SOURCE_DISPATCH_OBSERVATION_ONLY",
+      "reviewConsumed": "REQUEST_CHANGES_7P1_2P2",
+      "f9": "OPERATOR_ADJUDICATED_NARROW"
+    },
+    "latestG1R10ReviewAdmission": {
+      "atUtc": "2026-10-29T19:48:11.0762661Z",
+      "lane": "g1-r10-review",
+      "mainHead": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "candidate": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-bf853bb9",
+      "payloadSha256": "c223a136ed09018938ab9e0ad0a6c3690c5483255317a0522103aa838460c31a",
+      "windowsFreeKiB": 9436372,
+      "minimumWindowsKiB": 4194304,
+      "namesExit": 0,
+      "sourceProbeExit": 0,
+      "decision": "ADMIT_SOURCE_DISPATCH_OBSERVATION_ONLY"
+    },
+    "resume20261101": {
+      "plan": "docs/resume/20261101/RESUME-AND-HANDOFF-PLAN.md",
+      "capabilities": "docs/resume/20261101/CAPABILITIES-20261101.json",
+      "terminalReceiptsRepaired": [
+        "g1-r9-review",
+        "a11y-r3-review",
+        "windows-finite-case-r2"
+      ],
+      "note": "Terminal statuses reconstructed from native readback on 2026-11-01; no execution occurred."
+    },
+    "providerHold": {
+      "historicalFailure": "2026-10-29T19:48Z Codex usage limit on the R10 review",
+      "historicalProviderStatedRetry": "2026-11-04T16:50 local (unverified)",
+      "currentStatus": "CLEARED_PER_JOHAN_20261101",
+      "policy": "One fresh normal admitted native Sol attempt per stopped source; if it quota-fails, record once, no loops and no substitution."
+    },
+    "receiptArchive": {
+      "path": "G:/Backups/Applywright/20261101-resume",
+      "files": 1088,
+      "bytes": 10949001,
+      "scope": "20-task snapshot at 2026-11-01; excludes future outputs",
+      "manifest": "docs/resume/20261101/RECEIPT-ARCHIVE-MANIFEST.json (project copy if present)"
+    },
+    "independentHarness": {
+      "path": "docs/verification/20261029-resume/verify-grounding-r10-review.mjs",
+      "bytes": 5317,
+      "sha256": "f07bacf028887d03c7f31be92fa7e8ae8a7951a6a38368b2999075d98033294a",
+      "status": "AUTHORED_NOT_RUN",
+      "adoption": "May be included in a NEW Root-case approval ONLY after exact closure pin and source review; must not be substituted into an already-approved plan"
+    },
+    "checkpoint": {
+      "commit": "5199d32",
+      "scope": "46 documentary/source-fixture paths only; no candidate integration",
+      "originAndBackup": "pushed/readback exact per operator"
+    },
+    "latestIntake": "Checkpoint 5199d32 recorded (46 documentary/source-fixture paths, no candidate integration). Johan-authored independent 29-comparison harness recorded at docs/verification/20261029-resume/verify-grounding-r10-review.mjs (5317 B, f07bacf0…), AUTHORED_NOT_RUN and not substituted into any approved plan. All genuine source lanes now carry childThreadId/childRunId from identity files. A11Y R4 Sol review remains HELD: fresh reads 4,152,396 and 4,063,672 KiB are below the 4,194,304 KiB gate; attempt2 was corrected to HOLD with no dispatch. G1 R10.1 Sol review still running; WSL executor source still running with refreshed R10/R7 scope.",
+    "state": "WSL_SOURCE_PREPARED_REVIEW_HELD_RAM; A11Y_REVIEW_HELD_RAM; G1_R10_1_REVIEW_RUNNING",
+    "observedAtUtc": "1 November 2026 15:52:02",
+    "parentSelection": "1 November ordinal65: native configure before/apply/after codex/gpt-6.1-sol/xhigh/serviceTier=default, Standard/Fast OFF; full-access unchanged. Before was already the exact requested selection. Earlier DSH runs and failed ordinal64 retained; no claim this idempotent apply performed that earlier transition.",
+    "parentConfigurationReceipt": "docs/t3/receipts/20261101-resume/parent-config/ordinal65/CHECKPOINT.json",
+    "capabilitiesReceipt": "docs/t3/receipts/20261101-resume/parent-config/ordinal65/CAPABILITIES.native.json",
+    "mainHead": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+    "previousManifestReceipt": "docs/t3/receipts/20261101-resume/parent-config/ordinal65/NATIVE-DISPATCH-STATUS.before.json",
+    "externalReviewAssignments": [
+      {
+        "scope": "wsl-predicate-case",
+        "assignedTo": "Root",
+        "state": "ROOT_R2_1_ACTUAL_DIAGNOSTIC_COMPLETE_UNEXPECTED_DIRECTION_NO_PRODUCT_ACCEPTANCE",
+        "receipt": "docs/t3/receipts/20261101-resume/wsl-predicate-case/review/EXTERNAL-ROOT-ASSIGNMENT.json",
+        "nativeTaskId": null,
+        "nativeChildThreadId": null,
+        "runtimeRelease": false,
+        "dispositionReceipt": "docs/t3/receipts/20261101-resume/wsl-predicate-case/review/ROOT-R1-DISPOSITION.json",
+        "r2HandoffReceipt": "docs\\t3\\receipts\\20261101-resume\\wsl-predicate-case-r2\\ROOT-REVIEW-HANDOFF.json",
+        "actualDiagnosticReceipt": "docs\\t3\\receipts\\20261101-resume\\combined-g1-r11-a11y-r5\\UPSTREAM-ROOT-DISPOSITIONS.json"
+      },
+      {
+        "scope": "a11y-r4",
+        "assignedTo": "Root",
+        "state": "COMPLETED_REQUEST_CHANGES_ONE_P2",
+        "receipt": "docs/t3/receipts/20261101-resume/a11y-r4/review/EXTERNAL-ROOT-ASSIGNMENT.json",
+        "nativeTaskId": null,
+        "nativeChildThreadId": null,
+        "runtimeRelease": false,
+        "actualReportReceipt": "docs\\t3\\receipts\\20261101-resume\\combined-g1-r11-a11y-r5\\UPSTREAM-ROOT-DISPOSITIONS.json"
+      }
+    ],
+    "currentCheckpointReceipt": "docs\\t3\\receipts\\20261101-resume\\g1-r12\\review\\CHECKPOINT.started.json",
+    "lastNativeObservationAtUtc": "2026-11-01T19:45:00.0852914Z",
+    "nextFiniteSourceCommissionReceipt": "docs/t3/receipts/20261101-resume/NEXT-FINITE-SOURCE-COMMISSION-RECEIPT.json",
+    "rootConditionalR5OfferReceipt": "docs/t3/receipts/20261101-resume/combined-g1-r11-a11y-r5/a11y-r5-review/ROOT-CONDITIONAL-OFFER-HANDLE-CHECK.json",
+    "nextFiniteCaseStatusReceipt": "docs/t3/receipts/20261101-resume/combined-g1-r11-a11y-r5/OPERATOR-NEXT-CASE-STATUS.json",
+    "r11ActualDiagnosticsDispositionReceipt": "docs\\t3\\receipts\\20261101-resume\\g1-r12\\UPSTREAM-ACTUAL-DISPOSITION.json"
+  },
+  "goalComplete": false,
+  "productMerged": false
+}

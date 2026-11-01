@@ -1,0 +1,33 @@
+{
+  "capturedAtUtc": "2026-11-01T19:55:52.9328311Z",
+  "sourceRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-0564e52d",
+  "archive": "G:/Backups/Applywright/20261101-resume/g1-r12-frozen",
+  "files": [
+    {
+      "path": "server/lib/cv/tailor.js",
+      "bytes": 205880,
+      "sha256": "12a6a587c90628b07d581657e5ad28750a6117b9752d8a0208079d9ef0a83cb8"
+    },
+    {
+      "path": "server/lib/cv/refine.js",
+      "bytes": 95956,
+      "sha256": "761555c79ad3f8552b3e2252d954304adf336c564a874a87ed2f422c6ed5d958"
+    },
+    {
+      "path": "server/lib/cv/tailor.test.mjs",
+      "bytes": 136329,
+      "sha256": "fec6cf881171e36ef6ff83356675fedfbd8664dc3eec73046cdb9834e3bbbc30"
+    },
+    {
+      "path": "server/lib/cv/refine.test.mjs",
+      "bytes": 91034,
+      "sha256": "cba2184128abec1fd3cd66902cb2ce8e117825b71f7bed451d69bbe536817af3"
+    },
+    {
+      "path": "GROUNDING-G1-R12-RESULT.md",
+      "bytes": 18017,
+      "sha256": "a55a8b0ef5f165a951535a9dac032367f25bbf5f023e292e65b7895b6a4857e5"
+    }
+  ],
+  "state": "STOPPED_R12_SOURCE_ONLY_REVIEW_RUNNING_NOT_ACCEPTED"
+}

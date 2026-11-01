@@ -1,5 +1,39 @@
 # Current publisher update — 1 November 2026, resume in progress
 
+## Latest continuation patch —19:55UTC
+
+For ONLY brain/applywright-platform.md, preserving history. This is a publisher
+proposal, not proof of B publication. Root-qualified actual diagnostics now show
+R11 literal76/76,244/244 and29/29 PASS, but focused tailor63/70 and refine65/66
+FAIL eight assertions; Source review REQUEST_CHANGES5P1/3P2. The one R12 DSH
+successor stopped19:41:11 in t3-0564e52d,140 definitions with136 intents retained;
+new native Sol6.1/xhigh/Standard review is actually running. R12 has no runtime
+pass or product acceptance. All old/current oracles and frozen predecessors stay.
+
+A11YR5 independent Sol PASS_SOURCE and actual57/57/12suites PASS, no skip/cancel/
+todo, all70 wrapper controls PASS; real DOM/AT/browser/full gates still separate.
+No A11Y/G1 product main merge. WindowsR2 review REQUEST_CHANGES4P2 and actual
+custody-ABI gap remains; it is not an executor. A11Y-only full-gate Source now has
+115 public base blobs+six frozen R5 overlays+65 dependency records and five
+concrete keeper/manager/worker-guard/setup/gate Source drafts, unexecuted and
+unreviewed; actual tree/death/effects/startup/dependency qualification remains.
+
+Latest continuation package is docs/resume/20261101/CLAUDE-ESTATE-HANDOFF-IN-
+PROGRESS.md. Source/evidence snapshots and hash manifests survive PC/WSL shutdown
+under G:/Backups/Applywright/20261101-resume. New-day208file private Source/receipt
+snapshot and frozenR12 five-file copy are verified; active review output is not
+claimed coherent/finished. Website listener3160 absent in the latest operator
+check; no new public preview or new rendered visuals/animations claimed.
+
+Johan's Root-recorded planning assumption is MORE THAN USD100 each API org;
+Claude expiry22Nov2026, exact balances/OpenAI expiry unverified. Do not ask again
+now. Existing approved direct adapters, reservations and USD190 Claude cap remain;
+promotional API credits exclude Codex API-key usage/Claude Code respectively.
+Useful eligible direct pilot is prepared, not submitted. No project paid Org
+call/purchase/auth-home copy or shared toolchain mutation. Existing goal remains
+ACTIVE/INCOMPLETE; full handoff NOT_READY. Publisher supplies actual note hash,
+A/B commits and remote readbacks; no early completion or merge claim.
+
 Proposal for the sole Estate publisher; update ONLY brain/applywright-platform.md
 and preserve its history. This project has made no shared brain/vault write.
 

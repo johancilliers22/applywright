@@ -1,0 +1,65 @@
+{
+  "capturedAtUtc": "2026-11-01T19:20:29.3597026Z",
+  "sourceRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5",
+  "archive": "G:/Backups/Applywright/20261101-resume/combined-g1-r11-a11y-r5-frozen",
+  "files": [
+    {
+      "path": "server/lib/cv/tailor.js",
+      "bytes": 189640,
+      "sha256": "8ca37ac014c8bf8493884578f2380241470ca8a7df2abda60314c2b0faa23c09"
+    },
+    {
+      "path": "server/lib/cv/refine.js",
+      "bytes": 88019,
+      "sha256": "91f8ef263e826766882bd29a042851156c5c0fcad8f634519ac1d19056f0cadd"
+    },
+    {
+      "path": "server/lib/cv/tailor.test.mjs",
+      "bytes": 125852,
+      "sha256": "2c7fca04aac68b10b8ab30eb863196c588919f5b8823380c83a669f209156d9a"
+    },
+    {
+      "path": "server/lib/cv/refine.test.mjs",
+      "bytes": 84203,
+      "sha256": "2c95d699b6b9fcda3365d3354e5d8fb6155ed49ac355b87ffe4bfce5bf447ce0"
+    },
+    {
+      "path": "GROUNDING-G1-R11-RESULT.md",
+      "bytes": 20470,
+      "sha256": "8528ed4cc8d12f8a7b87ff7b865e3f5c73b5ace0eb915726ebbead6407d2dbe2"
+    },
+    {
+      "path": "public/app/app.js",
+      "bytes": 173917,
+      "sha256": "f1977b692bd33edb20c71bfdac923762d818249042c8440f0eccd7525a4edd5e"
+    },
+    {
+      "path": "public/assets/editor.js",
+      "bytes": 92658,
+      "sha256": "82e889c4029da675f594e7e10f0479c30d1f2184855ff406839d7146f7c12fae"
+    },
+    {
+      "path": "public/editor.html",
+      "bytes": 17803,
+      "sha256": "7746ca280729e709aa005772283eb08e558dc2c6757fcd121c4b5161693486d3"
+    },
+    {
+      "path": "docs/verification/20261029-a11y-fix/a11y-focused.test.mjs",
+      "bytes": 54648,
+      "sha256": "e8c019248e749c34514ac9151acd3de39f78300168862dca8f844001ffb3c7e8"
+    },
+    {
+      "path": "docs/verification/20261029-a11y-fix/A11Y-RESULT.md",
+      "bytes": 11145,
+      "sha256": "96185aa33b7192643a840e950a3248b4706dc7b9b8d183d4cbf96baf851a1a7e"
+    },
+    {
+      "path": "docs/verification/20261029-a11y-fix/A11Y-MANIFEST.json",
+      "bytes": 13130,
+      "sha256": "c155334b5aa0dd4d59502aaef83d8bbb6dd29f474b8839da0b97854e36b69162"
+    }
+  ],
+  "G1": "FrozenR11:76/244/29pass but focused128/136 and independent5P1/3P2 REQUEST_CHANGES",
+  "A11Y": "FrozenR5:independentPASS_SOURCE and actual57/57focused, fullgates pending",
+  "productAcceptance": false
+}

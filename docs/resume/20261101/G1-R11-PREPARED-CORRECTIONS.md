@@ -1,4 +1,41 @@
-# G1 R11 correction brief — PREPARED, NOT DISPATCHED
+# G1 R11 correction brief — actual diagnostic feedback received
+
+Root's ACTUAL R2.1 finite phase completed17:58:32UTC on1November. Parent receipt
+d84425361f416cd984c51e88f09ba821aba199eaad06cf12bfe3a974eb654698:
+57/57 protocol/release/classifier controls passed, all three children waitpid
+terminal without timeout, source unchanged, EX released. R10 fixture74/76 and
+replay222/244; the20 history and2 adjudicated failures are faithful positive
+rewrites incorrectly refused. Full exact failures are preserved in
+G1-R10-ACTUAL-FAILURES.json beside this brief. R7 baseline226/244 includes a
+dropped-metric control failure, so it is NOT an accepted controlled baseline RED.
+No oracle is changed and no product acceptance follows.
+
+The operator now explicitly releases this prepared correction for ONE normal
+native DSH source admission through the existing broker. No task/worktree is
+claimed until its real receipt. Apply only actual phase-specific Root resource
+rulings; the WSL-R2-only source exception is not a general floor waiver.
+
+## Additional runtime-derived repairs
+
+- Ownership must accept unchanged governed objects with independently evidenced
+  technical modifiers: 'Built services with Azure.' -> 'Built Azure-based
+  services.', and the retained Go-based/context language-list positives. Preserve
+  complete-object and actor binding: added 'review meetings' or unrelated objects
+  must not borrow a head, technology or count to acquire ownership.
+- 'Saved GBP40,000 a year.' -> the equivalent same-currency annual/40k phrasing
+  must not lose its own saving claim merely because its object is measured money
+  or an adverb replaces the period wording. Use the exact GBP-symbol examples in
+  the failure JSON. Preserve currency, period and figure identity; no salary or
+  money reassociation, currency swap or independent-clause ownership borrowing.
+- Apply lexical measured-object/unit identity consistently to digit AND spelled
+  figures: one/1 service, thirteen/13 services, forty/40 services, one/1 case.
+  Do not remove typed units to restore these positives or permit different nouns,
+  units, counts or relations to exchange values.
+
+Keep every frozen211/76/29 expectation and all current134 definition intents.
+Add meaningful paired regressions/controls to the owned test files. Run nothing
+inside SOURCE. Return actual hashes, a precise mechanism-based change map and
+the stopped candidate for independent review plus a new exact runtime binding.
 
 Prioritise the finite WSL case R2 safety review and actual diagnostic opportunity.
 This successor must not refill SOURCE ahead of a concretely ready execution case.

@@ -1,0 +1,8 @@
+{
+  "observedAtUtc": "2026-11-01T16:30:28.3877243Z",
+  "freeWindowsKiB": 4323304,
+  "thresholdKiB": 4194304,
+  "source": "Windows Get-CimInstance Win32_OperatingSystem names-only RAM",
+  "standingAdmission": false,
+  "meaningfulChangeFrom": "last native R2 hold1951096KiB; operator earlier4289264KiB crossed threshold"
+}

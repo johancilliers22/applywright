@@ -1,0 +1,45 @@
+{
+  "atUtc": "2026-11-01T19:50:20.3890590Z",
+  "state": "CONCRETE_SOURCE_DRAFTS_NOT_RUN_NEED_INDEPENDENT_REVIEW",
+  "scope": "docs/t3/receipts/20261101-resume/a11y-only-full-gate-source",
+  "files": [
+    {
+      "name": "linux-full-gate-parent.py.SOURCE.txt",
+      "bytes": 9085,
+      "sha256": "70c3abd58725050fd02ee2c2256e92ac6574770bcb6ac04d30588d0936062e86"
+    },
+    {
+      "name": "linux-full-gate-keeper.py.SOURCE.txt",
+      "bytes": 11059,
+      "sha256": "f5634d464c5355485159c64d54a31e5c59f29f845913206be1d63856a4f241e3"
+    },
+    {
+      "name": "worker-effects-guard.cjs.SOURCE.txt",
+      "bytes": 9803,
+      "sha256": "afb9648ad6a0992a7c3f8a2981c01136efc2ea44af2cdb6c0af765009775cc8a"
+    },
+    {
+      "name": "SETUP-EXECUTABLE-ENVELOPE-SOURCE.json",
+      "bytes": 3077,
+      "sha256": "e8734ede1f6485dd52db6a48ff334b003fcefa91532ff26980a09d00a3a9bf83"
+    },
+    {
+      "name": "FINITE-GATES-ENVELOPE-SOURCE.json",
+      "bytes": 3434,
+      "sha256": "527eb68d024e5513e4af124efc15006d09cd2989b81061dd106f3cd72c5c38aa"
+    }
+  ],
+  "stageCreated": false,
+  "dependenciesInstalled": false,
+  "keeperStarted": false,
+  "nodePythonParserOrTestsExecuted": false,
+  "runtimeApproval": false,
+  "knownUnqualified": [
+    "actual delegated cgroup/native/domain capability",
+    "Node default-worker internal preload/stdin/stdout/EX-FD propagation",
+    "complete FS/nativeSQLite/ESM/network hook coverage",
+    "bounded pipe framing and durable unknown-custody recovery",
+    "public npm startup/config/cache/payload/acquisition graph",
+    "actual reached/fired/death/cancel controls"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "recordedAtUtc": "2026-11-01T17:43:26.3436673Z",
+  "authority": "Direct Johan current gym-window request",
+  "expectedWindowHours": "1-2",
+  "latestCheckpointByUtc": "2026-11-01T19:43:26.3436673Z",
+  "objective": "Finish active missions, meaningful diagnostics and repairs, accepted merges, git/docs/owner brain-vault publication, then Claude/Estate handoff",
+  "goal": "ACTIVE/INCOMPLETE until objective actually achieved",
+  "currentMain": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+  "executor": "Private R2.1 micro-patch returned to Root independent review; no runtime approval or tests yet",
+  "sourceRefillPriority": "A concretely ready finite EX opportunity before further source/API refill",
+  "sourceAndReviewOwners": "Native DSH bulk writing; independent Sol/Root review; operator integrates and accepts; Estate sole shared A/B publisher",
+  "billing": "Root-recorded operator planningUSD100 each org, exact balances unverified; approved adapters/reservations/settlement rules remain",
+  "credentials": "No secret-store/env/auth values or auth-home copies",
+  "handoff": "Publish actual results and remaining plans without claiming unexecuted/unaccepted work complete"
+}

@@ -1,0 +1,19 @@
+{
+  "observedAtUtc": "2026-11-01T17:25:19.1545368Z",
+  "source": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/OPERATOR-API-FUNDING-ASSUMPTION.json",
+  "sourceSHA256": "9fa99520fd33ad6c00ef2455481fe8852959ed5990ab984e2cb21d53f9a5cd20",
+  "authority": "Direct Johan instruction relayed by Root",
+  "planningUSDPerProvider": 100,
+  "reportedAvailableUSDPerProvider": "greater than100",
+  "claudeReportedExpiry": "2026-11-22",
+  "openAIExpiry": null,
+  "verifiedBalances": false,
+  "historicalSpentPendingAssumedZero": false,
+  "doNotRepeatBalanceQuestionNow": true,
+  "newAPIRequestCreated": false,
+  "newOrgBillingConfigured": false,
+  "eligibilitySources": [
+    "https://developers.openai.com/api/docs/guides/chatgpt-api-credits",
+    "https://support.claude.com/en/articles/8977456-how-do-i-pay-for-my-claude-api-usage"
+  ]
+}

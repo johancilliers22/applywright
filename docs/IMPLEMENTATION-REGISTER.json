@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T16:54:59.9917021Z",
-  "state": "ACTIVE_20261101_NATIVE_SOURCE_REPAIRS_AND_EXECUTOR_PREPARATION",
+  "updatedAt": "2026-11-01T19:57:57.9272688Z",
+  "state": "GYM_CHECKPOINT_ACTIVE_INCOMPLETE_CLAUDE_HANDOFF_NOT_READY",
   "operatorThread": "01a183ff-e374-7d32-ae0e-1938714e813c",
   "rootThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
   "nativeParent": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
@@ -14,12 +14,12 @@
   "units": [
     {
       "id": "G1",
-      "state": "R10_1_SOL_REQUEST_CHANGES_TWO_P1_RESIDUALS_ONE_RETAINED_ASSERTION_CONFLICT",
+      "state": "R12_SOURCE_STOPPED140DEFS_NEW_SOL_REVIEW_RUNNING_NO_RUNTIME_OR_PRODUCT_ACCEPTANCE",
       "owner": "native DSH writer / independent Sol / Codex acceptance",
       "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
       "base": "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
       "evidence": "docs/t3/receipts/20261028-grounding-g1/r5/review/sol-review.FINDINGS.md",
-      "next": "Actual Root-approved finite diagnostic first; prepared R11 corrections not dispatched; preserve all old oracles and controls; independent stopped-source review and mandatory gates before acceptance",
+      "next": "Natural independent R12 review completion/hash/reap; Root exact new successor diagnostics; full required integrated gates still precede eligible merge",
       "runtimeAccepted": false,
       "executed": {
         "unitsPass": 100,
@@ -33,12 +33,14 @@
       "childThreadId": "thread:delegated-task:command%3Amcp%3Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%3Adelegate-task%3Aapplywright-grounding-g1-dsh-r7-66fbe5c4-d723-4406-a86f-851786759dec",
       "runId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253Aa33ad907-5b59-4a2b-9d50-e8f7ad81d37f%253Adelegate-task%253Aapplywright-grounding-g1-dsh-r7-66fbe5c4-d723-4406-a86f-851786759dec:ordinal:1",
       "worktreeState": "Stopped/reaped exact5hashesunchanged",
-      "currentRequestId": "applywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
-      "currentTaskId": "node:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
-      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3Ae83c7a7d-8813-454d-8ac9-929f7be82854%3Adelegate-task%3Aapplywright-resume-g1-dsh-r10-1-239852d3-2155-47d8-801a-74c58eefa909",
-      "currentCandidateRoot": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-f54d4b75",
+      "currentRequestId": "applywright-g1-r12-dsh-source-20261101T192000705Z",
+      "currentTaskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-dsh-source-20261101T192000705Z",
+      "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-g1-r12-dsh-source-20261101T192000705Z",
+      "currentCandidateRoot": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-0564e52d",
       "currentReview": "docs/resume/20261101/G1-R10-1-INDEPENDENT-REVIEW.md",
-      "historicalExecutedAppliesTo": "The executed100+211 fields and old worktree/task/run anchors describe frozen R7 only; they are not current R10.1 results."
+      "historicalExecutedAppliesTo": "The executed100+211 fields and old worktree/task/run anchors describe frozen R7 only; they are not current R10.1 results.",
+      "currentActualEvidence": "docs/resume/20261101/G1-R11-ACTUAL-SUMMARY.json and R11-FOCUSED-ACTUAL-RESULTS.json; actual pass scope is limited and does not override Source RC",
+      "newReviewRequest": "applywright-g1-r12-sol-review-20261101T194326352Z"
     },
     {
       "id": "CONTRAST-M1",
@@ -174,7 +176,7 @@
     },
     {
       "id": "CLAUDE-ORG",
-      "state": "JOHAN_RESUMED_CLAUDE_DIRECT_ORG_ACCOUNTING_STILL_REQUIRED",
+      "state": "OPERATOR_ASSUMED_GT100_AVAILABLE_CLAUDE_EXPIRY22NOV_BOUNDED_ELIGIBLE_DIRECT_PILOT_PREPARED_NOT_SUBMITTED",
       "brief": "docs/t3/CLAUDE-ORG-REVIEW-BRIEF-20261028.md",
       "sharedCapUSD": 190,
       "spent": null,
@@ -224,14 +226,15 @@
     },
     {
       "id": "A11Y-D1-D2",
-      "state": "R4_SOURCE_COMPLETE_55_DEFINITIONS_SOL_REVIEW_HELD_RAM",
+      "state": "R5_INDEPENDENT_PASS_SOURCE_AND_ACTUAL57_PASS_12SUITES_NO_SKIPS_FULL_GATES_PENDING",
       "scope": "field hints describedby and polite save-state status; independent review and runtime checks later",
       "owner": "T3 broker native DSH new worktree",
       "retryPolicy": "Fresh attempt only after meaningful changed capacity/terminal-owner cue, preserve original hold",
       "currentRequestId": "applywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
       "currentTaskId": "node:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
       "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A61e24d2a-bb16-49fb-8ac2-c6a3f5a80588%3Adelegate-task%3Aapplywright-resume-a11y-dsh-r2-4e12b762-4df0-416f-8bd1-343a596c2858",
-      "next": "Stop/hash/reap R4; independent Sol review then actual focused and integrated runtime verification"
+      "next": "Preserve frozenR5; qualified A11Y-only full-gate setup/descendant supervisor route and three actual required gates before eligible integration",
+      "currentEvidence": "Root ROOT-A11Y-R5-TAP-ACTUAL-ADJUDICATION.json receipt6acfe811…; native Sol R5 REVIEW.md; source-only full-gate proposal under docs/t3/receipts/20261101-resume/a11y-only-full-gate-source/"
     },
     {
       "id": "DESIGN-MOTION-X-RESEARCH",
@@ -252,23 +255,23 @@
     },
     {
       "id": "WINDOWS-FINITE-CASE",
-      "state": "R2_SOURCE_COMPLETE_INDEPENDENT_REVIEW_AND_ROOT_RELEASE_PENDING",
+      "state": "R2_SOL_REQUEST_CHANGES_4P2_RUNTIME_BLOCKED_CUSTODY_ABI",
       "owner": "Project new assigned native DSH source worktree; independent Sol review and Root exact acceptance before runtime",
       "scope": "One pinned Windows PowerShell/Node offline case, existing owned-child protocol; no generic controller or installed change",
       "runtime": "NOT_RUN_NO_QUALIFIED_WINDOWS_EXECUTOR_YET",
       "commission": "docs/resume/20261029/WINDOWS-FINITE-CASE-COMMISSION.md",
-      "next": "Inspect exact t3-a4173ab2 eight-file candidate; independent Sol safety review; Root exact-case release before any Windows execution"
+      "next": "Preserve8fileproposal/review; separately assigned ABI/keeper/env implementation and exact qualification still required, not a usable executor"
     },
     {
       "id": "WSL-PREDICATE-CASE",
-      "state": "R1_ROOT_REQUEST_CHANGES_R2_NATIVE_DSH_SOURCE_RUNNING",
-      "next": "Freeze/hash/reap stopped R2; Root direct source and startup/module/oracle/resource/cleanup review, then NEW exact runtime approval and actual EX execution",
+      "state": "ROOT_QUALIFIED_EXACT_CASES_ACTUALLY_EXECUTED_57_61_70CONTROLS_SCOPE_BOUND",
+      "next": "Every successor needs new exact Source/startup/target/oracle/output approval; no generic/Windows/HTTP/browser authority. All completed leases released.",
       "currentTaskId": "node:delegated-task:command%3Amcp%3A33ec4620-b25e-4e5f-97c5-aa2bf20ae728%3Adelegate-task%3Aapplywright-wsl-predicate-dsh-r2-20261101T162805994Z",
       "currentWorktree": "C:\\Users\\johan\\.t3\\worktrees\\applywright\\t3-eb89e021"
     },
     {
       "id": "CODEX-ORG-API",
-      "state": "AUTHORIZED_USE_CASES_PREPARED_ROUTE_BALANCE_AND_ACCOUNTING_UNKNOWN",
+      "state": "OPERATOR_ASSUMED_GT100_AVAILABLE_ORDINARY_API_ELIGIBILITY_ONLY_CODEX_API_USAGE_EXCLUDED_ROUTE_UNQUALIFIED",
       "next": "Toolchain owner verifies exact approved adapter/profile, credit/model entitlement and budget ledger before actual API use"
     }
   ],

@@ -1,0 +1,13 @@
+{
+  "recordedAtUtc": "2026-11-01T17:43:26.3436673Z",
+  "authorityThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
+  "source": "C:/Users/johan/Desktop/ClaudeHandoff/architecture-20260921/research/astra/coorchestrator-20261028/resume-20261101/wsl-predicate-r2.1-placement-source",
+  "state": "OPERATOR_SOURCE_MICROPATCH_STOPPED_PENDING_INDEPENDENT_ROOT_REVIEW",
+  "parentSHA256": "a89dabb5a6540c5908a67973401da10ba7f2738149d69493f8ebd82dbb1039ec",
+  "harnessSHA256": "e739f8a178f2f654e4c7d3e40c9a1b0afbadc2a57b6a67de67b5d4ec21b4bb98",
+  "patchIdentitiesSHA256": "587798702246a45425baca75c21440e277d5093a1d27b08f02158e5af5472b48",
+  "programsExecuted": false,
+  "all57AuthoredControlDefinitionsUnchanged": true,
+  "all13OriginalR2FilesPreserved": true,
+  "rootApproval": false
+}

@@ -1,0 +1,76 @@
+{
+  "atUtc": "2026-11-01T17:44:44.1157102Z",
+  "scope": "SOURCE_DATA_COUNTS_ONLY: PowerShell JSON metadata reading, zero Node/Python/predicate/candidate/control execution",
+  "counts": [
+    {
+      "file": "independent-grounding.json",
+      "rows": 52,
+      "pairedBoolean": 50,
+      "booleanWithoutPair": 2,
+      "label": 0,
+      "sha256": "f58b9dd2bccf9c7a3567f5d3d0b54394331d2f2c90d0a60b230b2eb7f2b81699"
+    },
+    {
+      "file": "review-derived-grounding.json",
+      "rows": 31,
+      "pairedBoolean": 30,
+      "booleanWithoutPair": 0,
+      "label": 1,
+      "sha256": "66f28830b4ac11493cbac35cd43b2026aa943cf96a55f62084661c31dde9a12f"
+    },
+    {
+      "file": "review-r2-derived-grounding.json",
+      "rows": 48,
+      "pairedBoolean": 48,
+      "booleanWithoutPair": 0,
+      "label": 0,
+      "sha256": "a6e9c46d2b8d17479fd6e0549a1a5bed8615c741a2b8aae60733e7c96c4e918e"
+    },
+    {
+      "file": "review-r3-derived-grounding.json",
+      "rows": 24,
+      "pairedBoolean": 24,
+      "booleanWithoutPair": 0,
+      "label": 0,
+      "sha256": "0f45b51f556a0ed91cc93bcabc8470082399b2887d4b238d7a64598ade8b9f36"
+    },
+    {
+      "file": "review-r45-derived-grounding.json",
+      "rows": 56,
+      "pairedBoolean": 56,
+      "booleanWithoutPair": 0,
+      "label": 0,
+      "sha256": "7ff2b93533a3c2ac0a97c9dbaf0afe8b1d0a3875bc28df3f5c2b785115ade863"
+    }
+  ],
+  "total": 211,
+  "pairedBoolean": 208,
+  "booleanWithoutPair": 2,
+  "labels": 1,
+  "specialRows": [
+    {
+      "file": "independent-grounding.json",
+      "kind": "boolean_without_pair",
+      "name": "soft unknown opener",
+      "predicate": "assertGrounded",
+      "expected": false
+    },
+    {
+      "file": "independent-grounding.json",
+      "kind": "boolean_without_pair",
+      "name": "soft unknown opener",
+      "predicate": "groundChanges",
+      "expected": false
+    },
+    {
+      "file": "review-derived-grounding.json",
+      "kind": "non_boolean_label",
+      "name": "dropped phone stays warning",
+      "predicate": "groundChanges",
+      "expected": "accepted with contact warning"
+    }
+  ],
+  "actualFieldsUsedAsOracle": false,
+  "frozenSourceUnchanged": true,
+  "runtimeAcceptance": false
+}

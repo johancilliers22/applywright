@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "verifiedAtUtc": "2026-11-01T17:10:35.2062074Z",
+  "source": "C:/Users/johan/.t3/worktrees/applywright/t3-eb89e021/docs/verification/20261101-wsl-predicate-case-r2",
+  "sourceBase": "5199d328d97e4871f286442f36fe2a7751e3819a",
+  "sourceBranch": "t3/wsl-predicate-case-r2",
+  "packet": "docs/t3/receipts/20261101-resume/wsl-predicate-case-r2/ROOT-REVIEW-HANDOFF.json",
+  "packetSHA256": "3a0df421e148fc6b84b04bde4277c1f28591bf699a8846e2b70a40c4f2f2129a",
+  "archive": "G:/Backups/Applywright/20261101-resume/wsl-predicate-case-r2",
+  "files": [
+    {
+      "name": "parent-applywright-g1-pure-js.py",
+      "bytes": 65814,
+      "sha256": "3dd6dc07964558ec3b868ecad99e7d5f9b24022b27bdfcf40d6387d36c6648b6"
+    },
+    {
+      "name": "verify-grounding-g1-pure-js.mjs",
+      "bytes": 36048,
+      "sha256": "e739f8a178f2f654e4c7d3e40c9a1b0afbadc2a57b6a67de67b5d4ec21b4bb98"
+    },
+    {
+      "name": "MANIFEST.json",
+      "bytes": 14712,
+      "sha256": "711ce305bc699f4d8be4d9740e40e72680a7beacfd5360c2a60dde401a309768"
+    },
+    {
+      "name": "PLAN-TEMPLATE-NOT-ADMITTED.json",
+      "bytes": 1746,
+      "sha256": "35157fceca37134b8b1e217b732eec8e68b855da54e39f9274a4e69818029d5d"
+    },
+    {
+      "name": "APPROVAL-TEMPLATE-NOT-AUTHORITY.json",
+      "bytes": 1089,
+      "sha256": "03b467f231711be8c31f6188ffe6383a9a6df8c2ef77de4dd79e27b7a02ed8e8"
+    },
+    {
+      "name": "DESIGN.md",
+      "bytes": 14913,
+      "sha256": "06f4e1fab55b9a47ba58937e09e659617eba03ef20d931c7f423184964a66563"
+    },
+    {
+      "name": "SOURCE-CHECKS.md",
+      "bytes": 13427,
+      "sha256": "cfadd8a0caccea5b133a8e04dc910f6a6488f936279ee8e3c7b6f4e4241ac979"
+    },
+    {
+      "name": "LEGACY-DISPOSITION.json",
+      "bytes": 4321,
+      "sha256": "5b875045b817985f1c13d1c00046a2baa4fdccf7a7bab3d4f667777f36c3cb16"
+    },
+    {
+      "name": "COPY-ORIGIN-MAP.json",
+      "bytes": 5305,
+      "sha256": "8c9ef2270d3a2b8abe18caeb533380949550910f2180c6dd3966e5860b5560af"
+    },
+    {
+      "name": "CHANGE-MAP.md",
+      "bytes": 11824,
+      "sha256": "bf14eb0f0f044aac0a70bd575b2844a5aed21021b2b5a4c2447ec91d28bc5d79"
+    },
+    {
+      "name": "PROTOCOL-CONTRACT.md",
+      "bytes": 10308,
+      "sha256": "8a5c83c3f7616e243a9d276f190d80650fdab3f985681348fa8e27f443136796"
+    },
+    {
+      "name": "ARTIFACT-MANIFEST.json",
+      "bytes": 3622,
+      "sha256": "684431ffd1640cbb9249a72d06a3593c99d15c0e9a51789973dee321638de0a9"
+    },
+    {
+      "name": "RESULT.md",
+      "bytes": 8673,
+      "sha256": "8522d05e4a41b5d4a974cf562e772d03a14f3a6d789374584bff74b93dd04391"
+    }
+  ],
+  "execution": "NOT_RUN",
+  "acceptance": false,
+  "rootReviewPending": true
+}

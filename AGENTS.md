@@ -1,4 +1,36 @@
-# Current resume — direct Johan, 1 November 2026
+# Current ownership and first commission — direct Johan / Root, 2 November 2026
+
+Claude's actual receiving ACK is adopted for Applywright co-orchestration only:
+`applywright-claude`, Claude Code WSL session
+`41a5cf3f-bd28-4ff8-97d8-10c1aa3d28e2`. This is alongside Codex, not a whole-Estate
+takeover. Read `docs/coordination/APPLYWRIGHT-CLAUDE-COORCHESTRATOR-20261102.md`
+and `docs/resume/20261101/FULL-GATE-R1.2-SOURCE-COMMISSION-20261102.md`.
+
+The dated split refines older generic acceptor language below: Claude plans,
+coordinates and dispositions bounded task deliveries. Codex operator01a183ff and
+SAME broker46ac76de retain the sole project ledger, integration and final product
+acceptance after distinct independent review, Root's applicable qualifications
+and actual required gates. Root01a183f2 independently accepts architecture,
+safety and exact execution/startup/effects/custody qualification. SAME Estate
+alone publishes shared docs/A/B. No worker or author self-certifies or commits.
+All existing source/worktree/broker claims remain unless explicitly reassigned.
+
+Priority is amended: FULL-GATE R1.2 SOURCE first, one official native Windows T3
+DSH Flash/high author and one distinct Sol6.1/xhigh/explicitdefault Standard,
+Fast OFF reviewer. NEW native allocated worktrees only; bind actual paths,
+branches, HEADs and task/run IDs before code moves. Current native/resource
+admission remains mandatory. Do not inherit old one-off floor exceptions.
+G1 implementation and new witness missions remain held; do not restart R13 or
+A11Y R4. R5's six A11Y files are the first-stage data binding, excluding G1.
+
+This is Source authoring/review only: no candidate parser/compile/import/eval,
+setup/install/fetch/stage/controls/tests/server/browser/EX/runtime/deployment or
+paid-call release. One author plus one review, no automatic correction loop.
+Frozen R1.1 and all candidates/oracles stay unchanged. Freeze current authority
+inputs after this documentary addendum; record later drift rather than claiming
+unchanged pins. Root's unrelated programme and heartbeat remain paused.
+
+# Historical resume — direct Johan, 1 November 2026
 
 Resume the existing missions after the usage interruption and prepare a verified
 Claude/Estate handoff. Codex remains project operator until that handoff. Sol6.1

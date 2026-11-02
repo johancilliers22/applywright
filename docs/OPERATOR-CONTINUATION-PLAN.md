@@ -1,3 +1,24 @@
+## Current project ACK and bounded Source commission — 2 November 2026
+
+Root adopted the actual Claude receiver applywright-claude/session
+41a5cf3f-bd28-4ff8-97d8-10c1aa3d28e2 alongside Codex. Read
+`docs/coordination/APPLYWRIGHT-CLAUDE-COORCHESTRATOR-20261102.md` and
+`docs/resume/20261101/FULL-GATE-R1.2-SOURCE-COMMISSION-20261102.md`.
+The dated AGENTS split retains Codex integration/final product acceptance,
+Root independent architecture/safety/exact-execution qualification and SAME
+Estate sole shared publication. Old receiving-ACK-pending paragraphs below
+are preserved as history, not current project ownership.
+
+First commission is amended to FULL-GATE R1.2 SOURCE, one official native
+Windows T3 DSH Flash/high author in a NEW allocated worktree, then a distinct
+Sol6.1/xhigh/explicitdefault Standard reviewer in its own NEW worktree. Fresh
+native admission and actual path/HEAD/task bindings before code moves remain
+required. A11Y R5's six-file stage is DATA ONLY; frozen R1.1 stays intact.
+G1/R13 and a new witness mission remain HELD. No parser/import/setup/install/
+stage/control/test/EX/runtime/deployment/paid-call release, no correction loop.
+Root's unrelated paused programme/heartbeat stays paused. This closes only the
+named project receiver gate; the full product goal remains incomplete.
+
 ## Current continuation checkpoint — 1 November 2026
 
 Start at docs/resume/20261101/FINAL-CONTINUATION-HANDOFF.md and its validation

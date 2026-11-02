@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T21:27:06.9511568Z",
-  "state": "CONTINUATION_READY_FOR_CLAUDE_ESTATE_PRODUCT_PROGRAMME_INCOMPLETE",
+  "updatedAt": "2026-11-02T19:37:21.6282354Z",
+  "state": "CLAUDE_COORCHESTRATOR_ACK_ADOPTED_R1_2_SOURCE_RELEASED_FRESH_ADMISSION_PENDING_G1_HELD",
   "operatorThread": "01a183ff-e374-7d32-ae0e-1938714e813c",
   "rootThread": "01a183f2-68ec-7223-bb5b-0705764b0734",
   "nativeParent": "46ac76de-4e76-42b4-a2b1-9f6d4e09c559",
@@ -19,7 +19,7 @@
       "worktree": "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
       "base": "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
       "evidence": "docs/t3/receipts/20261028-grounding-g1/r5/review/sol-review.FINDINGS.md",
-      "next": "Incoming Claude/Estate owner reviews complete claim-record repair contract plus nine Source findings and actual11 replay/10 focused failures. No automatic R13 during handoff. Preserve frozen candidates/oracles; independent review and all mandatory gates before merge.",
+      "next": "G1 implementation remains HELD while the explicitly released FULL-GATE R1.2 Source-first commission proceeds. Preserve R12 and all oracles; no automatic R13 or separate witness mission. Named Claude ACK now adopted; runtime/merge gates remain.",
       "runtimeAccepted": false,
       "executed": {
         "unitsPass": 100,
@@ -216,8 +216,8 @@
     },
     {
       "id": "DOCS-RETENTION-GIT",
-      "state": "CONTINUATION_READY_ALL_ASSIGNED_CHILDREN_TERMINAL_PRIVATE_ARCHIVES_VERIFIED",
-      "next": "Delivery/readbacks in FINAL-CHECKPOINT-VALIDATION.json; Root/Estate final named-note publication and incoming Claude owner ACK",
+      "state": "NAMED_CLAUDE_PROJECT_ACK_ADOPTED_DATED_GOVERNANCE_AND_SOURCE_COMMISSION_RECORDED",
+      "next": "Keep frozen handoffs as history; use 2Nov accepted co-orchestrator record and first R1.2 Source commission. Actual Source admission/task identities must come from broker receipts; no additional shared publication loop by this update.",
       "vaultNote": "brain/applywright-platform.md",
       "publisher": "Estate"
     },
@@ -249,7 +249,7 @@
       "currentRequestId": "applywright-a11y-r5-review-sol-20261101T184655910Z",
       "currentTaskId": "node:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-a11y-r5-review-sol-20261101T184655910Z",
       "currentChildThreadId": "thread:delegated-task:command%3Amcp%3A99f71b76-4f80-4207-b0b2-337d2cf7602d%3Adelegate-task%3Aapplywright-a11y-r5-review-sol-20261101T184655910Z",
-      "next": "Preserve six exact R5 A11Y files; consume independent full-gate R1.1 Source review, qualify setup/descendant custody/effects, then execute all three required integrated gates before eligible integration. No failed G1 overlay.",
+      "next": "R5 exact six-file data stage is FIRST for FULL-GATE R1.2 Source successor. No A11Y R4 repeat, G1 overlay, stage/install/test or integration before Root qualification and all required actual gates.",
       "currentEvidence": "Root ROOT-A11Y-R5-TAP-ACTUAL-ADJUDICATION.json receipt6acfe811…; native Sol R5 REVIEW.md; source-only full-gate proposal under docs/t3/receipts/20261101-resume/a11y-only-full-gate-source/",
       "currentCandidateRoot": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5"
     },
@@ -295,6 +295,48 @@
   "nightPolicy": "Historical night stop superseded by explicit Johan manual resume17:16GMT. No automatic scheduler reconstruction. Disk cleanup deferred.",
   "currentBrokerRun": "run:thread:46ac76de-4e76-42b4-a2b1-9f6d4e09c559:ordinal:88; child ledger quiescent, final operator checkpoint follows",
   "latestUsageObservation": "1Nov final observed account26%weeklyused/74%remaining; account-wide not project attributable; other window unknown; no reset consumed; FINAL-USAGE-OBSERVATION.json",
-  "currentResumePolicy": "1Nov Sol6.1 High/xhigh parents+children Standard/default FastOFF; DSH bulk preferred; Claude co-orchestrator after handoff; Root shared owner",
-  "continuationHandoff": "docs/resume/20261101/FINAL-CONTINUATION-HANDOFF.md"
+  "currentResumePolicy": "2Nov bounded project ACK and one FULL-GATE R1.2 Source author+review released; DSH native Windows T3/high, distinct Sol6.1/xhigh/Standard/FastOFF. G1 held. Root whole programme/heartbeat remains paused.",
+  "continuationHandoff": "docs/resume/20261101/FINAL-CONTINUATION-HANDOFF.md",
+  "claudeCoOrchestrator": {
+    "name": "applywright-claude",
+    "session": "41a5cf3f-bd28-4ff8-97d8-10c1aa3d28e2",
+    "link": "https://claude.ai/code/session_01YMMJMfQxybRCLJ1FncjXXw",
+    "harness": "Claude Code CLI2.1.316 on WSL/tmux, receiver-reported",
+    "exposedModel": "claude-opus-5-5",
+    "context": "1M launch requested; actual allocation UNKNOWN",
+    "effort": "ultracode receiver-reported; other effort/tier UNKNOWN",
+    "servedIdentity": "UNKNOWN",
+    "tokens": "UNKNOWN",
+    "cost": "UNKNOWN",
+    "scope": "Project co-orchestrator alongside existing Codex; no whole-Estate takeover or replacement of existing claims",
+    "adoptedBy": "Root01a183f2 on verified Johan instruction,2Nov2026",
+    "ackRawSHA256": "9534c543c43d4ffdbd65a85c154aaa34e643898f0a874f918012628e00a1694f",
+    "rootRulingRawSHA256": "402ea7066961275308d5ebb13b1717c5aebc5b7ec9c92f81a1ee51fcf4be0464",
+    "record": "docs/coordination/APPLYWRIGHT-CLAUDE-COORCHESTRATOR-20261102.md"
+  },
+  "acceptanceSplit": {
+    "taskDisposition": "Claude plus Codex within commission",
+    "projectLedgerIntegratorFinalProductAcceptor": "01a183ff-e374-7d32-ae0e-1938714e813c",
+    "independentArchitectureSafetyExactExecutionAcceptor": "01a183f2-68ec-7223-bb5b-0705764b0734",
+    "sharedPublisher": "SAME Estate",
+    "workerSelfAcceptance": false,
+    "productAcceptanceRequires": "Distinct independent review, Root applicable qualifications, all actual required gates"
+  },
+  "activeBoundedCommission": {
+    "id": "APPLYWRIGHT-FULL-GATE-R1.2-SOURCE-20261102-ROOT",
+    "brief": "docs/resume/20261101/FULL-GATE-R1.2-SOURCE-COMMISSION-20261102.md",
+    "state": "SOURCE_RELEASED_NATIVE_ADMISSION_NOT_YET_OBSERVED",
+    "authorRoute": "acpRegistry_deepseek_windows/[deepseek-official,deepseek-flash]/high",
+    "authorBranchRequest": "codex/applywright-full-gate-r1-2-source-20261102",
+    "authorActualWorktree": null,
+    "authorTaskId": null,
+    "reviewRoute": "codex/gpt-6.1-sol/xhigh/serviceTier=default/FastOFF",
+    "reviewBranchRequest": "codex/applywright-full-gate-r1-2-review-20261102",
+    "rounds": "One author delivery and one separate review only",
+    "stage": "Frozen115base+sixA11YR5overlays+65dependencyrecords, DATA_ONLY",
+    "G1Implementation": "HELD",
+    "executionApproved": false,
+    "paidCallApproved": false,
+    "nativeIdentityAuthority": "Sole broker ledger and exact actual receipts after allocation, before code moves"
+  }
 }

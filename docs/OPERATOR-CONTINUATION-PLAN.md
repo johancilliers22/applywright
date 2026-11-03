@@ -1,4 +1,12 @@
-## Current project ACK and bounded Source commission — 2 November 2026
+## Current night wrap — Johan/Estate, 3 November 2026
+
+Start at `docs/closeout/20261103/APPLYWRIGHT-NIGHT-HANDOFF.md`. All23 implementation rows remain (6done/11partial/6open); all42 checkouts are KEEP. Native inventory has no U1 reviewer allocated. The genuine separate Claude neutral receipt is verified; the original Sol review is deferred for tomorrow. U0's original round is closed REQUEST_CHANGES12P1/4P2. Root's future U0B brief1299fb6d is design-only, not commissioned tonight.
+
+Finish actually in-flight work naturally. No cancellation/force/new authoring/review/commission/probe/goal or app/WSL stop. Explicit resume and fresh native/resource/claim guards precede the next original U1 review. G1/full product gates and applicable U2-U4 gates remain held; no candidate parsing/import/eval/compile/execution is authorised by wrap. Codex retains project acceptance, Root exact qualification and Estate sole shared docs/A/B publication. Older dated Source-launch and paused-programme paragraphs below describe historical epochs.
+
+The handoff contains exact unit/task/cleanup states, every row/branch disposition, provider UNKNOWNs, backups and the first three resume steps. Final documentary SHA/remotes and terminal broker proof are in `docs/t3/receipts/20261103-night-wrap/FINAL-PUBLICATION-RECEIPT.json` after publication.
+
+## Historical project ACK and bounded Source commission — 2 November 2026
 
 Root adopted the actual Claude receiver applywright-claude/session
 41a5cf3f-bd28-4ff8-97d8-10c1aa3d28e2 alongside Codex. Read

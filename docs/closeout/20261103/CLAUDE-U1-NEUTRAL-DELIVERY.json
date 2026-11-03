@@ -1,0 +1,67 @@
+{
+  "schema": "applywright/minexec-u1-neutral-delivery-receipt/v1",
+  "kind": "NEUTRAL_ONLY_DELIVERY_RECEIPT_NO_TECHNICAL_CONTENT",
+  "commission": "APPLYWRIGHT-MINEXEC-U1-SOURCE-20261102-ESTATE",
+  "answersRequest": {
+    "brokerRequest": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/t3/receipts/20261102-resume/minexec-u1-broker/CLAUDE-DELIVERY-CHECK-REQUEST.json",
+    "brokerRequestSha256": "a3fbed8ddb9c9ecea91642bd8719444d84cbaac0b0c249332f2d04531bd19422",
+    "operatorRequest": "codex-to-estate/APPLYWRIGHT-MINEXEC-U1-NEUTRAL-RECEIPT-REQUEST-20261103.md",
+    "operatorRequestSha256": "f15da8d0ec3b8a9a620a02ff9a94d5e51342982ed194e57738b29711450dd5b2"
+  },
+  "actualActor": "applywright-claude",
+  "actualSession": "41a5cf3f-bd28-4ff8-97d8-10c1aa3d28e2",
+  "actualModel": "UNKNOWN_SERVED_IDENTITY_NOT_SELF_VERIFIED",
+  "checks": {
+    "originalDeliveryCheckAtUtc": "APPROXIMATE_2026-11-03T00:40Z_NOT_PRECISELY_RETAINED",
+    "freshMetadataOnlyRecheckStartedAtUtc": "2026-11-03T02:50:17Z",
+    "freshMetadataOnlyRecheckEndedAtUtc": "2026-11-03T02:50:22Z",
+    "method": "Read-only byte size and SHA256 of each file, directory listing of the prefix, git rev-parse/status/diff --cached with --no-optional-locks against the worktree gitdir. No candidate content was parsed, imported, compiled, evaluated or executed."
+  },
+  "candidate": {
+    "root": "C:/Users/johan/.t3/worktrees/applywright/t3-dbcd194d",
+    "branch": "t3/minexec-u1-latch-source",
+    "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+    "prefix": "docs/t3/receipts/20261102-resume/minexec-u1-source/"
+  },
+  "files": [
+    {"path": "ACCEPTANCE-COVERAGE.json", "bytes": 6844, "sha256": "5317d4913e467c9fee18c0e56db890500e50019d92fd082ad196c6b139f0ef0b", "result": "MATCH"},
+    {"path": "MANIFEST.json", "bytes": 44318, "sha256": "c15bdf4cb18379d1987cb2738b8c15a72ccc4864b7f6b90c9075786a351726b7", "result": "MATCH"},
+    {"path": "MINEX-D01-EVIDENCE-CONTRACT.json", "bytes": 3877, "sha256": "eb1faccbafc43c09609e6524de4a402480c2958bc9f26899ad352362500f86bc", "result": "MATCH"},
+    {"path": "RESULT.md", "bytes": 6225, "sha256": "702bd7379d05ab7511682f44e83610446dbe4edd81f7f27b514faedebab76072", "result": "MATCH"},
+    {"path": "TRANSITION-SPEC.json", "bytes": 43265, "sha256": "3246e96e485e3f89e5d6adcab067b1fe9d20d1a678c77aa568962a9fb11f8b54", "result": "MATCH"},
+    {"path": "U1-CONTRACT.md", "bytes": 11654, "sha256": "16bcfd666ddad60e11ad3fd643a7a2f8511f0470cc5757e95dc3576189e31e83", "result": "MATCH"},
+    {"path": "U1-PROOF.md", "bytes": 11527, "sha256": "11d4996abbf961c956064bdd9bb28b6362623eb8976fa22466abb9852d36e7e5", "result": "MATCH"},
+    {"path": "u1_acceptance.py.SOURCE.txt", "bytes": 31206, "sha256": "c7b58f8e162921dd993346f275e9f960e02a8afbfef106636da9cfc1a31c0b59", "result": "MATCH"},
+    {"path": "u1_mutations.py.SOURCE.txt", "bytes": 5619, "sha256": "4ea790b56d6a201c6f8b8a36a526e81455468e423e96bd0a89fadd4f9c834889", "result": "MATCH"},
+    {"path": "u1_reducer.py.SOURCE.txt", "bytes": 42001, "sha256": "ac19effa089b5657df9f82850fabe12b46ec772d3474b2bb7114fb5cb0f2025b", "result": "MATCH"}
+  ],
+  "fileSet": "EXACTLY_THE_TEN_REQUESTED_FILES_NO_EXTRA_NO_MISSING",
+  "inputs": {
+    "bindingManifest": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright/docs/t3/receipts/20261102-resume/minexec-u1-commission/INPUT-BINDINGS.json",
+    "bindingManifestSha256": "3eeec5cbd1633383c2abc021528ae0d94ea34cc34222854b84298ae8d863982a",
+    "bindingManifestResult": "MATCH",
+    "rawPinsChecked": 40,
+    "rawPinsMatching": 40,
+    "rawPinsDrifted": 0
+  },
+  "scope": {
+    "trackedChanges": 0,
+    "stagedChanges": 0,
+    "untrackedNonIgnored": 0,
+    "ignoredWritesObserved": "ONLY_docs/t3/receipts/20261102-resume/minexec-u1-source/ (the ten files above)",
+    "writesOutsidePrefix": 0
+  },
+  "scopeAndIntegrityResult": "MATCH",
+  "firstReviewCompleteAndWithheld": true,
+  "firstReviewNote": "Complete and withheld. Not attached, summarised or located here; it must stay out of the independent Sol reviewer's inputs.",
+  "noCandidateExecution": true,
+  "remainingDeliveryBlocker": "NONE",
+  "notClaimed": [
+    "semantic verdict",
+    "source acceptance or PASS",
+    "executed coverage",
+    "runtime qualification",
+    "physical MCP eviction or resource recovery",
+    "U0 or U2-U4 readiness"
+  ]
+}

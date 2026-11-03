@@ -1,0 +1,345 @@
+{
+  "atUtc": "2026-11-03T04:15:48.9417512Z",
+  "preWrapMain": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+  "rows": [
+    {
+      "root": "C:/Users/johan/Desktop/Coding/OpenClaw/agent-system/projects/applywright",
+      "branch": "refs/heads/main",
+      "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Canonical project checkout"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-0564e52d",
+      "branch": "refs/heads/t3/g1-r12-source-successor",
+      "head": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-06b4af37",
+      "branch": "refs/heads/t3/contrast-m1-r3-correction",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-11473ae7",
+      "branch": "refs/heads/t3/e2e-r3-source-correction",
+      "head": "7d40425a9cbc68fe5f03257036ad9acd1284a786",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-1c34103a",
+      "branch": "refs/heads/t3/full-gate-source-review",
+      "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-248746d3",
+      "branch": "refs/heads/t3/full-gate-r1-2-identity",
+      "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-2fb3f4d3",
+      "branch": "refs/heads/t3/muse-grounding-cases",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-3669749d",
+      "branch": "refs/heads/t3/e2e-owned-browser-lifecycle",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-551ab369",
+      "branch": "refs/heads/t3/contrast-gate",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-591e14fa",
+      "branch": "refs/heads/t3/minexec-u0-independent-review",
+      "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-69c42e7b",
+      "branch": "refs/heads/t3/e2e-lifecycle-r4-correction",
+      "head": "2927716426538c99f4c90104b3d8e3a280fccf97",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6d10e797",
+      "branch": "refs/heads/t3/prepare-wsl-predicate-case",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6e5f7dd4",
+      "branch": "refs/heads/t3/a11y-hint-id-collision-fix",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-6f365ec7",
+      "branch": "refs/heads/t3/a11y-hint-id-collision",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-76750b9f",
+      "branch": "refs/heads/t3/g1-r9-source-correction",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-7fef5f84",
+      "branch": "refs/heads/t3/g1-r7-combined-history",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-84a839b8",
+      "branch": "refs/heads/t3/pressproof-gemini-design-review",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-89b3cbb8",
+      "branch": "refs/heads/t3/r1-3-source-review",
+      "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-94aa81d5",
+      "branch": "refs/heads/t3/e2e-startup-timeout-race",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-9a61eb7d",
+      "branch": "refs/heads/t3/grounding-g1-repair",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-9a759bfe",
+      "branch": "refs/heads/t3/g1-r6-source-corrections",
+      "head": "05b859e13d484e45b8e3c0a25a63b32a6cd81ec1",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-9aa48ded",
+      "branch": "refs/heads/t3/grounding-g1-correction",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-a4173ab2",
+      "branch": "refs/heads/t3/windows-finite-case-revision",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-a4aeb610",
+      "branch": "refs/heads/t3/design-motion-research",
+      "head": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-a6b3b521",
+      "branch": "refs/heads/t3/r13-source-identity-check",
+      "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-afca85b6",
+      "branch": "refs/heads/t3/a11y-hint-save-status",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-b1a7a4d5",
+      "branch": "refs/heads/t3/g1-r11-a11y-r5",
+      "head": "1fb6f71fb3321209e797d5640c26d12b088b7be1",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-b88271ff",
+      "branch": "refs/heads/t3/g1-grounding-r4-correction",
+      "head": "7d40425a9cbc68fe5f03257036ad9acd1284a786",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-bf853bb9",
+      "branch": "refs/heads/t3/g1-r10-grounding-source-correction",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-c4597a35",
+      "branch": "refs/heads/t3/contrast-m1-r2-revision",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-cf7041b5",
+      "branch": "refs/heads/t3/windows-finite-case-proposal",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-dbcd194d",
+      "branch": "refs/heads/t3/minexec-u1-latch-source",
+      "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-e00182b7",
+      "branch": "refs/heads/t3/e2e-lifecycle-r2-source-fixes",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-e05a8f36",
+      "branch": "refs/heads/t3/livebench-provider-evidence",
+      "head": "3b84986ffd5e334ae53b21ffb7d19b9934f1e7dc",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-e8d401d4",
+      "branch": "refs/heads/t3/g1-r3-source-corrections",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-ea0c895a",
+      "branch": "refs/heads/t3/a11y-hints-save-status",
+      "head": "6e6c13f5db5df83dc625c7197067b851f165f14f",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-eb89e021",
+      "branch": "refs/heads/t3/wsl-predicate-case-r2",
+      "head": "5199d328d97e4871f286442f36fe2a7751e3819a",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f471e890",
+      "branch": "refs/heads/t3/minexec-u0-identity-report",
+      "head": "0b6bd4083db605adbf8038ab3e489b937c719f2c",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f54d4b75",
+      "branch": "refs/heads/t3/g1-r10-1-grounding-fixes",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-f66efc7c",
+      "branch": "refs/heads/t3/contrast-r4-source-correction",
+      "head": "86b74c3a1869255ce276cfe961474193d6080ca0",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-fcd3c5c8",
+      "branch": "refs/heads/t3/grounding-g1-source-corrections",
+      "head": "49e2e5ed830418b87a7eeeafccd494fcb3a473d1",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    },
+    {
+      "root": "C:/Users/johan/.t3/worktrees/applywright/t3-ff301e75",
+      "branch": "refs/heads/t3/grounding-g1-r8-corrections",
+      "head": "a1d7592e65ba291c0bf89d8a6552ab4090073037",
+      "aheadOfPreWrapMain": 0,
+      "disposition": "KEEP",
+      "reason": "Preserve owned stopped candidates, reports and unreviewed WIP; no new product merge/removal released by wrap"
+    }
+  ],
+  "inspection": "Git worktree metadata and object graph only, not a new per-tree content audit",
+  "removals": 0,
+  "merges": 0
+}

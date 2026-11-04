@@ -10,6 +10,25 @@
 
 import { createAnthropicModelClient } from "./provider/anthropic.js";
 
+function attachModelFailure(error, modelFailure) {
+  const failure = error instanceof Error ? error : new Error("model failure");
+  const descriptor = {
+    value: modelFailure,
+    enumerable: true,
+    configurable: true,
+    writable: true,
+  };
+  try {
+    // Define data on both paths without invoking an inherited or own setter.
+    Object.defineProperty(failure, "modelFailure", descriptor);
+    return failure;
+  } catch {
+    const wrapped = new Error(failure.message);
+    Object.defineProperty(wrapped, "modelFailure", descriptor);
+    return wrapped;
+  }
+}
+
 export function createModelClient(config, options = {}) {
   const provider = String(config.model?.provider ?? "").toLowerCase();
   const anthropicKey = String(config.anthropic?.apiKey ?? "").trim();
@@ -54,26 +73,53 @@ export function createModelClient(config, options = {}) {
           signal: AbortSignal.timeout(timeoutMs),
         });
       } catch (error) {
-        throw new Error(`model request failed: ${error.message}`);
+        throw attachModelFailure(
+          new Error(`model request failed: ${error?.message}`),
+          { kind: error?.name === "TimeoutError" ? "timeout" : "transport", stage: "request" },
+        );
       }
 
       if (!response.ok) {
         const detail = await response.text().catch(() => "");
-        throw new Error(`model returned ${response.status}: ${detail.slice(0, 200)}`);
+        throw attachModelFailure(
+          new Error(`model returned ${response.status}: ${detail.slice(0, 200)}`),
+          { kind: "http", stage: "http", status: response.status },
+        );
       }
 
-      const payload = await response.json();
+      let payload;
+      try {
+        payload = await response.json();
+      } catch (error) {
+        throw attachModelFailure(error, { kind: "parse", stage: "response" });
+      }
       const content = payload?.choices?.[0]?.message?.content;
-      if (typeof content !== "string" || !content.trim()) throw new Error("model returned no content");
+      if (typeof content !== "string" || !content.trim()) {
+        throw attachModelFailure(new Error("model returned no content"), { kind: "empty", stage: "content" });
+      }
 
       let parsed;
       try {
         parsed = JSON.parse(content);
       } catch {
-        throw new Error("model returned content that is not JSON");
+        throw attachModelFailure(
+          new Error("model returned content that is not JSON"),
+          { kind: "parse", stage: "content" },
+        );
       }
-      if (schema && typeof schema === "function" && !schema(parsed)) {
-        throw new Error("model returned JSON that does not match the expected shape");
+      if (schema && typeof schema === "function") {
+        let valid;
+        try {
+          valid = schema(parsed);
+        } catch (error) {
+          throw attachModelFailure(error, { kind: "schema", stage: "schema" });
+        }
+        if (!valid) {
+          throw attachModelFailure(
+            new Error("model returned JSON that does not match the expected shape"),
+            { kind: "schema", stage: "schema" },
+          );
+        }
       }
       return parsed;
     },

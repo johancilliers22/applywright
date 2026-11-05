@@ -1,3 +1,28 @@
+# Applywright qualified inactive feature — owner handoff,5November2026
+
+The bounded F1 facade/policy unit is qualified and committed on the feature branch. Root's ONE exact inert case at08:23 reproduced3 replay failures and1 original spy failure against preserved old source, then passed35/35 on RC2 with0fail/cancel/skip/todo. Three owned Node sessions reaped, scratch removed, actual canonicalEX held through closure then closed; all48 preservation pins stable. Result51565b2f/commands c35ef566/closure3256c6ef/before-afterfefadf3a; Root authority7c9c4dca. All ledger/credential/fetch/stream bindings were in-memory fakes. This does not qualify production resolver/CLI, real accounting, live parser/guard composition or paid API use.
+
+F1-01/F1-02 are closed for exact postimages and pure-factory behavior by Root's narrow disposition and RED/GREEN. Original ONE Sol REQUEST_CHANGES0P1/2P2 remains frozen; no second judge or rewritten verdict. DSH authored RC1 and the surgical RC2. Policy2/parser/guard/originals/reports remain unchanged. Raw own/pinned instruction epochs and operational-summary exposure are preserved; independence is not blind review. Earlier guard24 and UI/static/syntax/contrast gates were not rerun.
+
+Root released exact FOUR-file feature adoption. Operator copied raw4c29/2a5/d3d9/7818 into the existing assigned feature and committed275f57d87f6bca2c2b6ad4c9651266cc6ee62532, parent409baf3. Normal hooks, named4/whitespace/sacredprepost passed; none bypassed. Origin and authorised absolute backup both read back275; ownfeatureclean/main256/foreignf4b6 preserved. Native trees remain KEEP. A local PowerShell argv staging error was corrected without source changes, reset, test repeat or another source commit; it is recorded as a wrapper error.
+
+Bounded units done: Org guardU1, firstUICTA and F1facade/policy. Whole ClaudeOrg route is PARTIAL; its original row moves open→partial with this concrete evidence. All23 original rows remain:6bounded done/12partial/5open. Four dated stages remain route/agent/UIpartial and optionalbakeoffopen/deferred. Broader G1 factuality, bounded2–3turn local tool-feedback agent, full UI/motion/research and other asks are retained. No whole-product completion is claimed.
+
+LIVE API REMAINS EXPLICITLY CLOSED. Estate source-adopted guardf96, but there is no reconciled all-spender shared ledger, current Console credit cover or fixed live facade binding. Another spender uses a separate journal. Unknown is notzero. Never read rawjournal/ledger/keys, initialise fakezero or invoke loader/API from this handoff. Main merge/deploy, production WSL resolver/CLI, live parser/guard composition, fixed data-only Windows bridge and any paid proof require separate Owner/Root releases. No deployment tonight. Root's separate O6 GET-only browser qualification has its own lease; this operator has no desktop/browser controllerclaim.
+
+Next three tasks:
+
+1. Estate reconciles every spender, private ledger/current cycle/spent/pending and Johan's Console credit cover, then supplies the fixed nonsecret accounting/facade/pricing/profile binding and publishes the current project/docs/A/B delta. No key values or copied auth homes.
+2. Only after that binding and Root's exact phase release, commission the fixed WSL resolver/CLI, Windows data-only bridge and live parser/guard composition. Reuse the qualified inactive feature; no new author, reviewer, refill or paid call follows automatically from35fake passes.
+3. Resume the preserved bounded-agent tool-feedback and broader UI/motion/research/activation tasks through named scopes and meaningful gates. Retain all23/fourstages/original inventories/failures/U0Bhumanpark. Estate decides main integration/deployment later.
+
+All Source authors and the review are closed. Broker170 records documentary qualification/feature consumption only; it creates no actors or tests. Qualified code and new evidence are durable in Git, native trees and scoped G archives; source21delta5b39d4d3 and Root17proof copies/consumption6de7f003 are retained. Served backend/effective context/tokens/provider cost/invoice cost stay UNKNOWN where unexposed. Shared B publication is an Estate owner patch, not an operator write or assumed publication receipt. Programme remains ACTIVE/INCOMPLETE. Preserve the13:00/13:30/14:00 quiet rules; no PC/WSL lifecycle or disk cleanup.
+
+The companion PRODUCT-STATUS-20261105.json contains every row, evidence hashes, owner gates and worktree dispositions. This is a ready owner checkpoint for an inactive feature, not live product readiness.
+
+
+Earlier dated snapshots are preserved below.
+
 ## Current RC2 delta —5November08:14Z
 
 ONE independent Sol review finished REQUEST_CHANGES0P1/2P2, SOURCE_TRACED only. F1-01 replay skipped bound application validation and accepted missing stopReason; F1-02 absent-key test replaced its counting callback but expected one call. The source guard interface and one reserve-before-egress matched the reference; no budget/duplicate-spend bypass was established. Original four reports in9918 remain frozen; no second judge. All tests were NOT_RUN.

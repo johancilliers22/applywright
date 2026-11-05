@@ -1,20 +1,20 @@
 {
-  "atUtc": "2026-11-05T08:17:43.4004634Z",
-  "state": "ACTIVE_INCOMPLETE_ONE_REVIEW_TWO_P2_RC2_SOURCE_CLOSED_ROOT_INERT_QUALIFICATION_PENDING",
+  "atUtc": "2026-11-05T08:34:53.3219488Z",
+  "state": "ACTIVE_INCOMPLETE_BOUNDED_F1_QUALIFIED_FEATURE_PUSHED_LIVE_API_OWNER_GATE",
   "main": "25689cd36c00b84c6df93fde22ed232fe0d9540e",
   "qualifiedModelFeature": "e76598a42663be6fb86f460921a4afbf38bd4a8e",
   "qualifiedUICode": "785c2078ff8786c72fe8d1c72d29266362c991d6",
   "branch": "codex/qualified-report-cta-20261105",
   "all23": {
-    "atUtc": "2026-11-05T06:06:25.6703366Z",
-    "state": "UI_CODE785_PUSHED_BOTH_GUARD_QUALIFIED_ORG_F1_SOURCE_PENDING",
+    "atUtc": "2026-11-05T08:34:53.3219488Z",
+    "state": "ALL23_RETAINED_CLAUDE_ORG_OPEN_TO_PARTIAL_AFTER_QUALIFIED_F1_SOURCE",
     "sourceRegisterSHA256": "e4defc29864670bbcd7d9c4b62ae846da6a0cab0f45b90e9ac6e7a8d04e687d9",
     "main": "25689cd36c00b84c6df93fde22ed232fe0d9540e",
-    "feature": "785c2078ff8786c72fe8d1c72d29266362c991d6",
+    "feature": "275f57d87f6bca2c2b6ad4c9651266cc6ee62532",
     "classifications": {
       "boundedDone": 6,
-      "open": 6,
-      "partial": 11
+      "partial": 12,
+      "open": 5
     },
     "all23Retained": true,
     "productP0ThroughP7Retained": true,
@@ -87,9 +87,9 @@
       },
       {
         "id": "CLAUDE-ORG",
-        "status": "open",
+        "status": "partial",
         "retainedRecordedState": "OPERATOR_ASSUMED_GT100_AVAILABLE_CLAUDE_EXPIRY22NOV_BOUNDED_ELIGIBLE_DIRECT_PILOT_PREPARED_NOT_SUBMITTED",
-        "currentNote": "OrgGuardSourceadopted masterf96/Root24PASS retained;liveAPIexplicitCLOSED absentsharedledger/reconciliation/allspendercoverage/unknownbalance. F1ONEindependentSolREQUEST_CHANGES0P1/2P2, originalfrozen. Roota0releasedNEWDSHRC2narrowfacade/testfix; stoppedSourceclosedhandoff53dc/d3d9+7818/policy2unchanged. Rootnarrowdiffdispo+REDold/GREENfixedinertcasepending, no secondreview/API. OnecanonicalSHidentityholdpreserved, laterRootpassivestateopportunityandactualnativeidentity/semanticSource occurred; oldrawepochsnotrewritten."
+        "currentNote": "GuardSourceadoptedf96/Root24PASS; F1ONEindependentSolRC0P1/2P2preserved. NarrowDSHRC2RootqualifiedRED3replay+1spy/GREEN35PASS; exact4inactivefeature275pushedorigin+backup/ownclean/main256. Boundedguard/F1unitsDONE, wholeOrgroutePARTIAL: productionresolver/CLI/liveparser-guardcomposition/currentallspenderledger-reconciliation/Consolebalance/Windowsbridge/livecall notqualified. APIexplicitCLOSED/unknowncost-notzero."
       },
       {
         "id": "DSH-RESEARCH-USAGE-GLOBAL",
@@ -107,7 +107,7 @@
         "id": "DOCS-RETENTION-GIT",
         "status": "done",
         "retainedRecordedState": "NIGHT_WRAP_ALL23_ROWS_RETAINED_FROZEN_RESULTS_AND_WORKTREE_DISPOSITIONS_RECORDED",
-        "currentNote": "Qualified model e765 and new UI feature785c207 committed/pushed/readback on origin+backup. New UI tree clean, raw70 exact, main256/foreignf4b6 preserved. Exact owner relays/proofs/statuses retained; shared docs/A/B publication remains Estate owner pending."
+        "currentNote": "UI785 and F1code275 plus namedhandoff/statusdocs committed/pushed/readbackbothremotes; source/native/archiveproofs retained, main256/foreignf4b6preserved. SharedA/BpublicationownerpatchpendingEstate; no operatorBwrite."
       },
       {
         "id": "PRODUCT-PLAN-REMAINDER",
@@ -164,8 +164,8 @@
       "id": "ORG-ROUTE-20261105",
       "relatedOriginal": "CLAUDE-ORG / MODEL-P2",
       "status": "partial",
-      "actual": "GuardSourcef96adopted/liveaccountingAPIclosed. F1singleSolSourceRC2P2; RootreleasednewDSHmaintainerRC2; exact4baseline+2narrowdeltas stopped/frozen/cleaned; Rootruntimequalificationpending, no tests/API.",
-      "next": "Rootnarrowdiffdisposition and ONE exactinertREDoldfacade/newadversetests+GREENfixed; eligibleinactivefeatureonlyafterqualification. Estateallspenderreconciliation/JohanConsole/fixedbindingbeforefutureWindowsbridge/liveproof."
+      "actual": "BoundedguardSource24qualified/adoptedf96 and F1inactivefacade/policyRootRED4/GREEN35qualified/feature275pushed. WholeproductionroutePARTIAL/APIexplicitCLOSED/accounting-Console-fixedCLIbinding-Windowsbridge pending.",
+      "next": "Estateallspenderreconciliation/JohanConsole/fixedproductionbinding; Rootseparateexactreleaseforlivecomposition/CLI/data-onlyWindowsbridge/liveproof. No newauthor/refill fromfakepass."
     },
     {
       "id": "BOUNDED-AGENT-20261105",
@@ -197,9 +197,9 @@
     "request": "applywright-org-f1-dsh-code-go-20261105",
     "READY": "dfc7fff37532175772a09efa7019363e652f2c709108c46da83c4a2ade5ed7a8",
     "dispatchError": "Prompt first READY path rendered undefined; broker fixing receipt/admin pointer within samecommission, no duplicate original send",
-    "delivery": "RC1_SOURCE_CLOSED;RC2_NARROW_MAINTAINER_SOURCE_CLOSED53dc1d30",
-    "semanticReview": "ONE_FINAL_REQUEST_CHANGES_0P1_2P2_SOURCE_TRACED",
-    "tests": "NOT_RUN_ROOT_NARROW_DISPOSITION_AND_INERT_RED_OLD_GREEN_FIXED_PENDING",
+    "delivery": "RC1_AND_RC2_FROZEN_CLEANED_EXACT4_ADOPTED_FEATURE275_BOTH_REMOTES",
+    "semanticReview": "ONE_ORIGINAL_REQUEST_CHANGES0P1_2P2_PRESERVED_ROOT_NARROW_FIXES_CLOSED_NO_SECOND_JUDGE",
+    "tests": "ROOT_ACTUAL_RED_REPLAY3_AND_SPY1_EXPECTED_FAILURES_GREEN35PASS0FAIL_SKIP_CANCEL_TODO",
     "primary15": "729a3dd64ce5cea4f83683ab6bcc37f0dcf81ae5df49624bde55a074c4bc3423",
     "identityHold": {
       "atUtc": "2026-11-05T06:30:26Z",
@@ -245,8 +245,9 @@
       "reference14Policy2OldSourceReview40Pins": "UNCHANGED",
       "originalJudgment": "PRESERVED_ONE_REVIEW_NO_SECOND_JUDGE",
       "SourceAssertions": "AUTHOR_NOT_RUNTIME",
-      "RootQualification": "PENDING",
-      "API": "CLOSED"
+      "RootQualification": "QUALIFIED_EXACT_SOURCE_PURE_FACTORY_35PASS_ROOT7c9c_51565_CUSTODY_CLOSED",
+      "API": "CLOSED",
+      "codeFeatureCommit": "275f57d87f6bca2c2b6ad4c9651266cc6ee62532"
     },
     "sourceFindings": [
       {
@@ -254,16 +255,51 @@
         "priority": "P2",
         "issue": "Replay success skipped bound validation and accepted missing stopReason",
         "RC2": "Affirmativeend_turn/nontruncated +sameawaitedvalidator/throwsemantics;closedcompletedaccounting/noredispatch",
-        "status": "SOURCE_CORRECTION_DELIVERED_ROOT_GATE_PENDING"
+        "status": "CLOSED_EXACT_SOURCE_ROOT_NARROW_DISPOSITION_ACTUAL_RED_GREEN_ORIGINAL_VERDICT_PRESERVED"
       },
       {
         "id": "F1-02",
         "priority": "P2",
         "issue": "Absent-key test overwrote counting callback but expected one presence call",
         "RC2": "False-returning spy increments;onepresence+zeroauth/reserve/fetch/streamasserts retained",
-        "status": "SOURCE_CORRECTION_DELIVERED_ROOT_GATE_PENDING"
+        "status": "CLOSED_EXACT_SOURCE_ROOT_NARROW_DISPOSITION_ACTUAL_RED_GREEN_ORIGINAL_VERDICT_PRESERVED"
       }
-    ]
+    ],
+    "qualifiedCase": {
+      "case": "f1-rc2-inert-20261105a",
+      "RootAuthority": "7c9c4dca27c3b5305bf9927fea3604d1b6bc9bb610cd28016eb27417472adc43",
+      "result": "51565b2fb536f30e4a5d39bf060ff2b99067c4bf14d9e10c168dde57d56b2ee0",
+      "commands": "c35ef56665546aa6122a94584f4cd10ba46b00f9a2f8565854fef8c56dc3b9be",
+      "sourceBeforeAfter": "fefadf3a868ea604a06913754183d4812994374f8c5c8fe101097baf82b12f5b",
+      "greenTap": "d0caa7c7cece9875e09e50d445b372fb8f49b517b048504c607ca87b1d3cfb61",
+      "custody": "3256c6efc5c818afcf4bf0cbd9b885fabe606bb4a468bd1b88db513e5bfc8d23",
+      "hostKiB": 7403604,
+      "guestKiB": 36600656,
+      "canonicalEX": "2128:5197677",
+      "source48Stable": true,
+      "sessionsReaped": 3,
+      "scratchRemoved": true,
+      "EXClosed": true,
+      "realLedgerAPI": "NOT_RUN",
+      "scope": "PURE_FACTORY_FAKE_BINDINGS_NOT_LIVE_COMPOSITION",
+      "operatorRerun": false,
+      "consumption": "6de7f0030edcfd133a0e7a25c29b3b530791458777a37830cb754a2b6b88c34e"
+    },
+    "featureAdoption": {
+      "commit": "275f57d87f6bca2c2b6ad4c9651266cc6ee62532",
+      "parent": "409baf3cb1093ed700e5eaeca8bf85bd3049bbfe",
+      "branch": "codex/qualified-report-cta-20261105",
+      "exact4RawMatch": true,
+      "normalHooks": "NONE_ACTIVE_NONE_BYPASSED",
+      "namedStaged": 4,
+      "sacredPrePost": "CLEAN4",
+      "originVerified": true,
+      "backupVerified": true,
+      "main": "25689cd36c00b84c6df93fde22ed232fe0d9540e",
+      "nativeTrees": "KEEP_FROZEN",
+      "deployment": "NOT_DONE",
+      "API": "CLOSED"
+    }
   },
   "ownerGates": {
     "EstateSharedGuard": "SOURCE_ADOPTED_MASTER_f96ad332_POST2430_OWNER_REPLY_a38b717e_CURRENT_PROCESS_LOADED_STATE_UNKNOWN",
@@ -300,5 +336,63 @@
     "files": 21,
     "target": "G:/Backups/Applywright/20261105-product/f1-rc2-narrow-source",
     "manifest": "5b39d4d323f7410095ec39e853012665032abada3ceb1f424606ad0f9f33f4a6"
-  }
+  },
+  "feature": "275f57d87f6bca2c2b6ad4c9651266cc6ee62532",
+  "boundedCompletedUnits": [
+    {
+      "id": "ORG-GUARD-U1",
+      "status": "done",
+      "evidence": "ONE_SOL_SOURCEPASS_ROOT24PASS_SOURCE_ADOPTED_f96",
+      "limit": "NOT_ALLSPENDER_LEDGER_OR_LIVE_ROUTE"
+    },
+    {
+      "id": "PRODUCT-UI-FIRST-CTA",
+      "status": "done",
+      "evidence": "ROOT_SOURCE_STATIC70_CONTRAST58_SYNTAX_FEATURE785",
+      "limit": "NOT_BROWSER_WHOLE_UI_OR_DEPLOY"
+    },
+    {
+      "id": "ORG-F1-FACADE-POLICY",
+      "status": "done",
+      "evidence": "ONE_SOL_RC2P2_NARROW_DSH_FIX_ROOT_RED4_GREEN35_FEATURE275",
+      "limit": "INACTIVE_PURE_FACTORY_NOT_LIVE_BINDING"
+    }
+  ],
+  "worktreeDispositions": [
+    {
+      "tree": "t3-c600d294",
+      "branch": "t3/org-f1-identity",
+      "decision": "KEEP",
+      "reason": "FrozenRC1/reference"
+    },
+    {
+      "tree": "t3-991838d4",
+      "branch": "t3/org-f1-identity-review",
+      "decision": "KEEP",
+      "reason": "Originalone-review4reports"
+    },
+    {
+      "tree": "t3-41ee3640",
+      "branch": "t3/dsh-rc2-identity",
+      "decision": "KEEP",
+      "reason": "QualifiedRC2exactraw"
+    },
+    {
+      "tree": "codex-qualified-report-cta-20261105",
+      "branch": "codex/qualified-report-cta-20261105",
+      "decision": "KEEP_FEATURE",
+      "reason": "QualifiedUI_F1_source_namedDocs_MAIN_MERGE_NOT_RELEASED"
+    },
+    {
+      "tree": "Allpreviousacceptedinventoryentries",
+      "decision": "KEEP_EXISTING_DISPOSITIONS",
+      "reason": "Originalsavedrosterretained_no_globalreinventory_or_prune"
+    }
+  ],
+  "firstThreeOwnerTasks": [
+    "Estate reconciles everyspender/currentprivateledger/JohanConsolecreditcover and publishes nonsecretbinding; nofakezero/rawsecretread.",
+    "OnlyafterOwnerACK+Rootrelease commissionfixedWSLresolver/CLI+Windowsdata-onlybridge/livecomposition; no paidcall fromsyntheticpass.",
+    "Resume retainedboundedagenttool-feedback andbroaderUI/motion/researchunderownscopes; preserve23/fourstages/failures/U0Bpark/no main-deploy tonight."
+  ],
+  "ownerPublication": "PROPOSAL_TO_ESTATE_ONLY_B_ACTUAL_RECEIPT_PENDING"
 }

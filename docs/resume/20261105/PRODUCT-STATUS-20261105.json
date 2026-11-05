@@ -1,6 +1,6 @@
 {
-  "atUtc": "2026-11-05T06:09:31.3428819Z",
-  "state": "ACTIVE_INCOMPLETE_UI_FEATURE785_PUSHED_GUARD_READY_F1_SOURCE_RUNNING_NATIVE_ORDINAL2",
+  "atUtc": "2026-11-05T06:34:25.1036935Z",
+  "state": "ACTIVE_INCOMPLETE_F1_SOURCE_DELIVERED_SOL_IDENTITY_LOCK_HELD_API_EXPLICIT_CLOSED",
   "main": "25689cd36c00b84c6df93fde22ed232fe0d9540e",
   "qualifiedModelFeature": "e76598a42663be6fb86f460921a4afbf38bd4a8e",
   "qualifiedUICode": "785c2078ff8786c72fe8d1c72d29266362c991d6",
@@ -89,7 +89,7 @@
         "id": "CLAUDE-ORG",
         "status": "open",
         "retainedRecordedState": "OPERATOR_ASSUMED_GT100_AVAILABLE_CLAUDE_EXPIRY22NOV_BOUNDED_ELIGIBLE_DIRECT_PILOT_PREPARED_NOT_SUBMITTED",
-        "currentNote": "GuardU1 exactartifact module2430/newtestefe9/old5f92/patch6354: ONEindependentSolPASS_SOURCE0P1P2 + Rootactual24of24PASS0fail/skip/cancelNode0outer0.RootEX/4children/fixturecleanupclosed5c322698;source25pins+3stagedstable. Qualifiedownerreadyrelay e6096363/operatorconsumptiona9c07986. Installedcompatibleguard/currentprivateledger/reconciliation/Sonnetfacadepricer/Windowsbridge/liveAPIcase remainEstateRootgates; no paidcall. Scopeandrace/replay/nonpristineidentitylimitsretained."
+        "currentNote": "Bounded guard oneSolSourcePASS/Root24PASS retained; Estate sourceadopted masterf96ad332 actual2430. Full owner verifyFAILED/isolated14PASS notproofwrappercause. LiveAPIexplicitlyCLOSED: no sharedledger/reconciliation/all-spenderscoverage/cycle/spent/pending/creditcoverUNKNOWN; Estate+JohanConsole+Root release required. F1DSHsixfilesdelivered/frozen/cleaned, firstSolidentityheld SHbusy beforeallocation/no semanticverdict/tests. No API/loader/privateledger/key call."
       },
       {
         "id": "DSH-RESEARCH-USAGE-GLOBAL",
@@ -164,8 +164,8 @@
       "id": "ORG-ROUTE-20261105",
       "relatedOriginal": "CLAUDE-ORG / MODEL-P2",
       "status": "partial",
-      "actual": "BoundedguardunitDONEqualifiedSource+24synthetictests,e609ownerready.Rootcase/EXreleased,noAPI/install/realledger.Otherroutefacade/pricer/Windowsbridge/currentaccounting binding stillopen.",
-      "next": "Same DSH F1 authorc600 code admission via broker158, then one distinct Sol review and Root inert tests; Estate qualified guard adoption/current accounting and fixed owner API binding remain prerequisites to live use."
+      "actual": "GuardSourceadoptedOwnerf96ad332/a38b717e; F1DSHsixfilesdelivered/frozen/cleaned/e682. FirstSolidentityheld06:30:26canonicalSHbusy, RAMpassed/no allocation/no semanticverdict. APIexplicitCLOSED due absentledger/reconciliation/allspenderscoverage; Rootfakechecks remainlater.",
+      "next": "Genuine Root EX closure then SAME firstSolidentity/fresh4/3/native; one semanticreview, Rootdisposition/inerttests. Estate allspendersreconciliation/JohanConsole/fixedbinding before later bridge/livecase."
     },
     {
       "id": "BOUNDED-AGENT-20261105",
@@ -197,21 +197,38 @@
     "request": "applywright-org-f1-dsh-code-go-20261105",
     "READY": "dfc7fff37532175772a09efa7019363e652f2c709108c46da83c4a2ade5ed7a8",
     "dispatchError": "Prompt first READY path rendered undefined; broker fixing receipt/admin pointer within samecommission, no duplicate original send",
-    "delivery": "PENDING",
-    "semanticReview": "ONE_DISTINCT_SOL_XHIGH_STANDARD_AFTER_FROZEN_DELIVERY_NOT_YET_DISPATCHED",
-    "tests": "ROOT_EXACT_QUALIFICATION_REQUIRED_NOT_RUN"
+    "delivery": "SOURCE_SIX_FILES_FROZEN_CLEANED_HANDOFF_e68283d4",
+    "semanticReview": "NOT_REVIEWED_NO_REVIEWER_ALLOCATED_CANONICAL_SH_BUSY_063026",
+    "tests": "NOT_RUN_ROOT_EXACT_QUALIFICATION_AFTER_ONE_REVIEW",
+    "primary15": "729a3dd64ce5cea4f83683ab6bcc37f0dcf81ae5df49624bde55a074c4bc3423",
+    "identityHold": {
+      "atUtc": "2026-11-05T06:30:26Z",
+      "hostFreeKiB": 8210428,
+      "guestFreeKiB": 31518816,
+      "state": "HOLD_CANONICAL_SH_BUSY",
+      "exit": 3,
+      "inode": "8:80:5197677",
+      "SHacquired": false,
+      "reviewerREADY": false,
+      "reviewerAllocated": false,
+      "taskCreated": false,
+      "identityRequest": "applywright-org-f1-sol-identity-20261105",
+      "checkpointSHA": "045294b8013ac4e337e42d8a77cd01258d2bbecbef929718823a86ff2f94245a",
+      "release": "GENUINE_ROOT_OWNER_EX_RELEASE_THEN_ONE_FRESH_NORMAL_SAME_REQUEST_ATTEMPT"
+    }
   },
   "ownerGates": {
-    "EstateSharedGuard": "QUALIFIED_PATCH_OWNER_ADOPTION_PENDING",
-    "currentPrivateAccountingAndFacade": "PENDING_NONSECRET_OWNER_ACK_810524F1_2D3D946D",
-    "API": "NOT_RELEASED_OR_CALLED",
+    "EstateSharedGuard": "SOURCE_ADOPTED_MASTER_f96ad332_POST2430_OWNER_REPLY_a38b717e_CURRENT_PROCESS_LOADED_STATE_UNKNOWN",
+    "currentPrivateAccountingAndFacade": "LEDGER_ABSENT_NO_RECONCILIATION_ALL_SPENDERS_NOT_COVERED_CYCLE_EXPIRY_SPENT_PENDING_CREDIT_COVER_UNKNOWN",
+    "API": "EXPLICIT_ESTATE_NO_APPLYWRIGHT_LIVE_API_UNTIL_ALL_SPENDER_RECONCILIATION_AND_JOHAN_CONSOLE_PLUS_ROOT_EXACT_QUALIFICATION",
     "sharedAB": "PUBLISHER_PATCH_PENDING",
     "mainDeploy": "EXPLICIT_ESTATE_NO_DEPLOY_TONIGHT",
-    "U0B": "HUMAN_PARKED"
+    "U0B": "HUMAN_PARKED",
+    "ownerFullVerify": "FAILED_dashboard_harness170_ISOLATED14PASS_DOES_NOT_PROVE_WRAPPER_CAUSE"
   },
   "usage": {
     "DSH": "Guard_UI_and_F1_authoring_via_official_native_harness",
-    "Sol": "Guard_independent_Source_review;F1_review_pending",
+    "Sol": "EarlierguardindependentSource review completed; firstF1Solidentity held beforeallocation, noF1semanticreviewyet",
     "Root": "UI_one_Source_review_and_exact_static_syntax_qualification",
     "servedIdentities": "UNKNOWN_WHERE_NOT_EXPOSED",
     "tokens": "UNKNOWN",
@@ -225,5 +242,10 @@
   },
   "allWorktrees": "KEEP_FROZEN_CURRENT_HANDLES_NO_PRUNE",
   "globalInventory": "NOT_REPEATED",
-  "PCandWSLLifecycle": "NO_ACTION"
+  "PCandWSLLifecycle": "NO_ACTION",
+  "latestF1Archive": {
+    "files": 17,
+    "target": "G:/Backups/Applywright/20261105-product/f1-source-before-first-review",
+    "manifest": "8e692a63e81ebc94d05d6a541b5515dd2861b7ff58c139bace68bb20eacec997"
+  }
 }

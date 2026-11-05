@@ -1,3 +1,19 @@
+## Current operational delta —5November06:30Z
+
+DSH F1 is delivered, frozen and supported-cleaned: six exact files/input7/op9 stable, native code ordinal2 closed, zero active own children. Neutral handoffe68283d4; primary15 first-review packet729a3dd6. The first Sol6.1/xhigh/Standard/FastOFF identity attempt passed host8,210,428KiB/guest31,518,816KiB but stopped at canonicalSHbusy, exit3/inode8:80:5197677 at06:30:26Z. No SH acquired, READY, reviewer/task/tree allocation or semantic review. Request applywright-org-f1-sol-identity-20261105 remains UNSENT; checkpoint045294b8. Wait for a genuine Root owning-workload release, then one fresh normal attempt of this SAME request; no unchanged retry or substitute reviewer.
+
+Estate's actual later replya38b717e adopts guard SOURCE on masterf96ad332, exact7808→2430, with the sole importer loading on next spawn. Already-running-process state is not attested. Live Applywright API use is explicitly CLOSED: documented shared ledger absent, no reconciliation, cycle/expiry/spent/pending/promotional cover UNKNOWN, and another refiner spends through a separate journal. Estate takes all-spender reconciliation/true console balance to Johan. Never read the private journal/ledger/keys, create fakezero accounting or invoke loader/API here. F1 Source/fake tests may continue after proper gates. Full owner verifyFAILED remainsfailed; isolated14PASS does not prove wrapper causality.
+
+Carry this new operational authority separately from unchanged frozen7/6/15, not as retrospective input stability. Source adoption ACK is done; current accounting/facade/pricing/live permission is not. The17-file new F1 archive is verified onG, manifest8e692a63. All23 rows/four stages are updated in the companion JSON; all50 native rows preserved, no new reviewer row. Eligible B publication patch plus owner addendum are with Estate, not directly applied by operator. UI code785 and prior docs246 stay feature-pushed; this later documentation delta does not change code or rerun green gates. No main/deploy tonight.
+
+Next three tasks now:
+
+1. Root reports actual shared-lock owning phase closure; resume the same Sol identity under fresh normal gates, then bind one semantic GO after identity/cleanup and with the later owner ruling as a separate operational pin.
+2. Consume one verdict; Root dispositions concrete findings and qualifies exact meaningful inert tests on the stopped candidate. Preserve failures/holds and no automatic second review/correction loop. No live API follows from fake tests.
+3. Estate reconciles every spender and Johan's console balance, publishes current A/B/project handoff, and supplies the fixed facade/accounting/pricing binding. Root separately qualifies any future data-only Windows bridge/live proof. Broader agent/UI/motion/research goals stay retained.
+
+Earlier snapshot below is preserved as history; its running/queued/adoption-pending wording is superseded by this dated delta.
+
 # Applywright product handoff — 5 November2026
 
 Programme remains active and incomplete. See PRODUCT-STATUS-20261105.json for every original implementation-register row, all four dated stages, current providers and unresolved gates. No row was dropped or promoted to whole-product completion.

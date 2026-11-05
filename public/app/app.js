@@ -1446,7 +1446,22 @@ function reportPanel(report, { onTailor, advisory } = {}) {
           el("p", { class: "aw-body-text", text: "Five sections, weighted into one total. Every point below has a finding and a fix behind it." }),
           advisory ? el("p", { class: "aw-note", text: advisory }) : null
         ),
-        subscoreNodes.length ? el("div", { class: "aw-stack aw-stack--tight" }, subscoreNodes) : null
+        subscoreNodes.length ? el("div", { class: "aw-stack aw-stack--tight" }, subscoreNodes) : null,
+        onTailor
+          ? el(
+              "div",
+              { class: "aw-actions aw-actions--score" },
+              button(tailorLabel("Create the tailored pack"), {
+                onClick: onTailor,
+                disabled: credits.exhausted,
+              }),
+              el("span", {
+                class: "aw-note",
+                text: credits.unlimited ? "Unlimited credits on your plan." : `${credits.label} this month.`,
+              }),
+              credits.exhausted ? linkButton("See plans", "/app/billing", { variant: "ghost" }) : null
+            )
+          : null
       )
     ),
     coverageBlock,
@@ -1485,21 +1500,6 @@ function reportPanel(report, { onTailor, advisory } = {}) {
             { class: "aw-stack aw-stack--tight aw-advice" },
             advice.map((line) => el("li", { class: "aw-body-text", text: line }))
           )
-        )
-      : null,
-    onTailor
-      ? el(
-          "div",
-          { class: "aw-actions" },
-          button(tailorLabel("Create the tailored pack"), {
-            onClick: onTailor,
-            disabled: credits.exhausted,
-          }),
-          el("span", {
-            class: "aw-note",
-            text: credits.unlimited ? "Unlimited credits on your plan." : `${credits.label} this month.`,
-          }),
-          credits.exhausted ? linkButton("See plans", "/app/billing", { variant: "ghost" }) : null
         )
       : null
   );

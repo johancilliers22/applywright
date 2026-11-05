@@ -592,6 +592,11 @@
   align-items: center;
 }
 
+.aw-actions--score {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .aw-actions--end {
   justify-content: flex-end;
 }

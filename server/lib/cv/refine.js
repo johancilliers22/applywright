@@ -1245,7 +1245,7 @@ function stripFence(value) {
 }
 
 /** @returns {{ ok: boolean, payload?: object, problems: string[] }} */
-function validateModelReply(reply, { bulletCount }) {
+function validateModelReply(reply, { bulletCount, originalSummary }) {
   let payload = reply;
   if (typeof payload === "string") {
     try {
@@ -1261,7 +1261,9 @@ function validateModelReply(reply, { bulletCount }) {
   const problems = [];
   const output = { bullets: [] };
 
-  if (typeof payload.summary !== "string" || !payload.summary.trim()) {
+  if (typeof payload.summary !== "string") {
+    problems.push("summary is missing, empty or not a string");
+  } else if (!payload.summary.trim() && toText(originalSummary).trim()) {
     problems.push("summary is missing, empty or not a string");
   } else {
     output.summary = payload.summary.trim();
@@ -1270,6 +1272,8 @@ function validateModelReply(reply, { bulletCount }) {
   if (!Array.isArray(payload.bullets)) {
     problems.push("bullets is missing or not an array");
   } else {
+    // A repeated index would apply the same proposal twice or let a later one win.
+    const seenIndices = new Set();
     for (const [position, entry] of payload.bullets.entries()) {
       if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
         problems.push(`bullets[${position}] is not an object`);
@@ -1282,6 +1286,11 @@ function validateModelReply(reply, { bulletCount }) {
         problems.push(`bullets[${position}].index is outside 0..${Math.max(0, bulletCount - 1)}`);
         continue;
       }
+      if (seenIndices.has(index)) {
+        problems.push(`bullets[${position}].index duplicates an earlier bullet index`);
+        continue;
+      }
+      seenIndices.add(index);
       if (typeof entry.text !== "string" || !entry.text.trim()) {
         problems.push(`bullets[${position}].text is missing or empty`);
         continue;
@@ -1357,7 +1366,7 @@ async function tryModel({ pack, parsed, instruction, style, model, summary, bull
     return { ok: false, warnings: [`the model call failed (${message}), so the deterministic rules were used`] };
   }
 
-  const validation = validateModelReply(reply, { bulletCount: bullets.length });
+  const validation = validateModelReply(reply, { bulletCount: bullets.length, originalSummary: summary });
   if (!validation.ok) {
     const shown = validation.problems.slice(0, 3).join("; ");
     return {

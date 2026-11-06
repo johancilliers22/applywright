@@ -1,3 +1,7 @@
+##6November: 320px gap saved; lane stopped tonight
+
+Read [ROW8-320PX-PLAN.md](../20261106/ROW8-320PX-PLAN.md) for the accepted gap, source receipts and exactnext-sessionsteps. ExistingR5ownedlifecycle remainsqualified; no accepted narrow320entry exists. RootacceptedRow8asPARTIAL/NOT_RUN. No browser/runtime/admission/provider or newexecutor/reviewloop started. Johan nowauthorises documentation/handoffonly; do notauto-resume, wakeCC/WSL, run a browser, probe locks or start a mission tonight. Root/Estate receives the sourceplan/publicationpatch; Estate remains soleA/Bpublisher. All23 rows/four stages are retained; no statuspromotion. Root'soldEXclosureopportunity is history, not320casequalification.
+
 # Applywright qualified inactive feature — owner handoff,5November2026
 
 The bounded F1 facade/policy unit is qualified and committed on the feature branch. Root's ONE exact inert case at08:23 reproduced3 replay failures and1 original spy failure against preserved old source, then passed35/35 on RC2 with0fail/cancel/skip/todo. Three owned Node sessions reaped, scratch removed, actual canonicalEX held through closure then closed; all48 preservation pins stable. Result51565b2f/commands c35ef566/closure3256c6ef/before-afterfefadf3a; Root authority7c9c4dca. All ledger/credential/fetch/stream bindings were in-memory fakes. This does not qualify production resolver/CLI, real accounting, live parser/guard composition or paid API use.

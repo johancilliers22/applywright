@@ -394,9 +394,8 @@
     "OnlyafterOwnerACK+Rootrelease commissionfixedWSLresolver/CLI+Windowsdata-onlybridge/livecomposition; no paidcall fromsyntheticpass.",
     "Resume retainedboundedagenttool-feedback andbroaderUI/motion/researchunderownscopes; preserve23/fourstages/failures/U0Bpark/no main-deploy tonight."
   ],
-  "ownerPublication": "PROPOSAL_TO_ESTATE_ONLY_B_ACTUAL_RECEIPT_PENDING",
   "row8_320px": {
-    "updatedAt": "2026-11-06T00:16:09.2005880Z",
+    "updatedAt": "2026-11-06T00:16:09.200588Z",
     "state": "STOPPED_TONIGHT_PARTIAL_NOT_RUN_ROOT_ACCEPTED_SCENARIO_GAP",
     "plan": "docs/resume/20261106/ROW8-320PX-PLAN.md",
     "gap": "QUALIFIED_R5_LIFECYCLE_EXISTS_NO_ACCEPTED_NARROW_320_ENTRYPOINT",
@@ -409,6 +408,18 @@
     "reservation": "NONE",
     "next": "EXPLICIT_MANUAL_RESUME_THEN_ROOT_SCENARIO_COMMISSION_EXISTING_LIFECYCLE_AND_FRESH_CASE_QUALIFICATION",
     "automaticResume": false,
-    "vault": "ESTATE_OWNER_PUBLICATION_PATCH_ONLY"
+    "vault": "ESTATE_PUBLISHED_RECEIPT_VERIFIED_B_c868eb2"
+  },
+  "ownerPublication": {
+    "state": "CLAUDE_ESTATE_RECEIVED_A_OWNER_RECEIPTED_B_INDEPENDENTLY_VERIFIED",
+    "receipt": "docs/resume/20261106/ESTATE-HANDOFF-PUBLICATION-RECEIPT.md",
+    "EstateReceiptSHA256": "2b2a391090a97dcd96757461f0838cd7eef5deabddb56c1af9608d87fee8e3a5",
+    "RootReadbackSHA256": "17b1189a6c4d340cf9edb48aa574340610419f819ca296c1fa9aa36b214448eb",
+    "Bcommit": "c868eb2d77e754e6e3545a15b42cb0a209035788",
+    "BafterSHA256": "0d54d348fa42a14c076d947c8d743abb436f3f9719b7dbc7aecd53f960bacb57",
+    "A": "OWNER_RECEIPTED_NO_NEW_INDEPENDENT_A_RAW_PROOF",
+    "lane": "STOPPED_TONIGHT",
+    "runtime": "NONE",
+    "CC_WSL": "NOT_LAUNCHED"
   }
 }
